@@ -35,11 +35,14 @@ public class MainActivity extends Activity {
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
         queryBuilder.setTables(DataOpenHelper.PROFILES_TABLE_NAME);
         Cursor cursor = queryBuilder.query(db,
-                new String[]{"_id", DataOpenHelper.COLUMN_PROFILES_NAME}, null,
-                null, null, null, null);
+                new String[]{DataOpenHelper.COLUMN_ID,
+                        DataOpenHelper.COLUMN_PROFILES_NAME}, null, null, null,
+                null, null
+        );
 
         MatrixCursor extras = new MatrixCursor(
-                new String[]{"_id", DataOpenHelper.COLUMN_PROFILES_NAME});
+                new String[]{DataOpenHelper.COLUMN_ID,
+                        DataOpenHelper.COLUMN_PROFILES_NAME});
         extras.addRow(new String[]{Integer.toString(ID_ADD_PROFILE),
                 getResources().getString(R.string.action_add_profile)});
         MergeCursor mergeCursor = new MergeCursor(new Cursor[]{cursor, extras});
