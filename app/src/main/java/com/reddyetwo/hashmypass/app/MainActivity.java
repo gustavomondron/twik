@@ -38,6 +38,7 @@ public class MainActivity extends Activity {
         ProfileAdapter adapter = new ProfileAdapter(this, cursor, 0);
 
         ActionBar actionBar = getActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         actionBar.setListNavigationCallbacks(adapter,
                 new ActionBar.OnNavigationListener() {
