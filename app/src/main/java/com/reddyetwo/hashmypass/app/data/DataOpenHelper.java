@@ -17,7 +17,7 @@ public class DataOpenHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PROFILES_PASSWORD_TYPE = "password_type";
     private static final String PROFILES_TABLE_CREATE =
             "CREATE TABLE " + PROFILES_TABLE_NAME + " (" +
-                    "id INTEGER PRIMARY KEY, " +
+                    "_id INTEGER PRIMARY KEY, " +
                     COLUMN_PROFILES_NAME + " TEXT, " +
                     COLUMN_PROFILES_PRIVATE_KEY + " TEXT, " +
                     COLUMN_PROFILES_PASSWORD_LENGTH + " INTEGER, " +
@@ -32,7 +32,7 @@ public class DataOpenHelper extends SQLiteOpenHelper {
     public static final String COLUMN_TAGS_PASSWORD_TYPE = "password_type";
     private static final String TAGS_TABLE_CREATE =
             "CREATE TABLE " + TAGS_TABLE_NAME + " (" +
-                    "id INTEGER PRIMARY KEY, " +
+                    "_id INTEGER PRIMARY KEY, " +
                     COLUMN_TAGS_NAME + " TEXT, " +
                     COLUMN_TAGS_PROFILE_ID + " INTEGER, " +
                     COLUMN_TAGS_PASSWORD_LENGTH + " INTEGER, " +
