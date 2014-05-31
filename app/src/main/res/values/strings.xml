@@ -4,5 +4,6 @@
     <string name="app_name">Hash my pass</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="action_add_profile">Add profile</string>
 
 </resources>

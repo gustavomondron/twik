@@ -4,6 +4,8 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.MatrixCursor;
+import android.database.MergeCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.os.Bundle;
@@ -20,6 +22,8 @@ import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
 
 public class MainActivity extends Activity {
 
+    private final static int ID_ADD_PROFILE = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,12 +34,17 @@ public class MainActivity extends Activity {
 
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
         queryBuilder.setTables(DataOpenHelper.PROFILES_TABLE_NAME);
-        Cursor cursor = queryBuilder
-                .query(db, new String[]{"_id", DataOpenHelper
-                                .COLUMN_PROFILES_NAME},
-                        null, null, null, null, null
-                );
-        ProfileAdapter adapter = new ProfileAdapter(this, cursor, 0);
+        Cursor cursor = queryBuilder.query(db,
+                new String[]{"_id", DataOpenHelper.COLUMN_PROFILES_NAME}, null,
+                null, null, null, null);
+
+        MatrixCursor extras = new MatrixCursor(
+                new String[]{"_id", DataOpenHelper.COLUMN_PROFILES_NAME});
+        extras.addRow(new String[]{Integer.toString(ID_ADD_PROFILE),
+                getResources().getString(R.string.action_add_profile)});
+        MergeCursor mergeCursor = new MergeCursor(new Cursor[]{cursor, extras});
+
+        ProfileAdapter adapter = new ProfileAdapter(this, mergeCursor, 0);
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
@@ -79,15 +88,14 @@ public class MainActivity extends Activity {
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup parent) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            return inflater.inflate(android.R.layout
-                    .simple_dropdown_item_1line, parent, false);
+            return inflater.inflate(android.R.layout.simple_dropdown_item_1line,
+                    parent, false);
         }
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
-            String profileName = cursor.getString(cursor.getColumnIndex
-                    (DataOpenHelper
-                            .COLUMN_PROFILES_NAME));
+            String profileName = cursor.getString(
+                    cursor.getColumnIndex(DataOpenHelper.COLUMN_PROFILES_NAME));
             ((TextView) view).setText(profileName);
         }
     }
