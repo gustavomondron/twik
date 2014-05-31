@@ -1,15 +1,21 @@
 package com.reddyetwo.hashmypass.app;
 
+import android.app.ActionBar;
 import android.app.Activity;
-import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CursorAdapter;
+import android.widget.TextView;
 
 import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
-import com.reddyetwo.hashmypass.app.data.PasswordType;
 
 
 public class MainActivity extends Activity {
@@ -22,12 +28,26 @@ public class MainActivity extends Activity {
         DataOpenHelper helper = new DataOpenHelper(this);
         SQLiteDatabase db = helper.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(DataOpenHelper.COLUMN_PROFILES_NAME, "Work");
-        values.put(DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY, "12345-6789");
-        values.put(DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH, 12);
-        values.put(DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE, PasswordType.ALPHANUMERIC.ordinal());
-        db.insert(DataOpenHelper.PROFILES_TABLE_NAME, null, values);
+        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+        queryBuilder.setTables(DataOpenHelper.PROFILES_TABLE_NAME);
+        Cursor cursor = queryBuilder
+                .query(db, new String[]{"_id", DataOpenHelper
+                                .COLUMN_PROFILES_NAME},
+                        null, null, null, null, null
+                );
+        ProfileAdapter adapter = new ProfileAdapter(this, cursor, 0);
+
+        ActionBar actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        actionBar.setListNavigationCallbacks(adapter,
+                new ActionBar.OnNavigationListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(int itemPosition,
+                                                            long itemId) {
+                        return false;
+                    }
+                }
+        );
     }
 
     @Override
@@ -48,4 +68,27 @@ public class MainActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private class ProfileAdapter extends CursorAdapter {
+
+        private ProfileAdapter(Context context, Cursor c, int flags) {
+            super(context, c, flags);
+        }
+
+        @Override
+        public View newView(Context context, Cursor cursor, ViewGroup parent) {
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            return inflater.inflate(android.R.layout
+                    .simple_dropdown_item_1line, parent, false);
+        }
+
+        @Override
+        public void bindView(View view, Context context, Cursor cursor) {
+            String profileName = cursor.getString(cursor.getColumnIndex
+                    (DataOpenHelper
+                            .COLUMN_PROFILES_NAME));
+            ((TextView) view).setText(profileName);
+        }
+    }
+
 }
