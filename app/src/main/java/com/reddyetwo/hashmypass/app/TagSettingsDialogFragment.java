@@ -22,6 +22,8 @@ public class TagSettingsDialogFragment extends DialogFragment {
 
     private long mProfileId;
     private String mTag;
+    private Spinner mPasswordLengthSpinner;
+    private Spinner mPasswordTypeSpinner;
 
     /**
      * Sets the tag whose settings are to be edited with this dialog. Note that
@@ -53,21 +55,19 @@ public class TagSettingsDialogFragment extends DialogFragment {
         ContentValues tagValues =
                 TagSettings.getTagSettings(getActivity(), mProfileId, mTag);
 
-        Spinner passwordLengthSpinner =
+        // Get UI widgets
+        mPasswordLengthSpinner =
                 (Spinner) view.findViewById(R.id.tag_settings_password_length);
-        ArrayAdapter<String> passwordLengthAdapter =
-                new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_spinner_item, new String[]{
-                        tagValues.getAsString(
-                                DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH)}
-                );
-        passwordLengthAdapter.setDropDownViewResource(
-                android.R.layout.simple_spinner_dropdown_item);
-        passwordLengthSpinner.setAdapter(passwordLengthAdapter);
+        mPasswordTypeSpinner =
+                (Spinner) view.findViewById(R.id.tag_settings_password_type);
+
+        // Populate password length spinner
+        populatePasswordLengthSpinner(tagValues
+                .getAsInteger(DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH));
 
         /* Open number picker dialog when the password length spinner is
            touched */
-        passwordLengthSpinner.setOnTouchListener(new View.OnTouchListener() {
+        mPasswordLengthSpinner.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -116,8 +116,32 @@ public class TagSettingsDialogFragment extends DialogFragment {
         return builder.create();
     }
 
+    /* Shows a number picker dialog for choosing the password length */
     private void showPasswordLengthDialog() {
-        // TODO
+        PasswordLengthDialogFragment dialogFragment =
+                new PasswordLengthDialogFragment();
+        dialogFragment.setPasswordLength(Integer.parseInt(
+                (String) mPasswordLengthSpinner.getSelectedItem()));
+        dialogFragment.setOnSelectedListener(
+                new PasswordLengthDialogFragment.OnSelectedListener() {
+                    @Override
+                    public void onPasswordLengthSelected(int length) {
+                        populatePasswordLengthSpinner(length);
+                    }
+                }
+        );
+
+        dialogFragment.show(getFragmentManager(), "passwordLength");
+    }
+
+    private void populatePasswordLengthSpinner(int length) {
+        ArrayAdapter<String> passwordLengthAdapter =
+                new ArrayAdapter<String>(getActivity(),
+                        android.R.layout.simple_spinner_item,
+                        new String[]{String.valueOf(length)});
+        passwordLengthAdapter.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item);
+        mPasswordLengthSpinner.setAdapter(passwordLengthAdapter);
     }
 
     private void saveTagSettings() {
