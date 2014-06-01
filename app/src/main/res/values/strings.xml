@@ -15,6 +15,11 @@
     <string name="name">Name</string>
     <string name="add">Add</string>
     <string name="save">Save</string>
+    <string name="hash">Hash</string>
+    <string name="master_key">Master key</string>
+    <string name="tag">Tag</string>
+    <string name="tag_settings">Tag settings</string>
+    <string name="copy_to_clipboard">Copy to clipboard</string>
 
     <string-array name="password_types_array">
         <item>Alphanumeric + Special chars</item>
