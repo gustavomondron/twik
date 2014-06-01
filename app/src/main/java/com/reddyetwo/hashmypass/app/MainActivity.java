@@ -3,6 +3,7 @@ package com.reddyetwo.hashmypass.app;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.MergeCursor;
@@ -57,6 +58,12 @@ public class MainActivity extends Activity {
                     @Override
                     public boolean onNavigationItemSelected(int itemPosition,
                                                             long itemId) {
+                        if (itemId == ID_ADD_PROFILE) {
+                            Intent intent = new Intent(getBaseContext(),
+                                    AddProfileActivity.class);
+                            startActivity(intent);
+                        }
+
                         return false;
                     }
                 }
