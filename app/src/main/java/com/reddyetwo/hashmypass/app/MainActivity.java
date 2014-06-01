@@ -24,6 +24,7 @@ import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
 public class MainActivity extends Activity {
 
     private final static int ID_ADD_PROFILE = -1;
+    private long mSelectedProfileID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class MainActivity extends Activity {
                     @Override
                     public boolean onNavigationItemSelected(int itemPosition,
                                                             long itemId) {
+                        mSelectedProfileID = itemId;
                         if (itemId == ID_ADD_PROFILE) {
                             Intent intent = new Intent(getBaseContext(),
                                     AddProfileActivity.class);
@@ -84,6 +86,13 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            return true;
+        } else if (id == R.id.action_edit_profile) {
+            Intent intent = new Intent(getBaseContext(),
+                    EditProfileActivity.class);
+            intent.putExtra(EditProfileActivity.EXTRA_PROFILE_ID,
+                    mSelectedProfileID);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);

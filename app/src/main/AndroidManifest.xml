@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.reddyetwo.hashmypass.app" >
+          package="com.reddyetwo.hashmypass.app" >
 
     <application
         android:allowBackup="true"
@@ -18,7 +18,17 @@
         </activity>
         <activity
             android:name=".AddProfileActivity"
-            android:label="Add profile">
+            android:label="@string/action_add_profile">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".EditProfileActivity"
+            android:label="@string/action_edit_profile" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
 
         </activity>
     </application>
