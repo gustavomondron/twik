@@ -5,7 +5,8 @@ import android.app.Dialog;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.support.v4.app.NavUtils;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -25,7 +26,7 @@ public class AddProfileActivity extends Activity {
     private Spinner mPasswordLengthSpinner;
     private Button mAddButton;
     private Button mDiscardButton;
-    private ArrayAdapter<String> passwordLengthAdapter;
+    private ArrayAdapter<String> mPasswordLengthAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +55,11 @@ public class AddProfileActivity extends Activity {
         mPasswordTypeSpinner.setAdapter(adapter);
 
         /* Populate password length spinner */
-        passwordLengthAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_dropdown_item,
+        mPasswordLengthAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item,
                 new String[] { Integer.toString(PasswordLength.DEFAULT) });
-        mPasswordLengthSpinner.setAdapter(passwordLengthAdapter);
+        mPasswordLengthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mPasswordLengthSpinner.setAdapter(mPasswordLengthAdapter);
 
         /* Open number picker dialog when the password length spinner is
         touched
@@ -92,13 +94,13 @@ public class AddProfileActivity extends Activity {
                 values.put(DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE,
                         mPasswordTypeSpinner.getSelectedItemPosition());
 
-                long newRowID = db.insert(DataOpenHelper.PROFILES_TABLE_NAME,
+                db.insert(DataOpenHelper.PROFILES_TABLE_NAME,
                         null, values);
 
-                /* TODO Check newRowID value */
+                /* TODO Check insert return value */
 
                 /* Navigate to previous activity */
-                onBackPressed();
+                NavUtils.navigateUpFromSameTask(AddProfileActivity.this);
             }
         });
 
@@ -107,10 +109,19 @@ public class AddProfileActivity extends Activity {
             @Override
             public void onClick(View v) {
                 /* Navigate to previous activity */
-                onBackPressed();
+                NavUtils.navigateUpFromSameTask(AddProfileActivity.this);
             }
         });
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /* Shows a number picker dialog for choosing the password length */
@@ -138,15 +149,17 @@ public class AddProfileActivity extends Activity {
         bOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                passwordLengthAdapter = new ArrayAdapter<String>
+                mPasswordLengthAdapter = new ArrayAdapter<String>
                         (AddProfileActivity.this,
-                                android.R.layout.simple_spinner_dropdown_item,
+                                android.R.layout.simple_spinner_item,
                                 new String[] { String.valueOf(picker.getValue()) });
-                mPasswordLengthSpinner.setAdapter(passwordLengthAdapter);
+                mPasswordLengthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                mPasswordLengthSpinner.setAdapter(mPasswordLengthAdapter);
                 d.dismiss();
             }
         });
 
         d.show();
     }
+
 }
