@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.NavUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,6 +32,7 @@ public class EditProfileActivity extends Activity {
     private Button mDiscardButton;
     private Button mSaveButton;
     private ArrayAdapter<String> mPasswordLengthAdapter;
+    private long mProfileID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +41,12 @@ public class EditProfileActivity extends Activity {
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        final long profileID = getIntent().getLongExtra(EXTRA_PROFILE_ID, -1);
+        mProfileID = getIntent().getLongExtra(EXTRA_PROFILE_ID, -1);
 
         DataOpenHelper helper = new DataOpenHelper(this);
         SQLiteDatabase db = helper.getWritableDatabase();
         String query = "SELECT * FROM " + DataOpenHelper.PROFILES_TABLE_NAME
-                + " WHERE _id=" + profileID;
+                + " WHERE _id=" + mProfileID;
         Cursor cursor = db.rawQuery(query, null);
         if (!cursor.moveToFirst()) {
             // TODO This should be an error
@@ -123,7 +125,7 @@ public class EditProfileActivity extends Activity {
                         mPasswordTypeSpinner.getSelectedItemPosition());
 
                 db.update(DataOpenHelper.PROFILES_TABLE_NAME, values,
-                        "_id=" + profileID, null);
+                        "_id=" + mProfileID, null);
                 /* TODO Check that update return value == 1 */
 
                 /* Navigate to previous activity */
@@ -143,6 +145,13 @@ public class EditProfileActivity extends Activity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.edit_profile, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -150,6 +159,15 @@ public class EditProfileActivity extends Activity {
         int id = item.getItemId();
         if (id == android.R.id.home) {
             NavUtils.navigateUpFromSameTask(this);
+            return true;
+        } else if (id == R.id.action_delete) {
+            DataOpenHelper helper = new DataOpenHelper(EditProfileActivity
+                    .this);
+            SQLiteDatabase db = helper.getWritableDatabase();
+            db.delete(DataOpenHelper.PROFILES_TABLE_NAME,
+                    "_id=" + mProfileID, null);
+            /* TODO Check delete return value */
+            NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
             return true;
         }
         return super.onOptionsItemSelected(item);
