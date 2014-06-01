@@ -6,7 +6,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +19,6 @@ import android.widget.Spinner;
 
 import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
 import com.reddyetwo.hashmypass.app.data.PasswordLength;
-
 
 public class EditProfileActivity extends Activity {
 
@@ -54,7 +52,6 @@ public class EditProfileActivity extends Activity {
 
         getActionBar().setSubtitle(cursor.getString(cursor.getColumnIndex
                 (DataOpenHelper.COLUMN_PROFILES_NAME)));
-
 
         /* Get UI widgets */
         mNameEditText = (EditText) findViewById(R.id.edit_profile_name);
@@ -133,15 +130,12 @@ public class EditProfileActivity extends Activity {
             }
         });
 
-
         mDiscardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
             }
         });
-
-
     }
 
     @Override
