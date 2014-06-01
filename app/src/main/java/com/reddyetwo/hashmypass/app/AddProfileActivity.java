@@ -1,7 +1,6 @@
 package com.reddyetwo.hashmypass.app;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.NumberPicker;
 import android.widget.Spinner;
 
 import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
@@ -55,11 +53,7 @@ public class AddProfileActivity extends Activity {
         mPasswordTypeSpinner.setAdapter(adapter);
 
         /* Populate password length spinner */
-        mPasswordLengthAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item,
-                new String[] { Integer.toString(PasswordLength.DEFAULT) });
-        mPasswordLengthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mPasswordLengthSpinner.setAdapter(mPasswordLengthAdapter);
+        populatePasswordLengthSpinner(PasswordLength.DEFAULT);
 
         /* Open number picker dialog when the password length spinner is
         touched
@@ -126,40 +120,30 @@ public class AddProfileActivity extends Activity {
 
     /* Shows a number picker dialog for choosing the password length */
     private void showDialog() {
-        final Dialog d = new Dialog(AddProfileActivity.this);
-        d.setTitle(getString(R.string.password_length));
-        d.setContentView(R.layout.dialog_number_picker);
-
-        Button bDiscard = (Button) d.findViewById(R.id.number_picker_discard);
-        Button bOk = (Button) d.findViewById(R.id.number_picker_ok);
-        final NumberPicker picker = (NumberPicker) d.findViewById(R.id
-                .numberPicker);
-        picker.setMinValue(PasswordLength.MIN_LENGTH);
-        picker.setMaxValue(PasswordLength.MAX_LENGTH);
-        picker.setValue(Integer.parseInt(
+        PasswordLengthDialogFragment dialogFragment =
+                new PasswordLengthDialogFragment();
+        dialogFragment.setPasswordLength(Integer.parseInt(
                 (String) mPasswordLengthSpinner.getSelectedItem()));
+        dialogFragment.setOnSelectedListener(
+                new PasswordLengthDialogFragment.OnSelectedListener() {
+                    @Override
+                    public void onPasswordLengthSelected(int length) {
+                        populatePasswordLengthSpinner(length);
+                    }
+                }
+        );
 
-        bDiscard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                d.dismiss();
-            }
-        });
+        dialogFragment.show(getFragmentManager(), "passwordLength");
+    }
 
-        bOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPasswordLengthAdapter = new ArrayAdapter<String>
-                        (AddProfileActivity.this,
-                                android.R.layout.simple_spinner_item,
-                                new String[] { String.valueOf(picker.getValue()) });
-                mPasswordLengthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                mPasswordLengthSpinner.setAdapter(mPasswordLengthAdapter);
-                d.dismiss();
-            }
-        });
-
-        d.show();
+    private void populatePasswordLengthSpinner(int length) {
+        mPasswordLengthAdapter =
+                new ArrayAdapter<String>(AddProfileActivity.this,
+                        android.R.layout.simple_spinner_item,
+                        new String[]{String.valueOf(length)});
+        mPasswordLengthAdapter.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item);
+        mPasswordLengthSpinner.setAdapter(mPasswordLengthAdapter);
     }
 
 }

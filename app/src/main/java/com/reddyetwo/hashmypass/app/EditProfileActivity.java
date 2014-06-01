@@ -1,7 +1,6 @@
 package com.reddyetwo.hashmypass.app;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,11 +13,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.NumberPicker;
 import android.widget.Spinner;
 
 import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
-import com.reddyetwo.hashmypass.app.data.PasswordLength;
 
 public class EditProfileActivity extends Activity {
 
@@ -43,51 +40,47 @@ public class EditProfileActivity extends Activity {
 
         DataOpenHelper helper = new DataOpenHelper(this);
         SQLiteDatabase db = helper.getWritableDatabase();
-        String query = "SELECT * FROM " + DataOpenHelper.PROFILES_TABLE_NAME
-                + " WHERE _id=" + mProfileID;
+        String query = "SELECT * FROM " + DataOpenHelper.PROFILES_TABLE_NAME +
+                " WHERE _id=" + mProfileID;
         Cursor cursor = db.rawQuery(query, null);
         if (!cursor.moveToFirst()) {
             // TODO This should be an error
         }
 
-        getActionBar().setSubtitle(cursor.getString(cursor.getColumnIndex
-                (DataOpenHelper.COLUMN_PROFILES_NAME)));
+        getActionBar().setSubtitle(cursor.getString(
+                cursor.getColumnIndex(DataOpenHelper.COLUMN_PROFILES_NAME)));
 
         /* Get UI widgets */
         mNameEditText = (EditText) findViewById(R.id.edit_profile_name);
-        mPrivateKeyEditText = (EditText) findViewById(R.id
-                .edit_profile_private_key);
-        mPasswordLengthSpinner = (Spinner) findViewById(R.id
-                .edit_profile_password_length);
-        mPasswordTypeSpinner = (Spinner) findViewById(R.id
-                .edit_profile_password_type);
+        mPrivateKeyEditText =
+                (EditText) findViewById(R.id.edit_profile_private_key);
+        mPasswordLengthSpinner =
+                (Spinner) findViewById(R.id.edit_profile_password_length);
+        mPasswordTypeSpinner =
+                (Spinner) findViewById(R.id.edit_profile_password_type);
         mDiscardButton = (Button) findViewById(R.id.edit_profile_discard);
         mSaveButton = (Button) findViewById(R.id.edit_profile_save);
 
         /* Populate text fields */
-        mNameEditText.setText(cursor.getString(cursor.getColumnIndex
-                (DataOpenHelper.COLUMN_PROFILES_NAME)));
+        mNameEditText.setText(cursor.getString(
+                cursor.getColumnIndex(DataOpenHelper.COLUMN_PROFILES_NAME)));
 
-        mPrivateKeyEditText.setText(cursor.getString(cursor.getColumnIndex
-                (DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY)));
+        mPrivateKeyEditText.setText(cursor.getString(cursor.getColumnIndex(
+                DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY)));
 
         /* Populate password type spinner */
         ArrayAdapter<CharSequence> adapter = ArrayAdapter
                 .createFromResource(this, R.array.password_types_array,
                         android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item);
         mPasswordTypeSpinner.setAdapter(adapter);
-        mPasswordTypeSpinner.setSelection(cursor.getInt(cursor.getColumnIndex
-                (DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE)));
+        mPasswordTypeSpinner.setSelection(cursor.getInt(cursor.getColumnIndex(
+                DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE)));
 
         /* Populate password length spinner */
-        mPasswordLengthAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item,
-                new String[] { Integer.toString(cursor.getInt(cursor
-                        .getColumnIndex(
-                                DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH))) });
-        mPasswordLengthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mPasswordLengthSpinner.setAdapter(mPasswordLengthAdapter);
+        populatePasswordLengthSpinner(cursor.getInt(cursor.getColumnIndex(
+                DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH)));
 
         /* Open number picker dialog when the password length spinner is
            touched */
@@ -117,7 +110,8 @@ public class EditProfileActivity extends Activity {
                         mPrivateKeyEditText.getText().toString());
                 values.put(DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH,
                         Integer.decode((String) mPasswordLengthSpinner
-                                .getSelectedItem()));
+                                .getSelectedItem())
+                );
                 values.put(DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE,
                         mPasswordTypeSpinner.getSelectedItemPosition());
 
@@ -158,8 +152,8 @@ public class EditProfileActivity extends Activity {
             DataOpenHelper helper = new DataOpenHelper(EditProfileActivity
                     .this);
             SQLiteDatabase db = helper.getWritableDatabase();
-            db.delete(DataOpenHelper.PROFILES_TABLE_NAME,
-                    "_id=" + mProfileID, null);
+            db.delete(DataOpenHelper.PROFILES_TABLE_NAME, "_id=" + mProfileID,
+                    null);
             /* TODO Check delete return value */
             NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
             return true;
@@ -169,39 +163,30 @@ public class EditProfileActivity extends Activity {
 
     /* Shows a number picker dialog for choosing the password length */
     private void showDialog() {
-        final Dialog d = new Dialog(EditProfileActivity.this);
-        d.setTitle(getString(R.string.password_length));
-        d.setContentView(R.layout.dialog_number_picker);
-
-        Button bDiscard = (Button) d.findViewById(R.id.number_picker_discard);
-        Button bOk = (Button) d.findViewById(R.id.number_picker_ok);
-        final NumberPicker picker = (NumberPicker) d.findViewById(R.id
-                .numberPicker);
-        picker.setMinValue(PasswordLength.MIN_LENGTH);
-        picker.setMaxValue(PasswordLength.MAX_LENGTH);
-        picker.setValue(Integer.parseInt(
+        PasswordLengthDialogFragment dialogFragment =
+                new PasswordLengthDialogFragment();
+        dialogFragment.setPasswordLength(Integer.parseInt(
                 (String) mPasswordLengthSpinner.getSelectedItem()));
+        dialogFragment.setOnSelectedListener(
+                new PasswordLengthDialogFragment.OnSelectedListener() {
+                    @Override
+                    public void onPasswordLengthSelected(int length) {
+                        populatePasswordLengthSpinner(length);
+                    }
+                }
+        );
 
-        bDiscard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                d.dismiss();
-            }
-        });
-
-        bOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPasswordLengthAdapter = new ArrayAdapter<String>
-                        (EditProfileActivity.this,
-                                android.R.layout.simple_spinner_item,
-                                new String[] { String.valueOf(picker.getValue()) });
-                mPasswordLengthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                mPasswordLengthSpinner.setAdapter(mPasswordLengthAdapter);
-                d.dismiss();
-            }
-        });
-
-        d.show();
+        dialogFragment.show(getFragmentManager(), "passwordLength");
     }
+
+    private void populatePasswordLengthSpinner(int length) {
+        mPasswordLengthAdapter =
+                new ArrayAdapter<String>(EditProfileActivity.this,
+                        android.R.layout.simple_spinner_item,
+                        new String[]{String.valueOf(length)});
+        mPasswordLengthAdapter.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item);
+        mPasswordLengthSpinner.setAdapter(mPasswordLengthAdapter);
+    }
+
 }

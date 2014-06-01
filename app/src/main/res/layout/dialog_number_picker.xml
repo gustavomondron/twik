@@ -1,55 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:stretchColumns="*"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
               android:orientation="vertical">
 
     <NumberPicker
         android:id="@+id/numberPicker"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_span="2"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp" />
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:showDividers="middle"
-        android:divider="?android:dividerHorizontal">
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            />
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:divider="?android:dividerHorizontal"
-            style="?android:buttonBarStyle">
-
-            <Button
-                android:id="@+id/number_picker_discard"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                style="?android:buttonBarButtonStyle"
-                android:text="@string/discard" />
-
-            <Button
-                android:id="@+id/number_picker_ok"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                style="?android:buttonBarButtonStyle"
-                android:layout_weight="1"
-                android:text="@string/ok" />
-
-        </LinearLayout>
-    </LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_gravity="center"/>
 
 </LinearLayout>
