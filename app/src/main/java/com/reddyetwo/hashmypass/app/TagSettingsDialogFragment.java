@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
+import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 
 /**
@@ -22,6 +23,7 @@ public class TagSettingsDialogFragment extends DialogFragment {
 
     private long mProfileId;
     private String mTag;
+    private long mTagId;
     private Spinner mPasswordLengthSpinner;
     private Spinner mPasswordTypeSpinner;
 
@@ -54,6 +56,13 @@ public class TagSettingsDialogFragment extends DialogFragment {
         // Fill form and set button actions
         ContentValues tagValues =
                 TagSettings.getTagSettings(getActivity(), mProfileId, mTag);
+        Integer tagId = tagValues.getAsInteger(DataOpenHelper.COLUMN_ID);
+        if (tagId != null) {
+            mTagId = tagId;
+        } else {
+            // No previous data for this tag-profile was available
+            mTagId = -1;
+        }
 
         // Get UI widgets
         mPasswordLengthSpinner =
@@ -145,7 +154,18 @@ public class TagSettingsDialogFragment extends DialogFragment {
     }
 
     private void saveTagSettings() {
-        // TODO
+        int passwordLength = Integer.parseInt(
+                (String) mPasswordLengthSpinner.getSelectedItem());
+        PasswordType passwordType = PasswordType.values()[mPasswordTypeSpinner
+                .getSelectedItemPosition()];
+
+        if (mTagId == -1) {
+            TagSettings.insertTagSettings(getActivity(), mTag, mProfileId,
+                    passwordLength, passwordType);
+        } else {
+            TagSettings.updateTagSettings(getActivity(), mTagId, passwordLength,
+                    passwordType);
+        }
     }
 
 }
