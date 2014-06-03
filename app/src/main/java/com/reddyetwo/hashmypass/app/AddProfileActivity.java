@@ -15,6 +15,8 @@ import android.widget.Spinner;
 
 import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
 import com.reddyetwo.hashmypass.app.data.PasswordLength;
+import com.reddyetwo.hashmypass.app.data.PasswordType;
+import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 
 public class AddProfileActivity extends Activity {
 
@@ -36,12 +38,12 @@ public class AddProfileActivity extends Activity {
 
         /* Get UI widgets */
         mNameEditText = (EditText) findViewById(R.id.add_profile_name);
-        mPrivateKeyEditText = (EditText) findViewById(R.id
-                .add_profile_private_key);
-        mPasswordTypeSpinner = (Spinner) findViewById(R.id
-                .add_profile_password_type);
-        mPasswordLengthSpinner = (Spinner) findViewById(R.id
-                .add_profile_password_length);
+        mPrivateKeyEditText =
+                (EditText) findViewById(R.id.add_profile_private_key);
+        mPasswordTypeSpinner =
+                (Spinner) findViewById(R.id.add_profile_password_type);
+        mPasswordLengthSpinner =
+                (Spinner) findViewById(R.id.add_profile_password_length);
         mAddButton = (Button) findViewById(R.id.add_profile_add);
         mDiscardButton = (Button) findViewById(R.id.add_profile_discard);
 
@@ -49,7 +51,8 @@ public class AddProfileActivity extends Activity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter
                 .createFromResource(this, R.array.password_types_array,
                         android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item);
         mPasswordTypeSpinner.setAdapter(adapter);
 
         /* Populate password length spinner */
@@ -74,24 +77,18 @@ public class AddProfileActivity extends Activity {
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DataOpenHelper helper = new DataOpenHelper(AddProfileActivity
-                        .this);
-                SQLiteDatabase db = helper.getWritableDatabase();
-                ContentValues values = new ContentValues();
-                values.put(DataOpenHelper.COLUMN_PROFILES_NAME,
-                        mNameEditText.getText().toString());
-                values.put(DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY,
-                        mPrivateKeyEditText.getText().toString());
-                values.put(DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH,
-                        Integer.decode((String) mPasswordLengthSpinner
-                                .getSelectedItem()));
-                values.put(DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE,
-                        mPasswordTypeSpinner.getSelectedItemPosition());
+                long profileID =
+                        ProfileSettings.insertProfileSettings(AddProfileActivity
+                                        .this,
+                                mNameEditText.getText().toString(),
+                                mPrivateKeyEditText.getText().toString(),
+                                Integer.decode((String) mPasswordLengthSpinner
+                                        .getSelectedItem()),
+                                PasswordType.values()[mPasswordTypeSpinner
+                                        .getSelectedItemPosition()]
+                        );
 
-                db.insert(DataOpenHelper.PROFILES_TABLE_NAME,
-                        null, values);
-
-                /* TODO Check insert return value */
+                /* TODO Check that profileID != -1 */
 
                 /* Navigate to previous activity */
                 NavUtils.navigateUpFromSameTask(AddProfileActivity.this);

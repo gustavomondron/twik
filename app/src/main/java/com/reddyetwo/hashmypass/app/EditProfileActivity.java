@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
+import com.reddyetwo.hashmypass.app.data.PasswordType;
+import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 
 public class EditProfileActivity extends Activity {
 
@@ -100,24 +102,15 @@ public class EditProfileActivity extends Activity {
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DataOpenHelper helper = new DataOpenHelper(EditProfileActivity
-                        .this);
-                SQLiteDatabase db = helper.getWritableDatabase();
-                ContentValues values = new ContentValues();
-                values.put(DataOpenHelper.COLUMN_PROFILES_NAME,
-                        mNameEditText.getText().toString());
-                values.put(DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY,
-                        mPrivateKeyEditText.getText().toString());
-                values.put(DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH,
+                ProfileSettings.updateProfileSettings(EditProfileActivity
+                                .this, mProfileID,
+                        mNameEditText.getText().toString(),
+                        mPrivateKeyEditText.getText().toString(),
                         Integer.decode((String) mPasswordLengthSpinner
-                                .getSelectedItem())
+                                .getSelectedItem()),
+                        PasswordType.values()[mPasswordTypeSpinner
+                                .getSelectedItemPosition()]
                 );
-                values.put(DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE,
-                        mPasswordTypeSpinner.getSelectedItemPosition());
-
-                db.update(DataOpenHelper.PROFILES_TABLE_NAME, values,
-                        "_id=" + mProfileID, null);
-                /* TODO Check that update return value == 1 */
 
                 /* Navigate to previous activity */
                 NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
