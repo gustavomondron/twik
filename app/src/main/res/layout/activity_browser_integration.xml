@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_marginTop="@dimen/activity_vertical_margin"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_user"
+            android:contentDescription="@string/profile"/>
+
+        <Spinner
+            android:id="@+id/browser_profile"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"/>
+
+        <ImageView
+            android:src="@drawable/ic_action_gear"
+            android:contentDescription=""
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="25dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/ic_action_tag"
+            android:contentDescription="@string/tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/browser_tag"
+            android:inputType="text"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:maxLength="25"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"/>
+
+        <ImageButton
+            android:id="@+id/main_tag_settings"
+            android:src="@drawable/ic_action_gear"
+            android:contentDescription="@string/tag_settings"
+            android:background="@null"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/ic_action_key"
+            android:contentDescription="@string/master_key"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/browser_master_key"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:maxLength="25"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:src="@drawable/ic_action_gear"
+            android:contentDescription=""
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:gravity="bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:showDividers="middle"
+        android:divider="?android:dividerHorizontal">
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:divider="?android:dividerHorizontal"
+            style="?android:buttonBarStyle">
+
+            <Button
+                android:id="@+id/browser_cancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="?android:buttonBarButtonStyle"
+                android:text="@string/cancel"/>
+
+            <Button
+                android:id="@+id/browser_hash"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="?android:buttonBarButtonStyle"
+                android:layout_weight="1"
+                android:text="@string/hash"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/ic_action_key"
+            android:contentDescription="@string/master_key"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/main_master_key"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:maxLength="25"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:src="@drawable/ic_action_gear"
+            android:contentDescription=""
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</LinearLayout>

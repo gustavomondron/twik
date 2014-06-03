@@ -20,6 +20,8 @@
     <string name="tag">Tag</string>
     <string name="tag_settings">Tag settings</string>
     <string name="copy_to_clipboard">Copy to clipboard</string>
+    <string name="cancel">Cancel</string>
+    <string name="profile">Profile</string>
 
     <string-array name="password_types_array">
         <item>Alphanumeric + Special chars</item>
