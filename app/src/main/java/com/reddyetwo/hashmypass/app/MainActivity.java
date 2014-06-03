@@ -2,6 +2,7 @@ package com.reddyetwo.hashmypass.app;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,17 +11,23 @@ import android.database.MergeCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
+import com.reddyetwo.hashmypass.app.data.PasswordType;
+import com.reddyetwo.hashmypass.app.data.ProfileSettings;
+import com.reddyetwo.hashmypass.app.data.TagSettings;
+import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 
 
 public class MainActivity extends Activity {
@@ -85,6 +92,14 @@ public class MainActivity extends Activity {
                 showTagSettingsDialog();
             }
         });
+
+        Button hashButton = (Button) findViewById(R.id.main_hash);
+        hashButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calculatePasswordHash();
+            }
+        });
     }
 
     @Override
@@ -142,6 +157,43 @@ public class MainActivity extends Activity {
         dialogFragment.setTag(mTagEditText.getText().toString());
 
         dialogFragment.show(getFragmentManager(), "tagSettings");
+    }
+
+    private void calculatePasswordHash() {
+        String tag = mTagEditText.getText().toString().trim();
+        EditText masterKeyEditText =
+                (EditText) findViewById(R.id.main_master_key);
+        String masterKey = masterKeyEditText.getText().toString();
+
+        // TODO Show warning if tag or master key are empty
+        if (tag.length() > 0 && masterKey.length() > 0) {
+            /* Calculate the hashed password */
+            ContentValues tagSettings =
+                    TagSettings.getTagSettings(this, mSelectedProfileID, tag);
+            ContentValues profileSettings = ProfileSettings
+                    .getProfileSettings(this, mSelectedProfileID);
+            String privateKey = profileSettings
+                    .getAsString(DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY);
+            int passwordLength = tagSettings
+                    .getAsInteger(DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH);
+            PasswordType passwordType = PasswordType.values()[tagSettings
+                    .getAsInteger(DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE)];
+            String hashedPassword = PasswordHasher
+                    .hashPassword(tag, masterKey, privateKey, passwordLength,
+                            passwordType);
+
+            /* Update the TextView */
+            TextView hashedPasswordTextView =
+                    (TextView) findViewById(R.id.main_hashed_password);
+            hashedPasswordTextView.setText(hashedPassword);
+
+            /* If the tag is not already stored in the database,
+            save the current settings */
+            if (!tagSettings.containsKey(DataOpenHelper.COLUMN_ID)) {
+                TagSettings.insertTagSettings(this, tag, mSelectedProfileID,
+                        passwordLength, passwordType);
+            }
+        }
     }
 
 }
