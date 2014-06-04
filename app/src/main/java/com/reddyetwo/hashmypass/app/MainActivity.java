@@ -160,7 +160,7 @@ public class MainActivity extends Activity {
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup parent) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            return inflater.inflate(android.R.layout.simple_dropdown_item_1line,
+            return inflater.inflate(android.R.layout.simple_spinner_dropdown_item,
                     parent, false);
         }
 
