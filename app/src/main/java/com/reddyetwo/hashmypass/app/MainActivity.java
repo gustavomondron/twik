@@ -13,6 +13,7 @@ import android.database.MergeCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,46 +45,10 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DataOpenHelper helper = new DataOpenHelper(this);
-        SQLiteDatabase db = helper.getWritableDatabase();
-
-        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
-        queryBuilder.setTables(DataOpenHelper.PROFILES_TABLE_NAME);
-        Cursor cursor = queryBuilder.query(db,
-                new String[]{DataOpenHelper.COLUMN_ID,
-                        DataOpenHelper.COLUMN_PROFILES_NAME}, null, null, null,
-                null, null
-        );
-
-        MatrixCursor extras = new MatrixCursor(
-                new String[]{DataOpenHelper.COLUMN_ID,
-                        DataOpenHelper.COLUMN_PROFILES_NAME}
-        );
-        extras.addRow(new String[]{Integer.toString(ID_ADD_PROFILE),
-                getResources().getString(R.string.action_add_profile)});
-        MergeCursor mergeCursor = new MergeCursor(new Cursor[]{cursor, extras});
-
-        ProfileAdapter adapter = new ProfileAdapter(this, mergeCursor, 0);
-
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        actionBar.setListNavigationCallbacks(adapter,
-                new ActionBar.OnNavigationListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(int itemPosition,
-                                                            long itemId) {
-                        mSelectedProfileID = itemId;
-                        if (itemId == ID_ADD_PROFILE) {
-                            Intent intent = new Intent(getBaseContext(),
-                                    AddProfileActivity.class);
-                            startActivity(intent);
-                        }
-
-                        return false;
-                    }
-                }
-        );
+        populateActionBarSpinner();
 
         mTagEditText = (EditText) findViewById(R.id.main_tag);
 
@@ -122,6 +87,12 @@ public class MainActivity extends Activity {
 
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        populateActionBarSpinner();
     }
 
     @Override
@@ -217,4 +188,45 @@ public class MainActivity extends Activity {
         }
     }
 
+    private void populateActionBarSpinner() {
+        DataOpenHelper helper = new DataOpenHelper(this);
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+        queryBuilder.setTables(DataOpenHelper.PROFILES_TABLE_NAME);
+        Cursor cursor = queryBuilder.query(db,
+                new String[]{DataOpenHelper.COLUMN_ID,
+                        DataOpenHelper.COLUMN_PROFILES_NAME}, null, null, null,
+                null, null
+        );
+
+        MatrixCursor extras = new MatrixCursor(
+                new String[]{DataOpenHelper.COLUMN_ID,
+                        DataOpenHelper.COLUMN_PROFILES_NAME}
+        );
+        extras.addRow(new String[]{Integer.toString(ID_ADD_PROFILE),
+                getResources().getString(R.string.action_add_profile)});
+        MergeCursor mergeCursor = new MergeCursor(new Cursor[]{cursor, extras});
+
+        ProfileAdapter adapter = new ProfileAdapter(this, mergeCursor, 0);
+
+        getActionBar().setListNavigationCallbacks(adapter,
+                new ActionBar.OnNavigationListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(int itemPosition,
+                                                            long itemId) {
+                        mSelectedProfileID = itemId;
+                        if (itemId == ID_ADD_PROFILE) {
+                            Intent intent = new Intent(getBaseContext(),
+                                    AddProfileActivity.class);
+                            startActivity(intent);
+                        }
+
+                        return false;
+                    }
+                }
+        );
+
+        db.close();
+    }
 }
