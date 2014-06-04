@@ -15,7 +15,8 @@ public class DataOpenHelper extends SQLiteOpenHelper {
     public static final String PROFILES_TABLE_NAME = "profiles";
     public static final String COLUMN_PROFILES_NAME = "name";
     public static final String COLUMN_PROFILES_PRIVATE_KEY = "private_key";
-    public static final String COLUMN_PROFILES_PASSWORD_LENGTH = "password_length";
+    public static final String COLUMN_PROFILES_PASSWORD_LENGTH =
+            "password_length";
     public static final String COLUMN_PROFILES_PASSWORD_TYPE = "password_type";
     private static final String PROFILES_TABLE_CREATE =
             "CREATE TABLE " + PROFILES_TABLE_NAME + " (" +
@@ -30,6 +31,7 @@ public class DataOpenHelper extends SQLiteOpenHelper {
     public static final String TAGS_TABLE_NAME = "tags";
     public static final String COLUMN_TAGS_NAME = "name";
     public static final String COLUMN_TAGS_PROFILE_ID = "profile_id";
+    public static final String COLUMN_TAGS_SITE = "site";
     public static final String COLUMN_TAGS_PASSWORD_LENGTH = "password_length";
     public static final String COLUMN_TAGS_PASSWORD_TYPE = "password_type";
     private static final String TAGS_TABLE_CREATE =
@@ -37,11 +39,15 @@ public class DataOpenHelper extends SQLiteOpenHelper {
                     COLUMN_ID + " INTEGER PRIMARY KEY, " +
                     COLUMN_TAGS_NAME + " TEXT, " +
                     COLUMN_TAGS_PROFILE_ID + " INTEGER, " +
+                    COLUMN_TAGS_SITE + " TEXT, " +
                     COLUMN_TAGS_PASSWORD_LENGTH + " INTEGER, " +
                     COLUMN_TAGS_PASSWORD_TYPE + " INTEGER, " +
                     "FOREIGN KEY(" + COLUMN_TAGS_PROFILE_ID + ") REFERENCES " +
-                        PROFILES_TABLE_NAME + "(id)" +
-                    "UNIQUE (" + COLUMN_TAGS_NAME + "," + COLUMN_TAGS_PROFILE_ID + ")" +
+                    PROFILES_TABLE_NAME + "(id)" +
+                    "UNIQUE (" + COLUMN_TAGS_NAME + "," +
+                    "" + COLUMN_TAGS_PROFILE_ID + ")," +
+                    "UNIQUE (" + COLUMN_TAGS_PROFILE_ID + "," +
+                    "" + COLUMN_TAGS_SITE + ")" +
                     ");";
 
     public DataOpenHelper(Context context) {

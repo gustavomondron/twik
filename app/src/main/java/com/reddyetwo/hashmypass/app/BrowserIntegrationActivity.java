@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
+import com.reddyetwo.hashmypass.app.data.SiteSettings;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 
@@ -34,6 +36,7 @@ public class BrowserIntegrationActivity extends Activity {
 
     private EditText mTagEditText;
     private Spinner mProfileSpinner;
+    private String mSite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +50,18 @@ public class BrowserIntegrationActivity extends Activity {
             String host = uri.getHost();
 
             Matcher siteExtractor = SITE_PATTERN.matcher(host);
-            if (siteExtractor.matches()) {
-                String site = siteExtractor.group(1);
-                mTagEditText = (EditText) findViewById(R.id.browser_tag);
-                mTagEditText.setText(site);
+            if (!siteExtractor.matches()) {
+                // TODO Show error
+                finish();
             }
+
+            mSite = siteExtractor.group(1);
+        } else {
+            /* We shouldn't be here */
+            finish();
         }
+
+        mTagEditText = (EditText) findViewById(R.id.browser_tag);
 
         /* Populate profile spinner */
         DataOpenHelper helper = new DataOpenHelper(this);
@@ -74,6 +83,19 @@ public class BrowserIntegrationActivity extends Activity {
                 android.R.layout.simple_spinner_dropdown_item);
         mProfileSpinner = (Spinner) findViewById(R.id.browser_profile);
         mProfileSpinner.setAdapter(adapter);
+        mProfileSpinner.setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view,
+                                               int position, long id) {
+                        updateTagText();
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
 
         db.close();
 
@@ -107,6 +129,19 @@ public class BrowserIntegrationActivity extends Activity {
                 finish();
             }
         });
+
+        /* Update the tag according to the site */
+        updateTagText();
+    }
+
+    private void updateTagText() {
+        long profileID = mProfileSpinner.getSelectedItemId();
+        String siteTag = SiteSettings.getSiteTag(this, profileID, mSite);
+        if (siteTag == null) {
+            // There is no previous association, use the site as tag
+            siteTag = mSite;
+        }
+        mTagEditText.setText(siteTag);
     }
 
     private void calculatePasswordHash() {
@@ -150,6 +185,9 @@ public class BrowserIntegrationActivity extends Activity {
                         .insertTagSettings(this, tag, profileID, passwordLength,
                                 passwordType);
             }
+
+            /* Update the site-tag association */
+            SiteSettings.updateSiteTag(this, profileID, mSite, tag);
         }
     }
 
