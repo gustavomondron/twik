@@ -22,6 +22,8 @@
     <string name="copy_to_clipboard">Copy to clipboard</string>
     <string name="cancel">Cancel</string>
     <string name="profile">Profile</string>
+    <string name="copied_to_clipboard">The hashed password has been
+        copied to the clipboard</string>
 
     <string-array name="password_types_array">
         <item>Alphanumeric + Special chars</item>

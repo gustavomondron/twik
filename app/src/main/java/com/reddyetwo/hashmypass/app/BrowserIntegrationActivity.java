@@ -1,6 +1,9 @@
 package com.reddyetwo.hashmypass.app;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,8 +15,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
+import com.reddyetwo.hashmypass.app.data.PasswordType;
+import com.reddyetwo.hashmypass.app.data.ProfileSettings;
+import com.reddyetwo.hashmypass.app.data.TagSettings;
+import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,6 +32,7 @@ public class BrowserIntegrationActivity extends Activity {
             "^.*?([\\w\\d\\-]+)\\.((co|com|net|org|ac)\\.)?\\w+$");
 
     private EditText mTagEditText;
+    private Spinner mProfileSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +71,8 @@ public class BrowserIntegrationActivity extends Activity {
                 new int[]{android.R.id.text1}, 0);
         adapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item);
-        Spinner profileSpinner = (Spinner) findViewById(R.id.browser_profile);
-        profileSpinner.setAdapter(adapter);
+        mProfileSpinner = (Spinner) findViewById(R.id.browser_profile);
+        mProfileSpinner.setAdapter(adapter);
 
         db.close();
 
@@ -75,5 +84,62 @@ public class BrowserIntegrationActivity extends Activity {
                 finish();
             }
         });
+
+        /* Hash button calculated the hashed password,
+        copies it to the clipboard and finishes the dialog activity
+         */
+        Button hashButton = (Button) findViewById(R.id.browser_hash);
+        hashButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calculatePasswordHash();
+                finish();
+            }
+        });
     }
+
+    private void calculatePasswordHash() {
+        String tag = mTagEditText.getText().toString().trim();
+        EditText masterKeyEditText =
+                (EditText) findViewById(R.id.browser_master_key);
+        String masterKey = masterKeyEditText.getText().toString();
+        long profileID = mProfileSpinner.getSelectedItemId();
+
+        // TODO Show warning if tag or master key are empty
+        if (tag.length() > 0 && masterKey.length() > 0) {
+            /* Calculate the hashed password */
+            ContentValues tagSettings =
+                    TagSettings.getTagSettings(this, profileID, tag);
+            ContentValues profileSettings =
+                    ProfileSettings.getProfileSettings(this, profileID);
+            String privateKey = profileSettings
+                    .getAsString(DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY);
+            int passwordLength = tagSettings
+                    .getAsInteger(DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH);
+            PasswordType passwordType = PasswordType.values()[tagSettings
+                    .getAsInteger(DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE)];
+            String hashedPassword = PasswordHasher
+                    .hashPassword(tag, masterKey, privateKey, passwordLength,
+                            passwordType);
+
+            /* Copy the hashed password to the clipboard */
+            ClipboardManager clipboard =
+                    (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            ClipData clip =
+                    ClipData.newPlainText("hashed_password", hashedPassword);
+            clipboard.setPrimaryClip(clip);
+
+            Toast.makeText(this, R.string.copied_to_clipboard,
+                    Toast.LENGTH_LONG).show();
+
+            /* If the tag is not already stored in the database,
+            save the current settings */
+            if (!tagSettings.containsKey(DataOpenHelper.COLUMN_ID)) {
+                TagSettings
+                        .insertTagSettings(this, tag, profileID, passwordLength,
+                                passwordType);
+            }
+        }
+    }
+
 }
