@@ -2,6 +2,8 @@ package com.reddyetwo.hashmypass.app;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +24,7 @@ import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
@@ -35,6 +38,7 @@ public class MainActivity extends Activity {
     private final static int ID_ADD_PROFILE = -1;
     private long mSelectedProfileID;
     private EditText mTagEditText;
+    private TextView mHashedPasswordTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +102,25 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 calculatePasswordHash();
+            }
+        });
+
+        mHashedPasswordTextView =
+                (TextView) findViewById(R.id.main_hashed_password);
+        ImageButton clipboardButton =
+                (ImageButton) findViewById(R.id.main_clipboard);
+        clipboardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboard =
+                        (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("hashed_password",
+                        mHashedPasswordTextView.getText().toString());
+                clipboard.setPrimaryClip(clip);
+
+                Toast.makeText(MainActivity.this, R.string.copied_to_clipboard,
+                        Toast.LENGTH_LONG).show();
+
             }
         });
     }
@@ -183,9 +206,7 @@ public class MainActivity extends Activity {
                             passwordType);
 
             /* Update the TextView */
-            TextView hashedPasswordTextView =
-                    (TextView) findViewById(R.id.main_hashed_password);
-            hashedPasswordTextView.setText(hashedPassword);
+            mHashedPasswordTextView.setText(hashedPassword);
 
             /* If the tag is not already stored in the database,
             save the current settings */
