@@ -2,19 +2,10 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <item name="android:spinnerDropDownItemStyle">@style/DropDownItem</item>
-        <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
     </style>
 
     <style name="DropDownItem"
            parent="android:Widget.Holo.Light.DropDownItem.Spinner">
-        <item name="android:textAppearance">
-            ?android:attr/textAppearanceInverse
-        </item>
-    </style>
-
-    <style name="SpinnerItem"
-           parent="android:Widget.Holo.Light.TextView.SpinnerItem">
         <item name="android:textAppearance">
             ?android:attr/textAppearanceInverse
         </item>

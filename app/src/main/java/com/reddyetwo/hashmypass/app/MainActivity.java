@@ -13,7 +13,6 @@ import android.database.MergeCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -160,8 +159,9 @@ public class MainActivity extends Activity {
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup parent) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            return inflater.inflate(android.R.layout.simple_spinner_dropdown_item,
-                    parent, false);
+            return inflater
+                    .inflate(R.layout.actionbar_simple_spinner_dropdown_item,
+                            parent, false);
         }
 
         @Override
