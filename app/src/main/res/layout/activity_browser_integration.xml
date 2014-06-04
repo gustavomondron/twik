@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"/>
 
         <ImageButton
-            android:id="@+id/main_tag_settings"
+            android:id="@+id/browser_tag_settings"
             android:src="@drawable/ic_action_gear"
             android:contentDescription="@string/tag_settings"
             android:background="@null"

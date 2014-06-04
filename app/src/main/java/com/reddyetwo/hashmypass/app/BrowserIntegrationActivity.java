@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -75,6 +76,16 @@ public class BrowserIntegrationActivity extends Activity {
         mProfileSpinner.setAdapter(adapter);
 
         db.close();
+
+        /* Tag settings button */
+        ImageButton tagSettingsButton =
+                (ImageButton) findViewById(R.id.browser_tag_settings);
+        tagSettingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTagSettingsDialog();
+            }
+        });
 
         /* Cancel button finishes dialog activity */
         Button cancelButton = (Button) findViewById(R.id.browser_cancel);
@@ -142,4 +153,12 @@ public class BrowserIntegrationActivity extends Activity {
         }
     }
 
+    /* Shows a number picker dialog for choosing the password length */
+    private void showTagSettingsDialog() {
+        TagSettingsDialogFragment dialogFragment =
+                new TagSettingsDialogFragment();
+        dialogFragment.setProfileId(mProfileSpinner.getSelectedItemId());
+        dialogFragment.setTag(mTagEditText.getText().toString());
+        dialogFragment.show(getFragmentManager(), "tagSettings");
+    }
 }
