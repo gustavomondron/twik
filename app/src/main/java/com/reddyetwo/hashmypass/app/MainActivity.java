@@ -13,7 +13,6 @@ import android.database.MergeCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +30,7 @@ import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
+import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
 
 
 public class MainActivity extends Activity {
@@ -38,6 +38,7 @@ public class MainActivity extends Activity {
     private final static int ID_ADD_PROFILE = -1;
     private long mSelectedProfileID;
     private EditText mTagEditText;
+    private EditText mMasterKeyEditText;
     private TextView mHashedPasswordTextView;
 
     @Override
@@ -50,7 +51,14 @@ public class MainActivity extends Activity {
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         populateActionBarSpinner();
 
+        final TextView digestTextView =
+                (TextView) findViewById(R.id.main_digest);
+
         mTagEditText = (EditText) findViewById(R.id.main_tag);
+
+        mMasterKeyEditText = (EditText) findViewById(R.id.main_master_key);
+        mMasterKeyEditText
+                .addTextChangedListener(new MasterKeyWatcher(digestTextView));
 
         ImageButton tagSettingsButton =
                 (ImageButton) findViewById(R.id.main_tag_settings);
@@ -155,9 +163,7 @@ public class MainActivity extends Activity {
 
     private void calculatePasswordHash() {
         String tag = mTagEditText.getText().toString().trim();
-        EditText masterKeyEditText =
-                (EditText) findViewById(R.id.main_master_key);
-        String masterKey = masterKeyEditText.getText().toString();
+        String masterKey = mMasterKeyEditText.getText().toString();
 
         // TODO Show warning if tag or master key are empty
         if (tag.length() > 0 && masterKey.length() > 0) {
