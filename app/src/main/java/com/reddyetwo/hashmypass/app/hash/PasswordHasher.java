@@ -5,6 +5,7 @@ import android.util.Base64;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 
 import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,6 +19,11 @@ public class PasswordHasher {
      * Keyed-hash message authentication code (HMAC) used
      */
     private static final String HMAC_SHA1 = "HmacSHA1";
+
+    /**
+     * Message digest used to calculate key digest
+     */
+    private static final String DIGEST_SHA1 = "SHA-1";
 
     /**
      * A pattern that matches numerical digits
@@ -92,6 +98,17 @@ public class PasswordHasher {
         }
 
         return _hashPassword(tag, masterKey, length, passwordType);
+    }
+
+    public static String calculateKeyDigest(String key) {
+        MessageDigest messageDigest = null;
+        try {
+            messageDigest = MessageDigest.getInstance(DIGEST_SHA1);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return Base64.encodeToString(messageDigest.digest(key.getBytes()),
+                Base64.NO_PADDING | Base64.NO_WRAP).substring(0, 2);
     }
 
     /**
