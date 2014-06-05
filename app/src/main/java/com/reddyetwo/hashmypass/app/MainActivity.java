@@ -36,7 +36,7 @@ import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
 public class MainActivity extends Activity {
 
     private final static int ID_ADD_PROFILE = -1;
-    private long mSelectedProfileID;
+    private long mSelectedProfileID = -1;
     private EditText mTagEditText;
     private EditText mMasterKeyEditText;
     private TextView mHashedPasswordTextView;
@@ -100,6 +100,9 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        /* We have to re-populate the spinner because a new profile may have
+        been added or an existing profile may have been edited or deleted.
+         */
         populateActionBarSpinner();
     }
 
@@ -206,16 +209,35 @@ public class MainActivity extends Activity {
                 null, null
         );
 
+        /* We may need to copy the cursor (for restoring the profile selected
+         before pausing the activity).
+         ProfileAdapter uses the cursor during callbacks so it is not safe to
+         use it on our own after setting the navigation list callback */
+        MatrixCursor profilesCursorCopy = new MatrixCursor(
+                new String[]{DataOpenHelper.COLUMN_ID,
+                        DataOpenHelper.COLUMN_PROFILES_NAME}
+        );
+        if (cursor.moveToFirst()) {
+            do {
+                profilesCursorCopy.addRow(new String[]{Long.toString(
+                        cursor.getLong(cursor.getColumnIndex(
+                                DataOpenHelper.COLUMN_ID))), cursor.getString(
+                        cursor.getColumnIndex(
+                                DataOpenHelper.COLUMN_PROFILES_NAME))});
+            } while (cursor.moveToNext());
+            cursor.moveToFirst();
+        }
+
+        /* Include the "Add profile" option in the actionBar spinner */
         MatrixCursor extras = new MatrixCursor(
                 new String[]{DataOpenHelper.COLUMN_ID,
                         DataOpenHelper.COLUMN_PROFILES_NAME}
         );
         extras.addRow(new String[]{Integer.toString(ID_ADD_PROFILE),
                 getResources().getString(R.string.action_add_profile)});
+
         MergeCursor mergeCursor = new MergeCursor(new Cursor[]{cursor, extras});
-
         ProfileAdapter adapter = new ProfileAdapter(this, mergeCursor, 0);
-
         getActionBar().setListNavigationCallbacks(adapter,
                 new ActionBar.OnNavigationListener() {
                     @Override
@@ -233,6 +255,25 @@ public class MainActivity extends Activity {
                 }
         );
 
+        /* If we had previously selected a profile before pausing the
+        activity and it still exists, select it in the spinner. */
+        if (mSelectedProfileID != -1 && profilesCursorCopy.moveToFirst()) {
+            int position = 0;
+            int cursorLength = profilesCursorCopy.getCount();
+            while (position < cursorLength && profilesCursorCopy.getLong(
+                    profilesCursorCopy
+                            .getColumnIndex(DataOpenHelper.COLUMN_ID)) !=
+                    mSelectedProfileID) {
+                position++;
+                profilesCursorCopy.moveToNext();
+            }
+
+            if (position < cursorLength) {
+                getActionBar().setSelectedNavigationItem(position);
+            }
+        }
+
+        profilesCursorCopy.close();
         db.close();
     }
 }
