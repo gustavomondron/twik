@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
@@ -25,6 +26,7 @@ import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.SiteSettings;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
+import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,6 +37,7 @@ public class BrowserIntegrationActivity extends Activity {
             "^.*?([\\w\\d\\-]+)\\.((co|com|net|org|ac)\\.)?\\w+$");
 
     private EditText mTagEditText;
+    private EditText mMasterKeyEditText;
     private Spinner mProfileSpinner;
     private String mSite;
 
@@ -62,6 +65,12 @@ public class BrowserIntegrationActivity extends Activity {
         }
 
         mTagEditText = (EditText) findViewById(R.id.browser_tag);
+
+        TextView digestTextView = (TextView) findViewById(R.id.browser_digest);
+
+        mMasterKeyEditText = (EditText) findViewById(R.id.browser_master_key);
+        mMasterKeyEditText
+                .addTextChangedListener(new MasterKeyWatcher(digestTextView));
 
         /* Populate profile spinner */
         DataOpenHelper helper = new DataOpenHelper(this);
@@ -95,7 +104,8 @@ public class BrowserIntegrationActivity extends Activity {
                     public void onNothingSelected(AdapterView<?> parent) {
 
                     }
-                });
+                }
+        );
 
         db.close();
 
@@ -146,9 +156,7 @@ public class BrowserIntegrationActivity extends Activity {
 
     private void calculatePasswordHash() {
         String tag = mTagEditText.getText().toString().trim();
-        EditText masterKeyEditText =
-                (EditText) findViewById(R.id.browser_master_key);
-        String masterKey = masterKeyEditText.getText().toString();
+        String masterKey = mMasterKeyEditText.getText().toString();
         long profileID = mProfileSpinner.getSelectedItemId();
 
         // TODO Show warning if tag or master key are empty
