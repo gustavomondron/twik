@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class ProfileSettings {
 
@@ -96,6 +97,25 @@ public class ProfileSettings {
         db.update(DataOpenHelper.PROFILES_TABLE_NAME, values,
                 DataOpenHelper.COLUMN_ID + " = ?",
                 new String[]{Long.toString(profileID)});
+    }
+
+    public static int getProfileIDPositionInCursor(long profileID, Cursor c) {
+        int position = -1;
+        if (profileID != -1 && c.moveToFirst()) {
+            position = 0;
+            int cursorLength = c.getCount();
+            while (position < cursorLength &&
+                    c.getLong(c.getColumnIndex(DataOpenHelper.COLUMN_ID)) !=
+                            profileID) {
+                position++;
+                c.moveToNext();
+            }
+            if (position == cursorLength) {
+                /* Profile not found */
+                position = -1;
+            }
+        }
+        return position;
     }
 
 }

@@ -220,10 +220,11 @@ public class MainActivity extends Activity {
         if (cursor.moveToFirst()) {
             do {
                 profilesCursorCopy.addRow(new String[]{Long.toString(
-                        cursor.getLong(cursor.getColumnIndex(
-                                DataOpenHelper.COLUMN_ID))), cursor.getString(
-                        cursor.getColumnIndex(
-                                DataOpenHelper.COLUMN_PROFILES_NAME))});
+                        cursor.getLong(
+                                cursor.getColumnIndex(DataOpenHelper.COLUMN_ID))
+                ), cursor.getString(cursor.getColumnIndex(
+                                DataOpenHelper.COLUMN_PROFILES_NAME)
+                )});
             } while (cursor.moveToNext());
             cursor.moveToFirst();
         }
@@ -257,20 +258,11 @@ public class MainActivity extends Activity {
 
         /* If we had previously selected a profile before pausing the
         activity and it still exists, select it in the spinner. */
-        if (mSelectedProfileID != -1 && profilesCursorCopy.moveToFirst()) {
-            int position = 0;
-            int cursorLength = profilesCursorCopy.getCount();
-            while (position < cursorLength && profilesCursorCopy.getLong(
-                    profilesCursorCopy
-                            .getColumnIndex(DataOpenHelper.COLUMN_ID)) !=
-                    mSelectedProfileID) {
-                position++;
-                profilesCursorCopy.moveToNext();
-            }
-
-            if (position < cursorLength) {
-                getActionBar().setSelectedNavigationItem(position);
-            }
+        int profilePosition = ProfileSettings
+                .getProfileIDPositionInCursor(mSelectedProfileID,
+                        profilesCursorCopy);
+        if (profilePosition != -1) {
+            getActionBar().setSelectedNavigationItem(profilePosition);
         }
 
         profilesCursorCopy.close();
