@@ -7,6 +7,7 @@ import android.content.ClipboardManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.MergeCursor;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 
 import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
+import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
@@ -49,6 +51,13 @@ public class MainActivity extends Activity {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+
+        /* Select the last profile used */
+        SharedPreferences preferences =
+                getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
+        mSelectedProfileID =
+                preferences.getLong(Preferences.PREFS_KEY_LAST_PROFILE, -1);
+
         populateActionBarSpinner();
 
         final TextView digestTextView =
@@ -74,6 +83,15 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 calculatePasswordHash();
+
+                /* Update last used profile preference */
+                SharedPreferences preferences =
+                        getSharedPreferences(Preferences.PREFS_NAME,
+                                MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putLong(Preferences.PREFS_KEY_LAST_PROFILE,
+                        mSelectedProfileID);
+                editor.commit();
             }
         });
 

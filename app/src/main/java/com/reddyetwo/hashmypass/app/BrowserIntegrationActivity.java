@@ -5,6 +5,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
+import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.SiteSettings;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
@@ -84,6 +86,15 @@ public class BrowserIntegrationActivity extends Activity {
                 null, null
         );
 
+        /* Get the last used profile ID and its position in the cursor */
+        SharedPreferences preferences =
+                getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
+        long lastProfileID =
+                preferences.getLong(Preferences.PREFS_KEY_LAST_PROFILE, -1);
+        int profilePosition = ProfileSettings
+                .getProfileIDPositionInCursor(lastProfileID, cursor);
+        cursor.moveToFirst(); /* Rewind cursor */
+
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
                 android.R.layout.simple_spinner_item, cursor,
                 new String[]{DataOpenHelper.COLUMN_PROFILES_NAME},
@@ -92,6 +103,13 @@ public class BrowserIntegrationActivity extends Activity {
                 android.R.layout.simple_spinner_dropdown_item);
         mProfileSpinner = (Spinner) findViewById(R.id.browser_profile);
         mProfileSpinner.setAdapter(adapter);
+        mProfileSpinner.setSelection(profilePosition);
+
+        /* Select the last used profile */
+        if (profilePosition != -1) {
+            mProfileSpinner.setSelection(profilePosition);
+        }
+
         mProfileSpinner.setOnItemSelectedListener(
                 new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -136,6 +154,16 @@ public class BrowserIntegrationActivity extends Activity {
             @Override
             public void onClick(View v) {
                 calculatePasswordHash();
+
+                /* Update last used profile preference */
+                SharedPreferences preferences =
+                        getSharedPreferences(Preferences.PREFS_NAME,
+                                MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putLong(Preferences.PREFS_KEY_LAST_PROFILE,
+                        mProfileSpinner.getSelectedItemId());
+                editor.commit();
+                /* Close the dialog activity */
                 finish();
             }
         });
