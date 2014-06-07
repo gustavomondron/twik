@@ -143,6 +143,7 @@ public class MainActivity extends Activity {
         Typeface tf = Typeface.createFromAsset(getAssets(), FONT_MONOSPACE);
         mHashedPasswordTextView.setTypeface(tf);
         mHashedPasswordOldTextView.setTypeface(tf);
+        digestTextView.setTypeface(tf);
     }
 
     @Override
