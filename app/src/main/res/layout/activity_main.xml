@@ -79,8 +79,16 @@
         android:gravity="center"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/master_key_layout"
-        android:visibility="invisible"/>
+        android:layout_below="@+id/master_key_layout"/>
+
+    <TextView
+        android:id="@+id/main_hashed_password_old"
+        android:textSize="@dimen/hashed_password_text_size"
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/master_key_layout"/>
 
     <LinearLayout
         android:id="@+id/button_bar_layout"

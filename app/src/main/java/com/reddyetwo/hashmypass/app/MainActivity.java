@@ -51,6 +51,7 @@ public class MainActivity extends Activity {
     private AutoCompleteTextView mTagEditText;
     private EditText mMasterKeyEditText;
     private TextView mHashedPasswordTextView;
+    private TextView mHashedPasswordOldTextView;
     private Button mHashButton;
 
     public final HashButtonEnableTextWatcher hashButtonEnableTextWatcher =
@@ -133,6 +134,9 @@ public class MainActivity extends Activity {
                         R.string.copied_to_clipboard);
             }
         });
+
+        mHashedPasswordOldTextView =
+                (TextView) findViewById(R.id.main_hashed_password_old);
     }
 
     @Override
@@ -186,13 +190,11 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            Intent intent =
-                    new Intent(this, SettingsActivity.class);
+            Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
             return true;
         } else if (id == R.id.action_edit_profile) {
-            Intent intent =
-                    new Intent(this, EditProfileActivity.class);
+            Intent intent = new Intent(this, EditProfileActivity.class);
             intent.putExtra(EditProfileActivity.EXTRA_PROFILE_ID,
                     mSelectedProfileID);
             startActivity(intent);
@@ -254,15 +256,49 @@ public class MainActivity extends Activity {
                     .hashPassword(tag, masterKey, privateKey, passwordLength,
                             passwordType);
 
+            String hashedPasswordOld =
+                    mHashedPasswordTextView.getText().toString();
+
             /* Update the TextView */
             mHashedPasswordTextView.setText(hashedPassword);
 
-            // Make sure the hashed password is visible
-            if (mHashedPasswordTextView.getVisibility() != View.VISIBLE) {
-                mHashedPasswordTextView.setVisibility(View.VISIBLE);
-                Animation animation = AnimationUtils
-                        .loadAnimation(this, R.anim.hashed_password);
-                mHashedPasswordTextView.startAnimation(animation);
+            // Animate password text views if different
+            if (!hashedPassword.equals(hashedPasswordOld)) {
+                // Load "password in" animation
+                Animation animationIn = AnimationUtils
+                        .loadAnimation(this, R.anim.hashed_password_in);
+
+                // Load "password out" animation for backup view
+                Animation animationOut = AnimationUtils
+                        .loadAnimation(this, R.anim.hashed_password_out);
+                animationOut.setAnimationListener(
+                        new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                // Hide backup view once animation ends
+                                mHashedPasswordOldTextView
+                                        .setVisibility(View.INVISIBLE);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        }
+                );
+
+                // Update backup view and make visible
+                mHashedPasswordOldTextView.setText(hashedPasswordOld);
+                mHashedPasswordOldTextView.setVisibility(View.VISIBLE);
+
+                // Animate
+                mHashedPasswordTextView.startAnimation(animationIn);
+                mHashedPasswordOldTextView.startAnimation(animationOut);
             }
 
             /* If the tag is not already stored in the database,
