@@ -1,15 +1,11 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:paddingLeft="@dimen/activity_horizontal_margin"
-              android:paddingRight="@dimen/activity_horizontal_margin"
-              android:paddingTop="@dimen/activity_vertical_margin"
-              android:paddingBottom="@dimen/activity_vertical_margin"
-              android:orientation="vertical"
-              tools:context=".MainActivity">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                tools:context=".MainActivity">
 
     <LinearLayout
+        android:id="@+id/tag_layout"
         android:layout_marginTop="100dp"
         android:gravity="center"
         android:orientation="horizontal"
@@ -42,11 +38,13 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/master_key_layout"
         android:layout_marginTop="25dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tag_layout">
 
         <ImageView
             android:src="@drawable/ic_action_key"
@@ -71,28 +69,22 @@
             android:layout_height="48dp"/>
     </LinearLayout>
 
-    <Button
-        android:layout_marginTop="25dp"
-        android:id="@+id/main_hash"
-        android:text="@string/hash"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"/>
-
     <RelativeLayout
+        android:id="@+id/hashed_password_layout"
         android:layout_marginTop="50dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/master_key_layout">
 
-    <TextView
-        android:gravity="left"
-        android:id="@+id/main_hashed_password"
-        android:text="hashed_password"
-        android:textSize="20sp"
-        android:layout_width="275dp"
-        android:layout_height="wrap_content"/>
+        <TextView
+            android:gravity="left"
+            android:id="@+id/main_hashed_password"
+            android:text="hashed_password"
+            android:textSize="20sp"
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"/>
 
         <ImageButton
             android:id="@+id/main_clipboard"
@@ -104,5 +96,29 @@
             style="?android:borderlessButtonStyle"/>
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/button_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        style="?android:buttonBarStyle"
+        android:divider="?android:dividerHorizontal"
+        android:showDividers="middle">
 
-</LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+
+        <Button
+            android:id="@+id/main_hash"
+            android:text="@string/hash"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="?android:buttonBarButtonStyle"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>
