@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="password_types_array">
+        <item>Alphanumeric + Special chars</item>
+        <item>Alphanumeric</item>
+        <item>Numeric</item>
+    </string-array>
+
+</resources>

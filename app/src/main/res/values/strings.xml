@@ -25,10 +25,4 @@
     <string name="copied_to_clipboard">The hashed password has been
         copied to the clipboard</string>
 
-    <string-array name="password_types_array">
-        <item>Alphanumeric + Special chars</item>
-        <item>Alphanumeric</item>
-        <item>Numeric</item>
-    </string-array>
-
 </resources>
