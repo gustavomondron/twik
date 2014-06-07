@@ -1,7 +1,8 @@
 package com.reddyetwo.hashmypass.app;
 
 import android.app.Activity;
-import android.content.ContentValues;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ public class EditProfileActivity extends Activity {
     private Button mSaveButton;
     private ArrayAdapter<String> mPasswordLengthAdapter;
     private long mProfileID;
+    private String mOriginalName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +66,9 @@ public class EditProfileActivity extends Activity {
         mSaveButton = (Button) findViewById(R.id.edit_profile_save);
 
         /* Populate text fields */
-        mNameEditText.setText(cursor.getString(
-                cursor.getColumnIndex(DataOpenHelper.COLUMN_PROFILES_NAME)));
+        mOriginalName = cursor.getString(
+                cursor.getColumnIndex(DataOpenHelper.COLUMN_PROFILES_NAME));
+        mNameEditText.setText(mOriginalName);
 
         mPrivateKeyEditText.setText(cursor.getString(cursor.getColumnIndex(
                 DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY)));
@@ -142,13 +145,27 @@ public class EditProfileActivity extends Activity {
             NavUtils.navigateUpFromSameTask(this);
             return true;
         } else if (id == R.id.action_delete) {
-            DataOpenHelper helper = new DataOpenHelper(EditProfileActivity
-                    .this);
-            SQLiteDatabase db = helper.getWritableDatabase();
-            db.delete(DataOpenHelper.PROFILES_TABLE_NAME, "_id=" + mProfileID,
-                    null);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(getString(R.string.confirm_delete, mOriginalName));
+            builder.setPositiveButton(R.string.action_delete,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            DataOpenHelper helper =
+                                    new DataOpenHelper(EditProfileActivity
+                                            .this);
+                            SQLiteDatabase db = helper.getWritableDatabase();
+                            db.delete(DataOpenHelper.PROFILES_TABLE_NAME,
+                                    "_id=" + mProfileID, null);
             /* TODO Check delete return value */
-            NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
+                            NavUtils.navigateUpFromSameTask(
+                                    EditProfileActivity.this);
+                        }
+                    }
+            );
+            builder.setNegativeButton(android.R.string.cancel, null);
+            builder.create().show();
+
             return true;
         }
         return super.onOptionsItemSelected(item);

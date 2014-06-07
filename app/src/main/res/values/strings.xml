@@ -7,6 +7,7 @@
     <string name="action_add_profile">Add profile</string>
     <string name="action_edit_profile">Edit profile</string>
     <string name="action_delete">Delete</string>
+    <string name="confirm_delete">Delete \"%s\" profile?</string>
     <string name="discard">Discard</string>
     <string name="ok">Ok</string>
     <string name="password_length">Password length</string>
@@ -22,8 +23,7 @@
     <string name="copy_to_clipboard">Copy to clipboard</string>
     <string name="cancel">Cancel</string>
     <string name="profile">Profile</string>
-    <string name="copied_to_clipboard">The hashed password has been
-        copied to the clipboard</string>
+    <string name="copied_to_clipboard">Hashed password copied to clipboard</string>
     <string name="settings_title_remember_master_key">Remember master
         key</string>
     <string name="settings_summary_remember_master_key_never">
