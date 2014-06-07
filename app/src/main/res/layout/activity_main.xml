@@ -66,16 +66,18 @@
 
         <TextView
             android:id="@+id/main_digest"
-            android:gravity="left|center_vertical"
-            android:paddingLeft="10dp"
-            android:layout_width="38dp"
-            android:layout_height="48dp"/>
+            android:gravity="center"
+            android:text="a4"
+            android:paddingLeft="4dip"
+            android:paddingRight="4dip"
+            android:layout_width="48dip"
+            android:layout_height="48dip"
+            style="@android:style/TextAppearance.Medium" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/main_hashed_password"
         android:textSize="@dimen/hashed_password_text_size"
-        android:typeface="monospace"
         android:layout_marginTop="50dp"
         android:gravity="center"
         android:layout_width="fill_parent"
@@ -85,7 +87,6 @@
     <TextView
         android:id="@+id/main_hashed_password_old"
         android:textSize="@dimen/hashed_password_text_size"
-        android:typeface="monospace"
         android:layout_marginTop="50dp"
         android:gravity="center"
         android:layout_width="fill_parent"
