@@ -26,7 +26,6 @@ import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
@@ -50,7 +49,6 @@ public class MainActivity extends Activity {
     private AutoCompleteTextView mTagEditText;
     private EditText mMasterKeyEditText;
     private TextView mHashedPasswordTextView;
-    private View mHashedPasswordLayout;
     private Button mHashButton;
 
     public final HashButtonEnableTextWatcher hashButtonEnableTextWatcher =
@@ -133,8 +131,6 @@ public class MainActivity extends Activity {
                         R.string.copied_to_clipboard);
             }
         });
-
-        mHashedPasswordLayout = findViewById(R.id.hashed_password_layout);
     }
 
     @Override
@@ -259,8 +255,8 @@ public class MainActivity extends Activity {
             /* Update the TextView */
             mHashedPasswordTextView.setText(hashedPassword);
 
-            // Make sure the whole hashed password view is visible
-            mHashedPasswordLayout.setVisibility(View.VISIBLE);
+            // Make sure the hashed password is visible
+            mHashedPasswordTextView.setVisibility(View.VISIBLE);
 
             /* If the tag is not already stored in the database,
             save the current settings and update tag autocomplete data */

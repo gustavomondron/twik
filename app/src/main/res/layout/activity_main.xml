@@ -73,32 +73,15 @@
             android:layout_height="48dp"/>
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/hashed_password_layout"
+    <TextView
+        android:id="@+id/main_hashed_password"
+        android:textSize="@dimen/hashed_password_text_size"
         android:layout_marginTop="50dp"
         android:gravity="center"
-        android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/master_key_layout"
-        android:visibility="invisible">
-
-        <TextView
-            android:gravity="left"
-            android:id="@+id/main_hashed_password"
-            android:textSize="@dimen/hashed_password_text_size"
-            android:layout_width="275dp"
-            android:layout_height="wrap_content"/>
-
-        <ImageButton
-            android:id="@+id/main_clipboard"
-            android:src="@drawable/ic_action_copy"
-            android:contentDescription="@string/copy_to_clipboard"
-            android:layout_toRightOf="@id/main_hashed_password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="?android:borderlessButtonStyle"/>
-    </RelativeLayout>
+        android:visibility="invisible"/>
 
     <LinearLayout
         android:id="@+id/button_bar_layout"
