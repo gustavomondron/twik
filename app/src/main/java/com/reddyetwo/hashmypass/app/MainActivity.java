@@ -144,7 +144,14 @@ public class MainActivity extends Activity {
         super.onResume();
 
         MasterKeyAlarmManager.cancelAlarm(this);
-        mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey());
+        String cachedMasterKey = HashMyPassApplication.getCachedMasterKey();
+        if (cachedMasterKey != null) {
+            mMasterKeyEditText.setText(cachedMasterKey);
+            /* If we have removed the master key, remove also the hashed key */
+            if (cachedMasterKey.length() == 0) {
+                mHashedPasswordTextView.setText("");
+            }
+        }
         HashMyPassApplication.setCachedMasterKey("");
 
         /* We have to re-populate the spinner because a new profile may have
