@@ -19,6 +19,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -256,7 +258,12 @@ public class MainActivity extends Activity {
             mHashedPasswordTextView.setText(hashedPassword);
 
             // Make sure the hashed password is visible
-            mHashedPasswordTextView.setVisibility(View.VISIBLE);
+            if (mHashedPasswordTextView.getVisibility() != View.VISIBLE) {
+                mHashedPasswordTextView.setVisibility(View.VISIBLE);
+                Animation animation = AnimationUtils
+                        .loadAnimation(this, R.anim.hashed_password);
+                mHashedPasswordTextView.startAnimation(animation);
+            }
 
             /* If the tag is not already stored in the database,
             save the current settings and update tag autocomplete data */
