@@ -38,6 +38,13 @@ public class SettingsFragment extends PreferenceFragment
         updateCopyToClipboardSummary();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        getPreferenceManager().getSharedPreferences()
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
     private void updateRememberMasterKeySummary() {
         int masterKeyMins = Preferences.getRememberMasterKeyMins(getActivity());
         if (masterKeyMins == 0) {
