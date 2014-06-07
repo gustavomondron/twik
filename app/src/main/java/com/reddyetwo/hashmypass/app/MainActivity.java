@@ -11,6 +11,7 @@ import android.database.MatrixCursor;
 import android.database.MergeCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -46,6 +47,7 @@ import java.util.List;
 
 public class MainActivity extends Activity {
 
+    private static final String FONT_MONOSPACE = "UbuntuMono-Regular.ttf";
     private static final int ID_ADD_PROFILE = -1;
     private long mSelectedProfileID = -1;
     private AutoCompleteTextView mTagEditText;
@@ -137,6 +139,10 @@ public class MainActivity extends Activity {
 
         mHashedPasswordOldTextView =
                 (TextView) findViewById(R.id.main_hashed_password_old);
+
+        Typeface tf = Typeface.createFromAsset(getAssets(), FONT_MONOSPACE);
+        mHashedPasswordTextView.setTypeface(tf);
+        mHashedPasswordOldTextView.setTypeface(tf);
     }
 
     @Override

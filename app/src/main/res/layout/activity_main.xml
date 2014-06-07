@@ -75,6 +75,7 @@
     <TextView
         android:id="@+id/main_hashed_password"
         android:textSize="@dimen/hashed_password_text_size"
+        android:typeface="monospace"
         android:layout_marginTop="50dp"
         android:gravity="center"
         android:layout_width="fill_parent"
@@ -84,6 +85,7 @@
     <TextView
         android:id="@+id/main_hashed_password_old"
         android:textSize="@dimen/hashed_password_text_size"
+        android:typeface="monospace"
         android:layout_marginTop="50dp"
         android:gravity="center"
         android:layout_width="fill_parent"
