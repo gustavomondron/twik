@@ -4,34 +4,38 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:paddingLeft="@dimen/activity_horizontal_margin"
-              android:paddingRight="@dimen/activity_horizontal_margin">
+              android:padding="@dimen/dialog_padding">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
         android:text="@string/password_length"
         android:textAllCaps="true"
-        android:textColor="@color/text_grey"/>
+        android:textColor="@color/text_grey"
+        android:layout_marginBottom="@dimen/small_spacing"/>
 
     <Spinner
         android:id="@+id/tag_settings_password_length"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/small_spacing"
+        android:layout_marginBottom="@dimen/small_spacing"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
         android:text="@string/password_type"
         android:textAllCaps="true"
-        android:textColor="@color/text_grey"/>
+        android:textColor="@color/text_grey"
+        android:layout_marginTop="@dimen/section_margin_top"
+        android:layout_marginBottom="@dimen/small_spacing"/>
 
     <Spinner
         android:id="@+id/tag_settings_password_type"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:spinnerMode="dropdown"/>
+        android:spinnerMode="dropdown"
+        android:layout_marginTop="@dimen/small_spacing"
+        android:layout_marginBottom="@dimen/small_spacing"/>
 
 </LinearLayout>
