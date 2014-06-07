@@ -1,11 +1,9 @@
 package com.reddyetwo.hashmypass.app;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.reddyetwo.hashmypass.app.data.Preferences;
@@ -15,17 +13,19 @@ public class SettingsFragment extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Preference mRememberMasterKeyPreference;
+    private Preference mCopyToClipboardPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getPreferenceManager().setSharedPreferencesName(Preferences
-                .PREFS_NAME);
+        getPreferenceManager().setSharedPreferencesName(Preferences.PREFS_NAME);
 
         addPreferencesFromResource(R.xml.settings);
 
         mRememberMasterKeyPreference = (Preference) findPreference(
                 getString(R.string.settings_key_remember_master_key));
+        mCopyToClipboardPreference = (Preference) findPreference(
+                getString(R.string.settings_key_copy_to_clipboard));
     }
 
     @Override
@@ -35,6 +35,7 @@ public class SettingsFragment extends PreferenceFragment
         getPreferenceManager().getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
         updateRememberMasterKeySummary();
+        updateCopyToClipboardSummary();
     }
 
     private void updateRememberMasterKeySummary() {
@@ -53,6 +54,17 @@ public class SettingsFragment extends PreferenceFragment
         }
     }
 
+    private void updateCopyToClipboardSummary() {
+        boolean copyToClipboard = Preferences.getCopyToClipboard(getActivity());
+        if (copyToClipboard) {
+            setSummary(mCopyToClipboardPreference,
+                    R.string.settings_summary_copy_to_clipboard_enabled);
+        } else {
+            setSummary(mCopyToClipboardPreference,
+                    R.string.settings_summary_copy_to_clipboard_disabled);
+        }
+    }
+
     private void setSummary(Preference preference, int summaryId,
                             Object... args) {
         preference.setSummary(getString(summaryId, args));
@@ -63,6 +75,9 @@ public class SettingsFragment extends PreferenceFragment
                                           String key) {
         if (key.equals(getString(R.string.settings_key_remember_master_key))) {
             updateRememberMasterKeySummary();
+        } else if (key
+                .equals(getString(R.string.settings_key_copy_to_clipboard))) {
+            updateCopyToClipboardSummary();
         }
     }
 }

@@ -3,4 +3,7 @@
     <item name="settings_key_remember_master_key" format="string"
           type="string">remember_master_key
     </item>
+    <item name="settings_key_copy_to_clipboard" format="string" type="string"
+        >copy_to_clipboard
+    </item>
 </resources>

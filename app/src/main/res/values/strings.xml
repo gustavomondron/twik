@@ -24,7 +24,8 @@
     <string name="profile">Profile</string>
     <string name="copied_to_clipboard">The hashed password has been
         copied to the clipboard</string>
-    <string name="remember_master_key">Remember master key</string>
+    <string name="settings_title_remember_master_key">Remember master
+        key</string>
     <string name="settings_summary_remember_master_key_never">
         Master key will not be remembered when you leave the app
     </string>
@@ -34,6 +35,12 @@
     <string name="settings_summary_remember_master_key_hours">
         Master key will be remembered for %d hours after you leave the app
     </string>
+    <string name="settings_title_copy_to_clipboard">Copy password to
+        clipboard</string>
+    <string name="settings_summary_copy_to_clipboard_enabled">The
+        hashed password is automatically copied to the clipboard</string>
+    <string name="settings_summary_copy_to_clipboard_disabled">The
+        hashed password is not automatically copied to the clipboard</string>
     <string name="title_activity_settings">Settings</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

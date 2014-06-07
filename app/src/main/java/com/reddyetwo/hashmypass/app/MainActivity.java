@@ -2,8 +2,6 @@ package com.reddyetwo.hashmypass.app;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -36,8 +34,9 @@ import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
-import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
+import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
 import com.reddyetwo.hashmypass.app.util.HelpToastOnLongPressClickListener;
+import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
 
 import java.util.ArrayList;
@@ -111,32 +110,32 @@ public class MainActivity extends Activity {
                 editor.putLong(Preferences.PREFS_KEY_LAST_PROFILE,
                         mSelectedProfileID);
                 editor.commit();
+
+                /* Automatically copy password to clipboard if the preference
+                 is selected
+                  */
+                if (Preferences.getCopyToClipboard(getApplicationContext())) {
+                    ClipboardHelper.copyToClipboard(getApplicationContext(),
+                            ClipboardHelper.CLIPBOARD_LABEL_PASSWORD,
+                            mHashedPasswordTextView.getText().toString(),
+                            R.string.copied_to_clipboard);
+                }
             }
         });
 
         mHashedPasswordTextView =
                 (TextView) findViewById(R.id.main_hashed_password);
-        ImageButton clipboardButton =
-                (ImageButton) findViewById(R.id.main_clipboard);
-        clipboardButton.setOnClickListener(new View.OnClickListener() {
+        mHashedPasswordTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ClipboardManager clipboard =
-                        (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("hashed_password",
-                        mHashedPasswordTextView.getText().toString());
-                clipboard.setPrimaryClip(clip);
-
-                Toast.makeText(MainActivity.this, R.string.copied_to_clipboard,
-                        Toast.LENGTH_LONG).show();
-
+                ClipboardHelper.copyToClipboard(getApplicationContext(),
+                        ClipboardHelper.CLIPBOARD_LABEL_PASSWORD,
+                        mHashedPasswordTextView.getText().toString(),
+                        R.string.copied_to_clipboard);
             }
         });
 
         mHashedPasswordLayout = findViewById(R.id.hashed_password_layout);
-
-        clipboardButton.setOnLongClickListener(
-                new HelpToastOnLongPressClickListener());
     }
 
     @Override

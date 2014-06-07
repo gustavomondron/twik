@@ -28,6 +28,7 @@ import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.SiteSettings;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
+import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
 import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
 
@@ -221,14 +222,9 @@ public class BrowserIntegrationActivity extends Activity {
                             passwordType);
 
             /* Copy the hashed password to the clipboard */
-            ClipboardManager clipboard =
-                    (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-            ClipData clip =
-                    ClipData.newPlainText("hashed_password", hashedPassword);
-            clipboard.setPrimaryClip(clip);
-
-            Toast.makeText(this, R.string.copied_to_clipboard,
-                    Toast.LENGTH_LONG).show();
+            ClipboardHelper.copyToClipboard(getApplicationContext(),
+                    ClipboardHelper.CLIPBOARD_LABEL_PASSWORD, hashedPassword,
+                    R.string.copied_to_clipboard);
 
             /* If the tag is not already stored in the database,
             save the current settings */
