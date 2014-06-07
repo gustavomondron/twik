@@ -27,7 +27,8 @@
             android:maxLength="25"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:completionThreshold="2"/>
+            android:completionThreshold="2"
+            android:hint="@string/tag"/>
 
         <ImageButton
             android:id="@+id/main_tag_settings"
@@ -56,11 +57,13 @@
         <EditText
             android:id="@+id/main_master_key"
             android:inputType="textPassword"
+            android:fontFamily="sans-serif"
             android:singleLine="true"
             android:maxLines="1"
             android:maxLength="25"
             android:layout_width="250dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:hint="@string/master_key"/>
 
         <TextView
             android:id="@+id/main_digest"
