@@ -36,9 +36,9 @@
             android:id="@+id/main_tag_settings"
             android:src="@drawable/ic_action_gear"
             android:contentDescription="@string/tag_settings"
-            android:background="@null"
             android:layout_width="48dp"
-            android:layout_height="48dp"/>
+            android:layout_height="48dp"
+            style="?android:borderlessButtonStyle"/>
     </LinearLayout>
 
     <LinearLayout
@@ -98,10 +98,10 @@
             android:id="@+id/main_clipboard"
             android:src="@drawable/ic_action_copy"
             android:contentDescription="@string/copy_to_clipboard"
-            android:background="@null"
             android:layout_toRightOf="@id/main_hashed_password"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            style="?android:borderlessButtonStyle"/>
     </RelativeLayout>
 
 
