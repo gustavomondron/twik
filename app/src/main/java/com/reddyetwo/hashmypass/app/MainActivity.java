@@ -34,17 +34,18 @@ import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
+import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class MainActivity extends Activity {
 
-    private final static int ID_ADD_PROFILE = -1;
+    private static final int ID_ADD_PROFILE = -1;
     private long mSelectedProfileID = -1;
+    private boolean mStartingAppActivity = false;
     private AutoCompleteTextView mTagEditText;
     private EditText mMasterKeyEditText;
     private TextView mHashedPasswordTextView;
@@ -124,11 +125,40 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        mStartingAppActivity = false; /* Restore value to false */
+
+        /* Cancel the alarm and restore the cached master key */
+        MasterKeyAlarmManager.cancelAlarm(this);
+        mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey());
+
         /* We have to re-populate the spinner because a new profile may have
         been added or an existing profile may have been edited or deleted.
          */
         populateActionBarSpinner();
         populateTagAutocompleteTextView();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        /* If we are not starting an activity of this app, we have to:
+        (a) Remove text from master key edit text in the case that "Remember
+        master key" preference is set to never
+        (b) Store the master key in the application class and set an alarm
+         to remove it when the alarm is triggered.
+         */
+        if (!mStartingAppActivity) {
+            int masterKeyMins = Preferences.getRememberMasterKeyMins(this);
+            if (masterKeyMins == 0) {
+                mMasterKeyEditText.setText("");
+            } else {
+                HashMyPassApplication.setCachedMasterKey(
+                        mMasterKeyEditText.getText().toString());
+                MasterKeyAlarmManager.setAlarm(this, masterKeyMins);
+            }
+        }
     }
 
     @Override
@@ -145,11 +175,13 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            mStartingAppActivity = true;
             Intent intent =
                     new Intent(getBaseContext(), SettingsActivity.class);
             startActivity(intent);
             return true;
         } else if (id == R.id.action_edit_profile) {
+            mStartingAppActivity = true;
             Intent intent =
                     new Intent(getBaseContext(), EditProfileActivity.class);
             intent.putExtra(EditProfileActivity.EXTRA_PROFILE_ID,
@@ -277,6 +309,7 @@ public class MainActivity extends Activity {
                                                             long itemId) {
                         mSelectedProfileID = itemId;
                         if (itemId == ID_ADD_PROFILE) {
+                            mStartingAppActivity = true;
                             Intent intent = new Intent(getBaseContext(),
                                     AddProfileActivity.class);
                             startActivity(intent);

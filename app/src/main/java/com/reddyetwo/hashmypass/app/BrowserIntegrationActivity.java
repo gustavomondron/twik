@@ -28,6 +28,7 @@ import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.SiteSettings;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
+import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
 
 import java.util.regex.Matcher;
@@ -170,6 +171,21 @@ public class BrowserIntegrationActivity extends Activity {
 
         /* Update the tag according to the site */
         updateTagText();
+
+        /* Cancel the alarm and restore the cached master key */
+        MasterKeyAlarmManager.cancelAlarm(this);
+        mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey());
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        int masterKeyMins = Preferences.getRememberMasterKeyMins(this);
+        if (masterKeyMins > 0) {
+            HashMyPassApplication.setCachedMasterKey(
+                    mMasterKeyEditText.getText().toString());
+            MasterKeyAlarmManager.setAlarm(this, masterKeyMins);
+        }
     }
 
     private void updateTagText() {
