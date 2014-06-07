@@ -90,4 +90,23 @@ public class TagSettings {
                 new String[]{Long.toString(tagId)});
     }
 
+    /**
+     * Returns a cursor with the tag names and ids stored for the given profile.
+     *
+     * @param context used to open or create the database
+     * @param profileId the profile ID associated with the tags to retrieve
+     * @return a cursor with tag names and ids
+     */
+    public static Cursor getTagsForProfile(Context context, long profileId) {
+        DataOpenHelper helper = new DataOpenHelper(context);
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        return db.query(DataOpenHelper.TAGS_TABLE_NAME,
+                new String[]{DataOpenHelper.COLUMN_ID,
+                        DataOpenHelper.COLUMN_TAGS_NAME},
+                DataOpenHelper.COLUMN_TAGS_PROFILE_ID + "= ?",
+                new String[]{Long.toString(profileId)}, null, null, null
+        );
+    }
+
 }
