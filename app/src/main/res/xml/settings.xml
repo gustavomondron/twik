@@ -7,5 +7,5 @@
         android:title="@string/remember_master_key"
         android:entries="@array/RememberMasterKeyEntries"
         android:entryValues="@array/RememberMasterKeyEntryValues"
-        android:defaultValue="@string/settings_default_remember_master_key" />
+        android:defaultValue="@string/settings_default_remember_master_key"/>
 </PreferenceScreen>
