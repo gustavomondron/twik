@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:key="@string/settings_key_remember_master_key"
+        android:title="@string/remember_master_key"
+        android:entries="@array/RememberMasterKeyEntries"
+        android:entryValues="@array/RememberMasterKeyEntryValues"
+        android:defaultValue="@string/settings_default_remember_master_key" />
+</PreferenceScreen>

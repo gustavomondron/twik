@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="settings_key_remember_master_key" format="string"
+          type="string">remember_master_key
+    </item>
+</resources>
