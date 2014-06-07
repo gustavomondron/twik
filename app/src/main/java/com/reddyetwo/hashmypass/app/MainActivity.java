@@ -19,6 +19,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
@@ -34,12 +36,16 @@ import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class MainActivity extends Activity {
 
     private final static int ID_ADD_PROFILE = -1;
     private long mSelectedProfileID = -1;
-    private EditText mTagEditText;
+    private AutoCompleteTextView mTagEditText;
     private EditText mMasterKeyEditText;
     private TextView mHashedPasswordTextView;
 
@@ -63,7 +69,7 @@ public class MainActivity extends Activity {
         final TextView digestTextView =
                 (TextView) findViewById(R.id.main_digest);
 
-        mTagEditText = (EditText) findViewById(R.id.main_tag);
+        mTagEditText = (AutoCompleteTextView) findViewById(R.id.main_tag);
 
         mMasterKeyEditText = (EditText) findViewById(R.id.main_master_key);
         mMasterKeyEditText
@@ -122,6 +128,7 @@ public class MainActivity extends Activity {
         been added or an existing profile may have been edited or deleted.
          */
         populateActionBarSpinner();
+        populateTagAutocompleteTextView();
     }
 
     @Override
@@ -207,10 +214,13 @@ public class MainActivity extends Activity {
             mHashedPasswordTextView.setText(hashedPassword);
 
             /* If the tag is not already stored in the database,
-            save the current settings */
+            save the current settings and update tag autocomplete data */
             if (!tagSettings.containsKey(DataOpenHelper.COLUMN_ID)) {
                 TagSettings.insertTagSettings(this, tag, mSelectedProfileID,
                         passwordLength, passwordType);
+
+                // Update tag autocomplete
+                populateTagAutocompleteTextView();
             }
         }
     }
@@ -286,4 +296,25 @@ public class MainActivity extends Activity {
         profilesCursorCopy.close();
         db.close();
     }
+
+    private void populateTagAutocompleteTextView() {
+        Cursor cursor = TagSettings.getTagsForProfile(this, mSelectedProfileID);
+        if (!cursor.moveToFirst()) {
+            return;
+        }
+
+        int column = cursor.getColumnIndex(DataOpenHelper.COLUMN_TAGS_NAME);
+
+        List<String> tags = new ArrayList<String>(cursor.getCount());
+        tags.add(cursor.getString(column));
+        while (cursor.moveToNext()) {
+            tags.add(cursor.getString(column));
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1,
+                tags.toArray(new String[tags.size()]));
+        mTagEditText.setAdapter(adapter);
+    }
+
 }
