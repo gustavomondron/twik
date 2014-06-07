@@ -2,6 +2,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
+                android:animateLayoutChanges="true"
                 tools:context=".MainActivity">
 
     <LinearLayout
@@ -76,12 +77,12 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/master_key_layout">
+        android:layout_below="@+id/master_key_layout"
+        android:visibility="invisible">
 
         <TextView
             android:gravity="left"
             android:id="@+id/main_hashed_password"
-            android:text="hashed_password"
             android:textSize="20sp"
             android:layout_width="275dp"
             android:layout_height="wrap_content"/>

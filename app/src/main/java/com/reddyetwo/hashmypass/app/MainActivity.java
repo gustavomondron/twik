@@ -48,6 +48,7 @@ public class MainActivity extends Activity {
     private AutoCompleteTextView mTagEditText;
     private EditText mMasterKeyEditText;
     private TextView mHashedPasswordTextView;
+    private View mHashedPasswordLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +122,8 @@ public class MainActivity extends Activity {
 
             }
         });
+
+        mHashedPasswordLayout = findViewById(R.id.hashed_password_layout);
 
         clipboardButton
                 .setOnLongClickListener(new HelpToastOnLongPressClickListener());
@@ -217,6 +220,9 @@ public class MainActivity extends Activity {
 
             /* Update the TextView */
             mHashedPasswordTextView.setText(hashedPassword);
+
+            // Make sure the whole hashed password view is visible
+            mHashedPasswordLayout.setVisibility(View.VISIBLE);
 
             /* If the tag is not already stored in the database,
             save the current settings and update tag autocomplete data */
