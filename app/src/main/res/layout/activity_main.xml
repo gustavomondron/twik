@@ -86,7 +86,7 @@
         <TextView
             android:gravity="left"
             android:id="@+id/main_hashed_password"
-            android:textSize="20sp"
+            android:textSize="@dimen/hashed_password_text_size"
             android:layout_width="275dp"
             android:layout_height="wrap_content"/>
 
