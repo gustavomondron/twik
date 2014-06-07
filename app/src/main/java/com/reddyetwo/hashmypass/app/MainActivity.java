@@ -14,6 +14,8 @@ import android.database.MergeCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +37,7 @@ import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
+import com.reddyetwo.hashmypass.app.util.HelpToastOnLongPressClickListener;
 import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
 
 import java.util.ArrayList;
@@ -49,6 +52,11 @@ public class MainActivity extends Activity {
     private AutoCompleteTextView mTagEditText;
     private EditText mMasterKeyEditText;
     private TextView mHashedPasswordTextView;
+    private View mHashedPasswordLayout;
+    private Button mHashButton;
+
+    public final HashButtonEnableTextWatcher hashButtonEnableTextWatcher =
+            new HashButtonEnableTextWatcher();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +79,12 @@ public class MainActivity extends Activity {
                 (TextView) findViewById(R.id.main_digest);
 
         mTagEditText = (AutoCompleteTextView) findViewById(R.id.main_tag);
+        mTagEditText.addTextChangedListener(hashButtonEnableTextWatcher);
 
         mMasterKeyEditText = (EditText) findViewById(R.id.main_master_key);
         mMasterKeyEditText
                 .addTextChangedListener(new MasterKeyWatcher(digestTextView));
+        mMasterKeyEditText.addTextChangedListener(hashButtonEnableTextWatcher);
 
         ImageButton tagSettingsButton =
                 (ImageButton) findViewById(R.id.main_tag_settings);
@@ -84,9 +94,11 @@ public class MainActivity extends Activity {
                 showTagSettingsDialog();
             }
         });
+        tagSettingsButton.setOnLongClickListener(
+                new HelpToastOnLongPressClickListener());
 
-        Button hashButton = (Button) findViewById(R.id.main_hash);
-        hashButton.setOnClickListener(new View.OnClickListener() {
+        mHashButton = (Button) findViewById(R.id.main_hash);
+        mHashButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 calculatePasswordHash();
@@ -120,6 +132,11 @@ public class MainActivity extends Activity {
 
             }
         });
+
+        mHashedPasswordLayout = findViewById(R.id.hashed_password_layout);
+
+        clipboardButton.setOnLongClickListener(
+                new HelpToastOnLongPressClickListener());
     }
 
     @Override
@@ -137,6 +154,7 @@ public class MainActivity extends Activity {
          */
         populateActionBarSpinner();
         populateTagAutocompleteTextView();
+        updateHashButtonEnabled();
     }
 
     @Override
@@ -248,6 +266,9 @@ public class MainActivity extends Activity {
             /* Update the TextView */
             mHashedPasswordTextView.setText(hashedPassword);
 
+            // Make sure the whole hashed password view is visible
+            mHashedPasswordLayout.setVisibility(View.VISIBLE);
+
             /* If the tag is not already stored in the database,
             save the current settings and update tag autocomplete data */
             if (!tagSettings.containsKey(DataOpenHelper.COLUMN_ID)) {
@@ -351,6 +372,33 @@ public class MainActivity extends Activity {
                 android.R.layout.simple_list_item_1,
                 tags.toArray(new String[tags.size()]));
         mTagEditText.setAdapter(adapter);
+    }
+
+    private void updateHashButtonEnabled() {
+        boolean tagSet = mTagEditText.getText().toString().trim().length() > 0;
+        boolean masterKeySet =
+                mMasterKeyEditText.getText().toString().length() > 0;
+        mHashButton.setEnabled(tagSet && masterKeySet);
+    }
+
+    private class HashButtonEnableTextWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count,
+                                      int after) {
+            // Do nothing
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before,
+                                  int count) {
+            // Do nothing
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            updateHashButtonEnabled();
+        }
     }
 
 }

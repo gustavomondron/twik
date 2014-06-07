@@ -11,4 +11,9 @@
         </item>
     </style>
 
+    <style name="hashButtonStyle" parent="@android:style/ButtonBar">
+        <item name="android:background">@drawable/button_background</item>
+        <item name="android:textColor">@color/button_text_color</item>
+    </style>
+
 </resources>

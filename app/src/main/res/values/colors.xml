@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="text_grey">#ff666666</color>
+    <color name="button_disabled">@android:color/white</color>
+    <color name="button_enabled">@android:color/holo_blue_light</color>
+    <!-- Pressed state for Kit Kat: black 10% overlay. TODO pressed state for < 4.4 -->
+    <color name="button_enabled_pressed">#ff2ea3cf</color>
+    <color name="button_text_disabled">@android:color/darker_gray</color>
+    <color name="button_text_enabled">@android:color/white</color>
+    <color name="button_text_enabled_pressed">#ffe6e6e6</color>
 </resources>

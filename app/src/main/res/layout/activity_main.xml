@@ -1,15 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:paddingLeft="@dimen/activity_horizontal_margin"
-              android:paddingRight="@dimen/activity_horizontal_margin"
-              android:paddingTop="@dimen/activity_vertical_margin"
-              android:paddingBottom="@dimen/activity_vertical_margin"
-              android:orientation="vertical"
-              tools:context=".MainActivity">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:animateLayoutChanges="true"
+                tools:context=".MainActivity">
 
     <LinearLayout
+        android:id="@+id/tag_layout"
         android:layout_marginTop="100dp"
         android:gravity="center"
         android:orientation="horizontal"
@@ -30,23 +27,26 @@
             android:maxLength="25"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:completionThreshold="2"/>
+            android:completionThreshold="2"
+            android:hint="@string/tag"/>
 
         <ImageButton
             android:id="@+id/main_tag_settings"
             android:src="@drawable/ic_action_gear"
             android:contentDescription="@string/tag_settings"
-            android:background="@null"
             android:layout_width="48dp"
-            android:layout_height="48dp"/>
+            android:layout_height="48dp"
+            style="?android:borderlessButtonStyle"/>
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/master_key_layout"
         android:layout_marginTop="25dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tag_layout">
 
         <ImageView
             android:src="@drawable/ic_action_key"
@@ -57,11 +57,13 @@
         <EditText
             android:id="@+id/main_master_key"
             android:inputType="textPassword"
+            android:fontFamily="sans-serif"
             android:singleLine="true"
             android:maxLines="1"
             android:maxLength="25"
             android:layout_width="250dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:hint="@string/master_key"/>
 
         <TextView
             android:id="@+id/main_digest"
@@ -71,38 +73,57 @@
             android:layout_height="48dp"/>
     </LinearLayout>
 
-    <Button
-        android:layout_marginTop="25dp"
-        android:id="@+id/main_hash"
-        android:text="@string/hash"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"/>
-
     <RelativeLayout
+        android:id="@+id/hashed_password_layout"
         android:layout_marginTop="50dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/master_key_layout"
+        android:visibility="invisible">
 
-    <TextView
-        android:gravity="left"
-        android:id="@+id/main_hashed_password"
-        android:text="hashed_password"
-        android:textSize="20sp"
-        android:layout_width="275dp"
-        android:layout_height="wrap_content"/>
+        <TextView
+            android:gravity="left"
+            android:id="@+id/main_hashed_password"
+            android:textSize="@dimen/hashed_password_text_size"
+            android:layout_width="275dp"
+            android:layout_height="wrap_content"/>
 
         <ImageButton
             android:id="@+id/main_clipboard"
             android:src="@drawable/ic_action_copy"
             android:contentDescription="@string/copy_to_clipboard"
-            android:background="@null"
             android:layout_toRightOf="@id/main_hashed_password"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            style="?android:borderlessButtonStyle"/>
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/button_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        style="?android:buttonBarStyle"
+        android:divider="?android:dividerHorizontal"
+        android:showDividers="middle">
 
-</LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+
+        <Button
+            android:id="@+id/main_hash"
+            android:text="@string/hash"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:enabled="false"
+            style="@style/hashButtonStyle"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>
