@@ -189,12 +189,12 @@ public class MainActivity extends Activity {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             Intent intent =
-                    new Intent(getBaseContext(), SettingsActivity.class);
+                    new Intent(this, SettingsActivity.class);
             startActivity(intent);
             return true;
         } else if (id == R.id.action_edit_profile) {
             Intent intent =
-                    new Intent(getBaseContext(), EditProfileActivity.class);
+                    new Intent(this, EditProfileActivity.class);
             intent.putExtra(EditProfileActivity.EXTRA_PROFILE_ID,
                     mSelectedProfileID);
             startActivity(intent);
@@ -323,7 +323,7 @@ public class MainActivity extends Activity {
                                                             long itemId) {
                         mSelectedProfileID = itemId;
                         if (itemId == ID_ADD_PROFILE) {
-                            Intent intent = new Intent(getBaseContext(),
+                            Intent intent = new Intent(MainActivity.this,
                                     AddProfileActivity.class);
                             startActivity(intent);
                         }
