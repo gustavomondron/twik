@@ -34,9 +34,9 @@ import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
+import com.reddyetwo.hashmypass.app.util.HelpToastOnLongPressClickListener;
 import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,6 +83,8 @@ public class MainActivity extends Activity {
                 showTagSettingsDialog();
             }
         });
+        tagSettingsButton
+                .setOnLongClickListener(new HelpToastOnLongPressClickListener());
 
         Button hashButton = (Button) findViewById(R.id.main_hash);
         hashButton.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +121,9 @@ public class MainActivity extends Activity {
 
             }
         });
+
+        clipboardButton
+                .setOnLongClickListener(new HelpToastOnLongPressClickListener());
     }
 
     @Override
