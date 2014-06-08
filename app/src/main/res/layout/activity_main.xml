@@ -67,7 +67,6 @@
         <TextView
             android:id="@+id/main_digest"
             android:gravity="center"
-            android:text="a4"
             android:paddingLeft="4dip"
             android:paddingRight="4dip"
             android:layout_width="48dip"
