@@ -84,7 +84,9 @@ public class MainActivity extends Activity {
         tagSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTagSettingsDialog();
+                if (mTagEditText.getText().length() > 0) {
+                    showTagSettingsDialog();
+                }
             }
         });
         tagSettingsButton.setOnLongClickListener(
