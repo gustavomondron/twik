@@ -37,6 +37,7 @@ import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
+import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.HelpToastOnLongPressClickListener;
 import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
@@ -47,7 +48,6 @@ import java.util.List;
 
 public class MainActivity extends Activity {
 
-    private static final String FONT_MONOSPACE = "UbuntuMono-Regular.ttf";
     private static final int ID_ADD_PROFILE = -1;
     private long mSelectedProfileID = -1;
     private AutoCompleteTextView mTagEditText;
@@ -140,7 +140,8 @@ public class MainActivity extends Activity {
         mHashedPasswordOldTextView =
                 (TextView) findViewById(R.id.main_hashed_password_old);
 
-        Typeface tf = Typeface.createFromAsset(getAssets(), FONT_MONOSPACE);
+        Typeface tf =
+                Typeface.createFromAsset(getAssets(), Constants.FONT_MONOSPACE);
         mHashedPasswordTextView.setTypeface(tf);
         mHashedPasswordOldTextView.setTypeface(tf);
         digestTextView.setTypeface(tf);
