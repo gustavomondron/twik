@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CursorAdapter;
@@ -41,9 +40,7 @@ import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.HelpToastOnLongPressClickListener;
 import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.reddyetwo.hashmypass.app.util.TagAutocomplete;
 
 
 public class MainActivity extends Activity {
@@ -166,7 +163,9 @@ public class MainActivity extends Activity {
         been added or an existing profile may have been edited or deleted.
          */
         populateActionBarSpinner();
-        populateTagAutocompleteTextView();
+        TagAutocomplete
+                .populateTagAutocompleteTextView(this, mSelectedProfileID,
+                        mTagEditText);
         updateHashButtonEnabled();
     }
 
@@ -323,7 +322,8 @@ public class MainActivity extends Activity {
                         passwordLength, passwordType);
 
                 // Update tag autocomplete
-                populateTagAutocompleteTextView();
+                TagAutocomplete.populateTagAutocompleteTextView(this,
+                        mSelectedProfileID, mTagEditText);
             }
         }
     }
@@ -398,26 +398,6 @@ public class MainActivity extends Activity {
 
         profilesCursorCopy.close();
         db.close();
-    }
-
-    private void populateTagAutocompleteTextView() {
-        Cursor cursor = TagSettings.getTagsForProfile(this, mSelectedProfileID);
-        if (!cursor.moveToFirst()) {
-            return;
-        }
-
-        int column = cursor.getColumnIndex(DataOpenHelper.COLUMN_TAGS_NAME);
-
-        List<String> tags = new ArrayList<String>(cursor.getCount());
-        tags.add(cursor.getString(column));
-        while (cursor.moveToNext()) {
-            tags.add(cursor.getString(column));
-        }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1,
-                tags.toArray(new String[tags.size()]));
-        mTagEditText.setAdapter(adapter);
     }
 
     private void updateHashButtonEnabled() {
