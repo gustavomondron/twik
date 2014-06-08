@@ -7,10 +7,12 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -26,8 +28,10 @@ import com.reddyetwo.hashmypass.app.data.SiteSettings;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
+import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
+import com.reddyetwo.hashmypass.app.util.TagAutocomplete;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,7 +41,7 @@ public class BrowserIntegrationActivity extends Activity {
     private static final Pattern SITE_PATTERN = Pattern.compile(
             "^.*?([\\w\\d\\-]+)\\.((co|com|net|org|ac)\\.)?\\w+$");
 
-    private EditText mTagEditText;
+    private AutoCompleteTextView mTagEditText;
     private EditText mMasterKeyEditText;
     private Spinner mProfileSpinner;
     private String mSite;
@@ -65,7 +69,7 @@ public class BrowserIntegrationActivity extends Activity {
             finish();
         }
 
-        mTagEditText = (EditText) findViewById(R.id.browser_tag);
+        mTagEditText = (AutoCompleteTextView) findViewById(R.id.browser_tag);
 
         TextView digestTextView = (TextView) findViewById(R.id.browser_digest);
 
@@ -169,6 +173,11 @@ public class BrowserIntegrationActivity extends Activity {
 
         /* Update the tag according to the site */
         updateTagText();
+
+        /* Set monospace font for key digest */
+        Typeface tf =
+                Typeface.createFromAsset(getAssets(), Constants.FONT_MONOSPACE);
+        digestTextView.setTypeface(tf);
     }
 
     @Override
@@ -178,6 +187,10 @@ public class BrowserIntegrationActivity extends Activity {
         /* Cancel the alarm and restore the cached master key */
         MasterKeyAlarmManager.cancelAlarm(this);
         mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey());
+
+        TagAutocomplete.populateTagAutocompleteTextView(this,
+                mProfileSpinner.getSelectedItemId(), mTagEditText);
+
     }
 
     @Override
@@ -238,6 +251,9 @@ public class BrowserIntegrationActivity extends Activity {
 
             /* Update the site-tag association */
             SiteSettings.updateSiteTag(this, profileID, mSite, tag);
+
+            TagAutocomplete.populateTagAutocompleteTextView(this,
+                    mProfileSpinner.getSelectedItemId(), mTagEditText);
         }
     }
 
