@@ -169,6 +169,11 @@ public class BrowserIntegrationActivity extends Activity {
 
         /* Update the tag according to the site */
         updateTagText();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         /* Cancel the alarm and restore the cached master key */
         MasterKeyAlarmManager.cancelAlarm(this);
