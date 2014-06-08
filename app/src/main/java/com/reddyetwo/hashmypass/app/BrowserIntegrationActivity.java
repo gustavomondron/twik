@@ -29,6 +29,7 @@ import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
 import com.reddyetwo.hashmypass.app.util.Constants;
+import com.reddyetwo.hashmypass.app.util.HelpToastOnLongPressClickListener;
 import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
 import com.reddyetwo.hashmypass.app.util.TagAutocomplete;
@@ -139,6 +140,8 @@ public class BrowserIntegrationActivity extends Activity {
                 showTagSettingsDialog();
             }
         });
+        tagSettingsButton.setOnLongClickListener(
+                new HelpToastOnLongPressClickListener());
 
         /* Cancel button finishes dialog activity */
         Button cancelButton = (Button) findViewById(R.id.browser_cancel);
