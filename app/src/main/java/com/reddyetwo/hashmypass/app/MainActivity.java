@@ -159,9 +159,18 @@ public class MainActivity extends Activity {
             /* If we have removed the master key, remove also the hashed key */
             if (cachedMasterKey.length() == 0) {
                 mHashedPasswordTextView.setText("");
+            } else {
+                /* Else... populate the tag and the hashed password because
+                the activity could be destroyed
+                 */
+                mTagEditText.setText(HashMyPassApplication.getCachedTag());
+                mHashedPasswordTextView.setText(
+                        HashMyPassApplication.getCachedHashedPassword());
             }
         }
         HashMyPassApplication.setCachedMasterKey("");
+        HashMyPassApplication.setCachedTag("");
+        HashMyPassApplication.setCachedHashedPassword("");
 
         /* We have to re-populate the spinner because a new profile may have
         been added or an existing profile may have been edited or deleted.
@@ -187,9 +196,15 @@ public class MainActivity extends Activity {
         int masterKeyMins = Preferences.getRememberMasterKeyMins(this);
         if (masterKeyMins == 0) {
             mMasterKeyEditText.setText("");
+            mTagEditText.setText("");
+            mHashedPasswordTextView.setText("");
         } else {
             HashMyPassApplication.setCachedMasterKey(
                     mMasterKeyEditText.getText().toString());
+            HashMyPassApplication
+                    .setCachedTag(mTagEditText.getText().toString());
+            HashMyPassApplication.setCachedHashedPassword(
+                    mHashedPasswordTextView.getText().toString());
             MasterKeyAlarmManager.setAlarm(this, masterKeyMins);
         }
     }

@@ -19,6 +19,8 @@ public class MasterKeyAlarmManager extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         /* Remove cached master key */
         HashMyPassApplication.setCachedMasterKey("");
+        HashMyPassApplication.setCachedTag("");
+        HashMyPassApplication.setCachedHashedPassword("");
     }
 
     @TargetApi(15)
