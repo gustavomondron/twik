@@ -13,6 +13,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -388,7 +390,7 @@ public class MainActivity extends Activity {
                 getResources().getString(R.string.action_add_profile)});
 
         MergeCursor mergeCursor = new MergeCursor(new Cursor[]{cursor, extras});
-        ProfileAdapter adapter = new ProfileAdapter(this, mergeCursor, 0);
+        final ProfileAdapter adapter = new ProfileAdapter(this, mergeCursor, 0);
         getActionBar().setListNavigationCallbacks(adapter,
                 new ActionBar.OnNavigationListener() {
                     @Override
@@ -400,7 +402,6 @@ public class MainActivity extends Activity {
                                     AddProfileActivity.class);
                             startActivity(intent);
                         }
-
                         return false;
                     }
                 }

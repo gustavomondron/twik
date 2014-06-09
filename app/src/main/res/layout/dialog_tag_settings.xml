@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:text="@string/password_length"
         android:textAllCaps="true"
-        android:textColor="@color/text_grey"
+        android:textColor="@color/text_gray"
         android:layout_marginBottom="@dimen/small_spacing"/>
 
     <Spinner
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:text="@string/password_type"
         android:textAllCaps="true"
-        android:textColor="@color/text_grey"
+        android:textColor="@color/text_gray"
         android:layout_marginTop="@dimen/section_margin_top"
         android:layout_marginBottom="@dimen/small_spacing"/>
 

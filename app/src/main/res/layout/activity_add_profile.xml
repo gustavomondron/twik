@@ -17,7 +17,7 @@
             android:layout_marginBottom="@dimen/small_spacing"
             android:text="@string/name"
             android:textAllCaps="true"
-            android:textColor="@color/text_grey"/>
+            android:textColor="@color/text_gray"/>
 
         <EditText
             android:inputType="text"
@@ -37,7 +37,7 @@
             android:layout_marginBottom="@dimen/small_spacing"
             android:text="@string/private_key"
             android:textAllCaps="true"
-            android:textColor="@color/text_grey"
+            android:textColor="@color/text_gray"
             />
 
         <EditText
@@ -58,7 +58,7 @@
             android:layout_marginBottom="@dimen/small_spacing"
             android:text="@string/password_length"
             android:textAllCaps="true"
-            android:textColor="@color/text_grey"/>
+            android:textColor="@color/text_gray"/>
 
         <Spinner
             android:id="@+id/add_profile_password_length"
@@ -74,7 +74,7 @@
             android:layout_marginBottom="@dimen/small_spacing"
             android:text="@string/password_type"
             android:textAllCaps="true"
-            android:textColor="@color/text_grey"/>
+            android:textColor="@color/text_gray"/>
 
         <Spinner
             android:id="@+id/add_profile_password_type"
