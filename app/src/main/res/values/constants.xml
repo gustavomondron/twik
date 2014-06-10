@@ -6,4 +6,8 @@
     <item name="settings_default_copy_to_clipboard" format="boolean"
           type="bool">false
     </item>
+    <item name="text_profile_name_max_length" format="integer" type="integer">15
+    </item>
+    <item name="text_private_key_max_length" format="integer" type="integer">48
+    </item>
 </resources>
