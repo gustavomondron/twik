@@ -1,95 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="fill_parent">
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:paddingTop="@dimen/activity_vertical_margin">
+
+    <ScrollView
+        android:layout_above="@+id/button_bar_layout"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/name"
+                android:textAllCaps="true"
+                android:textColor="@color/text_gray"/>
+
+            <EditText
+                android:inputType="text"
+                android:id="@+id/profile_name_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:maxLength="@integer/text_profile_name_max_length"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="@string/private_key"
+                android:textAllCaps="true"
+                android:textColor="@color/text_gray"/>
+
+            <EditText
+                android:inputType="text"
+                android:id="@+id/private_key_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:maxLength="@integer/text_private_key_max_length"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="@string/password_length"
+                android:textAllCaps="true"
+                android:textColor="@color/text_gray"/>
+
+            <Spinner
+                android:id="@+id/password_length_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:spinnerStyle="@android:style/Widget.Spinner.DropDown"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="@string/password_type"
+                android:textAllCaps="true"
+                android:textColor="@color/text_gray"/>
+
+            <Spinner
+                android:id="@+id/password_type_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:spinnerStyle="@android:style/Widget.Spinner.DropDown"/>
+
+        </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
+        android:id="@+id/button_bar_layout"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/activity_vertical_margin">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/small_spacing"
-            android:text="@string/name"
-            android:textAllCaps="true"
-            android:textColor="@color/text_gray"/>
-
-        <EditText
-            android:inputType="text"
-            android:id="@+id/profile_name_text"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/small_spacing"
-            android:layout_marginBottom="@dimen/small_spacing"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:maxLength="15"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/section_margin_top"
-            android:layout_marginBottom="@dimen/small_spacing"
-            android:text="@string/private_key"
-            android:textAllCaps="true"
-            android:textColor="@color/text_gray"
-            />
-
-        <EditText
-            android:inputType="text"
-            android:id="@+id/private_key_text"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/small_spacing"
-            android:layout_marginBottom="@dimen/small_spacing"
-            android:singleLine="true"
-            android:maxLines="1"
-            android:maxLength="48"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/section_margin_top"
-            android:layout_marginBottom="@dimen/small_spacing"
-            android:text="@string/password_length"
-            android:textAllCaps="true"
-            android:textColor="@color/text_gray"/>
-
-        <Spinner
-            android:id="@+id/password_length_spinner"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/small_spacing"
-            android:layout_marginBottom="@dimen/small_spacing"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/section_margin_top"
-            android:layout_marginBottom="@dimen/small_spacing"
-            android:text="@string/password_type"
-            android:textAllCaps="true"
-            android:textColor="@color/text_gray"/>
-
-        <Spinner
-            android:id="@+id/password_type_spinner"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/small_spacing"
-            android:layout_marginBottom="@dimen/small_spacing"
-            android:spinnerMode="dropdown"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:gravity="bottom"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
         android:orientation="vertical"
         android:showDividers="middle"
         android:divider="?android:dividerHorizontal">
@@ -100,7 +98,7 @@
             />
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:divider="?android:dividerHorizontal"
@@ -120,9 +118,8 @@
                 android:layout_height="wrap_content"
                 style="?android:buttonBarButtonStyle"
                 android:layout_weight="1"
-                android:text="@string/add"/>
-
+                android:text="@string/save"/>
         </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
