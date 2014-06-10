@@ -36,12 +36,7 @@ public class PasswordLengthDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (mListener == null) {
-            try {
-                mListener = (OnSelectedListener) getActivity();
-            } catch (ClassCastException e) {
-                throw new IllegalStateException("Nor OnSelectedListener was " +
-                        "provided, neither parent activity is one", e);
-            }
+            dismiss();
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
