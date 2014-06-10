@@ -1,8 +1,6 @@
 package com.reddyetwo.hashmypass.app;
 
 import android.app.Activity;
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
@@ -13,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
 import com.reddyetwo.hashmypass.app.data.PasswordLength;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
@@ -37,15 +34,15 @@ public class AddProfileActivity extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         /* Get UI widgets */
-        mNameEditText = (EditText) findViewById(R.id.add_profile_name);
+        mNameEditText = (EditText) findViewById(R.id.profile_name_text);
         mPrivateKeyEditText =
-                (EditText) findViewById(R.id.add_profile_private_key);
+                (EditText) findViewById(R.id.private_key_text);
         mPasswordTypeSpinner =
-                (Spinner) findViewById(R.id.add_profile_password_type);
+                (Spinner) findViewById(R.id.password_type_spinner);
         mPasswordLengthSpinner =
-                (Spinner) findViewById(R.id.add_profile_password_length);
-        mAddButton = (Button) findViewById(R.id.add_profile_add);
-        mDiscardButton = (Button) findViewById(R.id.add_profile_discard);
+                (Spinner) findViewById(R.id.password_length_spinner);
+        mAddButton = (Button) findViewById(R.id.add_button);
+        mDiscardButton = (Button) findViewById(R.id.discard_button);
 
         /* Populate password type spinner */
         ArrayAdapter<CharSequence> adapter = ArrayAdapter
