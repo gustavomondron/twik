@@ -22,12 +22,12 @@
             android:layout_alignParentLeft="true"/>
 
         <AutoCompleteTextView
-            android:id="@+id/main_tag"
+            android:id="@+id/tag_text"
             android:inputType="text"
             android:singleLine="true"
             android:maxLines="1"
             android:maxLength="25"
-            android:layout_toLeftOf="@+id/main_tag_settings"
+            android:layout_toLeftOf="@+id/tag_settings"
             android:layout_toRightOf="@+id/ic_tag"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
             android:hint="@string/tag"/>
 
         <ImageButton
-            android:id="@+id/main_tag_settings"
+            android:id="@+id/tag_settings"
             android:src="@drawable/ic_action_gear"
             android:contentDescription="@string/tag_settings"
             android:layout_width="32dp"
@@ -64,20 +64,20 @@
             android:layout_alignParentLeft="true"/>
 
         <EditText
-            android:id="@+id/main_master_key"
+            android:id="@+id/master_key_text"
             android:inputType="textPassword"
             android:fontFamily="sans-serif"
             android:singleLine="true"
             android:maxLines="1"
             android:maxLength="25"
-            android:layout_toLeftOf="@+id/main_digest"
+            android:layout_toLeftOf="@+id/digest_text"
             android:layout_toRightOf="@+id/ic_key"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="@string/master_key"/>
 
         <TextView
-            android:id="@+id/main_digest"
+            android:id="@+id/digest_text"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_centerVertical="true"
@@ -87,7 +87,7 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/main_hashed_password"
+        android:id="@+id/hashed_password"
         android:textSize="@dimen/hashed_password_text_size"
         android:layout_marginTop="@dimen/activity_vertical_margin_large"
         android:gravity="center"
@@ -96,7 +96,7 @@
         android:layout_below="@+id/master_key_layout"/>
 
     <TextView
-        android:id="@+id/main_hashed_password_old"
+        android:id="@+id/hashed_password_old"
         android:textSize="@dimen/hashed_password_text_size"
         android:layout_marginTop="@dimen/activity_vertical_margin_large"
         android:gravity="center"
@@ -119,7 +119,7 @@
             android:layout_height="0dp"/>
 
         <Button
-            android:id="@+id/main_hash"
+            android:id="@+id/hash_button"
             android:text="@string/hash"
             android:layout_gravity="center_horizontal"
             android:layout_width="match_parent"

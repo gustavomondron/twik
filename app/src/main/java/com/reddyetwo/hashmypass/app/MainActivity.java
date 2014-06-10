@@ -13,8 +13,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -73,16 +71,16 @@ public class MainActivity extends Activity {
         populateActionBarSpinner();
 
         final TextView digestTextView =
-                (TextView) findViewById(R.id.main_digest);
+                (TextView) findViewById(R.id.digest_text);
 
-        mTagEditText = (AutoCompleteTextView) findViewById(R.id.main_tag);
+        mTagEditText = (AutoCompleteTextView) findViewById(R.id.tag_text);
 
-        mMasterKeyEditText = (EditText) findViewById(R.id.main_master_key);
+        mMasterKeyEditText = (EditText) findViewById(R.id.master_key_text);
         mMasterKeyEditText
                 .addTextChangedListener(new MasterKeyWatcher(digestTextView));
 
         ImageButton tagSettingsButton =
-                (ImageButton) findViewById(R.id.main_tag_settings);
+                (ImageButton) findViewById(R.id.tag_settings);
         tagSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,7 +92,7 @@ public class MainActivity extends Activity {
         tagSettingsButton.setOnLongClickListener(
                 new HelpToastOnLongPressClickListener());
 
-        mHashButton = (Button) findViewById(R.id.main_hash);
+        mHashButton = (Button) findViewById(R.id.hash_button);
         mHashButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,7 +120,7 @@ public class MainActivity extends Activity {
         });
 
         mHashedPasswordTextView =
-                (TextView) findViewById(R.id.main_hashed_password);
+                (TextView) findViewById(R.id.hashed_password);
         mHashedPasswordTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,7 +132,7 @@ public class MainActivity extends Activity {
         });
 
         mHashedPasswordOldTextView =
-                (TextView) findViewById(R.id.main_hashed_password_old);
+                (TextView) findViewById(R.id.hashed_password_old);
 
         Typeface tf =
                 Typeface.createFromAsset(getAssets(), Constants.FONT_MONOSPACE);
