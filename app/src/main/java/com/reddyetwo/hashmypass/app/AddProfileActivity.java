@@ -17,12 +17,17 @@ import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 
 public class AddProfileActivity extends Activity {
 
+    // State bundle keys
+    private static final String KEY_PASSWORD_LENGTH = "password_length";
+
+    // UI Widgets
     private EditText mNameEditText;
     private EditText mPrivateKeyEditText;
     private Spinner mPasswordTypeSpinner;
     private Spinner mPasswordLengthSpinner;
     private Button mAddButton;
     private Button mDiscardButton;
+
     private ArrayAdapter<String> mPasswordLengthAdapter;
 
     @Override
@@ -35,8 +40,7 @@ public class AddProfileActivity extends Activity {
 
         /* Get UI widgets */
         mNameEditText = (EditText) findViewById(R.id.profile_name_text);
-        mPrivateKeyEditText =
-                (EditText) findViewById(R.id.private_key_text);
+        mPrivateKeyEditText = (EditText) findViewById(R.id.private_key_text);
         mPasswordTypeSpinner =
                 (Spinner) findViewById(R.id.password_type_spinner);
         mPasswordLengthSpinner =
@@ -53,7 +57,13 @@ public class AddProfileActivity extends Activity {
         mPasswordTypeSpinner.setAdapter(adapter);
 
         /* Populate password length spinner */
-        populatePasswordLengthSpinner(PasswordLength.DEFAULT);
+        int passwordLength;
+        if (savedInstanceState != null) {
+            passwordLength = savedInstanceState.getInt(KEY_PASSWORD_LENGTH);
+        } else {
+            passwordLength = PasswordLength.DEFAULT;
+        }
+        populatePasswordLengthSpinner(passwordLength);
 
         /* Open number picker dialog when the password length spinner is
         touched
@@ -101,6 +111,14 @@ public class AddProfileActivity extends Activity {
             }
         });
 
+    }
+    
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_PASSWORD_LENGTH, Integer.parseInt(
+                        (String) mPasswordLengthSpinner.getSelectedItem())
+        );
     }
 
     @Override
