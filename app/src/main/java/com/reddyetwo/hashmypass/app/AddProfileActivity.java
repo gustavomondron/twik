@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -14,6 +13,7 @@ import android.widget.Spinner;
 import com.reddyetwo.hashmypass.app.data.PasswordLength;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
+import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
 
 public class AddProfileActivity extends Activity {
 
@@ -29,6 +29,7 @@ public class AddProfileActivity extends Activity {
     private Button mDiscardButton;
 
     private ArrayAdapter<String> mPasswordLengthAdapter;
+    private ProfileFormWatcher mProfileFormWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +76,8 @@ public class AddProfileActivity extends Activity {
                             public void onPressed() {
                                 showDialog();
                             }
-                        })
+                        }
+                )
         );
 
         /* Add profile to database when Add button is pressed */
@@ -109,6 +111,12 @@ public class AddProfileActivity extends Activity {
             }
         });
 
+        /* Add form watcher */
+        mProfileFormWatcher =
+                new ProfileFormWatcher(mNameEditText, mPrivateKeyEditText,
+                        mAddButton);
+        mNameEditText.addTextChangedListener(mProfileFormWatcher);
+        mPrivateKeyEditText.addTextChangedListener(mProfileFormWatcher);
     }
 
     @Override

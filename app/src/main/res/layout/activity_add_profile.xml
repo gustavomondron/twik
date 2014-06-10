@@ -118,6 +118,7 @@
                 android:layout_height="wrap_content"
                 style="?android:buttonBarButtonStyle"
                 android:layout_weight="1"
+                android:enabled="false"
                 android:text="@string/save"/>
         </LinearLayout>
     </LinearLayout>

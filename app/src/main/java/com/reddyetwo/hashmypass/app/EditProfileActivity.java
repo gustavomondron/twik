@@ -18,6 +18,7 @@ import android.widget.Spinner;
 import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
+import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
 
 public class EditProfileActivity extends Activity {
 
@@ -35,6 +36,7 @@ public class EditProfileActivity extends Activity {
     private Button mSaveButton;
 
     private ArrayAdapter<String> mPasswordLengthAdapter;
+    private ProfileFormWatcher mProfileFormWatcher;
 
     // Activity status
     private long mProfileID;
@@ -107,7 +109,8 @@ public class EditProfileActivity extends Activity {
                             public void onPressed() {
                                 showDialog();
                             }
-                        })
+                        }
+                )
         );
 
         /* Add profile to database when Add button is pressed */
@@ -135,6 +138,13 @@ public class EditProfileActivity extends Activity {
                 NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
             }
         });
+
+        /* Add form watcher */
+        mProfileFormWatcher =
+                new ProfileFormWatcher(mNameEditText, mPrivateKeyEditText,
+                        mSaveButton);
+        mNameEditText.addTextChangedListener(mProfileFormWatcher);
+        mPrivateKeyEditText.addTextChangedListener(mProfileFormWatcher);
     }
 
     @Override
