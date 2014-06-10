@@ -62,15 +62,15 @@ public class EditProfileActivity extends Activity {
                 cursor.getColumnIndex(DataOpenHelper.COLUMN_PROFILES_NAME)));
 
         /* Get UI widgets */
-        mNameEditText = (EditText) findViewById(R.id.edit_profile_name);
+        mNameEditText = (EditText) findViewById(R.id.profile_name_text);
         mPrivateKeyEditText =
-                (EditText) findViewById(R.id.edit_profile_private_key);
+                (EditText) findViewById(R.id.private_key_text);
         mPasswordLengthSpinner =
-                (Spinner) findViewById(R.id.edit_profile_password_length);
+                (Spinner) findViewById(R.id.password_length_spinner);
         mPasswordTypeSpinner =
-                (Spinner) findViewById(R.id.edit_profile_password_type);
-        mDiscardButton = (Button) findViewById(R.id.edit_profile_discard);
-        mSaveButton = (Button) findViewById(R.id.edit_profile_save);
+                (Spinner) findViewById(R.id.password_type_spinner);
+        mDiscardButton = (Button) findViewById(R.id.discard_button);
+        mSaveButton = (Button) findViewById(R.id.save_button);
 
         /* Populate text fields */
         mOriginalName = cursor.getString(
