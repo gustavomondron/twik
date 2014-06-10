@@ -21,9 +21,20 @@ import com.reddyetwo.hashmypass.app.data.TagSettings;
  */
 public class TagSettingsDialogFragment extends DialogFragment {
 
+    private static final String KEY_PROFILE_ID = "profile_id";
+    private static final String KEY_TAG = "tag";
+    private static final String KEY_TAG_ID = "tag_id";
+    private static final String KEY_PASSWORD_LENGTH = "password_length";
+    private static final String KEY_PASSWORD_TYPE = "password_type";
+
+    // Dialog state
     private long mProfileId;
-    private String mTag;
     private long mTagId;
+    private String mTag;
+    private int mPasswordLength;
+    private int mPasswordType;
+
+    // UI widgets
     private Spinner mPasswordLengthSpinner;
     private Spinner mPasswordTypeSpinner;
 
@@ -49,30 +60,34 @@ public class TagSettingsDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.tag_settings));
 
+        if (savedInstanceState != null) {
+            // Restore the state (e.g. when the screen is rotated)
+            mProfileId = savedInstanceState.getLong(KEY_PROFILE_ID);
+            mTag = savedInstanceState.getString(KEY_TAG);
+            mTagId = savedInstanceState.getLong(KEY_TAG_ID);
+            mPasswordLength = savedInstanceState.getInt(KEY_PASSWORD_LENGTH);
+            mPasswordType = savedInstanceState.getInt(KEY_PASSWORD_TYPE);
+        } else {
+            // No previous state, get data from storage
+            ContentValues tagValues =
+                    TagSettings.getTagSettings(getActivity(), mProfileId, mTag);
+            Integer tagId = tagValues.getAsInteger(DataOpenHelper.COLUMN_ID);
+            mTagId = tagId != null ? tagId : -1; // -1 => no previous data
+            mPasswordLength = tagValues
+                    .getAsInteger(DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH);
+            mPasswordType = tagValues
+                    .getAsInteger(DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE);
+        }
+
         // Inflate the layout
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_tag_settings, null);
 
-        // Fill form and set button actions
-        ContentValues tagValues =
-                TagSettings.getTagSettings(getActivity(), mProfileId, mTag);
-        Integer tagId = tagValues.getAsInteger(DataOpenHelper.COLUMN_ID);
-        if (tagId != null) {
-            mTagId = tagId;
-        } else {
-            // No previous data for this tag-profile was available
-            mTagId = -1;
-        }
-
-        // Get UI widgets
+        // Get spinner widgets
         mPasswordLengthSpinner =
                 (Spinner) view.findViewById(R.id.tag_settings_password_length);
         mPasswordTypeSpinner =
                 (Spinner) view.findViewById(R.id.tag_settings_password_type);
-
-        // Populate password length spinner
-        populatePasswordLengthSpinner(tagValues
-                .getAsInteger(DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH));
 
         /* Open number picker dialog when the password length spinner is
            touched */
@@ -88,6 +103,8 @@ public class TagSettingsDialogFragment extends DialogFragment {
             }
         });
 
+        populatePasswordLengthSpinner(mPasswordLength);
+
         /* Populate password type spinner */
         Spinner passwordTypeSpinner =
                 (Spinner) view.findViewById(R.id.tag_settings_password_type);
@@ -97,8 +114,7 @@ public class TagSettingsDialogFragment extends DialogFragment {
         adapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item);
         passwordTypeSpinner.setAdapter(adapter);
-        passwordTypeSpinner.setSelection(tagValues
-                .getAsInteger(DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE));
+        passwordTypeSpinner.setSelection(mPasswordType);
 
         // Set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
@@ -123,6 +139,19 @@ public class TagSettingsDialogFragment extends DialogFragment {
         );
 
         return builder.create();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(KEY_PROFILE_ID, mProfileId);
+        outState.putString(KEY_TAG, mTag);
+        outState.putLong(KEY_TAG_ID, mTagId);
+        outState.putInt(KEY_PASSWORD_LENGTH, Integer.parseInt(
+                        (String) mPasswordLengthSpinner.getSelectedItem())
+        );
+        outState.putInt(KEY_PASSWORD_TYPE,
+                mPasswordTypeSpinner.getSelectedItemPosition());
     }
 
     /* Shows a number picker dialog for choosing the password length */
