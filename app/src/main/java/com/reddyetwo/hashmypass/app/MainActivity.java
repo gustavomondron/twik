@@ -119,8 +119,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        mHashedPasswordTextView =
-                (TextView) findViewById(R.id.hashed_password);
+        mHashedPasswordTextView = (TextView) findViewById(R.id.hashed_password);
         mHashedPasswordTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -234,6 +233,18 @@ public class MainActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        if (requestCode == AddProfileActivity.REQUEST_ADD_PROFILE &&
+                resultCode == RESULT_OK) {
+            mSelectedProfileID =
+                    data.getLongExtra(AddProfileActivity.RESULT_KEY_PROFILE_ID,
+                            0);
+        }
+
     }
 
     private class ProfileAdapter extends CursorAdapter {
@@ -398,7 +409,8 @@ public class MainActivity extends Activity {
                         if (itemId == ID_ADD_PROFILE) {
                             Intent intent = new Intent(MainActivity.this,
                                     AddProfileActivity.class);
-                            startActivity(intent);
+                            startActivityForResult(intent,
+                                    AddProfileActivity.REQUEST_ADD_PROFILE);
                         }
                         return false;
                     }

@@ -1,6 +1,7 @@
 package com.reddyetwo.hashmypass.app;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
@@ -16,6 +17,10 @@ import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
 
 public class AddProfileActivity extends Activity {
+
+    // Request and result codes
+    public static final int REQUEST_ADD_PROFILE = 1;
+    public static final String RESULT_KEY_PROFILE_ID = "profile_id";
 
     // State bundle keys
     private static final String KEY_PASSWORD_LENGTH = "password_length";
@@ -97,6 +102,15 @@ public class AddProfileActivity extends Activity {
 
                 /* TODO Check that profileID != -1 */
 
+                /* Set activity result */
+                Intent resultIntent = new Intent();
+                if (profileID != -1) {
+                    resultIntent.putExtra(RESULT_KEY_PROFILE_ID, profileID);
+                    setResult(RESULT_OK, resultIntent);
+                } else {
+                    setResult(RESULT_CANCELED);
+                }
+
                 /* Navigate to previous activity */
                 NavUtils.navigateUpFromSameTask(AddProfileActivity.this);
             }
@@ -106,6 +120,8 @@ public class AddProfileActivity extends Activity {
         mDiscardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setResult(RESULT_CANCELED);
+
                 /* Navigate to previous activity */
                 NavUtils.navigateUpFromSameTask(AddProfileActivity.this);
             }
@@ -130,6 +146,7 @@ public class AddProfileActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            setResult(RESULT_CANCELED);
             NavUtils.navigateUpFromSameTask(this);
             return true;
         }
