@@ -72,11 +72,11 @@ public class BrowserIntegrationActivity extends Activity {
             finish();
         }
 
-        mTagEditText = (AutoCompleteTextView) findViewById(R.id.browser_tag);
+        mTagEditText = (AutoCompleteTextView) findViewById(R.id.tag_text);
 
-        TextView digestTextView = (TextView) findViewById(R.id.browser_digest);
+        TextView digestTextView = (TextView) findViewById(R.id.digest_text);
 
-        mMasterKeyEditText = (EditText) findViewById(R.id.browser_master_key);
+        mMasterKeyEditText = (EditText) findViewById(R.id.master_key_text);
         mMasterKeyEditText
                 .addTextChangedListener(new MasterKeyWatcher(digestTextView));
 
@@ -107,7 +107,7 @@ public class BrowserIntegrationActivity extends Activity {
                 new int[]{android.R.id.text1}, 0);
         adapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item);
-        mProfileSpinner = (Spinner) findViewById(R.id.browser_profile);
+        mProfileSpinner = (Spinner) findViewById(R.id.profile_spinner);
         mProfileSpinner.setAdapter(adapter);
         mProfileSpinner.setSelection(profilePosition);
 
@@ -135,7 +135,7 @@ public class BrowserIntegrationActivity extends Activity {
 
         /* Tag settings button */
         ImageButton tagSettingsButton =
-                (ImageButton) findViewById(R.id.browser_tag_settings);
+                (ImageButton) findViewById(R.id.tag_settings);
         tagSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,7 +148,7 @@ public class BrowserIntegrationActivity extends Activity {
                 new HelpToastOnLongPressClickListener());
 
         /* Cancel button finishes dialog activity */
-        Button cancelButton = (Button) findViewById(R.id.browser_cancel);
+        Button cancelButton = (Button) findViewById(R.id.cancel_button);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,7 +159,7 @@ public class BrowserIntegrationActivity extends Activity {
         /* Hash button calculated the hashed password,
         copies it to the clipboard and finishes the dialog activity
          */
-        Button hashButton = (Button) findViewById(R.id.browser_hash);
+        Button hashButton = (Button) findViewById(R.id.hash_button);
         hashButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
