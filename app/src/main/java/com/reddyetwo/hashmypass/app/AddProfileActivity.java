@@ -68,17 +68,15 @@ public class AddProfileActivity extends Activity {
         /* Open number picker dialog when the password length spinner is
         touched
          */
-        mPasswordLengthSpinner.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    showDialog();
-                    return true;
-                }
-
-                return false;
-            }
-        });
+        mPasswordLengthSpinner.setOnTouchListener(
+                new MovementTouchListener(this,
+                        new MovementTouchListener.OnPressedListener() {
+                            @Override
+                            public void onPressed() {
+                                showDialog();
+                            }
+                        })
+        );
 
         /* Add profile to database when Add button is pressed */
         mAddButton.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +110,7 @@ public class AddProfileActivity extends Activity {
         });
 
     }
-    
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

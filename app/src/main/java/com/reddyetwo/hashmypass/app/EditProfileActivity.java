@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -63,8 +62,7 @@ public class EditProfileActivity extends Activity {
 
         /* Get UI widgets */
         mNameEditText = (EditText) findViewById(R.id.profile_name_text);
-        mPrivateKeyEditText =
-                (EditText) findViewById(R.id.private_key_text);
+        mPrivateKeyEditText = (EditText) findViewById(R.id.private_key_text);
         mPasswordLengthSpinner =
                 (Spinner) findViewById(R.id.password_length_spinner);
         mPasswordTypeSpinner =
@@ -102,17 +100,15 @@ public class EditProfileActivity extends Activity {
 
         /* Open number picker dialog when the password length spinner is
            touched */
-        mPasswordLengthSpinner.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    showDialog();
-                    return true;
-                }
-
-                return false;
-            }
-        });
+        mPasswordLengthSpinner.setOnTouchListener(
+                new MovementTouchListener(this,
+                        new MovementTouchListener.OnPressedListener() {
+                            @Override
+                            public void onPressed() {
+                                showDialog();
+                            }
+                        })
+        );
 
         /* Add profile to database when Add button is pressed */
         mSaveButton.setOnClickListener(new View.OnClickListener() {
