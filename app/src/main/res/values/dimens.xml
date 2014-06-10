@@ -5,5 +5,7 @@
     <dimen name="dialog_padding">16dp</dimen>
     <dimen name="small_spacing">4dp</dimen>
     <dimen name="section_margin_top">16dp</dimen>
+
+    <!-- Specific Hash my Pass dimensions -->
     <dimen name="hashed_password_text_size">32sp</dimen>
 </resources>
