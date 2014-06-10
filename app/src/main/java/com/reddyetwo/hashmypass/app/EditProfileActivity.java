@@ -23,23 +23,29 @@ import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 public class EditProfileActivity extends Activity {
 
     public static final String EXTRA_PROFILE_ID = "profile_id";
+
+    // State bundle keys
+    private static final String KEY_PASSWORD_LENGTH = "password_length";
+
+    // UI Widgets
     private EditText mNameEditText;
     private EditText mPrivateKeyEditText;
     private Spinner mPasswordLengthSpinner;
     private Spinner mPasswordTypeSpinner;
     private Button mDiscardButton;
     private Button mSaveButton;
+
     private ArrayAdapter<String> mPasswordLengthAdapter;
+
+    // Activity status
     private long mProfileID;
     private String mOriginalName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_edit_profile);
-
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-
         mProfileID = getIntent().getLongExtra(EXTRA_PROFILE_ID, -1);
 
         DataOpenHelper helper = new DataOpenHelper(this);
@@ -51,6 +57,7 @@ public class EditProfileActivity extends Activity {
             // TODO This should be an error
         }
 
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setSubtitle(cursor.getString(
                 cursor.getColumnIndex(DataOpenHelper.COLUMN_PROFILES_NAME)));
 
@@ -84,8 +91,14 @@ public class EditProfileActivity extends Activity {
                 DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE)));
 
         /* Populate password length spinner */
-        populatePasswordLengthSpinner(cursor.getInt(cursor.getColumnIndex(
-                DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH)));
+        int passwordLength;
+        if (savedInstanceState != null) {
+            passwordLength = savedInstanceState.getInt(KEY_PASSWORD_LENGTH);
+        } else {
+            passwordLength = cursor.getInt(cursor.getColumnIndex(
+                    DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH));
+        }
+        populatePasswordLengthSpinner(passwordLength);
 
         /* Open number picker dialog when the password length spinner is
            touched */
@@ -126,6 +139,14 @@ public class EditProfileActivity extends Activity {
                 NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_PASSWORD_LENGTH, Integer.parseInt(
+                        (String) mPasswordLengthSpinner.getSelectedItem())
+        );
     }
 
     @Override
