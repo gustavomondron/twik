@@ -2,24 +2,24 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
+              android:paddingLeft="@dimen/activity_horizontal_margin"
+              android:paddingRight="@dimen/activity_horizontal_margin"
+              android:paddingTop="@dimen/activity_vertical_margin"
+              android:paddingBottom="@dimen/activity_vertical_margin"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:padding="@dimen/dialog_padding">
+              android:layout_height="match_parent">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/password_length"
         android:textAllCaps="true"
-        android:textColor="@color/text_gray"
-        android:layout_marginBottom="@dimen/small_spacing"/>
+        android:textColor="@color/text_gray"/>
 
     <Spinner
         android:id="@+id/tag_settings_password_length"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/small_spacing"
-        android:layout_marginBottom="@dimen/small_spacing"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,15 +27,12 @@
         android:text="@string/password_type"
         android:textAllCaps="true"
         android:textColor="@color/text_gray"
-        android:layout_marginTop="@dimen/section_margin_top"
-        android:layout_marginBottom="@dimen/small_spacing"/>
+        android:layout_marginTop="@dimen/activity_vertical_margin"/>
 
     <Spinner
         android:id="@+id/tag_settings_password_type"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:spinnerMode="dropdown"
-        android:layout_marginTop="@dimen/small_spacing"
-        android:layout_marginBottom="@dimen/small_spacing"/>
+        android:spinnerStyle="@android:style/Widget.Spinner.DropDown"/>
 
 </LinearLayout>
