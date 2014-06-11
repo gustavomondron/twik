@@ -10,14 +10,15 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="48dp">
 
         <ImageView
             android:id="@+id/ic_tag"
             android:src="@drawable/ic_action_tag"
             android:contentDescription="@string/tag"
             android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="8dp"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"/>
 
@@ -30,7 +31,7 @@
             android:layout_toLeftOf="@+id/tag_settings"
             android:layout_toRightOf="@+id/ic_tag"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:completionThreshold="2"
             android:hint="@string/tag"/>
 
@@ -38,8 +39,8 @@
             android:id="@+id/tag_settings"
             android:src="@drawable/ic_action_gear"
             android:contentDescription="@string/tag_settings"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             style="?android:borderlessButtonStyle"/>
@@ -48,7 +49,7 @@
     <RelativeLayout
         android:id="@+id/master_key_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -59,7 +60,8 @@
             android:src="@drawable/ic_action_key"
             android:contentDescription="@string/master_key"
             android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="8dp"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"/>
 
@@ -73,13 +75,13 @@
             android:layout_toLeftOf="@+id/digest_text"
             android:layout_toRightOf="@+id/ic_key"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:hint="@string/master_key"/>
 
         <TextView
             android:id="@+id/digest_text"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:gravity="center"
