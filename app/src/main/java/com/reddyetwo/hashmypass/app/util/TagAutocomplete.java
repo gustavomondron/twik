@@ -15,18 +15,17 @@ public class TagAutocomplete {
 
     public static void populateTagAutocompleteTextView(Context context,
                                                        long profileId,
+
                                                        AutoCompleteTextView tagTextView) {
+
+        List<String> tags = new ArrayList<String>();
         Cursor cursor = TagSettings.getTagsForProfile(context, profileId);
-        if (!cursor.moveToFirst()) {
-            return;
-        }
-
-        int column = cursor.getColumnIndex(DataOpenHelper.COLUMN_TAGS_NAME);
-
-        List<String> tags = new ArrayList<String>(cursor.getCount());
-        tags.add(cursor.getString(column));
-        while (cursor.moveToNext()) {
+        if (cursor.moveToFirst()) {
+            int column = cursor.getColumnIndex(DataOpenHelper.COLUMN_TAGS_NAME);
             tags.add(cursor.getString(column));
+            while (cursor.moveToNext()) {
+                tags.add(cursor.getString(column));
+            }
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,

@@ -421,6 +421,11 @@ public class MainActivity extends Activity {
                                     AddProfileActivity.class);
                             startActivityForResult(intent,
                                     AddProfileActivity.REQUEST_ADD_PROFILE);
+                        } else {
+                            // Update TagAutoCompleteTextView
+                            TagAutocomplete.populateTagAutocompleteTextView(
+                                    MainActivity.this, mSelectedProfileID,
+                                    mTagEditText);
                         }
                         return false;
                     }
