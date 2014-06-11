@@ -93,9 +93,8 @@ public class ManageTagsActivity extends Activity {
                 public void onClick(View v) {
                     AlertDialog.Builder builder =
                             new AlertDialog.Builder(ManageTagsActivity.this);
-                    builder.setTitle(
+                    builder.setMessage(
                             getString(R.string.confirm_delete_tag, tagName));
-                    builder.setMessage(R.string.warning_lose_settings);
                     builder.setPositiveButton(R.string.action_delete,
                             new DialogInterface.OnClickListener() {
                                 @Override
