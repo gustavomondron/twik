@@ -123,10 +123,13 @@ public class MainActivity extends Activity {
         mHashedPasswordTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ClipboardHelper.copyToClipboard(getApplicationContext(),
-                        ClipboardHelper.CLIPBOARD_LABEL_PASSWORD,
-                        mHashedPasswordTextView.getText().toString(),
-                        R.string.copied_to_clipboard);
+                if (mHashedPasswordTextView.getText().length() > 0) {
+                    ClipboardHelper.copyToClipboard(getApplicationContext(),
+                            ClipboardHelper.CLIPBOARD_LABEL_PASSWORD,
+                            mHashedPasswordTextView.getText().toString(),
+                            R.string.copied_to_clipboard);
+
+                }
             }
         });
 
