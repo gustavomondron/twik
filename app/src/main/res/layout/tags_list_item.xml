@@ -12,6 +12,7 @@
     <TextView
         android:id="@+id/tag_name"
         android:gravity="center_vertical"
+        android:textAppearance="?android:textAppearanceMedium"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="48dp"/>
