@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 tools:context=".MainActivity">
 
     <RelativeLayout
@@ -9,7 +9,7 @@
         android:layout_marginTop="@dimen/activity_top_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
@@ -29,7 +29,7 @@
             android:maxLength="25"
             android:layout_toLeftOf="@+id/tag_settings"
             android:layout_toRightOf="@+id/ic_tag"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:completionThreshold="2"
             android:hint="@string/tag"/>
@@ -47,7 +47,7 @@
 
     <RelativeLayout
         android:id="@+id/master_key_layout"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -72,7 +72,7 @@
             android:maxLength="25"
             android:layout_toLeftOf="@+id/digest_text"
             android:layout_toRightOf="@+id/ic_key"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/master_key"/>
 
@@ -91,7 +91,7 @@
         android:textSize="@dimen/hashed_password_text_size"
         android:layout_marginTop="@dimen/activity_vertical_margin_large"
         android:gravity="center"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/master_key_layout"/>
 
@@ -100,7 +100,7 @@
         android:textSize="@dimen/hashed_password_text_size"
         android:layout_marginTop="@dimen/activity_vertical_margin_large"
         android:gravity="center"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/master_key_layout"/>
 

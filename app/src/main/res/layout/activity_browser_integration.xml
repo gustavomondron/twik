@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
@@ -24,7 +24,7 @@
 
         <Spinner
             android:id="@+id/profile_spinner"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="32dp"
             android:layout_toRightOf="@+id/ic_profile"
@@ -37,7 +37,7 @@
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
@@ -57,7 +57,7 @@
             android:maxLength="25"
             android:layout_toLeftOf="@+id/tag_settings"
             android:layout_toRightOf="@+id/ic_tag"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:completionThreshold="2"
             android:hint="@string/tag"/>
@@ -76,7 +76,7 @@
 
     <RelativeLayout
         android:id="@+id/master_key_layout"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -101,7 +101,7 @@
             android:maxLength="25"
             android:layout_toLeftOf="@+id/digest_text"
             android:layout_toRightOf="@+id/ic_key"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/master_key"/>
 
@@ -117,19 +117,19 @@
 
     <LinearLayout
         android:gravity="bottom"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:orientation="vertical"
         android:showDividers="middle"
         android:divider="?android:dividerHorizontal">
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="0dp"/>
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:divider="?android:dividerHorizontal"
