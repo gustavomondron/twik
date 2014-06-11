@@ -8,4 +8,6 @@
 
     <!-- Specific Hash my Pass dimensions -->
     <dimen name="hashed_password_text_size">32sp</dimen>
+    <dimen name="empty_list_text_size">22sp</dimen>
+    <dimen name="empty_list_image_size">112dp</dimen>
 </resources>

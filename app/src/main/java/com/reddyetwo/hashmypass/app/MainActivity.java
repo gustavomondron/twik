@@ -234,7 +234,14 @@ public class MainActivity extends Activity {
                     mSelectedProfileID);
             startActivity(intent);
             return true;
+        } else if (id == R.id.action_manage_tags) {
+            Intent intent = new Intent(this, ManageTagsActivity.class);
+            intent.putExtra(EditProfileActivity.EXTRA_PROFILE_ID,
+                    mSelectedProfileID);
+            startActivity(intent);
+            return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
