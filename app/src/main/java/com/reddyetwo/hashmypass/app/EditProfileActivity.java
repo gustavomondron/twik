@@ -174,6 +174,7 @@ public class EditProfileActivity extends Activity {
         } else if (id == R.id.action_delete) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(getString(R.string.confirm_delete, mOriginalName));
+            builder.setMessage(R.string.warning_lose_settings);
             builder.setPositiveButton(R.string.action_delete,
                     new DialogInterface.OnClickListener() {
                         @Override

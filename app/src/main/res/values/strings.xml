@@ -10,7 +10,7 @@
     <string name="action_delete">Delete</string>
     <string name="confirm_delete">Delete \"%s\" profile?</string>
     <string name="confirm_delete_tag">Delete \"%s\" tag?</string>
-    <string name="warning_lose_settings">You\'ll lose its settings!</string>
+    <string name="warning_lose_settings">You\'ll lose all its settings!</string>
     <string name="discard">Discard</string>
     <string name="ok">Ok</string>
     <string name="password_length">Password length</string>
