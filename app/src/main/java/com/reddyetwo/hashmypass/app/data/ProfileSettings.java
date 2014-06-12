@@ -109,8 +109,7 @@ public class ProfileSettings {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getWritableDatabase();
         boolean deleted = db.delete(DataOpenHelper.PROFILES_TABLE_NAME,
-                "_id=" + profileId,
-                null) > 0;
+                "_id=" + profileId, null) > 0;
 
         db.close();
         return deleted;
@@ -146,7 +145,8 @@ public class ProfileSettings {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cursor = db.query(DataOpenHelper.PROFILES_TABLE_NAME,
-                new String[]{DataOpenHelper.COLUMN_PROFILES_NAME,
+                new String[]{DataOpenHelper.COLUMN_ID,
+                        DataOpenHelper.COLUMN_PROFILES_NAME,
                         DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY,
                         DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH,
                         DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE}, null,
