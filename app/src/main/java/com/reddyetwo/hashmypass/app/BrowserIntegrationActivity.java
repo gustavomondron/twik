@@ -1,30 +1,27 @@
 package com.reddyetwo.hashmypass.app;
 
 import android.app.Activity;
-import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
-import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Preferences;
+import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
-import com.reddyetwo.hashmypass.app.data.SiteSettings;
+import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
@@ -35,6 +32,7 @@ import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
 import com.reddyetwo.hashmypass.app.util.TagAutocomplete;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,7 +52,7 @@ public class BrowserIntegrationActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browser_integration);
 
-        /* Extract site from URI */
+        // Extract site from URI
         Intent intent = getIntent();
         if (intent != null && Intent.ACTION_SEND.equals(intent.getAction())) {
             Uri uri = Uri.parse(intent.getStringExtra(Intent.EXTRA_TEXT));
@@ -68,7 +66,7 @@ public class BrowserIntegrationActivity extends Activity {
 
             mSite = siteExtractor.group(1);
         } else {
-            /* We shouldn't be here */
+            // We shouldn't be here
             finish();
         }
 
@@ -80,41 +78,9 @@ public class BrowserIntegrationActivity extends Activity {
         mMasterKeyEditText
                 .addTextChangedListener(new MasterKeyWatcher(digestTextView));
 
-        /* Populate profile spinner */
-        DataOpenHelper helper = new DataOpenHelper(this);
-        SQLiteDatabase db = helper.getWritableDatabase();
-
-        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
-        queryBuilder.setTables(DataOpenHelper.PROFILES_TABLE_NAME);
-        Cursor cursor = queryBuilder.query(db,
-                new String[]{DataOpenHelper.COLUMN_ID,
-                        DataOpenHelper.COLUMN_PROFILES_NAME}, null, null, null,
-                null, null
-        );
-
-        /* Get the last used profile ID and its position in the cursor */
-        SharedPreferences preferences =
-                getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
-        long lastProfileID =
-                preferences.getLong(Preferences.PREFS_KEY_LAST_PROFILE, -1);
-        int profilePosition = ProfileSettings
-                .getProfileIDPositionInCursor(lastProfileID, cursor);
-        cursor.moveToFirst(); /* Rewind cursor */
-
-        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-                android.R.layout.simple_spinner_item, cursor,
-                new String[]{DataOpenHelper.COLUMN_PROFILES_NAME},
-                new int[]{android.R.id.text1}, 0);
-        adapter.setDropDownViewResource(
-                android.R.layout.simple_spinner_dropdown_item);
+        // Populate profile spinner
         mProfileSpinner = (Spinner) findViewById(R.id.profile_spinner);
-        mProfileSpinner.setAdapter(adapter);
-        mProfileSpinner.setSelection(profilePosition);
-
-        /* Select the last used profile */
-        if (profilePosition != -1) {
-            mProfileSpinner.setSelection(profilePosition);
-        }
+        populateProfileSpinner();
 
         mProfileSpinner.setOnItemSelectedListener(
                 new AdapterView.OnItemSelectedListener() {
@@ -131,9 +97,6 @@ public class BrowserIntegrationActivity extends Activity {
                 }
         );
 
-        db.close();
-
-        /* Tag settings button */
         ImageButton tagSettingsButton =
                 (ImageButton) findViewById(R.id.tag_settings);
         tagSettingsButton.setOnClickListener(new View.OnClickListener() {
@@ -147,7 +110,6 @@ public class BrowserIntegrationActivity extends Activity {
         tagSettingsButton.setOnLongClickListener(
                 new HelpToastOnLongPressClickListener());
 
-        /* Cancel button finishes dialog activity */
         Button cancelButton = (Button) findViewById(R.id.cancel_button);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,24 +118,14 @@ public class BrowserIntegrationActivity extends Activity {
             }
         });
 
-        /* Hash button calculated the hashed password,
-        copies it to the clipboard and finishes the dialog activity
-         */
         Button hashButton = (Button) findViewById(R.id.hash_button);
         hashButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 calculatePasswordHash();
 
-                /* Update last used profile preference */
-                SharedPreferences preferences =
-                        getSharedPreferences(Preferences.PREFS_NAME,
-                                MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putLong(Preferences.PREFS_KEY_LAST_PROFILE,
-                        mProfileSpinner.getSelectedItemId());
-                editor.commit();
-                /* Close the dialog activity */
+
+                // Close the dialog activity
                 finish();
             }
         });
@@ -192,7 +144,6 @@ public class BrowserIntegrationActivity extends Activity {
                         mMasterKeyEditText, hashButton);
         mTagEditText.addTextChangedListener(mHashButtonEnableTextWatcher);
         mMasterKeyEditText.addTextChangedListener(mHashButtonEnableTextWatcher);
-
     }
 
     @Override
@@ -204,7 +155,8 @@ public class BrowserIntegrationActivity extends Activity {
         mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey());
 
         TagAutocomplete.populateTagAutocompleteTextView(this,
-                mProfileSpinner.getSelectedItemId(), mTagEditText);
+                ((Profile) mProfileSpinner.getSelectedItem()).getId(),
+                mTagEditText);
 
         mHashButtonEnableTextWatcher.updateHashButtonEnabled();
     }
@@ -221,64 +173,110 @@ public class BrowserIntegrationActivity extends Activity {
     }
 
     private void updateTagText() {
-        long profileID = mProfileSpinner.getSelectedItemId();
-        String siteTag = SiteSettings.getSiteTag(this, profileID, mSite);
-        if (siteTag == null) {
-            // There is no previous association, use the site as tag
-            siteTag = mSite;
+        long profileId = ((Profile) mProfileSpinner.getSelectedItem()).getId();
+        Tag tag = TagSettings.getSiteTag(this, profileId, mSite);
+        String siteTagName;
+        if (tag == null) {
+            // There is no previous association, use the site as tag.
+            siteTagName = mSite;
+        } else {
+            siteTagName = tag.getName();
         }
-        mTagEditText.setText(siteTag);
+        mTagEditText.setText(siteTagName);
     }
 
     private void calculatePasswordHash() {
-        String tag = mTagEditText.getText().toString().trim();
+        String tagName = mTagEditText.getText().toString().trim();
         String masterKey = mMasterKeyEditText.getText().toString();
-        long profileID = mProfileSpinner.getSelectedItemId();
 
-        // TODO Show warning if tag or master key are empty
-        if (tag.length() > 0 && masterKey.length() > 0) {
-            /* Calculate the hashed password */
-            ContentValues tagSettings =
-                    TagSettings.getTagSettings(this, profileID, tag);
-            ContentValues profileSettings =
-                    ProfileSettings.getProfileSettings(this, profileID);
-            String privateKey = profileSettings
-                    .getAsString(DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY);
-            int passwordLength = tagSettings
-                    .getAsInteger(DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH);
-            PasswordType passwordType = PasswordType.values()[tagSettings
-                    .getAsInteger(DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE)];
+        if (tagName.length() > 0 && masterKey.length() > 0) {
+            // Get the private key
+            long profileId =
+                    ((Profile) mProfileSpinner.getSelectedItem()).getId();
+            Profile profile = ProfileSettings.getProfile(this, profileId);
+            Tag tag = TagSettings.getTag(this, profileId, tagName);
+
+            // Calculate hashed password
             String hashedPassword = PasswordHasher
-                    .hashPassword(tag, masterKey, privateKey, passwordLength,
-                            passwordType);
+                    .hashPassword(tagName, masterKey, profile.getPrivateKey(),
+                            tag.getPasswordLength(), tag.getPasswordType());
 
-            /* Copy the hashed password to the clipboard */
+            // Copy hashed password to clipboard
             ClipboardHelper.copyToClipboard(getApplicationContext(),
                     ClipboardHelper.CLIPBOARD_LABEL_PASSWORD, hashedPassword,
                     R.string.copied_to_clipboard);
 
             /* If the tag is not already stored in the database,
             save the current settings */
-            if (!tagSettings.containsKey(DataOpenHelper.COLUMN_ID)) {
-                TagSettings
-                        .insertTagSettings(this, tag, profileID, passwordLength,
-                                passwordType);
+            if (tag.getId() == Tag.NO_ID) {
+                TagSettings.insertTag(this, tag);
             }
 
-            /* Update the site-tag association */
-            SiteSettings.updateSiteTag(this, profileID, mSite, tag);
+            // Update the site-tag association
+            tag.setSite(mSite);
+            TagSettings.updateTag(this, tag);
 
-            TagAutocomplete.populateTagAutocompleteTextView(this,
-                    mProfileSpinner.getSelectedItemId(), mTagEditText);
+            // Update last used profile preference
+            SharedPreferences preferences =
+                    getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putLong(Preferences.PREFS_KEY_LAST_PROFILE, profileId);
+            editor.commit();
+
         }
     }
 
-    /* Shows a number picker dialog for choosing the password length */
+    // Shows a number picker dialog for choosing the password length
     private void showTagSettingsDialog() {
         TagSettingsDialogFragment dialogFragment =
                 new TagSettingsDialogFragment();
-        dialogFragment.setProfileId(mProfileSpinner.getSelectedItemId());
+        dialogFragment.setProfileId(
+                ((Profile) mProfileSpinner.getSelectedItem()).getId());
         dialogFragment.setTag(mTagEditText.getText().toString());
         dialogFragment.show(getFragmentManager(), "tagSettings");
+    }
+
+    private void populateProfileSpinner() {
+        List<Profile> profileList = ProfileSettings.getList(this);
+        mProfileSpinner.setAdapter(new ProfileAdapter(this, profileList));
+
+        // Get the last used profile
+        SharedPreferences preferences =
+                getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
+        long lastProfileId =
+                preferences.getLong(Preferences.PREFS_KEY_LAST_PROFILE, -1);
+        if (lastProfileId != -1) {
+            int position = 0;
+            for (Profile f : profileList) {
+                if (f.getId() == lastProfileId) {
+                    break;
+                }
+                position++;
+            }
+            mProfileSpinner.setSelection(position);
+        }
+    }
+
+    private class ProfileAdapter extends ArrayAdapter<Profile> {
+
+        private List<Profile> mProfiles;
+        private static final int mResource =
+                android.R.layout.simple_spinner_dropdown_item;
+
+        public ProfileAdapter(Context context, List<Profile> objects) {
+            super(context, mResource, objects);
+            mProfiles = objects;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView =
+                        getLayoutInflater().inflate(mResource, parent, false);
+            }
+
+            ((TextView) convertView).setText(mProfiles.get(position).getName());
+            return convertView;
+        }
     }
 }

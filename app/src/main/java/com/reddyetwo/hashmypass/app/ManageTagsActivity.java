@@ -1,5 +1,6 @@
 package com.reddyetwo.hashmypass.app;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -20,38 +22,42 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
+import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
+import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
+
+import java.util.List;
 
 public class ManageTagsActivity extends Activity {
 
     public static final String EXTRA_PROFILE_ID = "profile_id";
 
-    private long mProfileID;
+    private long mProfileId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_tags);
 
-        mProfileID = getIntent().getLongExtra(EXTRA_PROFILE_ID, -1);
+        mProfileId = getIntent().getLongExtra(EXTRA_PROFILE_ID, -1);
 
-        // Get profile name
-        ContentValues profileSettings =
-                ProfileSettings.getProfileSettings(this, mProfileID);
+        Profile profile = ProfileSettings.getProfile(this, mProfileId);
 
         // Populate action bar
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setSubtitle(profileSettings
-                .getAsString(DataOpenHelper.COLUMN_PROFILES_NAME));
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setSubtitle(profile.getName());
+        }
 
         // Set list adapter
-        Cursor cursor = TagSettings.getTagsForProfile(this, mProfileID);
-        TagAdapter adapter = new TagAdapter(this, cursor, 0);
+        List<Tag> tagList = TagSettings.getProfileTags(this, mProfileId);
+        TagAdapter adapter = new TagAdapter(this, tagList);
         ((ListView) findViewById(android.R.id.list)).setAdapter(adapter);
 
-        // Check that cursor contains data
-        checkEmptyList(cursor);
+        // Show the no-tags view or the list view
+        updateLayout(tagList.size());
     }
 
     @Override
@@ -66,35 +72,37 @@ public class ManageTagsActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class TagAdapter extends CursorAdapter {
+    private class TagAdapter extends ArrayAdapter<Tag> {
 
-        private TagAdapter(Context context, Cursor c, int flags) {
-            super(context, c, flags);
+        private List<Tag> mTags;
+        private static final int mResource = R.layout.tags_list_item;
+
+        public TagAdapter(Context context, List<Tag> objects) {
+            super(context, mResource, objects);
+            mTags = objects;
         }
 
         @Override
-        public View newView(Context context, Cursor cursor, ViewGroup parent) {
-            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            return inflater.inflate(R.layout.tags_list_item, parent, false);
-        }
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView =
+                        getLayoutInflater().inflate(mResource, parent, false);
+            }
 
-        @Override
-        public void bindView(View view, Context context, Cursor cursor) {
-            final long tagID = cursor.getLong(
-                    cursor.getColumnIndex(DataOpenHelper.COLUMN_ID));
-            final String tagName = cursor.getString(
-                    cursor.getColumnIndex(DataOpenHelper.COLUMN_TAGS_NAME));
-            TextView nameView = (TextView) view.findViewById(R.id.tag_name);
+            final Tag tag = mTags.get(position);
+            TextView nameView =
+                    (TextView) convertView.findViewById(R.id.tag_name);
             ImageButton deleteButton =
-                    (ImageButton) view.findViewById(R.id.delete_button);
-            nameView.setText(tagName);
+                    (ImageButton) convertView.findViewById(R.id.delete_button);
+            nameView.setText(tag.getName());
+
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder builder =
                             new AlertDialog.Builder(ManageTagsActivity.this);
-                    builder.setMessage(
-                            getString(R.string.confirm_delete_tag, tagName));
+                    builder.setMessage(getString(R.string.confirm_delete_tag,
+                            tag.getName()));
                     builder.setPositiveButton(R.string.action_delete,
                             new DialogInterface.OnClickListener() {
                                 @Override
@@ -104,23 +112,23 @@ public class ManageTagsActivity extends Activity {
                                             ManageTagsActivity
                                                     .this
                                     );
-                                    SQLiteDatabase db =
-                                            helper.getWritableDatabase();
-                                    db.delete(DataOpenHelper.TAGS_TABLE_NAME,
-                                            "_id=" + tagID + " AND " +
-                                                    DataOpenHelper.COLUMN_TAGS_PROFILE_ID +
-                                                    "=" + mProfileID, null
-                                    );
-                                    /* TODO Check delete return value */
-
-                                    /* Update list */
-                                    Cursor cursor = TagSettings
-                                            .getTagsForProfile(
-                                                    ManageTagsActivity.this,
-                                                    mProfileID);
-                                    changeCursor(cursor);
-                                    notifyDataSetChanged();
-                                    checkEmptyList(cursor);
+                                    if (TagSettings
+                                            .deleteTag(ManageTagsActivity.this,
+                                                    tag)) {
+                                        // Update tags list
+                                        mTags = TagSettings.getProfileTags(
+                                                ManageTagsActivity.this,
+                                                mProfileId);
+                                        clear();
+                                        addAll(mTags);
+                                        notifyDataSetChanged();
+                                        updateLayout(mTags.size());
+                                    } else {
+                                        // Error!
+                                        Toast.makeText(ManageTagsActivity.this,
+                                                R.string.error,
+                                                Toast.LENGTH_LONG).show();
+                                    }
                                 }
                             }
                     );
@@ -141,26 +149,28 @@ public class ManageTagsActivity extends Activity {
             nameView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showTagSettingsDialog(tagName);
+                    showTagSettingsDialog(tag.getName());
                 }
             });
+
+            return convertView;
         }
     }
 
     /* Shows a number picker dialog for choosing the password length */
-    private void showTagSettingsDialog(String tag) {
+    private void showTagSettingsDialog(String tagName) {
         TagSettingsDialogFragment dialogFragment =
                 new TagSettingsDialogFragment();
-        dialogFragment.setProfileId(mProfileID);
-        dialogFragment.setTag(tag);
+        dialogFragment.setProfileId(mProfileId);
+        dialogFragment.setTag(tagName);
 
         dialogFragment.show(getFragmentManager(), "tagSettings");
     }
 
-    private void checkEmptyList(Cursor cursor) {
+    private void updateLayout(int tagListSize) {
         View listView = findViewById(android.R.id.list);
         View emptyView = findViewById(R.id.list_empty_layout);
-        if (cursor.getCount() == 0) {
+        if (tagListSize == 0) {
             listView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         } else {

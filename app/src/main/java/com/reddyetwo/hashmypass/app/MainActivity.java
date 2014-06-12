@@ -2,7 +2,6 @@ package com.reddyetwo.hashmypass.app;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,9 +27,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
-import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Preferences;
+import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
+import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
@@ -45,12 +45,11 @@ import com.reddyetwo.hashmypass.app.util.TagAutocomplete;
 public class MainActivity extends Activity {
 
     private static final int ID_ADD_PROFILE = -1;
-    private long mSelectedProfileID = -1;
+    private long mSelectedProfileId = -1;
     private AutoCompleteTextView mTagEditText;
     private EditText mMasterKeyEditText;
     private TextView mHashedPasswordTextView;
     private TextView mHashedPasswordOldTextView;
-    private Button mHashButton;
     private HashButtonEnableTextWatcher mHashButtonEnableTextWatcher;
 
     @Override
@@ -59,13 +58,15 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         ActionBar actionBar = getActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        }
 
         /* Select the last profile used */
         SharedPreferences preferences =
                 getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
-        mSelectedProfileID =
+        mSelectedProfileId =
                 preferences.getLong(Preferences.PREFS_KEY_LAST_PROFILE, -1);
 
         populateActionBarSpinner();
@@ -92,8 +93,8 @@ public class MainActivity extends Activity {
         tagSettingsButton.setOnLongClickListener(
                 new HelpToastOnLongPressClickListener());
 
-        mHashButton = (Button) findViewById(R.id.hash_button);
-        mHashButton.setOnClickListener(new View.OnClickListener() {
+        Button hashButton = (Button) findViewById(R.id.hash_button);
+        hashButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 calculatePasswordHash();
@@ -104,7 +105,7 @@ public class MainActivity extends Activity {
                                 MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putLong(Preferences.PREFS_KEY_LAST_PROFILE,
-                        mSelectedProfileID);
+                        mSelectedProfileId);
                 editor.commit();
 
                 /* Automatically copy password to clipboard if the preference
@@ -145,7 +146,7 @@ public class MainActivity extends Activity {
         /* Set hash button enable watcher */
         mHashButtonEnableTextWatcher =
                 new HashButtonEnableTextWatcher(mTagEditText,
-                        mMasterKeyEditText, mHashButton);
+                        mMasterKeyEditText, hashButton);
         mTagEditText.addTextChangedListener(mHashButtonEnableTextWatcher);
         mMasterKeyEditText.addTextChangedListener(mHashButtonEnableTextWatcher);
     }
@@ -179,7 +180,7 @@ public class MainActivity extends Activity {
          */
         populateActionBarSpinner();
         TagAutocomplete
-                .populateTagAutocompleteTextView(this, mSelectedProfileID,
+                .populateTagAutocompleteTextView(this, mSelectedProfileId,
                         mTagEditText);
         mHashButtonEnableTextWatcher.updateHashButtonEnabled();
     }
@@ -231,13 +232,13 @@ public class MainActivity extends Activity {
         } else if (id == R.id.action_edit_profile) {
             Intent intent = new Intent(this, EditProfileActivity.class);
             intent.putExtra(EditProfileActivity.EXTRA_PROFILE_ID,
-                    mSelectedProfileID);
+                    mSelectedProfileId);
             startActivity(intent);
             return true;
         } else if (id == R.id.action_manage_tags) {
             Intent intent = new Intent(this, ManageTagsActivity.class);
             intent.putExtra(EditProfileActivity.EXTRA_PROFILE_ID,
-                    mSelectedProfileID);
+                    mSelectedProfileId);
             startActivity(intent);
             return true;
         }
@@ -250,7 +251,7 @@ public class MainActivity extends Activity {
                                     Intent data) {
         if (requestCode == AddProfileActivity.REQUEST_ADD_PROFILE &&
                 resultCode == RESULT_OK) {
-            mSelectedProfileID =
+            mSelectedProfileId =
                     data.getLongExtra(AddProfileActivity.RESULT_KEY_PROFILE_ID,
                             0);
         }
@@ -283,37 +284,32 @@ public class MainActivity extends Activity {
     private void showTagSettingsDialog() {
         TagSettingsDialogFragment dialogFragment =
                 new TagSettingsDialogFragment();
-        dialogFragment.setProfileId(mSelectedProfileID);
+        dialogFragment.setProfileId(mSelectedProfileId);
         dialogFragment.setTag(mTagEditText.getText().toString());
 
         dialogFragment.show(getFragmentManager(), "tagSettings");
     }
 
     private void calculatePasswordHash() {
-        String tag = mTagEditText.getText().toString().trim();
+        String tagName = mTagEditText.getText().toString().trim();
         String masterKey = mMasterKeyEditText.getText().toString();
 
         // TODO Show warning if tag or master key are empty
-        if (tag.length() > 0 && masterKey.length() > 0) {
-            /* Calculate the hashed password */
-            ContentValues tagSettings =
-                    TagSettings.getTagSettings(this, mSelectedProfileID, tag);
-            ContentValues profileSettings = ProfileSettings
-                    .getProfileSettings(this, mSelectedProfileID);
-            String privateKey = profileSettings
-                    .getAsString(DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY);
-            int passwordLength = tagSettings
-                    .getAsInteger(DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH);
-            PasswordType passwordType = PasswordType.values()[tagSettings
-                    .getAsInteger(DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE)];
+        if (tagName.length() > 0 && masterKey.length() > 0) {
+            // Calculate the hashed password
+            Tag tag = TagSettings.getTag(this, mSelectedProfileId, tagName);
+            Profile profile =
+                    ProfileSettings.getProfile(this, mSelectedProfileId);
+
+            // Calculate hashed password
             String hashedPassword = PasswordHasher
-                    .hashPassword(tag, masterKey, privateKey, passwordLength,
-                            passwordType);
+                    .hashPassword(tagName, masterKey, profile.getPrivateKey(),
+                            tag.getPasswordLength(), tag.getPasswordType());
 
             String hashedPasswordOld =
                     mHashedPasswordTextView.getText().toString();
 
-            /* Update the TextView */
+            // Update the TextView
             mHashedPasswordTextView.setText(hashedPassword);
 
             // Animate password text views if different
@@ -356,93 +352,95 @@ public class MainActivity extends Activity {
             }
 
             /* If the tag is not already stored in the database,
-            save the current settings and update tag autocomplete data */
-            if (!tagSettings.containsKey(DataOpenHelper.COLUMN_ID)) {
-                TagSettings.insertTagSettings(this, tag, mSelectedProfileID,
-                        passwordLength, passwordType);
-
-                // Update tag autocomplete
+            save the current settings and update the AutoCompleteTextView */
+            if (tag.getId() == Tag.NO_ID) {
+                TagSettings.insertTag(this, tag);
                 TagAutocomplete.populateTagAutocompleteTextView(this,
-                        mSelectedProfileID, mTagEditText);
+                        mSelectedProfileId, mTagEditText);
             }
         }
     }
 
     private void populateActionBarSpinner() {
-        DataOpenHelper helper = new DataOpenHelper(this);
-        SQLiteDatabase db = helper.getWritableDatabase();
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            DataOpenHelper helper = new DataOpenHelper(this);
+            SQLiteDatabase db = helper.getWritableDatabase();
 
-        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
-        queryBuilder.setTables(DataOpenHelper.PROFILES_TABLE_NAME);
-        Cursor cursor = queryBuilder.query(db,
-                new String[]{DataOpenHelper.COLUMN_ID,
-                        DataOpenHelper.COLUMN_PROFILES_NAME}, null, null, null,
-                null, null
-        );
+            SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+            queryBuilder.setTables(DataOpenHelper.PROFILES_TABLE_NAME);
+            Cursor cursor = queryBuilder.query(db,
+                    new String[]{DataOpenHelper.COLUMN_ID,
+                            DataOpenHelper.COLUMN_PROFILES_NAME}, null, null,
+                    null, null, null
+            );
 
-        /* We may need to copy the cursor (for restoring the profile selected
-         before pausing the activity).
-         ProfileAdapter uses the cursor during callbacks so it is not safe to
-         use it on our own after setting the navigation list callback */
-        MatrixCursor profilesCursorCopy = new MatrixCursor(
-                new String[]{DataOpenHelper.COLUMN_ID,
-                        DataOpenHelper.COLUMN_PROFILES_NAME}
-        );
-        if (cursor.moveToFirst()) {
-            do {
-                profilesCursorCopy.addRow(new String[]{Long.toString(
-                        cursor.getLong(
-                                cursor.getColumnIndex(DataOpenHelper.COLUMN_ID))
-                ), cursor.getString(cursor.getColumnIndex(
-                                DataOpenHelper.COLUMN_PROFILES_NAME)
-                )});
-            } while (cursor.moveToNext());
-            cursor.moveToFirst();
-        }
+            /* We may need to copy the cursor (for restoring the profile
+            selected before pausing the activity). ProfileAdapter uses the
+            cursor during callbacks so it is not safe to use it on our own after
+            setting the navigation list callback */
+            MatrixCursor profilesCursorCopy = new MatrixCursor(
+                    new String[]{DataOpenHelper.COLUMN_ID,
+                            DataOpenHelper.COLUMN_PROFILES_NAME}
+            );
+            if (cursor.moveToFirst()) {
+                do {
+                    profilesCursorCopy.addRow(new String[]{Long.toString(
+                            cursor.getLong(cursor.getColumnIndex(
+                                    DataOpenHelper.COLUMN_ID))
+                    ), cursor.getString(cursor.getColumnIndex(
+                                    DataOpenHelper.COLUMN_PROFILES_NAME)
+                    )});
+                } while (cursor.moveToNext());
+                cursor.moveToFirst();
+            }
 
-        /* Include the "Add profile" option in the actionBar spinner */
-        MatrixCursor extras = new MatrixCursor(
-                new String[]{DataOpenHelper.COLUMN_ID,
-                        DataOpenHelper.COLUMN_PROFILES_NAME}
-        );
-        extras.addRow(new String[]{Integer.toString(ID_ADD_PROFILE),
-                getResources().getString(R.string.action_add_profile)});
+            // Include the "Add profile" option in the actionBar spinner
+            MatrixCursor extras = new MatrixCursor(
+                    new String[]{DataOpenHelper.COLUMN_ID,
+                            DataOpenHelper.COLUMN_PROFILES_NAME}
+            );
+            extras.addRow(new String[]{Integer.toString(ID_ADD_PROFILE),
+                    getResources().getString(R.string.action_add_profile)});
 
-        MergeCursor mergeCursor = new MergeCursor(new Cursor[]{cursor, extras});
-        final ProfileAdapter adapter = new ProfileAdapter(this, mergeCursor, 0);
-        getActionBar().setListNavigationCallbacks(adapter,
-                new ActionBar.OnNavigationListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(int itemPosition,
-                                                            long itemId) {
-                        mSelectedProfileID = itemId;
-                        if (itemId == ID_ADD_PROFILE) {
-                            Intent intent = new Intent(MainActivity.this,
-                                    AddProfileActivity.class);
-                            startActivityForResult(intent,
-                                    AddProfileActivity.REQUEST_ADD_PROFILE);
-                        } else {
-                            // Update TagAutoCompleteTextView
-                            TagAutocomplete.populateTagAutocompleteTextView(
-                                    MainActivity.this, mSelectedProfileID,
-                                    mTagEditText);
+            MergeCursor mergeCursor =
+                    new MergeCursor(new Cursor[]{cursor, extras});
+            final ProfileAdapter adapter =
+                    new ProfileAdapter(this, mergeCursor, 0);
+            actionBar.setListNavigationCallbacks(adapter,
+                    new ActionBar.OnNavigationListener() {
+                        @Override
+                        public boolean onNavigationItemSelected(
+                                int itemPosition, long itemId) {
+                            mSelectedProfileId = itemId;
+                            if (itemId == ID_ADD_PROFILE) {
+                                Intent intent = new Intent(MainActivity.this,
+                                        AddProfileActivity.class);
+                                startActivityForResult(intent,
+                                        AddProfileActivity.REQUEST_ADD_PROFILE);
+                            } else {
+                                // Update TagAutoCompleteTextView
+                                TagAutocomplete.populateTagAutocompleteTextView(
+                                        MainActivity.this, mSelectedProfileId,
+                                        mTagEditText);
+                            }
+                            return false;
                         }
-                        return false;
                     }
-                }
-        );
+            );
 
-        /* If we had previously selected a profile before pausing the
-        activity and it still exists, select it in the spinner. */
-        int profilePosition = ProfileSettings
-                .getProfileIDPositionInCursor(mSelectedProfileID,
-                        profilesCursorCopy);
-        if (profilePosition != -1) {
-            getActionBar().setSelectedNavigationItem(profilePosition);
+            /* If we had previously selected a profile before pausing the
+            activity and it still exists, select it in the spinner. */
+            int profilePosition = ProfileSettings
+                    .indexOf(mSelectedProfileId, profilesCursorCopy);
+            if (profilePosition != -1) {
+                getActionBar().setSelectedNavigationItem(profilePosition);
+            }
+
+            profilesCursorCopy.close();
+            db.close();
         }
 
-        profilesCursorCopy.close();
-        db.close();
     }
 
 }

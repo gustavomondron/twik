@@ -6,6 +6,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
+import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 
 import java.util.ArrayList;
@@ -15,22 +16,16 @@ public class TagAutocomplete {
 
     public static void populateTagAutocompleteTextView(Context context,
                                                        long profileId,
-
                                                        AutoCompleteTextView tagTextView) {
 
-        List<String> tags = new ArrayList<String>();
-        Cursor cursor = TagSettings.getTagsForProfile(context, profileId);
-        if (cursor.moveToFirst()) {
-            int column = cursor.getColumnIndex(DataOpenHelper.COLUMN_TAGS_NAME);
-            tags.add(cursor.getString(column));
-            while (cursor.moveToNext()) {
-                tags.add(cursor.getString(column));
-            }
+        List<Tag> tags = TagSettings.getProfileTags(context, profileId);
+        List<String> names = new ArrayList<String>();
+        for (Tag tag : tags) {
+            names.add(tag.getName());
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
-                android.R.layout.simple_list_item_1,
-                tags.toArray(new String[tags.size()]));
+                android.R.layout.simple_list_item_1, names);
 
         tagTextView.setAdapter(adapter);
     }
