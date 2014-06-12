@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -266,6 +267,18 @@ public class BrowserIntegrationActivity extends Activity {
         public ProfileAdapter(Context context, List<Profile> objects) {
             super(context, mResource, objects);
             mProfiles = objects;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView,
+                                    ViewGroup parent) {
+            if (convertView == null) {
+                convertView =
+                        getLayoutInflater().inflate(mResource, parent, false);
+            }
+            ((TextView) convertView).setText(mProfiles.get(position).getName());
+
+            return convertView;
         }
 
         @Override
