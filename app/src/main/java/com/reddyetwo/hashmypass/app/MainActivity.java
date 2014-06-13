@@ -11,10 +11,13 @@ import android.database.MergeCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.graphics.Typeface;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -44,6 +47,10 @@ import com.reddyetwo.hashmypass.app.util.TagAutocomplete;
 
 public class MainActivity extends Activity {
 
+    private static final String KEY_SELECTED_PROFILE_ID = "profile_id";
+    private static final String KEY_ORIENTATION_HAS_CHANGED =
+            "orientation_has_changed";
+
     private static final int ID_ADD_PROFILE = -1;
     private long mSelectedProfileId = -1;
     private AutoCompleteTextView mTagEditText;
@@ -51,6 +58,8 @@ public class MainActivity extends Activity {
     private TextView mHashedPasswordTextView;
     private TextView mHashedPasswordOldTextView;
     private HashButtonEnableTextWatcher mHashButtonEnableTextWatcher;
+    private OrientationEventListener mOrientationEventListener;
+    private boolean mOrientationHasChanged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +73,22 @@ public class MainActivity extends Activity {
         }
 
         /* Select the last profile used */
-        SharedPreferences preferences =
-                getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
-        mSelectedProfileId =
-                preferences.getLong(Preferences.PREFS_KEY_LAST_PROFILE, -1);
+        if (savedInstanceState != null) {
+            Log.d("TEST", "Data was saved");
+            if (savedInstanceState
+                    .getBoolean(KEY_ORIENTATION_HAS_CHANGED, false)) {
+                mSelectedProfileId =
+                        savedInstanceState.getLong(KEY_SELECTED_PROFILE_ID, -1);
+                Log.d("TEST", "Previous profile: " + mSelectedProfileId);
+            }
+        } else {
+            SharedPreferences preferences =
+                    getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
+            mSelectedProfileId =
+                    preferences.getLong(Preferences.PREFS_KEY_LAST_PROFILE, -1);
+        }
+
+        mOrientationHasChanged = false;
 
         populateActionBarSpinner();
 
@@ -149,6 +170,30 @@ public class MainActivity extends Activity {
                         mMasterKeyEditText, hashButton);
         mTagEditText.addTextChangedListener(mHashButtonEnableTextWatcher);
         mMasterKeyEditText.addTextChangedListener(mHashButtonEnableTextWatcher);
+
+        /* Detect orientation changes.
+        In the case of an orientation change, we do not select the last used
+        profile but the currently selected profile.
+         */
+        mOrientationEventListener = new OrientationEventListener(this,
+                SensorManager.SENSOR_DELAY_NORMAL) {
+
+            @Override
+            public void onOrientationChanged(int orientation) {
+                Log.d("TEST", "Orientation changed");
+                mOrientationHasChanged = true;
+            }
+        };
+        mOrientationEventListener.enable();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(KEY_ORIENTATION_HAS_CHANGED,
+                mOrientationHasChanged);
+        Log.d("TEST", "Selected profile: " + mSelectedProfileId);
+        outState.putLong(KEY_SELECTED_PROFILE_ID, mSelectedProfileId);
     }
 
     @Override
@@ -210,6 +255,12 @@ public class MainActivity extends Activity {
                     mHashedPasswordTextView.getText().toString());
             MasterKeyAlarmManager.setAlarm(this, masterKeyMins);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mOrientationEventListener.disable();
     }
 
     @Override
