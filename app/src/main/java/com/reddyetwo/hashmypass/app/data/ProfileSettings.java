@@ -115,32 +115,6 @@ public class ProfileSettings {
         return deleted;
     }
 
-    /**
-     * Finds the position of a profile in a cursor
-     *
-     * @param profileId
-     * @param c
-     * @return the index where the profile is stored, or -1 if not found
-     */
-    public static int indexOf(long profileId, Cursor c) {
-        int position = -1;
-        if (profileId != -1 && c.moveToFirst()) {
-            position = 0;
-            int cursorLength = c.getCount();
-            while (position < cursorLength &&
-                    c.getLong(c.getColumnIndex(DataOpenHelper.COLUMN_ID)) !=
-                            profileId) {
-                position++;
-                c.moveToNext();
-            }
-            if (position == cursorLength) {
-                /* Profile not found */
-                position = -1;
-            }
-        }
-        return position;
-    }
-
     public static List<Profile> getList(Context context) {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getReadableDatabase();

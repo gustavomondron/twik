@@ -5,15 +5,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.MatrixCursor;
-import android.database.MergeCursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.graphics.Typeface;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.OrientationEventListener;
@@ -21,14 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
 import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
@@ -43,22 +37,29 @@ import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
 import com.reddyetwo.hashmypass.app.util.TagAutocomplete;
 
+import java.util.List;
+
 
 public class MainActivity extends Activity {
 
-    private static final String KEY_SELECTED_PROFILE_ID = "profile_id";
-    private static final String KEY_ORIENTATION_HAS_CHANGED =
+    // Constants
+    private static final int ID_ADD_PROFILE = -1;
+
+    // State keys
+    private static final String STATE_SELECTED_PROFILE_ID = "profile_id";
+    private static final String STATE_ORIENTATION_HAS_CHANGED =
             "orientation_has_changed";
 
-    private static final int ID_ADD_PROFILE = -1;
+    // State vars
     private long mSelectedProfileId = -1;
+    private boolean mOrientationHasChanged;
+
     private AutoCompleteTextView mTagEditText;
     private EditText mMasterKeyEditText;
     private TextView mHashedPasswordTextView;
     private TextView mHashedPasswordOldTextView;
     private HashButtonEnableTextWatcher mHashButtonEnableTextWatcher;
     private OrientationEventListener mOrientationEventListener;
-    private boolean mOrientationHasChanged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,24 +71,6 @@ public class MainActivity extends Activity {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         }
-
-        /* Select the last profile used */
-        if (savedInstanceState != null) {
-            if (savedInstanceState
-                    .getBoolean(KEY_ORIENTATION_HAS_CHANGED, false)) {
-                mSelectedProfileId =
-                        savedInstanceState.getLong(KEY_SELECTED_PROFILE_ID, -1);
-            }
-        } else {
-            SharedPreferences preferences =
-                    getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
-            mSelectedProfileId =
-                    preferences.getLong(Preferences.PREFS_KEY_LAST_PROFILE, -1);
-        }
-
-        mOrientationHasChanged = false;
-
-        populateActionBarSpinner();
 
         final TextView digestTextView =
                 (TextView) findViewById(R.id.digest_text);
@@ -147,7 +130,6 @@ public class MainActivity extends Activity {
                             ClipboardHelper.CLIPBOARD_LABEL_PASSWORD,
                             mHashedPasswordTextView.getText().toString(),
                             R.string.copied_to_clipboard);
-
                 }
             }
         });
@@ -161,7 +143,6 @@ public class MainActivity extends Activity {
         mHashedPasswordOldTextView.setTypeface(tf);
         digestTextView.setTypeface(tf);
 
-        /* Set hash button enable watcher */
         mHashButtonEnableTextWatcher =
                 new HashButtonEnableTextWatcher(mTagEditText,
                         mMasterKeyEditText, hashButton);
@@ -181,14 +162,41 @@ public class MainActivity extends Activity {
             }
         };
         mOrientationEventListener.enable();
+
+        // Select the last profile used for hashing a password
+        SharedPreferences preferences =
+                getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
+        mSelectedProfileId =
+                preferences.getLong(Preferences.PREFS_KEY_LAST_PROFILE, -1);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        Log.d("TEST", "Saving state");
         super.onSaveInstanceState(outState);
-        outState.putBoolean(KEY_ORIENTATION_HAS_CHANGED,
+        outState.putBoolean(STATE_ORIENTATION_HAS_CHANGED,
                 mOrientationHasChanged);
-        outState.putLong(KEY_SELECTED_PROFILE_ID, mSelectedProfileId);
+        if (mSelectedProfileId != ID_ADD_PROFILE) {
+            Log.d("TEST", "Saving profile: " + mSelectedProfileId);
+            outState.putLong(STATE_SELECTED_PROFILE_ID, mSelectedProfileId);
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        /* When the activity has been destroyed because of screen rotation,
+        we should restore the profile that the user had selected
+         */
+        if (savedInstanceState
+                .getBoolean(STATE_ORIENTATION_HAS_CHANGED, false)) {
+            mSelectedProfileId =
+                    savedInstanceState.getLong(STATE_SELECTED_PROFILE_ID, -1);
+        }
+
+        // Reset orientation changed flag
+        mOrientationHasChanged = false;
     }
 
     @Override
@@ -233,9 +241,7 @@ public class MainActivity extends Activity {
         (a) Remove text from master key edit text in the case that "Remember
         master key" preference is set to never.
         (b) In other case, store the master key in the application class and set
-         an alarm
-         to remove it when the alarm is triggered.
-         */
+         an alarm to remove it when the alarm is triggered. */
         int masterKeyMins = Preferences.getRememberMasterKeyMins(this);
         if (masterKeyMins == 0) {
             mMasterKeyEditText.setText("");
@@ -304,25 +310,31 @@ public class MainActivity extends Activity {
 
     }
 
-    private class ProfileAdapter extends CursorAdapter {
+    private class ProfileAdapter extends ArrayAdapter<Profile> {
+        private List<Profile> mProfiles;
+        private static final int mResource =
+                R.layout.actionbar_simple_spinner_dropdown_item;
 
-        private ProfileAdapter(Context context, Cursor c, int flags) {
-            super(context, c, flags);
+        public ProfileAdapter(Context context, List<Profile> objects) {
+            super(context, mResource, objects);
+            mProfiles = objects;
         }
 
         @Override
-        public View newView(Context context, Cursor cursor, ViewGroup parent) {
-            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            return inflater
-                    .inflate(R.layout.actionbar_simple_spinner_dropdown_item,
-                            parent, false);
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView =
+                        getLayoutInflater().inflate(mResource, parent, false);
+            }
+
+            ((TextView) convertView).setText(mProfiles.get(position).getName());
+            return convertView;
         }
 
         @Override
-        public void bindView(View view, Context context, Cursor cursor) {
-            String profileName = cursor.getString(
-                    cursor.getColumnIndex(DataOpenHelper.COLUMN_PROFILES_NAME));
-            ((TextView) view).setText(profileName);
+        public View getDropDownView(int position, View convertView,
+                                    ViewGroup parent) {
+            return getView(position, convertView, parent);
         }
     }
 
@@ -340,7 +352,6 @@ public class MainActivity extends Activity {
         String tagName = mTagEditText.getText().toString().trim();
         String masterKey = mMasterKeyEditText.getText().toString();
 
-        // TODO Show warning if tag or master key are empty
         if (tagName.length() > 0 && masterKey.length() > 0) {
             // Calculate the hashed password
             Tag tag = TagSettings.getTag(this, mSelectedProfileId, tagName);
@@ -410,61 +421,27 @@ public class MainActivity extends Activity {
     private void populateActionBarSpinner() {
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
-            DataOpenHelper helper = new DataOpenHelper(this);
-            SQLiteDatabase db = helper.getWritableDatabase();
+            final List<Profile> profiles = ProfileSettings.getList(this);
+            Profile addProfile = new Profile();
+            addProfile.setId(ID_ADD_PROFILE);
+            addProfile.setName(getString(R.string.action_add_profile));
+            profiles.add(addProfile);
 
-            SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
-            queryBuilder.setTables(DataOpenHelper.PROFILES_TABLE_NAME);
-            Cursor cursor = queryBuilder.query(db,
-                    new String[]{DataOpenHelper.COLUMN_ID,
-                            DataOpenHelper.COLUMN_PROFILES_NAME}, null, null,
-                    null, null, null
-            );
-
-            /* We may need to copy the cursor (for restoring the profile
-            selected before pausing the activity). ProfileAdapter uses the
-            cursor during callbacks so it is not safe to use it on our own after
-            setting the navigation list callback */
-            MatrixCursor profilesCursorCopy = new MatrixCursor(
-                    new String[]{DataOpenHelper.COLUMN_ID,
-                            DataOpenHelper.COLUMN_PROFILES_NAME}
-            );
-            if (cursor.moveToFirst()) {
-                do {
-                    profilesCursorCopy.addRow(new String[]{Long.toString(
-                            cursor.getLong(cursor.getColumnIndex(
-                                    DataOpenHelper.COLUMN_ID))
-                    ), cursor.getString(cursor.getColumnIndex(
-                                    DataOpenHelper.COLUMN_PROFILES_NAME)
-                    )});
-                } while (cursor.moveToNext());
-                cursor.moveToFirst();
-            }
-
-            // Include the "Add profile" option in the actionBar spinner
-            MatrixCursor extras = new MatrixCursor(
-                    new String[]{DataOpenHelper.COLUMN_ID,
-                            DataOpenHelper.COLUMN_PROFILES_NAME}
-            );
-            extras.addRow(new String[]{Integer.toString(ID_ADD_PROFILE),
-                    getResources().getString(R.string.action_add_profile)});
-
-            MergeCursor mergeCursor =
-                    new MergeCursor(new Cursor[]{cursor, extras});
-            final ProfileAdapter adapter =
-                    new ProfileAdapter(this, mergeCursor, 0);
+            ProfileAdapter adapter = new ProfileAdapter(this, profiles);
             actionBar.setListNavigationCallbacks(adapter,
                     new ActionBar.OnNavigationListener() {
                         @Override
                         public boolean onNavigationItemSelected(
                                 int itemPosition, long itemId) {
-                            mSelectedProfileId = itemId;
-                            if (itemId == ID_ADD_PROFILE) {
+                            long selectedProfile =
+                                    profiles.get(itemPosition).getId();
+                            if (selectedProfile == ID_ADD_PROFILE) {
                                 Intent intent = new Intent(MainActivity.this,
                                         AddProfileActivity.class);
                                 startActivityForResult(intent,
                                         AddProfileActivity.REQUEST_ADD_PROFILE);
                             } else {
+                                mSelectedProfileId = selectedProfile;
                                 // Update TagAutoCompleteTextView
                                 TagAutocomplete.populateTagAutocompleteTextView(
                                         MainActivity.this, mSelectedProfileId,
@@ -477,16 +454,25 @@ public class MainActivity extends Activity {
 
             /* If we had previously selected a profile before pausing the
             activity and it still exists, select it in the spinner. */
-            int profilePosition = ProfileSettings
-                    .indexOf(mSelectedProfileId, profilesCursorCopy);
-            if (profilePosition != -1) {
-                getActionBar().setSelectedNavigationItem(profilePosition);
+            int position = 0;
+
+            /* If mSelectedProfileId == ID_ADD_PROFILE is because we have
+            never hashed any password and there is no "last profile used for
+            hashing" */
+            if (mSelectedProfileId != ID_ADD_PROFILE) {
+                for (Profile p : profiles) {
+                    if (p.getId() == mSelectedProfileId) {
+                        break;
+                    }
+                    position++;
+                }
             }
 
-            profilesCursorCopy.close();
-            db.close();
+            /* It may happen that the last profiled used for hashing no longer
+            exists */
+            position = position % profiles.size();
+            actionBar.setSelectedNavigationItem(position);
         }
-
     }
 
 }
