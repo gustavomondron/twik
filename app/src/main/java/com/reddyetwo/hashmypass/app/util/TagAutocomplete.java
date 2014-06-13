@@ -1,11 +1,9 @@
 package com.reddyetwo.hashmypass.app.util;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
-import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
 import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 
