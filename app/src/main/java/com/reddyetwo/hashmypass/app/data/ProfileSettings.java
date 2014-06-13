@@ -108,8 +108,18 @@ public class ProfileSettings {
     public static boolean deleteProfile(Context context, long profileId) {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getWritableDatabase();
-        boolean deleted = db.delete(DataOpenHelper.PROFILES_TABLE_NAME,
-                "_id=" + profileId, null) > 0;
+        boolean deleted = false;
+        try {
+            db.beginTransaction();
+            deleted = db.delete(DataOpenHelper.PROFILES_TABLE_NAME,
+                    "_id=" + profileId, null) > 0;
+            db.delete(DataOpenHelper.TAGS_TABLE_NAME,
+                    DataOpenHelper.COLUMN_TAGS_PROFILE_ID + "=" + profileId,
+                    null);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
 
         db.close();
         return deleted;
