@@ -47,5 +47,7 @@
         hashed password is not automatically copied to the clipboard</string>
     <string name="title_activity_settings">Settings</string>
     <string name="error">Ouch! Something happened!</string>
+    <string name="error_no_profiles">Oops! You should create a profile
+     first!</string>
 
 </resources>

@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.Profile;
@@ -81,7 +82,13 @@ public class BrowserIntegrationActivity extends Activity {
 
         // Populate profile spinner
         mProfileSpinner = (Spinner) findViewById(R.id.profile_spinner);
-        populateProfileSpinner();
+        if (!populateProfileSpinner()) {
+            // No profiles, no hash!
+            Toast.makeText(this, R.string.error_no_profiles,
+                    Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
 
         mProfileSpinner.setOnItemSelectedListener(
                 new AdapterView.OnItemSelectedListener() {
@@ -241,25 +248,31 @@ public class BrowserIntegrationActivity extends Activity {
         dialogFragment.show(getFragmentManager(), "tagSettings");
     }
 
-    private void populateProfileSpinner() {
+    private boolean populateProfileSpinner() {
         List<Profile> profileList = ProfileSettings.getList(this);
-        mProfileSpinner.setAdapter(new ProfileAdapter(this, profileList));
+        boolean availableProfiles = profileList.size() > 0;
 
-        // Get the last used profile
-        SharedPreferences preferences =
-                getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
-        long lastProfileId =
-                preferences.getLong(Preferences.PREFS_KEY_LAST_PROFILE, -1);
-        if (lastProfileId != -1) {
-            int position = 0;
-            for (Profile f : profileList) {
-                if (f.getId() == lastProfileId) {
-                    break;
+        // Check that we have added at least one profile
+        if (availableProfiles) {
+            mProfileSpinner.setAdapter(new ProfileAdapter(this, profileList));
+
+            // Get the last used profile
+            SharedPreferences preferences = getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
+            long lastProfileId = preferences.getLong(Preferences.PREFS_KEY_LAST_PROFILE, -1);
+            if (lastProfileId != -1) {
+                int position = 0;
+                for (Profile f : profileList) {
+                    if (f.getId() == lastProfileId) {
+                        break;
+                    }
+                    position++;
                 }
-                position++;
+                position = position % profileList.size();
+                mProfileSpinner.setSelection(position);
             }
-            mProfileSpinner.setSelection(position);
         }
+
+        return availableProfiles;
     }
 
     private class ProfileAdapter extends ArrayAdapter<Profile> {
