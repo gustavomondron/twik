@@ -75,7 +75,11 @@ public class TagSettings {
         values.put(DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE,
                 tag.getPasswordType().ordinal());
 
-        return db.insertOrThrow(DataOpenHelper.TAGS_TABLE_NAME, null, values);
+        long id = db.insertOrThrow(DataOpenHelper.TAGS_TABLE_NAME, null,
+                values);
+
+        db.close();
+        return id;
     }
 
     /**
@@ -100,7 +104,6 @@ public class TagSettings {
                 new String[]{Long.toString(tag.getId())}) > 0;
 
         db.close();
-
         return updated;
     }
 
@@ -114,7 +117,6 @@ public class TagSettings {
         ) > 0;
 
         db.close();
-
         return deleted;
     }
 
@@ -160,6 +162,7 @@ public class TagSettings {
             } while (cursor.moveToNext());
         }
 
+        db.close();
         return tagList;
     }
 
@@ -181,7 +184,6 @@ public class TagSettings {
         }
 
         db.close();
-
         return tag;
     }
 }
