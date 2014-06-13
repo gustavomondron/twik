@@ -27,7 +27,7 @@ import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
 import com.reddyetwo.hashmypass.app.util.Constants;
-import com.reddyetwo.hashmypass.app.util.HashButtonEnableTextWatcher;
+import com.reddyetwo.hashmypass.app.util.ButtonsEnableTextWatcher;
 import com.reddyetwo.hashmypass.app.util.HelpToastOnLongPressClickListener;
 import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
@@ -46,7 +46,7 @@ public class BrowserIntegrationActivity extends Activity {
     private EditText mMasterKeyEditText;
     private Spinner mProfileSpinner;
     private String mSite;
-    private HashButtonEnableTextWatcher mHashButtonEnableTextWatcher;
+    private ButtonsEnableTextWatcher mButtonsEnableTextWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,8 +130,6 @@ public class BrowserIntegrationActivity extends Activity {
             @Override
             public void onClick(View v) {
                 calculatePasswordHash();
-
-
                 // Close the dialog activity
                 finish();
             }
@@ -146,11 +144,11 @@ public class BrowserIntegrationActivity extends Activity {
         digestTextView.setTypeface(tf);
 
         /* Set hash button enable watcher */
-        mHashButtonEnableTextWatcher =
-                new HashButtonEnableTextWatcher(mTagEditText,
-                        mMasterKeyEditText, hashButton);
-        mTagEditText.addTextChangedListener(mHashButtonEnableTextWatcher);
-        mMasterKeyEditText.addTextChangedListener(mHashButtonEnableTextWatcher);
+        mButtonsEnableTextWatcher =
+                new ButtonsEnableTextWatcher(mTagEditText, mMasterKeyEditText,
+                        tagSettingsButton, hashButton);
+        mTagEditText.addTextChangedListener(mButtonsEnableTextWatcher);
+        mMasterKeyEditText.addTextChangedListener(mButtonsEnableTextWatcher);
     }
 
     @Override
@@ -165,7 +163,7 @@ public class BrowserIntegrationActivity extends Activity {
                 ((Profile) mProfileSpinner.getSelectedItem()).getId(),
                 mTagEditText);
 
-        mHashButtonEnableTextWatcher.updateHashButtonEnabled();
+        mButtonsEnableTextWatcher.updateHashButtonEnabled();
     }
 
     @Override

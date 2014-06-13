@@ -31,7 +31,7 @@
             android:layout_toLeftOf="@+id/tag_settings"
             android:layout_toRightOf="@+id/ic_tag"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="match_parent"
             android:completionThreshold="2"
             android:hint="@string/tag"/>
 
@@ -39,6 +39,8 @@
             android:id="@+id/tag_settings"
             android:src="@drawable/ic_action_gear"
             android:contentDescription="@string/tag_settings"
+            android:enabled="false"
+            android:visibility="invisible"
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"

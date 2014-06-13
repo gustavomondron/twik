@@ -2,21 +2,26 @@ package com.reddyetwo.hashmypass.app.util;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
-public class HashButtonEnableTextWatcher implements TextWatcher {
+public class ButtonsEnableTextWatcher implements TextWatcher {
 
     private AutoCompleteTextView mTagEditText;
     private EditText mMasterKeyEditText;
+    private ImageButton mTagSettingsButton;
     private Button mHashButton;
 
-    public HashButtonEnableTextWatcher(AutoCompleteTextView tagEditText,
-                                       EditText masterKeyEditText,
-                                       Button hashButton) {
+    public ButtonsEnableTextWatcher(AutoCompleteTextView tagEditText,
+                                    EditText masterKeyEditText,
+                                    ImageButton tagSettingsButton,
+                                    Button hashButton) {
         mTagEditText = tagEditText;
         mMasterKeyEditText = masterKeyEditText;
+        mTagSettingsButton = tagSettingsButton;
         mHashButton = hashButton;
     }
 
@@ -34,6 +39,7 @@ public class HashButtonEnableTextWatcher implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
+        updateTagSettingsButtonEnabled();
         updateHashButtonEnabled();
     }
 
@@ -42,6 +48,16 @@ public class HashButtonEnableTextWatcher implements TextWatcher {
         boolean masterKeySet =
                 mMasterKeyEditText.getText().toString().length() > 0;
         mHashButton.setEnabled(tagSet && masterKeySet);
+    }
+
+    public void updateTagSettingsButtonEnabled() {
+        boolean tagSet = mTagEditText.getText().toString().trim().length() > 0;
+        mTagSettingsButton.setEnabled(tagSet);
+        if (tagSet) {
+            mTagSettingsButton.setVisibility(View.VISIBLE);
+        } else {
+            mTagSettingsButton.setVisibility(View.INVISIBLE);
+        }
     }
 
 

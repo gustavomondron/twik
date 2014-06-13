@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.OrientationEventListener;
@@ -29,9 +28,9 @@ import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
+import com.reddyetwo.hashmypass.app.util.ButtonsEnableTextWatcher;
 import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
 import com.reddyetwo.hashmypass.app.util.Constants;
-import com.reddyetwo.hashmypass.app.util.HashButtonEnableTextWatcher;
 import com.reddyetwo.hashmypass.app.util.HelpToastOnLongPressClickListener;
 import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
@@ -58,7 +57,7 @@ public class MainActivity extends Activity {
     private EditText mMasterKeyEditText;
     private TextView mHashedPasswordTextView;
     private TextView mHashedPasswordOldTextView;
-    private HashButtonEnableTextWatcher mHashButtonEnableTextWatcher;
+    private ButtonsEnableTextWatcher mButtonsEnableTextWatcher;
     private OrientationEventListener mOrientationEventListener;
 
     @Override
@@ -143,11 +142,11 @@ public class MainActivity extends Activity {
         mHashedPasswordOldTextView.setTypeface(tf);
         digestTextView.setTypeface(tf);
 
-        mHashButtonEnableTextWatcher =
-                new HashButtonEnableTextWatcher(mTagEditText,
-                        mMasterKeyEditText, hashButton);
-        mTagEditText.addTextChangedListener(mHashButtonEnableTextWatcher);
-        mMasterKeyEditText.addTextChangedListener(mHashButtonEnableTextWatcher);
+        mButtonsEnableTextWatcher =
+                new ButtonsEnableTextWatcher(mTagEditText,
+                        mMasterKeyEditText, tagSettingsButton, hashButton);
+        mTagEditText.addTextChangedListener(mButtonsEnableTextWatcher);
+        mMasterKeyEditText.addTextChangedListener(mButtonsEnableTextWatcher);
 
         /* Detect orientation changes.
         In the case of an orientation change, we do not select the last used
@@ -172,12 +171,10 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        Log.d("TEST", "Saving state");
         super.onSaveInstanceState(outState);
         outState.putBoolean(STATE_ORIENTATION_HAS_CHANGED,
                 mOrientationHasChanged);
         if (mSelectedProfileId != ID_ADD_PROFILE) {
-            Log.d("TEST", "Saving profile: " + mSelectedProfileId);
             outState.putLong(STATE_SELECTED_PROFILE_ID, mSelectedProfileId);
         }
     }
@@ -230,7 +227,8 @@ public class MainActivity extends Activity {
         TagAutocomplete
                 .populateTagAutocompleteTextView(this, mSelectedProfileId,
                         mTagEditText);
-        mHashButtonEnableTextWatcher.updateHashButtonEnabled();
+        mButtonsEnableTextWatcher.updateHashButtonEnabled();
+
     }
 
     @Override
