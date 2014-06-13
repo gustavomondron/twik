@@ -89,6 +89,12 @@ public class BrowserIntegrationActivity extends Activity {
                     public void onItemSelected(AdapterView<?> parent, View view,
                                                int position, long id) {
                         updateTagText();
+                        TagAutocomplete.populateTagAutocompleteTextView(
+                                BrowserIntegrationActivity.this,
+                                ((Profile) mProfileSpinner.getSelectedItem())
+                                        .getId(), mTagEditText
+                        );
+
                     }
 
                     @Override
