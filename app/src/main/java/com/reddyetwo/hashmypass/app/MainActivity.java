@@ -13,7 +13,6 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.graphics.Typeface;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -74,12 +73,10 @@ public class MainActivity extends Activity {
 
         /* Select the last profile used */
         if (savedInstanceState != null) {
-            Log.d("TEST", "Data was saved");
             if (savedInstanceState
                     .getBoolean(KEY_ORIENTATION_HAS_CHANGED, false)) {
                 mSelectedProfileId =
                         savedInstanceState.getLong(KEY_SELECTED_PROFILE_ID, -1);
-                Log.d("TEST", "Previous profile: " + mSelectedProfileId);
             }
         } else {
             SharedPreferences preferences =
@@ -180,7 +177,6 @@ public class MainActivity extends Activity {
 
             @Override
             public void onOrientationChanged(int orientation) {
-                Log.d("TEST", "Orientation changed");
                 mOrientationHasChanged = true;
             }
         };
@@ -192,7 +188,6 @@ public class MainActivity extends Activity {
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_ORIENTATION_HAS_CHANGED,
                 mOrientationHasChanged);
-        Log.d("TEST", "Selected profile: " + mSelectedProfileId);
         outState.putLong(KEY_SELECTED_PROFILE_ID, mSelectedProfileId);
     }
 
