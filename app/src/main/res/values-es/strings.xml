@@ -9,6 +9,7 @@
     <string name="action_edit_profile">Editar perfil</string>
     <string name="action_manage_tags">Gestionar etiquetas</string>
     <string name="action_help">Ayuda</string>
+    <string name="action_about">Acerca de</string>
     <string name="action_delete">Eliminar</string>
     <string name="discard">Descartar</string>
     <string name="ok">Ok</string>
@@ -114,4 +115,27 @@
     <string name="error_no_profiles">¡Oops! ¡Deberías crear un perfil
         primero!</string>
 
+    <!-- About Dialog -->
+    <string name="about_body"><![CDATA[
+        <b>Hash my pass</b> es una aplicación que hace más fácil generar contraseñas seguras y diferentes para cada sitio web.
+        Es compatible con la extensión Password Hasher Plus para Chrome de Eric Woodruff.<br/>
+
+        Versión 1.0.0 beta1<br/><br/>
+
+        Copyright \u00A9 2014<br/>
+        Red Dye No. 2<br/><br/>
+
+        Este algoritmo de generación de contraseñas está basado en Password Hasher de Steve Cooper.<br/><br/>
+
+        <b>Licencias de código abierto:</b>
+        <br /><br />
+        <b><a href="http://jgilfelt.github.io/android-actionbarstylegenerator/">Android Action Bar Style Generator</a></b> <br />
+        <i>por The Android Open Source Project</i> y <i>readyState Software Ltd.</i> <br />
+        Apache 2.0 License
+        <br /> <br />
+        <b><a href="https://github.com/passsy/android-HoloCircularProgressBar">Ubuntu Mono</a></b> <br />
+        <i>por Canonical Ltd.</i> <br />
+        Ubuntu Font Licence 1.0
+        <br /> <br />
+    ]]></string>
 </resources>

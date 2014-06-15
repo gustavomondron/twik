@@ -313,6 +313,9 @@ public class MainActivity extends Activity {
             Intent intent = new Intent(this, TutorialActivity.class);
             startActivity(intent);
             return true;
+        } else if (id == R.id.action_about) {
+            AboutDialog.showAbout(this);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
