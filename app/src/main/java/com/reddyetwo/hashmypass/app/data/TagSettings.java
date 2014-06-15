@@ -28,7 +28,7 @@ public class TagSettings {
                         DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE},
                 DataOpenHelper.COLUMN_TAGS_PROFILE_ID + "=" +
                         profileID + " AND " + DataOpenHelper.COLUMN_TAGS_NAME +
-                        "=\"" + name + "\"", null, null, null, null
+                        " = ?", new String[]{name}, null, null, null
         );
 
         Tag tag = null;
@@ -75,8 +75,8 @@ public class TagSettings {
         values.put(DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE,
                 tag.getPasswordType().ordinal());
 
-        long id = db.insertOrThrow(DataOpenHelper.TAGS_TABLE_NAME, null,
-                values);
+        long id =
+                db.insertOrThrow(DataOpenHelper.TAGS_TABLE_NAME, null, values);
 
         db.close();
         return id;
@@ -173,8 +173,8 @@ public class TagSettings {
         Cursor cursor = db.query(DataOpenHelper.TAGS_TABLE_NAME,
                 new String[]{DataOpenHelper.COLUMN_TAGS_NAME},
                 DataOpenHelper.COLUMN_TAGS_PROFILE_ID + "=" + profileId + " " +
-                        "AND " + DataOpenHelper.COLUMN_TAGS_SITE + "=\"" +
-                        site + "\"", null, null, null, null
+                        "AND " + DataOpenHelper.COLUMN_TAGS_SITE + " = ?",
+                new String[]{site}, null, null, null
         );
 
         Tag tag = null;
