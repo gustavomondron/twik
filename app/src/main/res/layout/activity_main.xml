@@ -32,6 +32,7 @@
             android:layout_toRightOf="@+id/ic_tag"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:imeOptions="actionNext"
             android:completionThreshold="2"
             android:hint="@string/tag"/>
 
@@ -78,6 +79,7 @@
             android:layout_toRightOf="@+id/ic_key"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:imeOptions="actionDone"
             android:hint="@string/master_key"/>
 
         <TextView
