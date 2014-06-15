@@ -134,7 +134,8 @@ public class ProfileSettings {
                         DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY,
                         DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH,
                         DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE}, null,
-                null, null, null, null
+                null, null, null, DataOpenHelper.COLUMN_PROFILES_NAME + " " +
+                        "COLLATE NOCASE"
         );
 
         List<Profile> list = new ArrayList<Profile>();

@@ -138,7 +138,8 @@ public class TagSettings {
                         DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH,
                         DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE},
                 DataOpenHelper.COLUMN_TAGS_PROFILE_ID + "= ?",
-                new String[]{Long.toString(profileId)}, null, null, null
+                new String[]{Long.toString(profileId)}, null, null,
+                DataOpenHelper.COLUMN_TAGS_NAME + " COLLATE NOCASE"
         );
 
         List<Tag> tagList = new ArrayList<Tag>();
