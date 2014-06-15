@@ -58,7 +58,7 @@
                 android:maxLines="2"
                 android:maxLength="48"
                 android:hint="@string/private_key"
-                android:layout_marginTop="@dimen/activity_vertical_margin_large"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:scrollHorizontally="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
