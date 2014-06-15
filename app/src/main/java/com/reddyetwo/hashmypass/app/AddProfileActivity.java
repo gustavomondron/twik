@@ -21,8 +21,7 @@ import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
 
 public class AddProfileActivity extends Activity {
 
-    // Request and result codes
-    public static final int REQUEST_ADD_PROFILE = 1;
+    // Result codes
     public static final String RESULT_KEY_PROFILE_ID = "profile_id";
 
     // State bundle keys

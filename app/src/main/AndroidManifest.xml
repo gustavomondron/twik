@@ -59,7 +59,27 @@
                 android:value=".MainActivity"/>
         </activity>
 
-        <receiver android:name=".util.MasterKeyAlarmManager"></receiver>
+        <receiver android:name=".util.MasterKeyAlarmManager"/>
+
+        <activity
+            android:name=".TutorialActivity"
+            android:noHistory="true"
+            android:label="@string/title_activity_tutorial"
+            android:screenOrientation="portrait"
+            android:theme="@style/tutorialStyle">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
+
+        <activity
+            android:name=".AddDefaultProfileActivity"
+            android:noHistory="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/tutorialStyle">
+        </activity>
     </application>
 
 </manifest>

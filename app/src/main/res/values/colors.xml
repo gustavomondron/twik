@@ -8,6 +8,8 @@
     <color name="button_text_disabled">@android:color/darker_gray</color>
     <color name="button_text_enabled">@android:color/white</color>
     <color name="button_text_enabled_pressed">#ffe6e6e6</color>
+    <color name="pager_progress_current">@color/hashmypass_light</color>
+    <color name="pager_progress_rest">#e5e5e5</color>
     <color name="hashmypass_main">#0f9d58</color>
     <color name="hashmypass_light">#15c770</color>
 </resources>

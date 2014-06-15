@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <style name="tutorialStyle" parent="android:style/Theme.Holo.Light.Dialog">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="tutorialLayoutStyle">
+        <item name="android:layout_width">532dp</item>
+        <item name="android:layout_height">750dp</item>
+    </style>
+
+    <style name="defaultProfileLayoutStyle">
+        <item name="android:layout_width">532dp</item>
+        <item name="android:layout_height">550dp</item>
+    </style>
+</resources>

@@ -16,4 +16,9 @@
         android:title="@string/action_settings"
         android:orderInCategory="102"
         android:showAsAction="never"/>
+    <item
+        android:id="@+id/action_help"
+        android:title="@string/action_help"
+        android:orderInCategory="103"
+        android:showAsAction="never"/>
 </menu>

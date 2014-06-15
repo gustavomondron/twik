@@ -43,6 +43,8 @@ public class MainActivity extends Activity {
 
     // Constants
     private static final int ID_ADD_PROFILE = -1;
+    private static final int REQUEST_ADD_PROFILE = 1;
+    private static final int REQUEST_CREATE_DEFAULT_PROFILE = 2;
 
     // State keys
     private static final String STATE_SELECTED_PROFILE_ID = "profile_id";
@@ -143,8 +145,8 @@ public class MainActivity extends Activity {
         digestTextView.setTypeface(tf);
 
         mButtonsEnableTextWatcher =
-                new ButtonsEnableTextWatcher(mTagEditText,
-                        mMasterKeyEditText, tagSettingsButton, hashButton);
+                new ButtonsEnableTextWatcher(mTagEditText, mMasterKeyEditText,
+                        tagSettingsButton, hashButton);
         mTagEditText.addTextChangedListener(mButtonsEnableTextWatcher);
         mMasterKeyEditText.addTextChangedListener(mButtonsEnableTextWatcher);
 
@@ -200,6 +202,21 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
+        // Check if tutorial should be shown
+        SharedPreferences preferences =
+                getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
+        boolean showTutorial = preferences
+                .getBoolean(Preferences.PREFS_KEY_SHOW_TUTORIAL, getResources()
+                        .getBoolean(R.bool.settings_default_show_tutorial));
+        if (showTutorial) {
+            Intent intent = new Intent(this, TutorialActivity.class);
+            startActivity(intent);
+        } else if (ProfileSettings.getList(this).size() == 0) {
+            // Check if a profile is already defined
+            Intent intent = new Intent(this, AddDefaultProfileActivity.class);
+            startActivityForResult(intent, REQUEST_CREATE_DEFAULT_PROFILE);
+        }
+
         MasterKeyAlarmManager.cancelAlarm(this);
         String cachedMasterKey = HashMyPassApplication.getCachedMasterKey();
         if (cachedMasterKey != null) {
@@ -223,12 +240,13 @@ public class MainActivity extends Activity {
         /* We have to re-populate the spinner because a new profile may have
         been added or an existing profile may have been edited or deleted.
          */
-        populateActionBarSpinner();
-        TagAutocomplete
-                .populateTagAutocompleteTextView(this, mSelectedProfileId,
-                        mTagEditText);
+        if (ProfileSettings.getList(this).size() > 0) {
+            populateActionBarSpinner();
+            TagAutocomplete
+                    .populateTagAutocompleteTextView(this, mSelectedProfileId,
+                            mTagEditText);
+        }
         mButtonsEnableTextWatcher.updateHashButtonEnabled();
-
     }
 
     @Override
@@ -291,6 +309,10 @@ public class MainActivity extends Activity {
                     mSelectedProfileId);
             startActivity(intent);
             return true;
+        } else if (id == R.id.action_help) {
+            Intent intent = new Intent(this, TutorialActivity.class);
+            startActivity(intent);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -299,13 +321,26 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
-        if (requestCode == AddProfileActivity.REQUEST_ADD_PROFILE &&
-                resultCode == RESULT_OK) {
-            mSelectedProfileId =
-                    data.getLongExtra(AddProfileActivity.RESULT_KEY_PROFILE_ID,
-                            0);
+        switch (requestCode) {
+            case REQUEST_ADD_PROFILE:
+                switch (resultCode) {
+                    case RESULT_OK:
+                        mSelectedProfileId = data.getLongExtra(
+                                AddProfileActivity.RESULT_KEY_PROFILE_ID, 0);
+                        break;
+                    default:
+                }
+                break;
+            case REQUEST_CREATE_DEFAULT_PROFILE:
+                switch (resultCode) {
+                    case RESULT_CANCELED:
+                        finish();
+                        return;
+                    default:
+                }
+                break;
+            default:
         }
-
     }
 
     private class ProfileAdapter extends ArrayAdapter<Profile> {
@@ -437,7 +472,7 @@ public class MainActivity extends Activity {
                                 Intent intent = new Intent(MainActivity.this,
                                         AddProfileActivity.class);
                                 startActivityForResult(intent,
-                                        AddProfileActivity.REQUEST_ADD_PROFILE);
+                                        REQUEST_ADD_PROFILE);
                             } else {
                                 mSelectedProfileId = selectedProfile;
                                 // Update TagAutoCompleteTextView

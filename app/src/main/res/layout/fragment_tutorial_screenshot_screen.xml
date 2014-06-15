@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:paddingLeft="@dimen/small_spacing"
+              android:paddingRight="@dimen/small_spacing"
+              android:paddingTop="@dimen/small_spacing"
+              android:paddingBottom="@dimen/small_spacing"
+              android:scrollbars="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_gravity="bottom"
+            android:id="@+id/tutorial_content_layout"
+            android:orientation="vertical"
+            android:background="@drawable/tutorial_background"
+            android:paddingLeft="@dimen/tutorial_content_image_padding_horizontal"
+            android:paddingRight="@dimen/tutorial_content_image_padding_horizontal"
+            android:paddingTop="@dimen/tutorial_content_image_padding_vertical"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+            <ImageView
+                android:id="@+id/tutorial_content_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/tutorial_content_height">
+
+            <TextView
+                android:id="@+id/tutorial_header_text"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="@dimen/tutorial_header_text_size"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tutorial_content_header_height"/>
+
+            <TextView
+                android:id="@+id/tutorial_content_text"
+                android:gravity="center"
+                android:textSize="@dimen/tutorial_content_text_size"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tutorial_content_content_height"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

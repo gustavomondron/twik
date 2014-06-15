@@ -131,4 +131,17 @@
         <item name="android:textColor">@color/button_text_color</item>
     </style>
 
+    <style
+        name="tutorialStyle"
+        parent="android:style/Theme.Holo.Light.NoActionBar" />
+
+    <style name="tutorialLayoutStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="defaultProfileLayoutStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
 </resources>

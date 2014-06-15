@@ -9,6 +9,7 @@
     <string name="action_add_profile">Add profile</string>
     <string name="action_edit_profile">Edit profile</string>
     <string name="action_manage_tags">Manage tags</string>
+    <string name="action_help">Help</string>
     <string name="action_delete">Delete</string>
     <string name="discard">Discard</string>
     <string name="ok">Ok</string>
@@ -17,6 +18,10 @@
     <string name="add">Add</string>
     <string name="save">Save</string>
     <string name="hash">Hash</string>
+    <string name="skip">Skip tutorial</string>
+    <string name="next">Next</string>
+    <string name="start">Start</string>
+    <string name="ready">I\'m ready to go!</string>
 
     <!-- Dialogs -->
     <string name="confirm_delete">Delete \"%s\" profile?</string>
@@ -33,6 +38,45 @@
     <string name="tag">Tag</string>
     <string name="tag_settings">Tag settings</string>
 
+    <!-- Tutorial -->
+    <string name="tutorial_splash_subtitle">A different password for each site.
+     \nNo passwords stored.</string>
+    <string name="tutorial_one_password_header">One password to rule
+        them all</string>
+    <string name="tutorial_one_password_content">You just have to
+        remember a master key. Using it, a different password is
+        generated for each site.</string>
+    <string name="tutorial_not_a_password_store_header">        It\'s safer than a password store</string>
+    <string name="tutorial_not_a_password_store_content">        Passwords are never stored, so they can\'t be stolen. They are
+        generated each time using a secure encryption algorithm.</string>
+    <string name="tutorial_private_key_header">Bulletproof</string>
+    <string name="tutorial_private_key_content">Your passwords are generated
+        using also a private key, which is store in the device.
+        An attacker would need both your master and private keys to generate
+        your passwords.</string>
+    <string name="tutorial_profiles_header">Use it in every facet of
+        your life</string>
+    <string name="tutorial_profiles_content">You can define multiple
+        profiles. For example, a personal profile and a work profile, which
+        you can share with your co-workers.
+        Each profile has its own private key and settings.</string>
+    <string name="tutorial_tag_settings_header">Flexibility is my
+        middle name</string>
+    <string name="tutorial_tag_settings_content">Some sites have specific
+        requirements, like an specific password length.\n
+        No problem! You can specify different settings for
+        those sites, and Hash my pass will remember it.</string>
+    <string name="tutorial_browser_dialog_header">Login made easy</string>
+    <string name="tutorial_browser_dialog_content">When using your
+        favourite browser, share the page with Hash my Pass. You\'ll
+        generate the website password in the blink of an eye.</string>
+    <string name="tutorial_first_profile">First of all, we\'ll create your
+        first profile and a private key. I have taken the
+        liberty to generate a random one for you, but you can use a different
+        one if you prefer.
+    </string>
+    <item name="profile_default_name" format="string" type="string">Default</item>
+
     <!-- Notices -->
     <string name="no_tags">You got no tags!</string>
     <string name="copied_to_clipboard">Hashed password copied to
@@ -46,14 +90,11 @@
 
     <!-- Settings summaries -->
     <string name="settings_summary_remember_master_key_never">Master key
-        will not be remembered when you leave the app
-    </string>
+        will not be remembered when you leave the app</string>
     <string name="settings_summary_remember_master_key_minutes">Master
-        key will be remembered for %d minutes after you leave the app
-    </string>
+        key will be remembered for %d minutes after you leave the app</string>
     <string name="settings_summary_remember_master_key_hours"> Master key wil
-        l be remembered for %d hours after you leave the app
-    </string>
+        l be remembered for %d hours after you leave the app</string>
     <string name="settings_summary_copy_to_clipboard_enabled">The hashed
         password is automatically copied to the clipboard</string>
     <string name="settings_summary_copy_to_clipboard_disabled">The hashed
@@ -63,5 +104,7 @@
     <string name="error">Ouch! Something happened!</string>
     <string name="error_no_profiles">Oops! You should create a profile
         first!</string>
+    <string name="title_activity_tutorial">Tutorial</string>
+    <string name="title_activity_add_default_profile">Add default profile</string>
 
 </resources>
