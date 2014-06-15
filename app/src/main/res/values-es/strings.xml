@@ -44,7 +44,7 @@
     <string name="tutorial_one_password_header">Una contraseña para
        dominarlos a todos</string>
     <string name="tutorial_one_password_content">Sólo tienes que
-        recordar una contraseña maestra.\nA partir de ella,
+        recordar una contraseña maestra. A partir de ella,
         se genera una contraseña diferente para cada sitio web.</string>
     <string name="tutorial_not_a_password_store_header">
         Más seguro que un almacén de contraseñas
@@ -76,7 +76,7 @@
         Hash my pass desde tu navegador favorito. Obtendrás la contraseña del
         sitio web en un abrir y cerrar de ojos.</string>
     <string name="tutorial_first_profile">Antes de empezar, crearemos tu
-        primer perfil de Hash my pass y elegiremos una clave privada.\n Me he
+        primer perfil de Hash my pass y elegiremos una clave privada. Me he
         tomado la libertad de generarte una aleatoriamente, pero puedes usar
         una diferente si quieres.</string>
     <item name="profile_default_name" format="string" type="string">

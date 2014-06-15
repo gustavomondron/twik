@@ -47,8 +47,8 @@
     <string name="tutorial_one_password_content">You just have to
         remember a master key. Using it, a different password is
         generated for each site.</string>
-    <string name="tutorial_not_a_password_store_header">        It\'s safer than a password store</string>
-    <string name="tutorial_not_a_password_store_content">        Passwords are never stored, so they can\'t be stolen. They are
+    <string name="tutorial_not_a_password_store_header">It\'s safer than a password store</string>
+    <string name="tutorial_not_a_password_store_content">Passwords are never stored, so they can\'t be stolen. They are
         generated each time using a secure encryption algorithm.</string>
     <string name="tutorial_private_key_header">Bulletproof</string>
     <string name="tutorial_private_key_content">Your passwords are generated
