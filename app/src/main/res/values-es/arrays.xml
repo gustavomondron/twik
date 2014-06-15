@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="RememberMasterKeyEntries">
+        <item>Nunca</item>
+        <item>5 minutos</item>
+        <item>30 minutos</item>
+        <item>1 hora</item>
+        <item>2 horas</item>
+        <item>4 horas</item>
+    </string-array>
+
+    <string-array name="RememberMasterKeyEntryValues">
+        <item>0</item>
+        <item>5</item>
+        <item>30</item>
+        <item>60</item>
+        <item>120</item>
+        <item>240</item>
+    </string-array>
+
+    <string-array name="password_types_array">
+        <item>Alfanumérica + Caracteres especiales</item>
+        <item>Alfanumérica</item>
+        <item>Numérica</item>
+    </string-array>
+
+</resources>
