@@ -7,120 +7,133 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        <ImageView
-            android:id="@+id/ic_profile"
-            android:src="@drawable/ic_action_user"
-            android:contentDescription="@string/profile"
-            android:layout_width="32dp"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"/>
-
-        <Spinner
-            android:id="@+id/profile_spinner"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginRight="48dp"
-            android:layout_toRightOf="@+id/ic_profile"
-            android:layout_alignParentRight="true"
-            android:spinnerStyle="@android:style/Widget.Spinner.DropDown"/>
-    </RelativeLayout>
+            android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:id="@+id/tag_layout"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_width="match_parent"
-        android:layout_height="48dp">
+            <RelativeLayout
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_width="match_parent"
+                android:layout_height="48dp">
 
-        <ImageView
-            android:id="@+id/ic_tag"
-            android:src="@drawable/ic_action_tag"
-            android:contentDescription="@string/tag"
-            android:layout_width="32dp"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"/>
+                <ImageView
+                    android:id="@+id/ic_profile"
+                    android:src="@drawable/ic_action_user"
+                    android:contentDescription="@string/profile"
+                    android:layout_width="32dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"/>
 
-        <AutoCompleteTextView
-            android:id="@+id/tag_text"
-            android:inputType="text"
-            android:singleLine="true"
-            android:maxLines="1"
-            android:maxLength="25"
-            android:layout_toLeftOf="@+id/tag_settings"
-            android:layout_toRightOf="@+id/ic_tag"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:completionThreshold="2"
-            android:hint="@string/tag"/>
+                <Spinner
+                    android:id="@+id/profile_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="48dp"
+                    android:layout_toRightOf="@+id/ic_profile"
+                    android:layout_alignParentRight="true"
+                    android:spinnerStyle="@android:style/Widget.Spinner.DropDown"/>
+            </RelativeLayout>
 
-        <ImageButton
-            android:id="@+id/tag_settings"
-            android:src="@drawable/ic_action_gear"
-            android:contentDescription="@string/tag_settings"
-            android:enabled="false"
-            android:visibility="invisible"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            style="?android:borderlessButtonStyle"/>
-    </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/tag_layout"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_width="match_parent"
+                android:layout_height="48dp">
+
+                <ImageView
+                    android:id="@+id/ic_tag"
+                    android:src="@drawable/ic_action_tag"
+                    android:contentDescription="@string/tag"
+                    android:layout_width="32dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"/>
+
+                <AutoCompleteTextView
+                    android:id="@+id/tag_text"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:maxLength="25"
+                    android:layout_toLeftOf="@+id/tag_settings"
+                    android:layout_toRightOf="@+id/ic_tag"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:completionThreshold="2"
+                    android:hint="@string/tag"/>
+
+                <ImageButton
+                    android:id="@+id/tag_settings"
+                    android:src="@drawable/ic_action_gear"
+                    android:contentDescription="@string/tag_settings"
+                    android:enabled="false"
+                    android:visibility="invisible"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    style="?android:borderlessButtonStyle"/>
+            </RelativeLayout>
 
 
-    <RelativeLayout
-        android:id="@+id/master_key_layout"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_below="@+id/tag_layout">
+            <RelativeLayout
+                android:id="@+id/master_key_layout"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_below="@+id/tag_layout">
 
-        <ImageView
-            android:id="@+id/ic_key"
-            android:src="@drawable/ic_action_key"
-            android:contentDescription="@string/master_key"
-            android:layout_width="32dp"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"/>
+                <ImageView
+                    android:id="@+id/ic_key"
+                    android:src="@drawable/ic_action_key"
+                    android:contentDescription="@string/master_key"
+                    android:layout_width="32dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"/>
 
-        <EditText
-            android:id="@+id/master_key_text"
-            android:inputType="textPassword"
-            android:fontFamily="sans-serif"
-            android:singleLine="true"
-            android:maxLines="1"
-            android:maxLength="25"
-            android:layout_toLeftOf="@+id/digest_text"
-            android:layout_toRightOf="@+id/ic_key"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/master_key"/>
+                <EditText
+                    android:id="@+id/master_key_text"
+                    android:inputType="textPassword"
+                    android:fontFamily="sans-serif"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:maxLength="25"
+                    android:layout_toLeftOf="@+id/digest_text"
+                    android:layout_toRightOf="@+id/ic_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/master_key"/>
 
-        <TextView
-            android:id="@+id/digest_text"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:gravity="center"
-            style="@android:style/TextAppearance.Medium"/>
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/digest_text"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center"
+                    style="@android:style/TextAppearance.Medium"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
 
     <LinearLayout
         android:gravity="bottom"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:orientation="vertical"
         android:showDividers="middle"
@@ -132,7 +145,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/button_bar_height"
             android:orientation="horizontal"
             android:divider="?android:dividerHorizontal"
             style="?android:buttonBarStyle">
