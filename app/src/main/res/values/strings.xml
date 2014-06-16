@@ -135,25 +135,53 @@
 
     <!-- About Dialog -->
     <string name="about_body"><![CDATA[
-        <b>Hash my pass</b> is an application that makes it easy to generate
-        different and secure passwords for each website. It is compatible with
-        the Password Hasher Plus Chrome extension by Eric Woodruff.<br/><br/>
+        <b>Hash my pass</b><br/>
+        Version 1.0.0 beta1<br/>
+        Copyright \u00A9 2014 Red Dye No. 2
+        <br/><br/>
+        <b>Hash my pass</b> is an application that makes it easier to generate
+        secure and different passwords for each website.
+        <br/><br/>
+        Hash my pass is based on the password generation mechanism of Password
+        Hasher by Steve Cooper and Password Hasher Plus by Eric Woodruff.
+        <br/><br/>
+        Hash my pass is compatible with the Google Chrome Password Hasher Plus
+        extension by Eric Woodruff.
+        <br/><br/>
 
-        Version 1.0.0 beta1<br/><br/>
+        <b>License</b><br/>
+        Hash my pass is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.<br/><br/>
+        Hash my pass is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+        <br/><br/>
 
-        Copyright \u00A9 2014 Red Dye No. 2<br/><br/>
-
-        The password generation method is based on Password Hasher by Steve
-        Cooper.<br/><br/>
-
-        <b>Open source tools used:</b>
+        <b>Open source licenses</b>
         <br /><br />
-        <b><a href="http://jgilfelt.github.io/android-actionbarstylegenerator/">Android Action Bar Style Generator</a></b> <br />
-        <i>by The Android Open Source Project</i> and <i>readyState Software Ltd.</i> <br />
-        Apache 2.0 License
-        <br /> <br />
-        <b><a href="http://font.ubuntu.com/">Ubuntu Mono</a></b> <br />
-        <i>by Canonical Ltd.</i> <br />
+        <b><a href="https://addons.mozilla.org/en-US/firefox/addon/password-hasher/">
+        Password Hasher</a></b><br/><i>by Steve Cooper.</i><br/>
+        MPL 1.1/GPL 2.0/LGPL 2.1 licenses.<br/><br/>
+
+        <b><a href="http://passwordhasherplus.com">Password Hasher Plus</a></b><br/>
+        <i>by Eric Woodruff.</i><br/>
+        MPL 1.1/GPL 2.0/LGPL 2.1 licenses.<br/><br/>
+
+        <b><a href="https://github.com/ginkel/hashit/">HashIt!</a></b><br/>
+        <i>by Thilo-Alexander Ginkel and TG Byte Software GmbH.</i><br/>
+        GPLv3 license.<br/><br/>
+
+        <b><a href="http://jgilfelt.github.io/android-actionbarstylegenerator/">
+        Android Action Bar Style Generator</a></b><br/>
+        <i>by The Android Open Source Project</i> y
+        <i>readyState Software Ltd.</i> <br/>
+        Apache 2.0 license<br/> <br/>
+
+        <b><a href="http://font.ubuntu.com/">Ubuntu Mono</a></b> <br/>
+        <i>by Canonical Ltd.</i> <br/>
         Ubuntu Font Licence 1.0
     ]]></string>
 
