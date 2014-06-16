@@ -1,6 +1,7 @@
 package com.reddyetwo.hashmypass.app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -52,7 +54,10 @@ public class BrowserIntegrationActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_LEFT_ICON);
         setContentView(R.layout.activity_browser_integration);
+        setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,
+                R.drawable.ic_launcher);
 
         // Extract site from URI
         Intent intent = getIntent();
@@ -84,8 +89,8 @@ public class BrowserIntegrationActivity extends Activity {
         mProfileSpinner = (Spinner) findViewById(R.id.profile_spinner);
         if (!populateProfileSpinner()) {
             // No profiles, no hash!
-            Toast.makeText(this, R.string.error_no_profiles,
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.error_no_profiles, Toast.LENGTH_LONG)
+                    .show();
             finish();
             return;
         }
@@ -257,8 +262,10 @@ public class BrowserIntegrationActivity extends Activity {
             mProfileSpinner.setAdapter(new ProfileAdapter(this, profileList));
 
             // Get the last used profile
-            SharedPreferences preferences = getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
-            long lastProfileId = preferences.getLong(Preferences.PREFS_KEY_LAST_PROFILE, -1);
+            SharedPreferences preferences =
+                    getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
+            long lastProfileId =
+                    preferences.getLong(Preferences.PREFS_KEY_LAST_PROFILE, -1);
             if (lastProfileId != -1) {
                 int position = 0;
                 for (Profile f : profileList) {
