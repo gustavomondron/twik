@@ -46,13 +46,13 @@
         them all</string>
     <string name="tutorial_one_password_content">You just have to
         remember a master key. Using it, a different password is
-        generated for each site.</string>
+        generated for each website.</string>
     <string name="tutorial_not_a_password_store_header">It\'s safer than a password store</string>
     <string name="tutorial_not_a_password_store_content">Passwords are never stored, so they can\'t be stolen. They are
         generated each time using a secure encryption algorithm.</string>
     <string name="tutorial_private_key_header">Bulletproof</string>
     <string name="tutorial_private_key_content">Your passwords are generated
-        using also a private key, which is store in the device.
+        using also a private key, which is stored in the device.
         An attacker would need both your master and private keys to generate
         your passwords.</string>
     <string name="tutorial_profiles_header">Use it in every facet of
@@ -63,10 +63,10 @@
         Each profile has its own private key and settings.</string>
     <string name="tutorial_tag_settings_header">Flexibility is my
         middle name</string>
-    <string name="tutorial_tag_settings_content">Some sites have specific
-        requirements, like an specific password length.\n
+    <string name="tutorial_tag_settings_content">Some websites have specific
+        requirements, like an specific password length.
         No problem! You can specify different settings for
-        those sites, and Hash my pass will remember it.</string>
+        those websites, and Hash my pass will remember it.</string>
     <string name="tutorial_browser_dialog_header">Login made easy</string>
     <string name="tutorial_browser_dialog_content">When using your
         favourite browser, share the page with Hash my Pass. You\'ll
