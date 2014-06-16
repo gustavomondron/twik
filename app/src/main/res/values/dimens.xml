@@ -20,8 +20,11 @@
     <dimen name="tutorial_content_height">144dp</dimen>
     <dimen name="tutorial_content_header_height">48dp</dimen>
     <dimen name="tutorial_content_content_height">96dp</dimen>
-    <dimen name="add_default_profile_logo_size">96dp</dimen>
-    <dimen name="add_default_profile_logo_text_size">32sp</dimen>
+    <dimen name="add_default_profile_logo_size">48dp</dimen>
+    <dimen name="add_default_profile_logo_text_size">30sp</dimen>
+    <dimen name="add_default_profile_vertical_margin">
+        @dimen/activity_vertical_margin_large
+    </dimen>
     <dimen name="viewpager_indicator_height">2dp</dimen>
     <dimen name="empty_list_text_size">22sp</dimen>
     <dimen name="empty_list_image_size">112dp</dimen>

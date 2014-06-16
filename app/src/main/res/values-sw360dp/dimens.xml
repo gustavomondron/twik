@@ -1,0 +1,5 @@
+<resources>
+    <dimen name="add_default_profile_logo_size">48dp</dimen>
+    <dimen name="add_default_profile_logo_text_size">30sp</dimen>
+    <dimen name="add_default_profile_vertical_margin">@dimen/activity_vertical_margin_large</dimen>
+</resources>
