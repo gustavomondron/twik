@@ -20,6 +20,7 @@
 package com.reddyetwo.hashmypass.app;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,15 @@ class ProfileAdapter extends ArrayAdapter<Profile> {
         }
 
         ((TextView) convertView).setText(mProfiles.get(position).getName());
+
+        if (position == getCount() - 1) {
+            // Set to italic if this is the last option in the dropdown
+            ((TextView) convertView).setTypeface(null, Typeface.ITALIC);
+        } else {
+            // Explicitly set to normal, in case convertView was in italics
+            ((TextView) convertView).setTypeface(null, Typeface.NORMAL);
+        }
+
         return convertView;
     }
 
