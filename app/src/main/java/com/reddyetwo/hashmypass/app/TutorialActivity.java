@@ -34,6 +34,7 @@ import com.reddyetwo.hashmypass.app.data.Preferences;
 
 public class TutorialActivity extends FragmentActivity {
 
+    private boolean mTutorialCompleted = false;
     private Button mSkipButton;
     private Button mNextButton;
     private Button mStartButton;
@@ -101,6 +102,13 @@ public class TutorialActivity extends FragmentActivity {
                 new TutorialFinishedListener();
         mSkipButton.setOnClickListener(tutorialFinishedListener);
         mStartButton.setOnClickListener(tutorialFinishedListener);
+
+        // Restore the current page
+        SharedPreferences preferences =
+                getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
+        int position =
+                preferences.getInt(Preferences.PREFS_KEY_TUTORIAL_PAGE, 0);
+        mPager.setCurrentItem(position);
     }
 
     @Override
@@ -110,6 +118,14 @@ public class TutorialActivity extends FragmentActivity {
             super.onBackPressed();
         } else {
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (!mTutorialCompleted) {
+            saveTutorialPage(mPager.getCurrentItem());
         }
     }
 
@@ -181,7 +197,7 @@ public class TutorialActivity extends FragmentActivity {
         @Override
         public void onMeasure(int width, int height) {
             mIndicatorBaseWidth = (double) width / (mImageAlignment.length + 1);
-            updateIndicators(0);
+            updateIndicators(mPager.getCurrentItem());
         }
 
         @Override
@@ -223,7 +239,18 @@ public class TutorialActivity extends FragmentActivity {
         @Override
         public void onClick(View v) {
             disableTutorial();
+            // The next time the tutorial is shown, open the first page
+            saveTutorialPage(0);
+            mTutorialCompleted = true;
             finish();
         }
+    }
+
+    private void saveTutorialPage(int page) {
+        SharedPreferences preferences =
+                getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(Preferences.PREFS_KEY_TUTORIAL_PAGE, page);
+        editor.commit();
     }
 }
