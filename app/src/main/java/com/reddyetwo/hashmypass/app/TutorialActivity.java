@@ -74,6 +74,7 @@ public class TutorialActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tutorial);
+        setFinishOnTouchOutside(false);
 
         TutorialPagerAdapter pagerAdapter =
                 new TutorialPagerAdapter(getSupportFragmentManager(),

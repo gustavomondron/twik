@@ -42,6 +42,7 @@ public class AddDefaultProfileActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_default_profile);
+        setFinishOnTouchOutside(false);
 
         final Button readyButton = (Button) findViewById(R.id.ready_button);
         readyButton.setOnClickListener(new View.OnClickListener() {
