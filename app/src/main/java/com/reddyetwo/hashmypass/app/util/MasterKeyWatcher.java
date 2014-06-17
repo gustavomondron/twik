@@ -19,18 +19,26 @@
 
 package com.reddyetwo.hashmypass.app.util;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.ImageView;
 
-import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
+import com.reddyetwo.hashmypass.app.IdenticonGenerationTask;
 
-public class MasterKeyWatcher implements TextWatcher {
+public class MasterKeyWatcher implements TextWatcher,
+        IdenticonGenerationTask.OnIconGeneratedListener {
 
-    private TextView mDigestTextView;
+    private ImageView mIdenticonImageView;
+    private IdenticonGenerationTask mTask;
+    private Context mContext;
 
-    public MasterKeyWatcher(TextView digestTextView) {
-        mDigestTextView = digestTextView;
+    public MasterKeyWatcher(Context context, ImageView identiconImageView) {
+        mContext = context;
+        mIdenticonImageView = identiconImageView;
     }
 
     @Override
@@ -47,11 +55,20 @@ public class MasterKeyWatcher implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
-        if (s.toString().length() == 0) {
-            mDigestTextView.setText("");
-        } else {
-            mDigestTextView
-                    .setText(PasswordHasher.calculateKeyDigest(s.toString()));
+        mIdenticonImageView.setVisibility(View.INVISIBLE);
+        if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) {
+            mTask.cancel(true);
         }
+        if (s.toString().length() > 0) {
+            mTask = new IdenticonGenerationTask(mContext, this);
+            mTask.execute(s.toString());
+        }
+    }
+
+    @Override
+    public void onIconGenerated(Bitmap bitmap) {
+        mIdenticonImageView.setImageBitmap(bitmap);
+        mIdenticonImageView.setVisibility(View.VISIBLE);
+        mTask = null;
     }
 }

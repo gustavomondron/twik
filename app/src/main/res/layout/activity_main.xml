@@ -95,21 +95,22 @@
             android:singleLine="true"
             android:maxLines="1"
             android:maxLength="25"
-            android:layout_toLeftOf="@+id/digest_text"
+            android:layout_toLeftOf="@+id/identicon"
             android:layout_toRightOf="@+id/ic_key"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:imeOptions="actionDone"
             android:hint="@string/master_key"/>
 
-        <TextView
-            android:id="@+id/digest_text"
+        <ImageView
+            android:id="@+id/identicon"
             android:layout_width="48dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:gravity="center"
-            style="@android:style/TextAppearance.Medium"/>
+            android:gravity="center"/>
     </RelativeLayout>
 
     <TextView

@@ -44,8 +44,7 @@ public class PasswordHasher {
     /**
      * Message digest used to calculate key digest
      */
-    private static final String DIGEST_SHA1 = "SHA-1";
-
+    private static final String DIGEST_MD5 = "MD5";
 
     private static String _hashPassword(String tag, String key, int length,
                                         PasswordType type) {
@@ -115,20 +114,23 @@ public class PasswordHasher {
     }
 
     /**
-     * Calculates the digest of the master key
+     * Calculates the digest of an input string
      *
-     * @param key the key
-     * @return the digest of the key
+     * @param input the input string
+     * @return the digest of the input string
      */
-    public static String calculateKeyDigest(String key) {
+    public static byte[] calculateDigest(String input) {
         MessageDigest messageDigest;
+        byte[] result;
+
         try {
-            messageDigest = MessageDigest.getInstance(DIGEST_SHA1);
+            messageDigest = MessageDigest.getInstance(DIGEST_MD5);
+            result = messageDigest.digest(input.getBytes());
         } catch (NoSuchAlgorithmException e) {
-            return null;
+            result = null;
         }
-        return Base64.encodeToString(messageDigest.digest(key.getBytes()),
-                Base64.NO_PADDING | Base64.NO_WRAP).substring(0, 2);
+
+        return result;
     }
 
     /**

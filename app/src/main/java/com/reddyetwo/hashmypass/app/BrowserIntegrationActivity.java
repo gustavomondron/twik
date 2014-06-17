@@ -20,14 +20,11 @@
 package com.reddyetwo.hashmypass.app;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -37,6 +34,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,9 +45,8 @@ import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
-import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
-import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.ButtonsEnableTextWatcher;
+import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
 import com.reddyetwo.hashmypass.app.util.HelpToastOnLongPressClickListener;
 import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
@@ -98,11 +95,11 @@ public class BrowserIntegrationActivity extends Activity {
 
         mTagEditText = (AutoCompleteTextView) findViewById(R.id.tag_text);
 
-        TextView digestTextView = (TextView) findViewById(R.id.digest_text);
+        ImageView identiconImageView = (ImageView) findViewById(R.id.identicon);
 
         mMasterKeyEditText = (EditText) findViewById(R.id.master_key_text);
-        mMasterKeyEditText
-                .addTextChangedListener(new MasterKeyWatcher(digestTextView));
+        mMasterKeyEditText.addTextChangedListener(
+                new MasterKeyWatcher(this, identiconImageView));
 
         // Populate profile spinner
         mProfileSpinner = (Spinner) findViewById(R.id.profile_spinner);
@@ -168,11 +165,6 @@ public class BrowserIntegrationActivity extends Activity {
 
         /* Update the tag according to the site */
         updateTagText();
-
-        /* Set monospace font for key digest */
-        Typeface tf =
-                Typeface.createFromAsset(getAssets(), Constants.FONT_MONOSPACE);
-        digestTextView.setTypeface(tf);
 
         /* Set hash button enable watcher */
         mButtonsEnableTextWatcher =

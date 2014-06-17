@@ -36,6 +36,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.reddyetwo.hashmypass.app.data.Preferences;
@@ -55,8 +56,8 @@ import com.reddyetwo.hashmypass.app.util.TagAutocomplete;
 import java.util.List;
 
 
-public class MainActivity extends Activity implements AddDefaultProfileDialog
-        .OnProfileAddedListener {
+public class MainActivity extends Activity
+        implements AddDefaultProfileDialog.OnProfileAddedListener {
 
     // Constants
     private static final int ID_ADD_PROFILE = -1;
@@ -90,14 +91,12 @@ public class MainActivity extends Activity implements AddDefaultProfileDialog
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         }
 
-        final TextView digestTextView =
-                (TextView) findViewById(R.id.digest_text);
-
         mTagEditText = (AutoCompleteTextView) findViewById(R.id.tag_text);
+        ImageView identiconImageView = (ImageView) findViewById(R.id.identicon);
 
         mMasterKeyEditText = (EditText) findViewById(R.id.master_key_text);
-        mMasterKeyEditText
-                .addTextChangedListener(new MasterKeyWatcher(digestTextView));
+        mMasterKeyEditText.addTextChangedListener(
+                new MasterKeyWatcher(this, identiconImageView));
 
         ImageButton tagSettingsButton =
                 (ImageButton) findViewById(R.id.tag_settings);
@@ -159,7 +158,6 @@ public class MainActivity extends Activity implements AddDefaultProfileDialog
                 Typeface.createFromAsset(getAssets(), Constants.FONT_MONOSPACE);
         mHashedPasswordTextView.setTypeface(tf);
         mHashedPasswordOldTextView.setTypeface(tf);
-        digestTextView.setTypeface(tf);
 
         mButtonsEnableTextWatcher =
                 new ButtonsEnableTextWatcher(mTagEditText, mMasterKeyEditText,
@@ -230,8 +228,8 @@ public class MainActivity extends Activity implements AddDefaultProfileDialog
             startActivity(intent);
         } else if (ProfileSettings.getList(this).size() == 0) {
             // Check if a profile is already defined
-            AddDefaultProfileDialog addProfileDialog = new
-                    AddDefaultProfileDialog();
+            AddDefaultProfileDialog addProfileDialog =
+                    new AddDefaultProfileDialog();
             addProfileDialog.setOnProfileAddedListener(this);
             addProfileDialog.show(getFragmentManager(), "addDefaultProfile");
         }
