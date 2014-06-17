@@ -21,7 +21,6 @@ package com.reddyetwo.hashmypass.app;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -31,10 +30,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.OrientationEventListener;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -362,34 +359,6 @@ public class MainActivity extends Activity {
                 }
                 break;
             default:
-        }
-    }
-
-    private class ProfileAdapter extends ArrayAdapter<Profile> {
-        private List<Profile> mProfiles;
-        private static final int mResource =
-                R.layout.actionbar_simple_spinner_dropdown_item;
-
-        public ProfileAdapter(Context context, List<Profile> objects) {
-            super(context, mResource, objects);
-            mProfiles = objects;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView =
-                        getLayoutInflater().inflate(mResource, parent, false);
-            }
-
-            ((TextView) convertView).setText(mProfiles.get(position).getName());
-            return convertView;
-        }
-
-        @Override
-        public View getDropDownView(int position, View convertView,
-                                    ViewGroup parent) {
-            return getView(position, convertView, parent);
         }
     }
 
