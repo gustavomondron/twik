@@ -37,6 +37,7 @@ import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.util.ProfileFormInflater;
 import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
+import com.reddyetwo.hashmypass.app.util.RandomPrivateKeyGenerator;
 
 public class AddProfileActivity extends Activity {
 
@@ -146,6 +147,7 @@ public class AddProfileActivity extends Activity {
                         addButton);
         mNameEditText.addTextChangedListener(profileFormWatcher);
         mPrivateKeyEditText.addTextChangedListener(profileFormWatcher);
+        mPrivateKeyEditText.setText(RandomPrivateKeyGenerator.generate());
     }
 
     @Override
