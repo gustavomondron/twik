@@ -21,6 +21,7 @@ package com.reddyetwo.hashmypass.app;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -55,7 +56,8 @@ import com.reddyetwo.hashmypass.app.util.TagAutocomplete;
 import java.util.List;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements AddDefaultProfileDialog
+        .OnProfileAddedListener {
 
     // Constants
     private static final int ID_ADD_PROFILE = -1;
@@ -229,8 +231,10 @@ public class MainActivity extends Activity {
             startActivity(intent);
         } else if (ProfileSettings.getList(this).size() == 0) {
             // Check if a profile is already defined
-            Intent intent = new Intent(this, AddDefaultProfileActivity.class);
-            startActivityForResult(intent, REQUEST_CREATE_DEFAULT_PROFILE);
+            AddDefaultProfileDialog addProfileDialog = new
+                    AddDefaultProfileDialog();
+            addProfileDialog.setOnProfileAddedListener(this);
+            addProfileDialog.show(getFragmentManager(), "addDefaultProfile");
         }
 
         MasterKeyAlarmManager.cancelAlarm(this);
@@ -499,4 +503,15 @@ public class MainActivity extends Activity {
         }
     }
 
+    @Override
+    public void onProfileAdded() {
+        // Refresh the action bar spinner
+        populateActionBarSpinner();
+    }
+
+    @Override
+    public void onCanceled() {
+        // You didn't add the profile! Nothing to do here!
+        finish();
+    }
 }

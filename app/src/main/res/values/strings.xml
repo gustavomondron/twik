@@ -43,6 +43,7 @@
     <string name="next">Next</string>
     <string name="start">Start</string>
     <string name="ready">I\'m ready to go!</string>
+    <string name="add_first_profile">Add your first profile</string>
 
     <!-- Dialogs -->
     <string name="confirm_delete">Delete \"%s\" profile?</string>

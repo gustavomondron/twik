@@ -91,15 +91,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
-
-        <activity
-            android:name=".AddDefaultProfileActivity"
-            android:noHistory="true"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/tutorialStyle">
-        </activity>
     </application>
 
 </manifest>
