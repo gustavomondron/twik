@@ -21,6 +21,7 @@ package com.reddyetwo.hashmypass.app;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -32,6 +33,7 @@ import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -135,6 +137,14 @@ public class MainActivity extends Activity
                             mHashedPasswordTextView.getText().toString(),
                             R.string.copied_to_clipboard);
                 }
+
+                // Hide keyboard
+                InputMethodManager inputManager =
+                        (InputMethodManager) getSystemService(
+                                INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(
+                        getCurrentFocus().getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
             }
         });
 
