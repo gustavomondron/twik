@@ -40,6 +40,8 @@
 <resources>
 
     <style name="Theme.Hashmypass" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+        <!-- Needed for emulator bug - Holo light color is white instead of gray -->
+        <item name="android:windowBackground">@color/holo_light_background</item>
         <item name="android:actionBarItemBackground">
             @drawable/selectable_background_hashmypass
         </item>
@@ -163,5 +165,17 @@
     <style name="defaultProfileLayoutStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <!-- Cards -->
+
+    <style name="Tag.card.content_outer_layout" parent="@style/card.content_outer_layout">
+        <!--Style for Content View-->
+        <item name="android:minHeight">40dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginTop">@dimen/card_content_outer_view_margin_top</item>
+        <item name="android:layout_marginBottom">@dimen/card_content_outer_view_margin_bottom</item>
+        <item name="android:layout_marginLeft">@dimen/card_content_outer_view_margin_left</item>
+        <item name="android:layout_marginRight">@dimen/card_content_outer_view_margin_right</item>
     </style>
 </resources>

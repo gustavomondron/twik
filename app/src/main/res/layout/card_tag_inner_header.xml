@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/header"
+        android:orientation="horizontal"
+        style="@style/card"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="@dimen/card_header_simple_title_margin_left"
+        android:layout_marginRight="@dimen/card_header_simple_title_margin_right"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/tag_favicon"
+            android:src="@drawable/ic_amazon"
+            android:layout_width="32dp"
+            android:layout_marginRight="8dp"
+            android:layout_height="40dp"/>
+
+        <TextView
+            android:id="@+id/tag_name"
+            android:fontFamily="sans-serif-light"
+            android:textSize="@dimen/card_inner_text_size"
+            android:gravity="left"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+
+        <AutoCompleteTextView
+            android:id="@+id/tag_name_autocomplete"
+            android:inputType="text"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:maxLength="25"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:imeOptions="actionNext"
+            android:completionThreshold="1"
+            android:visibility="gone"
+            android:background="#00000000"
+            android:textSize="@dimen/card_inner_text_size"
+            android:selectAllOnFocus="true"
+            android:hint="@string/tag"/>
+    </LinearLayout>
+    <View
+        android:id="@+id/card_header_divider"
+        android:layout_alignBottom="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_height="1dp"
+        android:background="@color/card_base_cardwithlist_divider_color"/>
+</RelativeLayout>

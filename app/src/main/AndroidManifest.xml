@@ -40,6 +40,18 @@
             </intent-filter>
         </activity>
         <activity
+            android:theme="@style/Theme.Hashmypass"
+            android:name=".CardsMainActivity"
+            android:label="Cards HashMyPass"
+            android:windowSoftInputMode="stateHidden"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".AddProfileActivity"
             android:label="@string/action_add_profile">
             <meta-data

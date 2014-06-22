@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:card="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <ScrollView
+        android:id="@+id/main_base"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.reddyetwo.hashmypass.app.cards.NewCardView
+                android:id="@+id/card_selected_tag"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                card:card_layout_resourceID="@layout/card_tag_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <com.reddyetwo.hashmypass.app.cards.NewCardView
+                android:id="@+id/card_master_key"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/small_spacing"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                card:card_layout_resourceID="@layout/card_master_key_layout"
+                android:animateLayoutChanges="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <com.reddyetwo.hashmypass.app.cards.NewCardView
+                android:id="@+id/card_tags_list"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp"/>
+
+            <!-- Empty view-->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="15dp"/>
+
+            </LinearLayout>
+        </ScrollView>
+</LinearLayout>

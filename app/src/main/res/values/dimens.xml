@@ -49,4 +49,6 @@
     <dimen name="empty_list_text_size">22sp</dimen>
     <dimen name="empty_list_image_size">112dp</dimen>
     <dimen name="button_bar_height">48dp</dimen>
+    <dimen name="card_inner_text_size">16sp</dimen>
+    <dimen name="card_hashed_password_text_size">18sp</dimen>
 </resources>

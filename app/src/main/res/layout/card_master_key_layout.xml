@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:card="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <!-- Card visible layout -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@id/card_main_layout"
+        style="@style/card.main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Main Content View -->
+        <FrameLayout
+            android:id="@+id/card_main_content_layout"
+            style="@style/Tag.card.content_outer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <!-- Compound view for Shadow
+           If you want to customize this element use attr card:card_shadow_layout_resourceID -->
+    <it.gmariotti.cardslib.library.view.component.CardShadowView
+        style="@style/card.shadow_outer_layout"
+        android:id="@+id/card_shadow_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
