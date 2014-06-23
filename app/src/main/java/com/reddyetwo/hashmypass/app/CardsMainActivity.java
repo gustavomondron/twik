@@ -512,8 +512,11 @@ public class CardsMainActivity extends Activity
             mSelectedTagCard.showHashedPassword();
 
             // Restore tag if cached
-            mTagToRestore = TagSettings.getTag(this, mSelectedProfileId,
-                    HashMyPassApplication.getCachedTag());
+            if (HashMyPassApplication.getCachedTag() != null &&
+                    HashMyPassApplication.getCachedTag().length() > 0) {
+                mTagToRestore = TagSettings.getTag(this, mSelectedProfileId,
+                        HashMyPassApplication.getCachedTag());
+            }
         }
         HashMyPassApplication.setCachedMasterKey("");
     }
