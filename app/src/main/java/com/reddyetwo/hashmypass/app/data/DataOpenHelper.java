@@ -27,7 +27,7 @@ public class DataOpenHelper extends SQLiteOpenHelper {
 
     // TODO Typo in the db name... we should fix it... or maybe it's too late
     private static final String DATABASE_NAME = "hassmypass.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     public static final String COLUMN_ID = "_id";
 
@@ -52,6 +52,7 @@ public class DataOpenHelper extends SQLiteOpenHelper {
     public static final String COLUMN_TAGS_NAME = "name";
     public static final String COLUMN_TAGS_PROFILE_ID = "profile_id";
     public static final String COLUMN_TAGS_SITE = "site";
+    public static final String COLUMN_TAGS_HASH_COUNTER = "hash_counter";
     public static final String COLUMN_TAGS_PASSWORD_LENGTH = "password_length";
     public static final String COLUMN_TAGS_PASSWORD_TYPE = "password_type";
     private static final String TAGS_TABLE_CREATE =
@@ -59,6 +60,7 @@ public class DataOpenHelper extends SQLiteOpenHelper {
                     COLUMN_ID + " INTEGER PRIMARY KEY, " +
                     COLUMN_TAGS_NAME + " TEXT, " +
                     COLUMN_TAGS_PROFILE_ID + " INTEGER, " +
+                    COLUMN_TAGS_HASH_COUNTER + " INTEGER NOT NULL DEFAULT 0, " +
                     COLUMN_TAGS_SITE + " TEXT, " +
                     COLUMN_TAGS_PASSWORD_LENGTH + " INTEGER, " +
                     COLUMN_TAGS_PASSWORD_TYPE + " INTEGER, " +
@@ -69,6 +71,9 @@ public class DataOpenHelper extends SQLiteOpenHelper {
                     "UNIQUE (" + COLUMN_TAGS_PROFILE_ID + "," +
                     "" + COLUMN_TAGS_SITE + ")" +
                     ");";
+    private static final String TAGS_TABLE_ADD_HASH_COUNTER_COLUMN = "" +
+            "ALTER TABLE " + TAGS_TABLE_NAME + " ADD COLUMN " +
+            COLUMN_TAGS_HASH_COUNTER + " INTEGER NOT NULL DEFAULT 0;";
 
     /* Table "favicons" */
     public static final String FAVICONS_TABLE_NAME = "favicons";
@@ -94,6 +99,8 @@ public class DataOpenHelper extends SQLiteOpenHelper {
         switch (oldVersion) {
             case 1:
                 db.execSQL(FAVICONS_TABLE_CREATE);
+            case 2:
+                db.execSQL(TAGS_TABLE_ADD_HASH_COUNTER_COLUMN);
         }
     }
 }

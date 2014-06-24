@@ -272,12 +272,18 @@ public class BrowserIntegrationActivity extends Activity {
             // Current tag
             Tag tag = TagSettings.getTag(this, profileId, tagName);
 
+            // Increase hash counter
+            tag.setHashCounter(tag.getHashCounter() + 1);
+
             // Current site tag
             Tag siteTag = TagSettings.getSiteTag(this, profileId, mSite);
 
-            if (siteTag != null && siteTag.getName() != tag.getName()) {
+            if (siteTag != null && !siteTag.getName().equals(tag.getName())) {
                 /* I understand I should remove the previous tag because it
-                is no longer necessary */
+                is no longer necessary, but we should add its hash counter
+                because we are generating the password for the same website */
+                tag.setHashCounter(
+                        tag.getHashCounter() + siteTag.getHashCounter());
                 TagSettings.deleteTag(this, siteTag);
             }
 

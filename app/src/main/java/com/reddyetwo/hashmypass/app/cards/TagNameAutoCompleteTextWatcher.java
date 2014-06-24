@@ -33,7 +33,8 @@ public class TagNameAutoCompleteTextWatcher implements TextWatcher {
 
     public void updateProfileTags() {
         mTags = new ArrayList<String>();
-        List<Tag> tags = TagSettings.getProfileTags(mContext, mProfileId);
+        List<Tag> tags = TagSettings.getProfileTags(mContext, mProfileId,
+                TagSettings.ORDER_BY_HASH_COUNTER, TagSettings.LIMIT_UNBOUNDED);
         for (Tag tag : tags) {
             mTags.add(tag.getName());
         }

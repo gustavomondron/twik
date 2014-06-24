@@ -1,19 +1,11 @@
 package com.reddyetwo.hashmypass.app.cards;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.reddyetwo.hashmypass.app.R;
-import com.reddyetwo.hashmypass.app.data.Favicon;
-import com.reddyetwo.hashmypass.app.data.FaviconSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.util.FaviconLoader;
 

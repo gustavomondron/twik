@@ -35,7 +35,8 @@ public class TagAutocomplete {
                                                        long profileId,
                                                        AutoCompleteTextView tagTextView) {
 
-        List<Tag> tags = TagSettings.getProfileTags(context, profileId);
+        List<Tag> tags = TagSettings.getProfileTags(context, profileId,
+                TagSettings.ORDER_BY_HASH_COUNTER, TagSettings.LIMIT_UNBOUNDED);
         List<String> names = new ArrayList<String>();
         for (Tag tag : tags) {
             names.add(tag.getName());

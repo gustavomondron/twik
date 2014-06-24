@@ -180,12 +180,15 @@ public class TagSettingsDialogFragment extends DialogFragment {
         PasswordType passwordType = PasswordType.values()[mPasswordTypeSpinner
                 .getSelectedItemPosition()];
 
-        Tag tag = new Tag(mTagId, mProfileId, null, mTagName, passwordLength,
+        Tag tag = new Tag(mTagId, mProfileId, 0, null, mTagName, passwordLength,
                 passwordType);
         if (mTagId == Tag.NO_ID) {
             // New tag
             TagSettings.insertTag(getActivity(), tag);
         } else {
+            int hashCounter =
+                    TagSettings.getTag(getActivity(), mTagId).getHashCounter();
+            tag.setHashCounter(hashCounter);
             TagSettings.updateTag(getActivity(), tag);
         }
     }

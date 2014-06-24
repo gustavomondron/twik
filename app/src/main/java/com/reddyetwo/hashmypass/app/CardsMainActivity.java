@@ -23,7 +23,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.Menu;
@@ -39,7 +38,6 @@ import com.reddyetwo.hashmypass.app.cards.OnTagSelectedListener;
 import com.reddyetwo.hashmypass.app.cards.SelectedTagCard;
 import com.reddyetwo.hashmypass.app.cards.TagCardHeader;
 import com.reddyetwo.hashmypass.app.cards.TagListCard;
-import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.Profile;
@@ -60,6 +58,7 @@ public class CardsMainActivity extends Activity
     private static final int ID_ADD_PROFILE = -1;
     private static final int REQUEST_ADD_PROFILE = 1;
     private static final int REQUEST_CREATE_DEFAULT_PROFILE = 2;
+    private static final int TAG_LIST_MAX_SIZE = 25;
 
     // State keys
     private static final String STATE_SELECTED_PROFILE_ID = "profile_id";
@@ -226,7 +225,7 @@ public class CardsMainActivity extends Activity
                     savedInstanceState.getInt(STATE_CARD_PASSWORD_LENGTH);
             PasswordType passwordType = PasswordType.values()[savedInstanceState
                     .getInt(STATE_CARD_PASSWORD_TYPE)];
-            mTag = new Tag(Tag.NO_ID, mSelectedProfileId, null, tagName,
+            mTag = new Tag(Tag.NO_ID, mSelectedProfileId, 0, null, tagName,
                     passwordLength, passwordType);
         } else {
             mTag = TagSettings.getTag(this, tagId);
@@ -351,7 +350,10 @@ public class CardsMainActivity extends Activity
                                         .setProfileId(mSelectedProfileId);
                                 List<Tag> tags = TagSettings
                                         .getProfileTags(CardsMainActivity.this,
-                                                mSelectedProfileId);
+                                                mSelectedProfileId,
+                                                TagSettings.ORDER_BY_HASH_COUNTER,
+                                                TAG_LIST_MAX_SIZE
+                                        );
                                 if (tags.size() > 0) {
                                     mTagListCard.updateTags(tags);
                                     if (mTagToRestore != null) {
@@ -415,10 +417,16 @@ public class CardsMainActivity extends Activity
         // Save the profile used
         updateLastProfile();
 
+        // Add +1 to the hash counter
+        mTag.setHashCounter(mTag.getHashCounter() + 1);
+
         if (fromList) {
             mSelectedTagCard.setTag(tag);
             mSelectedTagCard.selectTag();
             updateHashedPassword();
+
+            // Save the tag to update the hash counter
+            TagSettings.updateTag(this, mTag);
 
             // Go to the top of ScrollView to show the password
             mBaseView.fullScroll(ScrollView.FOCUS_UP);
@@ -432,6 +440,7 @@ public class CardsMainActivity extends Activity
                 mSelectedTagCard.setTag(mTag);
             }
         }
+
         mMasterKeyCard.getCardView().setVisibility(View.VISIBLE);
         /* The soft keyboard should be automatically shown only if the
         master key is not already filled.

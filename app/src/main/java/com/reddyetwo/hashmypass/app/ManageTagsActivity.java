@@ -67,7 +67,9 @@ public class ManageTagsActivity extends Activity {
         }
 
         // Set list adapter
-        List<Tag> tagList = TagSettings.getProfileTags(this, mProfileId);
+        List<Tag> tagList = TagSettings
+                .getProfileTags(this, mProfileId, TagSettings.ORDER_BY_NAME,
+                        TagSettings.LIMIT_UNBOUNDED);
         TagAdapter adapter = new TagAdapter(this, tagList);
         ((ListView) findViewById(android.R.id.list)).setAdapter(adapter);
 
@@ -177,7 +179,9 @@ public class ManageTagsActivity extends Activity {
             if (TagSettings.deleteTag(ManageTagsActivity.this, tag)) {
                 // Update tags list
                 mTags = TagSettings
-                        .getProfileTags(ManageTagsActivity.this, mProfileId);
+                        .getProfileTags(ManageTagsActivity.this, mProfileId,
+                                TagSettings.ORDER_BY_NAME,
+                                TagSettings.LIMIT_UNBOUNDED);
 
                 // Check if we should delete favicon
                 String site = tag.getSite();

@@ -25,6 +25,7 @@ public class Tag {
 
     private long mId = NO_ID;
     private long mProfileId;
+    private int mHashCounter = 0;
     private String mSite;
     private String mName;
     private int mPasswordLength;
@@ -33,10 +34,12 @@ public class Tag {
     public Tag() {
     }
 
-    public Tag(long id, long profileId, String site, String name,
+    public Tag(long id, long profileId, int hashCounter, String site,
+               String name,
                int passwordLength, PasswordType passwordType) {
         mId = id;
         mProfileId = profileId;
+        mHashCounter = hashCounter;
         mSite = site;
         mName = name;
         mPasswordLength = passwordLength;
@@ -57,6 +60,14 @@ public class Tag {
 
     public void setProfileId(long profileId) {
         mProfileId = profileId;
+    }
+
+    public int getHashCounter() {
+        return mHashCounter;
+    }
+
+    public void setHashCounter(int hashCounter) {
+        mHashCounter = hashCounter;
     }
 
     public String getSite() {

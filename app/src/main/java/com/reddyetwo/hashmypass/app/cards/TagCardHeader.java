@@ -44,7 +44,7 @@ public class TagCardHeader extends CardHeader {
     public void setProfileId(long profileId) {
         mProfileId = profileId;
         Profile profile = ProfileSettings.getProfile(getContext(), profileId);
-        mTag = new Tag(Tag.NO_ID, profileId, null, null,
+        mTag = new Tag(Tag.NO_ID, profileId, 0, null, null,
                 profile.getPasswordLength(), profile.getPasswordType());
         mNameAutoCompleteTextWatcher.updateProfileTags();
     }
@@ -117,7 +117,7 @@ public class TagCardHeader extends CardHeader {
                         // new one
                         Profile profile = ProfileSettings
                                 .getProfile(getContext(), mProfileId);
-                        mTag = new Tag(Tag.NO_ID, mProfileId, null, name,
+                        mTag = new Tag(Tag.NO_ID, mProfileId, 0, null, name,
                                 profile.getPasswordLength(),
                                 profile.getPasswordType());
                     } else {

@@ -29,6 +29,10 @@ import java.util.List;
 
 public class TagSettings {
 
+    public static final int ORDER_BY_NAME = 1;
+    public static final int ORDER_BY_HASH_COUNTER = 2;
+    public static final int LIMIT_UNBOUNDED = -1;
+
     /**
      * Gets tag settings from database
      *
@@ -43,6 +47,7 @@ public class TagSettings {
         Cursor cursor = db.query(DataOpenHelper.TAGS_TABLE_NAME,
                 new String[]{DataOpenHelper.COLUMN_ID,
                         DataOpenHelper.COLUMN_TAGS_SITE,
+                        DataOpenHelper.COLUMN_TAGS_HASH_COUNTER,
                         DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH,
                         DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE},
                 DataOpenHelper.COLUMN_TAGS_PROFILE_ID + "=" +
@@ -55,7 +60,8 @@ public class TagSettings {
             // Specific tag settings found
             tag = new Tag(cursor
                     .getLong(cursor.getColumnIndex(DataOpenHelper.COLUMN_ID)),
-                    profileID, cursor.getString(
+                    profileID, cursor.getInt(cursor.getColumnIndex(
+                    DataOpenHelper.COLUMN_TAGS_HASH_COUNTER)), cursor.getString(
                     cursor.getColumnIndex(DataOpenHelper.COLUMN_TAGS_SITE)),
                     name, cursor.getInt(cursor.getColumnIndex(
                             DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH)
@@ -66,7 +72,7 @@ public class TagSettings {
             // Tag settings not found, use profile settings
             Profile profile = ProfileSettings.getProfile(context, profileID);
             if (profile != null) {
-                tag = new Tag(Tag.NO_ID, profileID, null, name,
+                tag = new Tag(Tag.NO_ID, profileID, 0, null, name,
                         profile.getPasswordLength(), profile.getPasswordType());
             }
         }
@@ -88,6 +94,7 @@ public class TagSettings {
         Cursor cursor = db.query(DataOpenHelper.TAGS_TABLE_NAME,
                 new String[]{DataOpenHelper.COLUMN_TAGS_PROFILE_ID,
                         DataOpenHelper.COLUMN_TAGS_NAME,
+                        DataOpenHelper.COLUMN_TAGS_HASH_COUNTER,
                         DataOpenHelper.COLUMN_TAGS_SITE,
                         DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH,
                         DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE},
@@ -99,7 +106,10 @@ public class TagSettings {
         if (cursor.moveToFirst()) {
             // Specific tag settings found
             tag = new Tag(tagId, cursor.getLong(cursor.getColumnIndex(
-                    DataOpenHelper.COLUMN_TAGS_PROFILE_ID)), cursor.getString(
+                    DataOpenHelper.COLUMN_TAGS_PROFILE_ID)), cursor.getInt(
+                    cursor.getColumnIndex(
+                            DataOpenHelper.COLUMN_TAGS_HASH_COUNTER)
+            ), cursor.getString(
                     cursor.getColumnIndex(DataOpenHelper.COLUMN_TAGS_SITE)),
                     cursor.getString(cursor.getColumnIndex(
                             DataOpenHelper.COLUMN_TAGS_NAME)), cursor.getInt(
@@ -126,6 +136,8 @@ public class TagSettings {
         ContentValues values = new ContentValues();
         values.put(DataOpenHelper.COLUMN_TAGS_NAME, tag.getName());
         values.put(DataOpenHelper.COLUMN_TAGS_PROFILE_ID, tag.getProfileId());
+        values.put(DataOpenHelper.COLUMN_TAGS_HASH_COUNTER,
+                tag.getHashCounter());
         values.put(DataOpenHelper.COLUMN_TAGS_SITE, tag.getSite());
         values.put(DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH,
                 tag.getPasswordLength());
@@ -155,6 +167,8 @@ public class TagSettings {
                 tag.getPasswordLength());
         values.put(DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE,
                 tag.getPasswordType().ordinal());
+        values.put(DataOpenHelper.COLUMN_TAGS_HASH_COUNTER,
+                tag.getHashCounter());
         values.put(DataOpenHelper.COLUMN_TAGS_SITE, tag.getSite());
 
         boolean updated = db.update(DataOpenHelper.TAGS_TABLE_NAME, values,
@@ -179,25 +193,43 @@ public class TagSettings {
     }
 
     /**
-     * Returns the list of tags of a profile
+     * Returns an ordered list of tags of a profile
      *
      * @param context
      * @param profileId
+     * @param orderBy
      * @return
      */
-    public static List<Tag> getProfileTags(Context context, long profileId) {
+    public static List<Tag> getProfileTags(Context context, long profileId,
+                                           int orderBy, int limit) {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getReadableDatabase();
 
+        String orderClause = "";
+        switch (orderBy) {
+            case ORDER_BY_HASH_COUNTER:
+                orderClause = DataOpenHelper.COLUMN_TAGS_HASH_COUNTER + " " +
+                        "DESC, ";
+            case ORDER_BY_NAME:
+            default:
+                orderClause += DataOpenHelper.COLUMN_TAGS_NAME + " COLLATE " +
+                        "NOCASE";
+        }
+        String limitClause = null;
+        if (limit != LIMIT_UNBOUNDED) {
+            limitClause = Integer.toString(limit);
+        }
+
         Cursor cursor = db.query(DataOpenHelper.TAGS_TABLE_NAME,
                 new String[]{DataOpenHelper.COLUMN_ID,
+                        DataOpenHelper.COLUMN_TAGS_HASH_COUNTER,
                         DataOpenHelper.COLUMN_TAGS_SITE,
                         DataOpenHelper.COLUMN_TAGS_NAME,
                         DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH,
                         DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE},
                 DataOpenHelper.COLUMN_TAGS_PROFILE_ID + "= ?",
-                new String[]{Long.toString(profileId)}, null, null,
-                DataOpenHelper.COLUMN_TAGS_NAME + " COLLATE NOCASE"
+                new String[]{Long.toString(profileId)}, null, null, orderClause,
+                limitClause
         );
 
         List<Tag> tagList = new ArrayList<Tag>();
@@ -205,6 +237,8 @@ public class TagSettings {
             do {
                 long tagId = cursor.getLong(
                         cursor.getColumnIndex(DataOpenHelper.COLUMN_ID));
+                int hashCounter = cursor.getInt(cursor.getColumnIndex(
+                        DataOpenHelper.COLUMN_TAGS_HASH_COUNTER));
                 String site = cursor.getString(
                         cursor.getColumnIndex(DataOpenHelper.COLUMN_TAGS_SITE));
                 String name = cursor.getString(
@@ -214,9 +248,8 @@ public class TagSettings {
                 PasswordType passwordType = PasswordType.values()[cursor
                         .getInt(cursor.getColumnIndex(
                                 DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE))];
-                tagList.add(
-                        new Tag(tagId, profileId, site, name, passwordLength,
-                                passwordType)
+                tagList.add(new Tag(tagId, profileId, hashCounter, site, name,
+                                passwordLength, passwordType)
                 );
             } while (cursor.moveToNext());
         }
