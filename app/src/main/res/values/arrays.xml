@@ -50,6 +50,11 @@
         <item>@color/favicon_background_3</item>
         <item>@color/favicon_background_4</item>
         <item>@color/favicon_background_5</item>
+        <item>@color/favicon_background_6</item>
+        <item>@color/favicon_background_7</item>
+        <item>@color/favicon_background_8</item>
+        <item>@color/favicon_background_9</item>
+        <item>@color/favicon_background_10</item>
     </array>
 
 </resources>

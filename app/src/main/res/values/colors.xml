@@ -41,4 +41,10 @@
     <color name="favicon_background_3">#ff99cc00</color>
     <color name="favicon_background_4">#ffffbb33</color>
     <color name="favicon_background_5">#ffff4444</color>
+    <color name="favicon_background_6">#ff0099cc</color>
+    <color name="favicon_background_7">#ff9933cc</color>
+    <color name="favicon_background_8">#ff669900</color>
+    <color name="favicon_background_9">#ffff8800</color>
+    <color name="favicon_background_10">#ffcc0000</color>
+
 </resources>
