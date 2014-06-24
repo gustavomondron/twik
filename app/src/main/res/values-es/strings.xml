@@ -22,6 +22,7 @@
 <resources>
 
     <!-- Titles -->
+    <string name="tags_list">LISTA DE ETIQUETAS</string>
 
     <!-- Actions -->
     <string name="action_settings">Ajustes</string>
