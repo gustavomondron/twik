@@ -23,7 +23,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.ContactsContract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +79,7 @@ public class TagSettings {
      * Gets tag settings from database
      *
      * @param context
-     * @param tagId the tag identifier
+     * @param tagId   the tag identifier
      * @return the tag settings, or null if not found
      */
     public static Tag getTag(Context context, long tagId) {
@@ -127,6 +126,7 @@ public class TagSettings {
         ContentValues values = new ContentValues();
         values.put(DataOpenHelper.COLUMN_TAGS_NAME, tag.getName());
         values.put(DataOpenHelper.COLUMN_TAGS_PROFILE_ID, tag.getProfileId());
+        values.put(DataOpenHelper.COLUMN_TAGS_SITE, tag.getSite());
         values.put(DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH,
                 tag.getPasswordLength());
         values.put(DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE,
@@ -155,6 +155,7 @@ public class TagSettings {
                 tag.getPasswordLength());
         values.put(DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE,
                 tag.getPasswordType().ordinal());
+        values.put(DataOpenHelper.COLUMN_TAGS_SITE, tag.getSite());
 
         boolean updated = db.update(DataOpenHelper.TAGS_TABLE_NAME, values,
                 DataOpenHelper.COLUMN_ID + " = ?",
@@ -243,5 +244,15 @@ public class TagSettings {
 
         db.close();
         return tag;
+    }
+
+    public static boolean siteHasTags(Context context, String site) {
+        DataOpenHelper helper = new DataOpenHelper(context);
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.query(DataOpenHelper.TAGS_TABLE_NAME,
+                new String[]{DataOpenHelper.COLUMN_ID},
+                DataOpenHelper.COLUMN_TAGS_SITE + " = ?", new String[]{site},
+                null, null, null);
+        return cursor.getCount() > 0;
     }
 }

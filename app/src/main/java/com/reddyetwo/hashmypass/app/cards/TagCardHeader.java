@@ -8,19 +8,21 @@ import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
 import com.reddyetwo.hashmypass.app.R;
+import com.reddyetwo.hashmypass.app.data.Favicon;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
+import com.reddyetwo.hashmypass.app.util.FaviconLoader;
 
 import it.gmariotti.cardslib.library.internal.CardHeader;
 
 public class TagCardHeader extends CardHeader {
 
-    //private ImageView mFavIconImageView;
+    private TextView mFaviconTextView;
     private TextView mNameTextView;
     private AutoCompleteTextView mNameAutoComplete;
-    private TagNameAutoCompleteTextWatcher mNameAutocompleteTextWatcher;
+    private TagNameAutoCompleteTextWatcher mNameAutoCompleteTextWatcher;
     private OnTagChangedListener mTagChangedListener;
 
     private long mProfileId;
@@ -36,6 +38,7 @@ public class TagCardHeader extends CardHeader {
     public void setTag(Tag tag) {
         mTag = tag;
         mNameTextView.setText(tag.getName());
+        FaviconLoader.setAsBackground(getContext(), mFaviconTextView, mTag);
     }
 
     public void setProfileId(long profileId) {
@@ -43,19 +46,19 @@ public class TagCardHeader extends CardHeader {
         Profile profile = ProfileSettings.getProfile(getContext(), profileId);
         mTag = new Tag(Tag.NO_ID, profileId, null, null,
                 profile.getPasswordLength(), profile.getPasswordType());
-        mNameAutocompleteTextWatcher.updateProfileTags();
+        mNameAutoCompleteTextWatcher.updateProfileTags();
     }
 
     @Override
     public void setupInnerViewElements(ViewGroup parent, View view) {
-        //mFavIconImageView = (ImageView) parent.findViewById(R.id.tag_favicon);
+        mFaviconTextView = (TextView) parent.findViewById(R.id.tag_favicon);
         mNameTextView = (TextView) parent.findViewById(R.id.tag_name);
         mNameAutoComplete = (AutoCompleteTextView) parent
                 .findViewById(R.id.tag_name_autocomplete);
-        mNameAutocompleteTextWatcher =
+        mNameAutoCompleteTextWatcher =
                 new TagNameAutoCompleteTextWatcher(getContext(), mProfileId,
                         mNameMatchListener);
-        mNameAutoComplete.addTextChangedListener(mNameAutocompleteTextWatcher);
+        mNameAutoComplete.addTextChangedListener(mNameAutoCompleteTextWatcher);
     }
 
     public void toggleOverflow() {
@@ -90,7 +93,7 @@ public class TagCardHeader extends CardHeader {
     }
 
     public void tagStored() {
-        mNameAutocompleteTextWatcher.addTag(mTag.getName());
+        mNameAutoCompleteTextWatcher.addTag(mTag.getName());
     }
 
     public boolean autoCompleteIsShown() {
@@ -120,6 +123,10 @@ public class TagCardHeader extends CardHeader {
                     } else {
                         mTag.setName(name);
                     }
+
+                    FaviconLoader
+                            .setAsBackground(getContext(), mFaviconTextView,
+                                    mTag);
 
                     // Notify the listener
                     mTagChangedListener.onTagChanged(mTag);

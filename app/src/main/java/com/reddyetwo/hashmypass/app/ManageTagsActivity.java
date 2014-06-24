@@ -35,7 +35,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.reddyetwo.hashmypass.app.data.DataOpenHelper;
+import com.reddyetwo.hashmypass.app.data.Favicon;
+import com.reddyetwo.hashmypass.app.data.FaviconSettings;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
@@ -86,6 +87,28 @@ public class ManageTagsActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    /* Shows a number picker dialog for choosing the password length */
+    private void showTagSettingsDialog(String tagName) {
+        TagSettingsDialogFragment dialogFragment =
+                new TagSettingsDialogFragment();
+        dialogFragment.setProfileId(mProfileId);
+        dialogFragment.setTag(tagName);
+
+        dialogFragment.show(getFragmentManager(), "tagSettings");
+    }
+
+    private void updateLayout(int tagListSize) {
+        View listView = findViewById(android.R.id.list);
+        View emptyView = findViewById(R.id.list_empty_layout);
+        if (tagListSize == 0) {
+            listView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            listView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
+    }
+
     private class TagAdapter extends ArrayAdapter<Tag> {
 
         private List<Tag> mTags;
@@ -122,27 +145,7 @@ public class ManageTagsActivity extends Activity {
                                 @Override
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
-                                    DataOpenHelper helper = new DataOpenHelper(
-                                            ManageTagsActivity
-                                                    .this
-                                    );
-                                    if (TagSettings
-                                            .deleteTag(ManageTagsActivity.this,
-                                                    tag)) {
-                                        // Update tags list
-                                        mTags = TagSettings.getProfileTags(
-                                                ManageTagsActivity.this,
-                                                mProfileId);
-                                        clear();
-                                        addAll(mTags);
-                                        notifyDataSetChanged();
-                                        updateLayout(mTags.size());
-                                    } else {
-                                        // Error!
-                                        Toast.makeText(ManageTagsActivity.this,
-                                                R.string.error,
-                                                Toast.LENGTH_LONG).show();
-                                    }
+                                    deleteTag(tag);
                                 }
                             }
                     );
@@ -169,27 +172,38 @@ public class ManageTagsActivity extends Activity {
 
             return convertView;
         }
-    }
 
-    /* Shows a number picker dialog for choosing the password length */
-    private void showTagSettingsDialog(String tagName) {
-        TagSettingsDialogFragment dialogFragment =
-                new TagSettingsDialogFragment();
-        dialogFragment.setProfileId(mProfileId);
-        dialogFragment.setTag(tagName);
+        private void deleteTag(Tag tag) {
+            if (TagSettings.deleteTag(ManageTagsActivity.this, tag)) {
+                // Update tags list
+                mTags = TagSettings
+                        .getProfileTags(ManageTagsActivity.this, mProfileId);
 
-        dialogFragment.show(getFragmentManager(), "tagSettings");
-    }
+                // Check if we should delete favicon
+                String site = tag.getSite();
+                if (site != null) {
+                    Favicon favicon =
+                            FaviconSettings.getFavicon(ManageTagsActivity
+                                    .this, site);
+                    if (favicon != null &&
+                            !TagSettings.siteHasTags(ManageTagsActivity
+                                            .this, site
+                            )) {
+                        FaviconSettings.deleteFavicon(ManageTagsActivity
+                                .this, favicon);
+                    }
 
-    private void updateLayout(int tagListSize) {
-        View listView = findViewById(android.R.id.list);
-        View emptyView = findViewById(R.id.list_empty_layout);
-        if (tagListSize == 0) {
-            listView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
-        } else {
-            listView.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.GONE);
+                }
+
+                clear();
+                addAll(mTags);
+                notifyDataSetChanged();
+                updateLayout(mTags.size());
+            } else {
+                // Error!
+                Toast.makeText(ManageTagsActivity.this, R.string.error,
+                        Toast.LENGTH_LONG).show();
+            }
         }
     }
 }

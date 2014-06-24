@@ -25,8 +25,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DataOpenHelper extends SQLiteOpenHelper {
 
+    // TODO Typo in the db name... we should fix it... or maybe it's too late
     private static final String DATABASE_NAME = "hassmypass.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public static final String COLUMN_ID = "_id";
 
@@ -69,6 +70,14 @@ public class DataOpenHelper extends SQLiteOpenHelper {
                     "" + COLUMN_TAGS_SITE + ")" +
                     ");";
 
+    /* Table "favicons" */
+    public static final String FAVICONS_TABLE_NAME = "favicons";
+    public static final String COLUMN_FAVICONS_SITE = "site";
+    public static final String FAVICONS_TABLE_CREATE = "CREATE TABLE " +
+            FAVICONS_TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY, " +
+            COLUMN_FAVICONS_SITE + " TEXT, " +
+            "UNIQUE (" + COLUMN_FAVICONS_SITE + "));";
+
     public DataOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -77,10 +86,14 @@ public class DataOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(PROFILES_TABLE_CREATE);
         db.execSQL(TAGS_TABLE_CREATE);
+        db.execSQL(FAVICONS_TABLE_CREATE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        switch (oldVersion) {
+            case 1:
+                db.execSQL(FAVICONS_TABLE_CREATE);
+        }
     }
 }

@@ -16,21 +16,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <TextView
             android:id="@+id/tag_favicon"
-            android:src="@drawable/ic_amazon"
-            android:layout_width="32dp"
+            android:textAllCaps="true"
+            android:layout_width="24dp"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
             android:layout_marginRight="8dp"
-            android:layout_height="40dp"/>
+            android:layout_height="24dp"/>
 
         <TextView
             android:id="@+id/tag_name"
             android:fontFamily="sans-serif-light"
             android:textSize="@dimen/card_inner_text_size"
-            android:gravity="left"
+            android:gravity="left|center_vertical"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="40dp"/>
 
         <AutoCompleteTextView
             android:id="@+id/tag_name_autocomplete"
@@ -40,7 +43,8 @@
             android:maxLength="25"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
+            android:gravity="left|center_vertical"
             android:imeOptions="actionNext"
             android:completionThreshold="1"
             android:visibility="gone"

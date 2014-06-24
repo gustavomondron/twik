@@ -1,12 +1,21 @@
 package com.reddyetwo.hashmypass.app.cards;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.reddyetwo.hashmypass.app.R;
+import com.reddyetwo.hashmypass.app.data.Favicon;
+import com.reddyetwo.hashmypass.app.data.FaviconSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
+import com.reddyetwo.hashmypass.app.util.FaviconLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,10 +93,12 @@ public class TagListCard extends CardWithList {
     @Override
     public View setupChildView(int i, ListObject listObject, View view,
                                ViewGroup viewGroup) {
+        TextView faviconTextView =
+                (TextView) view.findViewById(R.id.tag_favicon);
         TextView tagName = (TextView) view.findViewById(R.id.tag_name);
         Tag tag = ((TagObject) listObject).getTag();
         tagName.setText(tag.getName());
-
+        FaviconLoader.setAsBackground(getContext(), faviconTextView, tag);
         return view;
     }
 

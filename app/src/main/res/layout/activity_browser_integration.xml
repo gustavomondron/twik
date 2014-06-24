@@ -78,18 +78,44 @@
                     android:layout_centerVertical="true"
                     android:layout_alignParentLeft="true"/>
 
-                <AutoCompleteTextView
-                    android:id="@+id/tag_text"
-                    android:inputType="text"
-                    android:singleLine="true"
-                    android:maxLines="1"
-                    android:maxLength="25"
+                <RelativeLayout
                     android:layout_toLeftOf="@+id/tag_settings"
                     android:layout_toRightOf="@+id/ic_tag"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:completionThreshold="2"
-                    android:hint="@string/tag"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/tag_text"
+                        android:inputType="text"
+                        android:singleLine="true"
+                        android:maxLines="1"
+                        android:maxLength="25"
+                        android:paddingRight="48dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:completionThreshold="2"
+                        android:hint="@string/tag"/>
+
+                    <ProgressBar
+                        android:id="@+id/favicon_progress"
+                        android:progress="10"
+                        style="?android:attr/progressBarStyleSmall"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_alignRight="@id/tag_text"/>
+
+                    <ImageView
+                        android:visibility="gone"
+                        android:id="@+id/tag_favicon"
+                        android:contentDescription="@string/tag"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:layout_alignRight="@id/tag_text"/>
+                </RelativeLayout>
 
                 <ImageButton
                     android:id="@+id/tag_settings"

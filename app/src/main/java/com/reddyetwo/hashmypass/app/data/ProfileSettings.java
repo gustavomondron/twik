@@ -131,7 +131,7 @@ public class ProfileSettings {
         try {
             db.beginTransaction();
             deleted = db.delete(DataOpenHelper.PROFILES_TABLE_NAME,
-                    "_id=" + profileId, null) > 0;
+                    DataOpenHelper.COLUMN_ID + "=" + profileId, null) > 0;
             db.delete(DataOpenHelper.TAGS_TABLE_NAME,
                     DataOpenHelper.COLUMN_TAGS_PROFILE_ID + "=" + profileId,
                     null);

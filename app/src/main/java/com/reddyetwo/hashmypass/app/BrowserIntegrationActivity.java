@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -35,10 +36,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.reddyetwo.hashmypass.app.data.Favicon;
+import com.reddyetwo.hashmypass.app.data.FaviconSettings;
 import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
@@ -47,6 +51,7 @@ import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.ButtonsEnableTextWatcher;
 import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
+import com.reddyetwo.hashmypass.app.util.FaviconLoader;
 import com.reddyetwo.hashmypass.app.util.HelpToastOnLongPressClickListener;
 import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
@@ -66,6 +71,7 @@ public class BrowserIntegrationActivity extends Activity {
     private Spinner mProfileSpinner;
     private String mSite;
     private ButtonsEnableTextWatcher mButtonsEnableTextWatcher;
+    private Favicon mFavicon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +80,12 @@ public class BrowserIntegrationActivity extends Activity {
         setContentView(R.layout.activity_browser_integration);
         setFeatureDrawableResource(Window.FEATURE_LEFT_ICON,
                 R.drawable.ic_launcher);
+
+        final ImageView faviconImageView =
+                (ImageView) findViewById(R.id.tag_favicon);
+        final ProgressBar faviconProgressBar =
+                (ProgressBar) findViewById(R.id.favicon_progress);
+        faviconProgressBar.setIndeterminate(true);
 
         // Extract site from URI
         Intent intent = getIntent();
@@ -91,6 +103,32 @@ public class BrowserIntegrationActivity extends Activity {
         } else {
             // We shouldn't be here
             finish();
+        }
+
+        // Check if we have a favicon stored for this site
+        mFavicon = FaviconSettings.getFavicon(this, mSite);
+        if (mFavicon != null) {
+            // Loaded from storage
+            faviconProgressBar.setVisibility(View.GONE);
+            faviconImageView.setImageBitmap(mFavicon.getIcon());
+            faviconImageView.setVisibility(View.VISIBLE);
+        } else {
+            // Load favicon from website
+            faviconProgressBar.setVisibility(View.VISIBLE);
+            faviconImageView.setVisibility(View.GONE);
+            FaviconLoader faviconLoader = new FaviconLoader(this);
+            faviconLoader.load(intent.getStringExtra(Intent.EXTRA_TEXT),
+                    new FaviconLoader.OnFaviconLoaded() {
+                        @Override
+                        public void onFaviconLoaded(BitmapDrawable icon) {
+                            faviconImageView.setImageDrawable(icon);
+                            faviconProgressBar.setVisibility(View.GONE);
+                            faviconImageView.setVisibility(View.VISIBLE);
+                            mFavicon = new Favicon(Favicon.NO_ID, mSite,
+                                    icon.getBitmap());
+                        }
+                    }
+            );
         }
 
         mTagEditText = (AutoCompleteTextView) findViewById(R.id.tag_text);
@@ -158,6 +196,14 @@ public class BrowserIntegrationActivity extends Activity {
             @Override
             public void onClick(View v) {
                 calculatePasswordHash();
+                if (mFavicon != null) {
+                    if (mFavicon.getId() == Favicon.NO_ID) {
+                        // Save the favicon in the storage
+                        FaviconSettings
+                                .insertFavicon(BrowserIntegrationActivity.this,
+                                        mFavicon);
+                    }
+                }
                 // Close the dialog activity
                 finish();
             }
@@ -222,7 +268,18 @@ public class BrowserIntegrationActivity extends Activity {
             long profileId =
                     ((Profile) mProfileSpinner.getSelectedItem()).getId();
             Profile profile = ProfileSettings.getProfile(this, profileId);
+
+            // Current tag
             Tag tag = TagSettings.getTag(this, profileId, tagName);
+
+            // Current site tag
+            Tag siteTag = TagSettings.getSiteTag(this, profileId, mSite);
+
+            if (siteTag != null && siteTag.getName() != tag.getName()) {
+                /* I understand I should remove the previous tag because it
+                is no longer necessary */
+                TagSettings.deleteTag(this, siteTag);
+            }
 
             // Calculate hashed password
             String hashedPassword = PasswordHasher
@@ -236,13 +293,13 @@ public class BrowserIntegrationActivity extends Activity {
 
             /* If the tag is not already stored in the database,
             save the current settings */
+            tag.setSite(mSite);
             if (tag.getId() == Tag.NO_ID) {
                 TagSettings.insertTag(this, tag);
+            } else {
+                // Update the site-tag association
+                TagSettings.updateTag(this, tag);
             }
-
-            // Update the site-tag association
-            tag.setSite(mSite);
-            TagSettings.updateTag(this, tag);
 
             // Update last used profile preference
             SharedPreferences preferences =

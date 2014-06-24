@@ -44,4 +44,12 @@
         <item>Numeric</item>
     </string-array>
 
+    <array name="favicon_background_colors">
+        <item>@color/favicon_background_1</item>
+        <item>@color/favicon_background_2</item>
+        <item>@color/favicon_background_3</item>
+        <item>@color/favicon_background_4</item>
+        <item>@color/favicon_background_5</item>
+    </array>
+
 </resources>
