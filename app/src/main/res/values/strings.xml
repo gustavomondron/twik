@@ -177,15 +177,19 @@
         <i>by David Hamp-Gonsalves.</i>
         <br/><br/>
 
+        <b><a href="https://github.com/gabrielemariotti/cardslib">Card Library</a></b><br/>
+        <i>by Gabriele Mariotti.</i><br/>
+        Apache 2.0 license.<br/><br/>
+
         <b><a href="http://jgilfelt.github.io/android-actionbarstylegenerator/">
         Android Action Bar Style Generator</a></b><br/>
         <i>by The Android Open Source Project</i> y
         <i>readyState Software Ltd.</i> <br/>
-        Apache 2.0 license<br/> <br/>
+        Apache 2.0 license.<br/> <br/>
 
         <b><a href="http://font.ubuntu.com/">Ubuntu Mono</a></b> <br/>
         <i>by Canonical Ltd.</i> <br/>
-        Ubuntu Font Licence 1.0
+        Ubuntu Font Licence 1.0.
     ]]></string>
 
 </resources>
