@@ -44,6 +44,7 @@
     <string name="start">Comenzar</string>
     <string name="ready">¡Estoy listo para empezar!</string>
     <string name="add_first_profile">Añade tu primer perfil</string>
+    <string name="hash_this_tag">Usar esta etiqueta</string>
 
     <!-- Dialogs -->
     <string name="confirm_delete">¿Eliminar el perfil \"%s\"?</string>
