@@ -231,7 +231,9 @@ public class CardsMainActivity extends Activity
             mTag = TagSettings.getTag(this, tagId);
         }
 
-        mSelectedTagCard.setTag(mTag);
+        if (mTag != null) {
+            mSelectedTagCard.setTag(mTag);
+        }
 
         boolean autoCompleteIsShown =
                 savedInstanceState.getBoolean(STATE_CARD_AUTOCOMPLETE_IS_SHOWN);

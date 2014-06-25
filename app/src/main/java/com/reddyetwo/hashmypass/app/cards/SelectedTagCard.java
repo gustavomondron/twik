@@ -91,6 +91,11 @@ public class SelectedTagCard extends Card {
      */
     public void setHashedPassword(String hashedPassword) {
         mHashedPasswordTextView.setText(hashedPassword);
+        if (hashedPassword.length() == 0) {
+            mHeader.hideDivider();
+        } else {
+            mHeader.showDivider();
+        }
     }
 
     /**
@@ -101,6 +106,7 @@ public class SelectedTagCard extends Card {
             mHeader.toggleAutocomplete();
         }
         showHashAction();
+        mHeader.showDivider();
     }
 
     /**
@@ -109,6 +115,9 @@ public class SelectedTagCard extends Card {
     public void showHashedPassword() {
         mHashActionTextView.setVisibility(View.GONE);
         mHashedPasswordTextView.setVisibility(View.VISIBLE);
+        if (mHashedPasswordTextView.getText().length() == 0) {
+            mHeader.hideDivider();
+        }
     }
 
     /**
@@ -117,6 +126,7 @@ public class SelectedTagCard extends Card {
     public void showHashAction() {
         mHashedPasswordTextView.setVisibility(View.GONE);
         mHashActionTextView.setVisibility(View.VISIBLE);
+        mHeader.showDivider();
     }
 
     public boolean hashedPasswordIsShown() {

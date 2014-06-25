@@ -21,6 +21,7 @@ public class TagCardHeader extends CardHeader {
 
     private TextView mFaviconTextView;
     private TextView mNameTextView;
+    private View mDividerView;
     private AutoCompleteTextView mNameAutoComplete;
     private TagNameAutoCompleteTextWatcher mNameAutoCompleteTextWatcher;
     private OnTagChangedListener mTagChangedListener;
@@ -49,10 +50,19 @@ public class TagCardHeader extends CardHeader {
         mNameAutoCompleteTextWatcher.updateProfileTags();
     }
 
+    public void hideDivider() {
+        mDividerView.setVisibility(View.INVISIBLE);
+    }
+
+    public void showDivider() {
+        mDividerView.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void setupInnerViewElements(ViewGroup parent, View view) {
         mFaviconTextView = (TextView) parent.findViewById(R.id.tag_favicon);
         mNameTextView = (TextView) parent.findViewById(R.id.tag_name);
+        mDividerView = parent.findViewById(R.id.card_header_divider);
         mNameAutoComplete = (AutoCompleteTextView) parent
                 .findViewById(R.id.tag_name_autocomplete);
         mNameAutoCompleteTextWatcher =
@@ -109,27 +119,32 @@ public class TagCardHeader extends CardHeader {
                     // Keep the name text view in sync
                     mNameTextView.setText(name);
 
-                    if (match) {
-                        mTag = TagSettings
-                                .getTag(getContext(), mProfileId, name);
-                    } else if (mTag.getId() != Tag.NO_ID) {
-                        // Replace the current (existing and saved) tag for a
-                        // new one
-                        Profile profile = ProfileSettings
-                                .getProfile(getContext(), mProfileId);
-                        mTag = new Tag(Tag.NO_ID, mProfileId, 0, null, name,
-                                profile.getPasswordLength(),
-                                profile.getPasswordType());
-                    } else {
-                        mTag.setName(name);
+                    // We have to check whether there is a profile created.
+                    // This code is executed even before the first profile
+                    // has been created.
+                    if (mProfileId != -1) {
+                        if (match) {
+                            mTag = TagSettings
+                                    .getTag(getContext(), mProfileId, name);
+                        } else if (mTag == null || mTag.getId() != Tag.NO_ID) {
+                            // Replace the current (existing and saved) tag for a
+                            // new one
+                            Profile profile = ProfileSettings
+                                    .getProfile(getContext(), mProfileId);
+                            mTag = new Tag(Tag.NO_ID, mProfileId, 0, null, name,
+                                    profile.getPasswordLength(),
+                                    profile.getPasswordType());
+                        } else {
+                            mTag.setName(name);
+                        }
+
+                        FaviconLoader
+                                .setAsBackground(getContext(), mFaviconTextView,
+                                        mTag);
+
+                        // Notify the listener
+                        mTagChangedListener.onTagChanged(mTag);
                     }
-
-                    FaviconLoader
-                            .setAsBackground(getContext(), mFaviconTextView,
-                                    mTag);
-
-                    // Notify the listener
-                    mTagChangedListener.onTagChanged(mTag);
                 }
             };
 
