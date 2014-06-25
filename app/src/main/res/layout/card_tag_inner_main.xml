@@ -14,7 +14,7 @@
         style="@style/card.base_simple_title"
         android:textColor="@color/card_action"
         android:fontFamily="sans-serif-light"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/small_spacing"
         android:textSize="@dimen/card_inner_text_size"
         android:layout_height="match_parent"/>
 
@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         style="@style/card.base_simple_title"
         android:textSize="@dimen/card_hashed_password_text_size"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/small_spacing"
         android:layout_height="match_parent"/>
 
 
