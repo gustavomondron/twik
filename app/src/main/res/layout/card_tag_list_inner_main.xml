@@ -13,22 +13,22 @@
         android:orientation="horizontal"
         style="@style/card"
         android:gravity="center_vertical"
-        android:paddingLeft="@dimen/card_header_simple_title_margin_left"
-        android:paddingRight="@dimen/card_header_simple_title_margin_right"
+        android:paddingLeft="@dimen/small_spacing"
+        android:paddingRight="@dimen/small_spacing"
         android:paddingBottom="0dp"
         android:background="@drawable/tag_list_item_selector"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="48dp">
 
         <TextView
             android:id="@+id/tag_favicon"
             android:textAllCaps="true"
-            android:layout_width="24dp"
+            android:layout_width="@dimen/favicon_size"
+            android:layout_height="@dimen/favicon_size"
             android:textColor="@android:color/white"
             android:gravity="center"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="8dp"
-            android:layout_height="24dp"/>
+            android:layout_marginRight="16dp"/>
 
         <TextView
             android:id="@+id/tag_name"

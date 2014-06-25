@@ -56,7 +56,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/button_bar_height"
+        android:layout_height="@dimen/button_size"
         android:orientation="vertical"
         android:showDividers="none"
         android:divider="?android:dividerHorizontal">

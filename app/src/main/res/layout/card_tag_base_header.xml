@@ -41,15 +41,17 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="@dimen/button_size">
 
         <!-- overflow button. It has a Popup Menu -->
         <ImageButton
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
+            android:paddingRight="20dp"
+            android:src="@drawable/card_menu_button_rounded_overflow"
+            style="?android:buttonBarButtonStyle"
             android:id="@+id/card_header_button_overflow"
-            style="@style/card.header_button_base.overflow"
-            android:paddingLeft="32dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            />
 
         <!-- Expand/Collapse button. It show/hide a Hidden Frame-->
         <ImageButton

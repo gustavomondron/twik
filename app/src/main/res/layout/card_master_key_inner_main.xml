@@ -19,13 +19,13 @@
         android:maxLength="25"
         android:maxLines="1"
         android:singleLine="true"
-        android:layout_height="32dp"/>
+        android:layout_height="48dp"/>
 
     <ImageView
         android:id="@+id/identicon"
-        android:layout_width="40dp"
-        android:paddingLeft="8dp"
-        android:layout_height="32dp"
+        android:layout_width="48dp"
+        android:padding="8dp"
+        android:layout_height="48dp"
         android:gravity="center"/>
 
 </LinearLayout>
