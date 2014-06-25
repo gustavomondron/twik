@@ -22,6 +22,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.reddyetwo.hashmypass.app">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name=".HashMyPassApplication"
         android:allowBackup="true"
@@ -29,20 +31,9 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.Hashmypass">
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize"
-            android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        <activity
             android:theme="@style/Theme.Hashmypass"
             android:name=".CardsMainActivity"
-            android:label="Cards HashMyPass"
+            android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden"
             android:launchMode="singleTop">
             <intent-filter>
@@ -56,21 +47,21 @@
             android:label="@string/action_add_profile">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".CardsMainActivity"/>
         </activity>
         <activity
             android:name=".EditProfileActivity"
             android:label="@string/action_edit_profile">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".CardsMainActivity"/>
         </activity>
         <activity
             android:name=".ManageTagsActivity"
             android:label="@string/action_manage_tags">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".CardsMainActivity"/>
         </activity>
         <activity
             android:name=".BrowserIntegrationActivity"
@@ -78,9 +69,7 @@
             android:theme="@android:style/Theme.Holo.Light.Dialog">
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.SEND"/>
-
                 <category android:name="android.intent.category.DEFAULT"/>
-
                 <data android:mimeType="text/plain"/>
             </intent-filter>
         </activity>
@@ -89,7 +78,7 @@
             android:label="@string/action_settings">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".CardsMainActivity"/>
         </activity>
 
         <receiver android:name=".util.MasterKeyAlarmManager"/>
@@ -102,9 +91,7 @@
             android:theme="@style/tutorialStyle">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".CardsMainActivity"/>
         </activity>
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
