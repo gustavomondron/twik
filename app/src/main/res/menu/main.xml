@@ -37,6 +37,7 @@
         android:orderInCategory="102"
         android:showAsAction="never"/>
     <item
+        android:visible="false"
         android:id="@+id/action_help"
         android:title="@string/action_help"
         android:orderInCategory="103"
