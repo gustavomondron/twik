@@ -22,13 +22,13 @@
 <resources>
 
     <!-- Titles -->
-    <string name="tags_list">LISTA DE ETIQUETAS</string>
+    <string name="tags_list">LISTA DE SITIOS WEB</string>
 
     <!-- Actions -->
     <string name="action_settings">Ajustes</string>
     <string name="action_add_profile">Añadir perfil</string>
     <string name="action_edit_profile">Editar perfil</string>
-    <string name="action_manage_tags">Gestionar etiquetas</string>
+    <string name="action_manage_tags">Gestionar sitios web</string>
     <string name="action_help">Ayuda</string>
     <string name="action_about">Acerca de</string>
     <string name="action_delete">Eliminar</string>
@@ -44,11 +44,11 @@
     <string name="start">Comenzar</string>
     <string name="ready">¡Estoy listo para empezar!</string>
     <string name="add_first_profile">Añade tu primer perfil</string>
-    <string name="hash_this_tag">Usar esta etiqueta</string>
+    <string name="hash_this_tag">Generar contraseña</string>
 
     <!-- Dialogs -->
     <string name="confirm_delete">¿Eliminar el perfil \"%s\"?</string>
-    <string name="confirm_delete_tag">¿Eliminar la etiqueta \"%s\"?</string>
+    <string name="confirm_delete_tag">¿Eliminar el sitio web \"%s\"?</string>
     <string name="warning_lose_settings">¡Perderás todos sus ajustes!</string>
 
     <!-- Descriptions / Hints -->
@@ -58,8 +58,8 @@
     <string name="private_key">Clave privada</string>
     <string name="name">Nombre</string>
     <string name="master_key">Contraseña maestra</string>
-    <string name="tag">Etiqueta</string>
-    <string name="tag_settings">Ajustes de la etiqueta</string>
+    <string name="tag">Sitio web</string>
+    <string name="tag_settings">Ajustes del sitio web</string>
 
     <!-- Tutorial -->
     <string name="tutorial_splash_subtitle">Una contraseña diferente
@@ -111,7 +111,7 @@
     </item>
 
     <!-- Notices -->
-    <string name="no_tags">¡No tienes etiquetas!</string>
+    <string name="no_tags">¡No tienes sitios web!</string>
     <string name="copied_to_clipboard">Contraseña generada copiada al
         portapapeles</string>
 
