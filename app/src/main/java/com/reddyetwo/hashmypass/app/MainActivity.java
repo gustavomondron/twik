@@ -556,7 +556,7 @@ public class MainActivity extends Activity
     }
 
     private void restoreCachedMasterKey() {
-        MasterKeyAlarmManager.cancelAlarm(this);
+        /*MasterKeyAlarmManager.cancelAlarm(this);
         String cachedMasterKey = HashMyPassApplication.getCachedMasterKey();
         if (cachedMasterKey != null) {
             mMasterKeyCard.setMasterKey(cachedMasterKey);
@@ -570,7 +570,7 @@ public class MainActivity extends Activity
                         HashMyPassApplication.getCachedTag());
             }
         }
-        HashMyPassApplication.setCachedMasterKey("");
+        HashMyPassApplication.setCachedMasterKey("");*/
     }
 
     private void cacheMasterKey() {
@@ -580,6 +580,8 @@ public class MainActivity extends Activity
             (b) In other case, store the master key in the application class and set
                 an alarm to remove it when the alarm is triggered.
         */
+
+/*
         int masterKeyMins = Preferences.getRememberMasterKeyMins(this);
         if (masterKeyMins == 0) {
             mMasterKeyCard.setMasterKey("");
@@ -589,6 +591,7 @@ public class MainActivity extends Activity
             HashMyPassApplication.setCachedTag(mTag.getName());
             MasterKeyAlarmManager.setAlarm(this, masterKeyMins);
         }
+*/
     }
 
     private class TagAdapter extends ArrayAdapter<Tag> {
