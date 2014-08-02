@@ -624,6 +624,8 @@ public class MainActivity extends Activity
                 public void onClick(View v) {
                     GeneratePasswordDialogFragment dialog = new
                             GeneratePasswordDialogFragment();
+                    dialog.setProfileId(mSelectedProfileId);
+                    dialog.setTag(tag);
                     dialog.show(getFragmentManager(), "generatePassword");
                 }
             });
