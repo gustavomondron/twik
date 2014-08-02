@@ -51,5 +51,10 @@
     <dimen name="button_size">48dp</dimen>
     <dimen name="card_inner_text_size">18sp</dimen>
     <dimen name="card_hashed_password_text_size">20sp</dimen>
-    <dimen name="favicon_size">32dp</dimen>
+    <dimen name="favicon_size">24dp</dimen>
+
+    <dimen name="text_micro">12sp</dimen>
+    <dimen name="text_small">14sp</dimen>
+    <dimen name="text_medium">18sp</dimen>
+    <dimen name="text_large">22sp</dimen>
 </resources>

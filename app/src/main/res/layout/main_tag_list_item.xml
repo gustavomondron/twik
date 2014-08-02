@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="48dp">
+
+    <TextView
+        android:id="@+id/tag_favicon"
+        android:textAllCaps="true"
+        android:layout_width="@dimen/favicon_size"
+        android:layout_height="@dimen/favicon_size"
+        android:textColor="@android:color/white"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:gravity="center"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="32dp"/>
+
+    <TextView
+        android:id="@+id/tag_name"
+        android:layout_width="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/tag"
+        android:gravity="left|center_vertical"
+        android:textSize="@dimen/text_medium"
+        android:layout_height="48dp"/>
+</LinearLayout>

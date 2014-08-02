@@ -263,7 +263,7 @@ public class SelectedTagCard extends Card {
             }
 
             // Notify: new tag hashed
-            mSelectedTagListener.onTagSelected(tag, false);
+            mSelectedTagListener.onTagSelected(tag, false, null);
         }
     }
 

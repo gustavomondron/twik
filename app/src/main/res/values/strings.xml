@@ -17,8 +17,7 @@
     * You should have received a copy of the GNU General Public License
     * along with Hash my pass.  If not, see <http://www.gnu.org/licenses/>.
     *
-    -->
-
+-->
 <resources>
 
     <!-- Titles -->
@@ -97,14 +96,13 @@
     <string name="tutorial_first_profile">First of all, we\'ll create your
         first profile and a private key. I have taken the
         liberty to generate a random one for you, but you can use a different
-        one if you prefer.
-    </string>
+        one if you prefer.</string>
     <string name="tutorial_first_profile_master_key">You don\'t have
         to remember this key, just make sure that you don\'t lose it!
         You have to choose and remember a master key too,
         but you don\'t have to fill it out right now.</string>
-    <item name="profile_default_name" format="string" type="string">Default
-    </item>
+
+    <item name="profile_default_name" format="string" type="string">Default</item>
 
     <!-- Notices -->
     <string name="no_tags">You got no websites!</string>
@@ -137,7 +135,8 @@
     <string name="title_activity_add_default_profile">Add default profile</string>
 
     <!-- About Dialog -->
-    <string name="about_body"><![CDATA[
+    <string name="about_body">
+<![CDATA[
         <b>Hash my pass</b><br/>
         Version 1.1.0 beta1<br/>
         Copyright \u00A9 2014 Red Dye No. 2
@@ -190,6 +189,10 @@
         <b><a href="http://font.ubuntu.com/">Ubuntu Mono</a></b> <br/>
         <i>by Canonical Ltd.</i> <br/>
         Ubuntu Font Licence 1.0.
-    ]]></string>
+    ]]>
+    </string>
+    <string name="title_activity_calculate_password">Calculate Password</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

@@ -1,21 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:card="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:card="http://schemas.android.com/apk/res-auto"
+             xmlns:card_view="http://schemas.android.com/apk/res-auto"
+             android:orientation="vertical"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <ListView
+        android:id="@+id/new_tag_list"
+        android:divider="@drawable/tag_list_divider"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:choiceMode="singleChoice"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.reddyetwo.hashmypass.app.util.Fab
+        android:id="@+id/fabbutton"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"/>
 
     <ScrollView
         android:id="@+id/main_base"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <com.reddyetwo.hashmypass.app.cards.NewCardView
+                android:visibility="gone"
                 android:id="@+id/card_selected_tag"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -35,8 +56,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/native_cardview"
+                card_view:cardCornerRadius="2dp"
+                android:layout_margin="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="128dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/anim_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Animation!!"/>
+            </android.support.v7.widget.CardView>
+
+
             <com.reddyetwo.hashmypass.app.cards.NewCardView
                 android:id="@+id/card_tags_list"
+                android:visibility="gone"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -49,6 +88,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="15dp"/>
 
-            </LinearLayout>
-        </ScrollView>
-</LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

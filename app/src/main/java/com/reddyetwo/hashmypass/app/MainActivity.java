@@ -21,15 +21,23 @@ package com.reddyetwo.hashmypass.app;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.OrientationEventListener;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.reddyetwo.hashmypass.app.cards.MasterKeyCard;
 import com.reddyetwo.hashmypass.app.cards.NewCardView;
@@ -45,12 +53,14 @@ import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
+import com.reddyetwo.hashmypass.app.util.Fab;
+import com.reddyetwo.hashmypass.app.util.FaviconLoader;
 import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 
 import java.util.List;
 
 
-public class CardsMainActivity extends Activity
+public class MainActivity extends Activity
         implements AddDefaultProfileDialog.OnProfileAddedListener,
         OnTagSelectedListener, OnMasterKeyChangedListener {
 
@@ -96,7 +106,7 @@ public class CardsMainActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_cardsui);
+        setContentView(R.layout.activity_main);
 
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
@@ -107,7 +117,24 @@ public class CardsMainActivity extends Activity
         // Select the last profile used for hashing a password
         mSelectedProfileId = getLastProfile();
 
+        ListView newTagList = (ListView) findViewById(R.id.new_tag_list);
+        newTagList.setAdapter(new TagAdapter(this, TagSettings
+                .getProfileTags(this, mSelectedProfileId,
+                        TagSettings.ORDER_BY_HASH_COUNTER,
+                        TagSettings.LIMIT_UNBOUNDED)));
+
+        Fab mFab = (Fab)findViewById(R.id.fabbutton);
+        mFab.setFabColor(getResources().getColor(R.color.hashmypass_main));
+        mFab.setFabDrawable(getResources().getDrawable(R.drawable
+                .ic_action_add));
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+
         // Create cards
+/*
         mSelectedTagCard = new SelectedTagCard(this, this, mSelectedProfileId);
         NewCardView selectedTagCardView =
                 (NewCardView) findViewById(R.id.card_selected_tag);
@@ -139,6 +166,7 @@ public class CardsMainActivity extends Activity
                         .getLong(STATE_SELECTED_PROFILE_ID, -1);
             }
         }
+*/
 
         /* Detect orientation changes.
         In the case of an orientation change, we do not select the last used
@@ -181,7 +209,7 @@ public class CardsMainActivity extends Activity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // Selected tag card
+/*        // Selected tag card
         TagCardHeader tagHeader =
                 (TagCardHeader) mSelectedTagCard.getCardHeader();
         outState.putBoolean(STATE_CARD_AUTOCOMPLETE_IS_SHOWN,
@@ -205,7 +233,7 @@ public class CardsMainActivity extends Activity
 
         // Master key card
         outState.putBoolean(STATE_CARD_MASTER_KEY_IS_SHOWN,
-                mMasterKeyCard.getCardView().getVisibility() == View.VISIBLE);
+                mMasterKeyCard.getCardView().getVisibility() == View.VISIBLE);*/
 
         // Activity state
         outState.putBoolean(STATE_ORIENTATION_HAS_CHANGED,
@@ -341,21 +369,21 @@ public class CardsMainActivity extends Activity
                                     profiles.get(itemPosition).getId();
                             if (selectedProfile == ID_ADD_PROFILE) {
                                 Intent intent =
-                                        new Intent(CardsMainActivity.this,
+                                        new Intent(MainActivity.this,
                                                 AddProfileActivity.class);
                                 startActivityForResult(intent,
                                         REQUEST_ADD_PROFILE);
                             } else {
                                 mSelectedProfileId = selectedProfile;
                                 // Update cards
+/*
                                 mSelectedTagCard
                                         .setProfileId(mSelectedProfileId);
                                 List<Tag> tags = TagSettings
-                                        .getProfileTags(CardsMainActivity.this,
+                                        .getProfileTags(MainActivity.this,
                                                 mSelectedProfileId,
                                                 TagSettings.ORDER_BY_HASH_COUNTER,
-                                                TAG_LIST_MAX_SIZE
-                                        );
+                                                TAG_LIST_MAX_SIZE);
                                 if (tags.size() > 0) {
                                     mTagListCard.updateTags(tags);
                                     if (mTagToRestore != null) {
@@ -369,6 +397,7 @@ public class CardsMainActivity extends Activity
                                     mTagListCard.clearTags();
                                     mSelectedTagCard.clear();
                                 }
+*/
 
                                 // Recalculate hashed password
                                 onMasterKeyChanged(mMasterKey);
@@ -414,42 +443,52 @@ public class CardsMainActivity extends Activity
     }
 
     @Override
-    public void onTagSelected(Tag tag, boolean fromList) {
-        mTag = tag;
-        // Save the profile used
-        updateLastProfile();
+    public void onTagSelected(Tag tag, boolean fromList, View view) {
+        CardView cardView = (CardView) findViewById(R.id.native_cardview);
+        Animation animationIn = AnimationUtils
+                .loadAnimation(MainActivity.this,
+                        R.anim.hashed_password_in);
+        cardView.setVisibility(View.VISIBLE);
+        cardView.setX(view.getX());
+        cardView.setY(view.getY());
+        cardView.startAnimation(animationIn);
 
-        // Add +1 to the hash counter
-        mTag.setHashCounter(mTag.getHashCounter() + 1);
 
-        if (fromList) {
-            mSelectedTagCard.setTag(tag);
-            mSelectedTagCard.selectTag();
-            updateHashedPassword();
-
-            // Save the tag to update the hash counter
-            TagSettings.updateTag(this, mTag);
-
-            // Go to the top of ScrollView to show the password
-            mBaseView.fullScroll(ScrollView.FOCUS_UP);
-
-        } else {
-            // Save the tag in the case that it has been just created
-            if (mTag.getId() == Tag.NO_ID) {
-                mTag.setId(TagSettings.insertTag(this, mTag));
-                // Update the list and the selected tag card
-                mTagListCard.addTag(mTag);
-                mSelectedTagCard.setTag(mTag);
-            }
-        }
-
-        mMasterKeyCard.getCardView().setVisibility(View.VISIBLE);
-        /* The soft keyboard should be automatically shown only if the
-        master key is not already filled.
-         */
-        if (mMasterKey == null || mMasterKey.length() == 0) {
-            mMasterKeyCard.showSoftKeyboard();
-        }
+//        mTag = tag;
+//        // Save the profile used
+//        updateLastProfile();
+//
+//        // Add +1 to the hash counter
+//        mTag.setHashCounter(mTag.getHashCounter() + 1);
+//
+//        if (fromList) {
+//            mSelectedTagCard.setTag(tag);
+//            mSelectedTagCard.selectTag();
+//            updateHashedPassword();
+//
+//            // Save the tag to update the hash counter
+//            TagSettings.updateTag(this, mTag);
+//
+//            // Go to the top of ScrollView to show the password
+//            mBaseView.fullScroll(ScrollView.FOCUS_UP);
+//
+//        } else {
+//            // Save the tag in the case that it has been just created
+//            if (mTag.getId() == Tag.NO_ID) {
+//                mTag.setId(TagSettings.insertTag(this, mTag));
+//                // Update the list and the selected tag card
+//                mTagListCard.addTag(mTag);
+//                mSelectedTagCard.setTag(mTag);
+//            }
+//        }
+//
+//        mMasterKeyCard.getCardView().setVisibility(View.VISIBLE);
+//        /* The soft keyboard should be automatically shown only if the
+//        master key is not already filled.
+//         */
+//        if (mMasterKey == null || mMasterKey.length() == 0) {
+//            mMasterKeyCard.showSoftKeyboard();
+//        }
     }
 
     @Override
@@ -471,9 +510,9 @@ public class CardsMainActivity extends Activity
                                     .getPrivateKey(), mTag.getPasswordLength(),
                             mTag.getPasswordType()
                     );
-            mSelectedTagCard.setHashedPassword(hashedPassword);
+            //mSelectedTagCard.setHashedPassword(hashedPassword);
         } else {
-            mSelectedTagCard.setHashedPassword("");
+            //mSelectedTagCard.setHashedPassword("");
         }
     }
 
@@ -549,6 +588,44 @@ public class CardsMainActivity extends Activity
                     .setCachedMasterKey(mMasterKeyCard.getMasterKey());
             HashMyPassApplication.setCachedTag(mTag.getName());
             MasterKeyAlarmManager.setAlarm(this, masterKeyMins);
+        }
+    }
+
+    private class TagAdapter extends ArrayAdapter<Tag> {
+
+        private List<Tag> mTags;
+        private static final int mResource = R.layout.main_tag_list_item;
+
+        public TagAdapter(Context context, List<Tag> objects) {
+            super(context, mResource, objects);
+            mTags = objects;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView =
+                        getLayoutInflater().inflate(mResource, parent, false);
+            }
+
+            final Tag tag = mTags.get(position);
+            TextView faviconTextView =
+                    (TextView) convertView.findViewById(R.id.tag_favicon);
+            TextView tagName =
+                    (TextView) convertView.findViewById(R.id.tag_name);
+            tagName.setText(tag.getName());
+            FaviconLoader.setAsBackground(getContext(), faviconTextView, tag);
+
+            tagName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    GeneratePasswordDialogFragment dialog = new
+                            GeneratePasswordDialogFragment();
+                    dialog.show(getFragmentManager(), "generatePassword");
+                }
+            });
+
+            return convertView;
         }
     }
 }
