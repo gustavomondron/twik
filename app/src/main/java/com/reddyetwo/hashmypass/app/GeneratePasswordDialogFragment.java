@@ -6,13 +6,19 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.reddyetwo.hashmypass.app.data.Profile;
+import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
+import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.FaviconLoader;
 
@@ -25,6 +31,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment {
     private AutoCompleteTextView mTagEditAutoCompleteTextView;
     private EditText mMasterKeyEditText;
     private TextView mPasswordTextView;
+    private ImageView mTagSettingsImageView;
 
     public void setProfileId(long profileId) {
         mProfileId = profileId;
@@ -49,15 +56,13 @@ public class GeneratePasswordDialogFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
-                }
-        );
+                });
 
         mFaviconTextView = (TextView) view.findViewById(R.id.tag_favicon);
         FaviconLoader.setAsBackground(getActivity(), mFaviconTextView, mTag);
 
         mTagEditAutoCompleteTextView =
                 (AutoCompleteTextView) view.findViewById(R.id.tag_text);
-        mTagEditAutoCompleteTextView.setText(mTag.getName());
 
         mMasterKeyEditText = (EditText) view.findViewById(R.id.master_key_text);
         mMasterKeyEditText.requestFocus();
@@ -67,8 +72,61 @@ public class GeneratePasswordDialogFragment extends DialogFragment {
                 Constants.FONT_MONOSPACE);
         mPasswordTextView.setTypeface(tf);
 
+        mTagSettingsImageView =
+                (ImageView) view.findViewById(R.id.tag_settings);
+
+        PasswordTextWatcher watcher = new PasswordTextWatcher();
+        mTagEditAutoCompleteTextView.addTextChangedListener(watcher);
+        mMasterKeyEditText.addTextChangedListener(watcher);
+
+        // Populate fields
+        mTagEditAutoCompleteTextView.setText(mTag.getName());
 
         return builder.create();
+    }
+
+    private void updatePassword() {
+        Profile profile = ProfileSettings.getProfile(getActivity(), mProfileId);
+        String password = PasswordHasher.hashPassword(mTag.getName(),
+                mMasterKeyEditText.getText().toString(),
+                profile.getPrivateKey(), mTag.getPasswordLength(),
+                mTag.getPasswordType());
+        mPasswordTextView.setText(password);
+    }
+
+    private class PasswordTextWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count,
+                                      int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before,
+                                  int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            // Update password
+            if (mTagEditAutoCompleteTextView.getText().length() > 0 &&
+                    mMasterKeyEditText.getText().length() > 0) {
+                updatePassword();
+            } else {
+                mPasswordTextView.setText("");
+            }
+
+            // Update tag settings icon visibility
+            if (mTagEditAutoCompleteTextView.getText().length() > 0) {
+                mTagSettingsImageView.setVisibility(View.VISIBLE);
+                mTagSettingsImageView.setEnabled(true);
+            } else {
+                mTagSettingsImageView.setVisibility(View.INVISIBLE);
+                mTagSettingsImageView.setEnabled(false);
+            }
+        }
     }
 
 
