@@ -619,7 +619,7 @@ public class MainActivity extends Activity
             tagName.setText(tag.getName());
             FaviconLoader.setAsBackground(getContext(), faviconTextView, tag);
 
-            tagName.setOnClickListener(new View.OnClickListener() {
+            convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     GeneratePasswordDialogFragment dialog = new
