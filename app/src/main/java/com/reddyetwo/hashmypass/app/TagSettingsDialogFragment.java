@@ -192,7 +192,7 @@ public class TagSettingsDialogFragment extends DialogFragment {
 
         if (mTag.getId() == Tag.NO_ID) {
             // New tag
-            TagSettings.insertTag(getActivity(), mTag);
+            mTag.setId(TagSettings.insertTag(getActivity(), mTag));
         } else {
             TagSettings.updateTag(getActivity(), mTag);
         }
