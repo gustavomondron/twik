@@ -246,6 +246,9 @@ public class BrowserIntegrationActivity extends Activity
         if (mTag == null) {
             // There is no previous association, use the site as tag.
             siteTagName = mSite;
+            Profile profile = ProfileSettings.getProfile(this, profileId);
+            mTag = new Tag(Tag.NO_ID, profileId, 0, mSite, mSite,
+                    profile.getPasswordLength(), profile.getPasswordType());
         } else {
             siteTagName = mTag.getName();
         }
