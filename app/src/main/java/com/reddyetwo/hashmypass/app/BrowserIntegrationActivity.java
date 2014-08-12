@@ -61,7 +61,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BrowserIntegrationActivity extends Activity {
+public class BrowserIntegrationActivity extends Activity
+        implements TagSettingsDialogFragment.OnTagSettingsSavedListener {
 
     private static final Pattern SITE_PATTERN = Pattern.compile(
             "^.*?([\\w\\d\\-]+)\\.((co|com|net|org|ac)\\.)?\\w+$");
@@ -72,6 +73,9 @@ public class BrowserIntegrationActivity extends Activity {
     private String mSite;
     private ButtonsEnableTextWatcher mButtonsEnableTextWatcher;
     private Favicon mFavicon;
+
+    private long mProfileId;
+    private Tag mTag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,23 +91,8 @@ public class BrowserIntegrationActivity extends Activity {
                 (ProgressBar) findViewById(R.id.favicon_progress);
         faviconProgressBar.setIndeterminate(true);
 
-        // Extract site from URI
         Intent intent = getIntent();
-        if (intent != null && Intent.ACTION_SEND.equals(intent.getAction())) {
-            Uri uri = Uri.parse(intent.getStringExtra(Intent.EXTRA_TEXT));
-            String host = uri.getHost();
-
-            Matcher siteExtractor = SITE_PATTERN.matcher(host);
-            if (!siteExtractor.matches()) {
-                // TODO Show error
-                finish();
-            }
-
-            mSite = siteExtractor.group(1);
-        } else {
-            // We shouldn't be here
-            finish();
-        }
+        mSite = getSite();
 
         // Check if we have a favicon stored for this site
         mFavicon = FaviconSettings.getFavicon(this, mSite);
@@ -127,8 +116,7 @@ public class BrowserIntegrationActivity extends Activity {
                             mFavicon = new Favicon(Favicon.NO_ID, mSite,
                                     icon.getBitmap());
                         }
-                    }
-            );
+                    });
         }
 
         mTagEditText = (AutoCompleteTextView) findViewById(R.id.tag_text);
@@ -154,21 +142,20 @@ public class BrowserIntegrationActivity extends Activity {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view,
                                                int position, long id) {
-                        updateTagText();
-                        TagAutocomplete.populateTagAutocompleteTextView(
-                                BrowserIntegrationActivity.this,
+                        updateTag();
+                        mProfileId =
                                 ((Profile) mProfileSpinner.getSelectedItem())
-                                        .getId(), mTagEditText
-                        );
-
+                                        .getId();
+                        TagAutocomplete.populateTagAutocompleteTextView(
+                                BrowserIntegrationActivity.this, mProfileId,
+                                mTagEditText);
                     }
 
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {
 
                     }
-                }
-        );
+                });
 
         ImageButton tagSettingsButton =
                 (ImageButton) findViewById(R.id.tag_settings);
@@ -176,7 +163,13 @@ public class BrowserIntegrationActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (mTagEditText.getText().length() > 0) {
-                    showTagSettingsDialog();
+                    TagSettingsDialogFragment settingsDialog =
+                            new TagSettingsDialogFragment();
+                    settingsDialog.setProfileId(mProfileId);
+                    settingsDialog.setTag(mTag);
+                    settingsDialog.setTagSettingsSavedListener(
+                            BrowserIntegrationActivity.this);
+                    settingsDialog.show(getFragmentManager(), "tagSettings");
                 }
             }
         });
@@ -210,7 +203,7 @@ public class BrowserIntegrationActivity extends Activity {
         });
 
         /* Update the tag according to the site */
-        updateTagText();
+        updateTag();
 
         /* Set hash button enable watcher */
         mButtonsEnableTextWatcher =
@@ -246,17 +239,45 @@ public class BrowserIntegrationActivity extends Activity {
         }
     }
 
-    private void updateTagText() {
+    private void updateTag() {
         long profileId = ((Profile) mProfileSpinner.getSelectedItem()).getId();
-        Tag tag = TagSettings.getSiteTag(this, profileId, mSite);
+        mTag = TagSettings.getSiteTag(this, profileId, mSite);
         String siteTagName;
-        if (tag == null) {
+        if (mTag == null) {
             // There is no previous association, use the site as tag.
             siteTagName = mSite;
         } else {
-            siteTagName = tag.getName();
+            siteTagName = mTag.getName();
         }
         mTagEditText.setText(siteTagName);
+    }
+
+    @Override
+    public void onTagSettingsSaved(Tag tag) {
+        mTag = tag;
+    }
+
+    private String getSite() {
+        // Extract site from URI
+        String site = null;
+        Intent intent = getIntent();
+        if (intent != null && Intent.ACTION_SEND.equals(intent.getAction())) {
+            Uri uri = Uri.parse(intent.getStringExtra(Intent.EXTRA_TEXT));
+            String host = uri.getHost();
+
+            Matcher siteExtractor = SITE_PATTERN.matcher(host);
+            if (!siteExtractor.matches()) {
+                // TODO Show error
+                finish();
+            }
+
+            site = siteExtractor.group(1);
+        } else {
+            // We shouldn't be here
+            finish();
+        }
+
+        return site;
     }
 
     private void calculatePasswordHash() {
@@ -315,16 +336,6 @@ public class BrowserIntegrationActivity extends Activity {
             editor.commit();
 
         }
-    }
-
-    // Shows a number picker dialog for choosing the password length
-    private void showTagSettingsDialog() {
-        TagSettingsDialogFragment dialogFragment =
-                new TagSettingsDialogFragment();
-        dialogFragment.setProfileId(
-                ((Profile) mProfileSpinner.getSelectedItem()).getId());
-        dialogFragment.setTag(mTagEditText.getText().toString());
-        dialogFragment.show(getFragmentManager(), "tagSettings");
     }
 
     private boolean populateProfileSpinner() {

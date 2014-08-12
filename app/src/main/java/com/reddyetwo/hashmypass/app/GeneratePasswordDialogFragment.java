@@ -18,11 +18,13 @@ import android.widget.TextView;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
+import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.FaviconLoader;
 
-public class GeneratePasswordDialogFragment extends DialogFragment {
+public class GeneratePasswordDialogFragment extends DialogFragment
+        implements TagSettingsDialogFragment.OnTagSettingsSavedListener {
 
     private long mProfileId;
     private Tag mTag;
@@ -74,6 +76,18 @@ public class GeneratePasswordDialogFragment extends DialogFragment {
 
         mTagSettingsImageView =
                 (ImageView) view.findViewById(R.id.tag_settings);
+        mTagSettingsImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TagSettingsDialogFragment settingsDialog =
+                        new TagSettingsDialogFragment();
+                settingsDialog.setProfileId(mProfileId);
+                settingsDialog.setTag(mTag);
+                settingsDialog.setTagSettingsSavedListener(
+                        GeneratePasswordDialogFragment.this);
+                settingsDialog.show(getFragmentManager(), "tagSettings");
+            }
+        });
 
         PasswordTextWatcher watcher = new PasswordTextWatcher();
         mTagEditAutoCompleteTextView.addTextChangedListener(watcher);
@@ -92,6 +106,12 @@ public class GeneratePasswordDialogFragment extends DialogFragment {
                 profile.getPrivateKey(), mTag.getPasswordLength(),
                 mTag.getPasswordType());
         mPasswordTextView.setText(password);
+    }
+
+    @Override
+    public void onTagSettingsSaved(Tag tag) {
+        mTag = tag;
+        updatePassword();
     }
 
     private class PasswordTextWatcher implements TextWatcher {

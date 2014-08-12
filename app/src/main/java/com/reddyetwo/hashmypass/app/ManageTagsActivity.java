@@ -90,12 +90,11 @@ public class ManageTagsActivity extends Activity {
     }
 
     /* Shows a number picker dialog for choosing the password length */
-    private void showTagSettingsDialog(String tagName) {
+    private void showTagSettingsDialog(Tag tag) {
         TagSettingsDialogFragment dialogFragment =
                 new TagSettingsDialogFragment();
         dialogFragment.setProfileId(mProfileId);
-        dialogFragment.setTag(tagName);
-
+        dialogFragment.setTag(tag);
         dialogFragment.show(getFragmentManager(), "tagSettings");
     }
 
@@ -168,7 +167,7 @@ public class ManageTagsActivity extends Activity {
             nameView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showTagSettingsDialog(tag.getName());
+                    showTagSettingsDialog(tag);
                 }
             });
 

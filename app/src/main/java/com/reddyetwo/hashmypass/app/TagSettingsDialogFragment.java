@@ -43,23 +43,33 @@ public class TagSettingsDialogFragment extends DialogFragment {
     private static final String KEY_TAG_ID = "tag_id";
     private static final String KEY_PASSWORD_LENGTH = "password_length";
     private static final String KEY_PASSWORD_TYPE = "password_type";
+    private static final String KEY_TAG_NAME = "tag_name";
 
     // Dialog state
     private long mProfileId;
-    private long mTagId;
-    private String mTagName;
+    private Tag mTag;
+    private OnTagSettingsSavedListener mListener;
 
     // UI widgets
     private Spinner mPasswordLengthSpinner;
     private Spinner mPasswordTypeSpinner;
+
+    public interface OnTagSettingsSavedListener {
+        public void onTagSettingsSaved(Tag tag);
+    }
 
     /**
      * Sets the tag whose settings are to be edited with this dialog. Note that
      * this "tag" is not the same as {@link #getTag()}, which belongs to the
      * {@link android.app.Fragment} class.
      */
-    public void setTag(String tag) {
-        this.mTagName = tag;
+    public void setTag(Tag tag) {
+        mTag = tag;
+    }
+
+    public void setTagSettingsSavedListener(
+            OnTagSettingsSavedListener listener) {
+        mListener = listener;
     }
 
     /**
@@ -79,26 +89,28 @@ public class TagSettingsDialogFragment extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_tag_settings, null);
 
-        int passwordLength;
-        int passwordType;
         if (savedInstanceState != null) {
             // Restore the state (e.g. when the screen is rotated)
             mProfileId = savedInstanceState.getLong(KEY_PROFILE_ID);
-            mTagId = savedInstanceState.getLong(KEY_TAG_ID);
-            passwordLength = savedInstanceState.getInt(KEY_PASSWORD_LENGTH);
-            passwordType = savedInstanceState.getInt(KEY_PASSWORD_TYPE);
-        } else {
-            // No previous state, get data from storage
-            Tag tag = TagSettings.getTag(getActivity(), mProfileId, mTagName);
-            mTagId = tag.getId();
-            passwordLength = tag.getPasswordLength();
-            passwordType = tag.getPasswordType().ordinal();
+            long tagId = savedInstanceState.getLong(KEY_TAG_ID);
+            PasswordType passwordType = PasswordType.values()[savedInstanceState
+                    .getInt(KEY_PASSWORD_TYPE)];
+            int passwordLength = savedInstanceState.getInt(KEY_PASSWORD_LENGTH);
+            String tagName = savedInstanceState.getString(KEY_TAG_NAME);
+            if (tagId != Tag.NO_ID) {
+                mTag = TagSettings.getTag(getActivity(), tagId);
+                mTag.setPasswordType(passwordType);
+                mTag.setPasswordLength(passwordLength);
+            } else {
+                mTag = new Tag(Tag.NO_ID, mProfileId, 0, null, tagName,
+                        passwordLength, passwordType);
+            }
         }
 
         mPasswordLengthSpinner =
                 (Spinner) view.findViewById(R.id.tag_settings_password_length);
         ProfileFormInflater.populatePasswordLengthSpinner(getActivity(),
-                mPasswordLengthSpinner, passwordLength);
+                mPasswordLengthSpinner, mTag.getPasswordLength());
         mPasswordLengthSpinner.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -114,7 +126,7 @@ public class TagSettingsDialogFragment extends DialogFragment {
         mPasswordTypeSpinner =
                 (Spinner) view.findViewById(R.id.tag_settings_password_type);
         ProfileFormInflater.populatePasswordTypeSpinner(getActivity(),
-                mPasswordTypeSpinner, PasswordType.values()[passwordType]);
+                mPasswordTypeSpinner, mTag.getPasswordType());
 
 
         // Set the layout for the dialog
@@ -130,14 +142,12 @@ public class TagSettingsDialogFragment extends DialogFragment {
                                 TagSettingsDialogFragment.this.getDialog()
                                         .cancel();
                             }
-                        }
-                ).setNegativeButton(R.string.discard,
+                        }).setNegativeButton(R.string.discard,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         TagSettingsDialogFragment.this.getDialog().cancel();
                     }
-                }
-        );
+                });
 
         return builder.create();
     }
@@ -146,10 +156,9 @@ public class TagSettingsDialogFragment extends DialogFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLong(KEY_PROFILE_ID, mProfileId);
-        outState.putLong(KEY_TAG_ID, mTagId);
+        outState.putLong(KEY_TAG_ID, mTag.getId());
         outState.putInt(KEY_PASSWORD_LENGTH, Integer.parseInt(
-                        (String) mPasswordLengthSpinner.getSelectedItem())
-        );
+                (String) mPasswordLengthSpinner.getSelectedItem()));
         outState.putInt(KEY_PASSWORD_TYPE,
                 mPasswordTypeSpinner.getSelectedItemPosition());
     }
@@ -168,8 +177,7 @@ public class TagSettingsDialogFragment extends DialogFragment {
                                 .populatePasswordLengthSpinner(getActivity(),
                                         mPasswordLengthSpinner, length);
                     }
-                }
-        );
+                });
 
         dialogFragment.show(getFragmentManager(), "passwordLength");
     }
@@ -179,17 +187,18 @@ public class TagSettingsDialogFragment extends DialogFragment {
                 (String) mPasswordLengthSpinner.getSelectedItem());
         PasswordType passwordType = PasswordType.values()[mPasswordTypeSpinner
                 .getSelectedItemPosition()];
+        mTag.setPasswordLength(passwordLength);
+        mTag.setPasswordType(passwordType);
 
-        Tag tag = new Tag(mTagId, mProfileId, 0, null, mTagName, passwordLength,
-                passwordType);
-        if (mTagId == Tag.NO_ID) {
+        if (mTag.getId() == Tag.NO_ID) {
             // New tag
-            TagSettings.insertTag(getActivity(), tag);
+            TagSettings.insertTag(getActivity(), mTag);
         } else {
-            int hashCounter =
-                    TagSettings.getTag(getActivity(), mTagId).getHashCounter();
-            tag.setHashCounter(hashCounter);
-            TagSettings.updateTag(getActivity(), tag);
+            TagSettings.updateTag(getActivity(), mTag);
+        }
+
+        if (mListener != null) {
+            mListener.onTagSettingsSaved(mTag);
         }
     }
 
