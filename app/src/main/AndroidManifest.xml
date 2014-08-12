@@ -49,21 +49,21 @@
             android:label="@string/action_add_profile" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".CardsMainActivity" />
+                android:value=".MainActivity" />
         </activity>
         <activity
             android:name=".EditProfileActivity"
             android:label="@string/action_edit_profile" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".CardsMainActivity" />
+                android:value=".MainActivity" />
         </activity>
         <activity
             android:name=".ManageTagsActivity"
             android:label="@string/action_manage_tags" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".CardsMainActivity" />
+                android:value=".MainActivity" />
         </activity>
         <activity
             android:name=".BrowserIntegrationActivity"
@@ -82,7 +82,7 @@
             android:label="@string/action_settings" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".CardsMainActivity" />
+                android:value=".MainActivity" />
         </activity>
 
         <receiver android:name=".util.MasterKeyAlarmManager" />
@@ -95,16 +95,7 @@
             android:theme="@style/tutorialStyle" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".CardsMainActivity" />
-        </activity>
-        <activity
-            android:name=".CalculatePasswordActivity"
-            android:label="@string/title_activity_calculate_password"
-            android:theme="@style/Theme.Transparent"
-            android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.reddyetwo.hashmypass.app.CardsMainActivity" />
+                android:value=".MainActivity" />
         </activity>
     </application>
 
