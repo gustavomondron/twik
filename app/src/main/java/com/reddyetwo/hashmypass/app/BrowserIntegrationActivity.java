@@ -336,8 +336,7 @@ public class BrowserIntegrationActivity extends Activity
                     getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putLong(Preferences.PREFS_KEY_LAST_PROFILE, profileId);
-            editor.commit();
-
+            editor.apply();
         }
     }
 
