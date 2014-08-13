@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,19 +25,23 @@ import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.FaviconLoader;
+import com.reddyetwo.hashmypass.app.util.IdenticonGenerator;
 
 public class GeneratePasswordDialogFragment extends DialogFragment
-        implements TagSettingsDialogFragment.OnTagSettingsSavedListener {
+        implements TagSettingsDialogFragment.OnTagSettingsSavedListener,
+        IdenticonGenerationTask.OnIconGeneratedListener {
 
     private long mProfileId;
     private Tag mTag;
     private boolean mCacheMasterKey;
+    private IdenticonGenerationTask mTask;
 
     private TextView mFaviconTextView;
     private AutoCompleteTextView mTagEditAutoCompleteTextView;
     private EditText mMasterKeyEditText;
     private TextView mPasswordTextView;
     private ImageView mTagSettingsImageView;
+    private ImageView mIdenticonImageView;
 
     public void setProfileId(long profileId) {
         mProfileId = profileId;
@@ -91,6 +97,8 @@ public class GeneratePasswordDialogFragment extends DialogFragment
             }
         });
 
+        mIdenticonImageView = (ImageView) view.findViewById(R.id.identicon);
+
         PasswordTextWatcher watcher = new PasswordTextWatcher();
         mTagEditAutoCompleteTextView.addTextChangedListener(watcher);
         mMasterKeyEditText.addTextChangedListener(watcher);
@@ -101,7 +109,8 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         mCacheMasterKey =
                 Preferences.getRememberMasterKeyMins(getActivity()) > 0;
         if (mCacheMasterKey) {
-            mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey());
+            mMasterKeyEditText
+                    .setText(HashMyPassApplication.getCachedMasterKey());
         }
 
         return builder.create();
@@ -144,6 +153,25 @@ public class GeneratePasswordDialogFragment extends DialogFragment
                         mMasterKeyEditText.getText().toString());
             }
 
+            // Update favicon
+            mTag.setName(mTagEditAutoCompleteTextView.getText().toString());
+            if (mTag.getSite() == null) {
+                FaviconLoader
+                        .setAsBackground(getActivity(), mFaviconTextView, mTag);
+            }
+
+            // Update identicon
+            mIdenticonImageView.setVisibility(View.INVISIBLE);
+            if (mTask != null &&
+                    mTask.getStatus() == AsyncTask.Status.RUNNING) {
+                mTask.cancel(true);
+            }
+            if (mMasterKeyEditText.getText().length() > 0) {
+                mTask = new IdenticonGenerationTask(getActivity(),
+                        GeneratePasswordDialogFragment.this);
+                mTask.execute(mMasterKeyEditText.getText().toString());
+            }
+
             // Update password
             if (mTagEditAutoCompleteTextView.getText().length() > 0 &&
                     mMasterKeyEditText.getText().length() > 0) {
@@ -163,5 +191,11 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         }
     }
 
+    @Override
+    public void onIconGenerated(Bitmap bitmap) {
+        mIdenticonImageView.setImageBitmap(bitmap);
+        mIdenticonImageView.setVisibility(View.VISIBLE);
+        mTask = null;
+    }
 
 }
