@@ -33,14 +33,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.reddyetwo.hashmypass.app.cards.MasterKeyCard;
-import com.reddyetwo.hashmypass.app.cards.SelectedTagCard;
-import com.reddyetwo.hashmypass.app.cards.TagCardHeader;
-import com.reddyetwo.hashmypass.app.cards.TagListCard;
-import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
@@ -59,40 +53,18 @@ public class MainActivity extends Activity
     private static final int ID_ADD_PROFILE = -1;
     private static final int REQUEST_ADD_PROFILE = 1;
     private static final int REQUEST_CREATE_DEFAULT_PROFILE = 2;
-    private static final int TAG_LIST_MAX_SIZE = 25;
 
     // State keys
     private static final String STATE_SELECTED_PROFILE_ID = "profile_id";
     private static final String STATE_ORIENTATION_HAS_CHANGED =
             "orientation_has_changed";
-    private static final String STATE_CARD_AUTOCOMPLETE_IS_SHOWN =
-            "autocomplete_is_shown";
-    private static final String STATE_CARD_TAG_SETTINGS_ARE_SHOWN =
-            "settings_are_shown";
-    private static final String STATE_CARD_HASHED_PASSWORD_IS_SHOWN =
-            "hashed_password_is_shown";
-    private static final String STATE_CARD_TAG_ID = "tag_id";
-    private static final String STATE_CARD_TAG_NAME = "tag_name";
-    private static final String STATE_CARD_PASSWORD_LENGTH = "password_length";
-    private static final String STATE_CARD_PASSWORD_TYPE = "password_type";
-    private static final String STATE_CARD_MASTER_KEY_IS_SHOWN =
-            "master_key_is_shown";
 
     // State vars
     private long mSelectedProfileId = -1;
     private OrientationEventListener mOrientationEventListener;
     private boolean mOrientationHasChanged;
-    private Tag mTagToRestore;
 
-    // Cards
-    private SelectedTagCard mSelectedTagCard;
-    private MasterKeyCard mMasterKeyCard;
-    private TagListCard mTagListCard;
-
-    private ScrollView mBaseView;
-
-    private Tag mTag;
-    private String mMasterKey;
+    private ListView mTagListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,11 +80,7 @@ public class MainActivity extends Activity
         // Select the last profile used for hashing a password
         mSelectedProfileId = getLastProfile();
 
-        ListView newTagList = (ListView) findViewById(R.id.new_tag_list);
-        newTagList.setAdapter(new TagAdapter(this, TagSettings
-                .getProfileTags(this, mSelectedProfileId,
-                        TagSettings.ORDER_BY_HASH_COUNTER,
-                        TagSettings.LIMIT_UNBOUNDED)));
+        mTagListView = (ListView) findViewById(R.id.new_tag_list);
 
         Fab mFab = (Fab) findViewById(R.id.fabbutton);
         mFab.setFabColor(getResources().getColor(R.color.hashmypass_main));
@@ -181,6 +149,11 @@ public class MainActivity extends Activity
         if (!showTutorial()) {
             restoreCachedMasterKey();
             populateActionBarSpinner();
+            mTagListView.setAdapter(new TagAdapter(this, TagSettings
+                    .getProfileTags(this, mSelectedProfileId,
+                            TagSettings.ORDER_BY_HASH_COUNTER,
+                            TagSettings.LIMIT_UNBOUNDED)));
+
         }
     }
 
@@ -231,48 +204,6 @@ public class MainActivity extends Activity
                 mOrientationHasChanged);
         outState.putLong(STATE_SELECTED_PROFILE_ID, mSelectedProfileId);
 
-    }
-
-    private void restoreSelectedTagCardState(Bundle savedInstanceState) {
-        TagCardHeader tagHeader =
-                (TagCardHeader) mSelectedTagCard.getCardHeader();
-
-        long tagId = savedInstanceState.getLong(STATE_CARD_TAG_ID);
-        if (tagId == Tag.NO_ID) {
-            String tagName = savedInstanceState.getString(STATE_CARD_TAG_NAME);
-            int passwordLength =
-                    savedInstanceState.getInt(STATE_CARD_PASSWORD_LENGTH);
-            PasswordType passwordType = PasswordType.values()[savedInstanceState
-                    .getInt(STATE_CARD_PASSWORD_TYPE)];
-            mTag = new Tag(Tag.NO_ID, mSelectedProfileId, 0, null, tagName,
-                    passwordLength, passwordType);
-        } else {
-            mTag = TagSettings.getTag(this, tagId);
-        }
-
-        if (mTag != null) {
-            mSelectedTagCard.setTag(mTag);
-        }
-
-        boolean autoCompleteIsShown =
-                savedInstanceState.getBoolean(STATE_CARD_AUTOCOMPLETE_IS_SHOWN);
-        if (autoCompleteIsShown) {
-            tagHeader.toggleAutocomplete();
-        }
-
-        boolean tagSettingsAreShown = savedInstanceState
-                .getBoolean(STATE_CARD_TAG_SETTINGS_ARE_SHOWN);
-        if (tagSettingsAreShown) {
-            tagHeader.toggleOverflow();
-        }
-
-        boolean hashedPasswordIsShown = savedInstanceState
-                .getBoolean(STATE_CARD_HASHED_PASSWORD_IS_SHOWN);
-        if (hashedPasswordIsShown) {
-            mSelectedTagCard.showHashedPassword();
-        } else {
-            mSelectedTagCard.showHashAction();
-        }
     }
 
     @Override
