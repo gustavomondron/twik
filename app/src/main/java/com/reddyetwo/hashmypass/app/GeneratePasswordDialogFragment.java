@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
@@ -28,6 +29,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
 
     private long mProfileId;
     private Tag mTag;
+    private boolean mCacheMasterKey;
 
     private TextView mFaviconTextView;
     private AutoCompleteTextView mTagEditAutoCompleteTextView;
@@ -96,6 +98,12 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         // Populate fields
         mTagEditAutoCompleteTextView.setText(mTag.getName());
 
+        mCacheMasterKey =
+                Preferences.getRememberMasterKeyMins(getActivity()) > 0;
+        if (mCacheMasterKey) {
+            mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey());
+        }
+
         return builder.create();
     }
 
@@ -130,6 +138,12 @@ public class GeneratePasswordDialogFragment extends DialogFragment
 
         @Override
         public void afterTextChanged(Editable s) {
+            // Store master key in the case that it is cached
+            if (mCacheMasterKey) {
+                HashMyPassApplication.setCachedMasterKey(
+                        mMasterKeyEditText.getText().toString());
+            }
+
             // Update password
             if (mTagEditAutoCompleteTextView.getText().length() > 0 &&
                     mMasterKeyEditText.getText().length() > 0) {

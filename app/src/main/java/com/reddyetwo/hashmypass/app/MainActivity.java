@@ -42,6 +42,7 @@ import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.util.Fab;
 import com.reddyetwo.hashmypass.app.util.FaviconLoader;
+import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 
 import java.util.List;
 
@@ -239,7 +240,8 @@ public class MainActivity extends Activity
                             } else {
                                 mSelectedProfileId = selectedProfile;
                                 populateTagList();
-                            } return false;
+                            }
+                            return false;
                         }
                     });
 
@@ -336,24 +338,10 @@ public class MainActivity extends Activity
     }
 
     private void cacheMasterKey() {
-        /* Check if we have to remember the master key:
-            (a) Remove text from master key edit text in the case that "Remember
-                master key" preference is set to never.
-            (b) In other case, store the master key in the application class and set
-                an alarm to remove it when the alarm is triggered.
-        */
-
-/*
         int masterKeyMins = Preferences.getRememberMasterKeyMins(this);
-        if (masterKeyMins == 0) {
-            mMasterKeyCard.setMasterKey("");
-        } else {
-            HashMyPassApplication
-                    .setCachedMasterKey(mMasterKeyCard.getMasterKey());
-            HashMyPassApplication.setCachedTag(mTag.getName());
+        if (masterKeyMins > 0) {
             MasterKeyAlarmManager.setAlarm(this, masterKeyMins);
         }
-*/
     }
 
     private class TagAdapter extends ArrayAdapter<Tag> {
