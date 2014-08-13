@@ -341,7 +341,7 @@ public class MainActivity extends Activity
 
     @Override
     public void onDialogOkButton(Tag tag) {
-        if (tag.getId() == Tag.NO_ID) {
+        if (tag.getId() == Tag.NO_ID && tag.getName().length() > 0) {
             // It is a new tag
             TagSettings.insertTag(this, tag);
             populateTagList();
