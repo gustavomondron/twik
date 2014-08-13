@@ -37,8 +37,8 @@
             android:layout_height="wrap_content">
 
             <RelativeLayout
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="48dp">
 
@@ -46,8 +46,9 @@
                     android:id="@+id/ic_profile"
                     android:src="@drawable/ic_action_user"
                     android:contentDescription="@string/profile"
-                    android:layout_width="32dp"
+                    android:layout_width="24dp"
                     android:layout_height="match_parent"
+                    android:layout_marginRight="24dp"
                     android:layout_centerVertical="true"
                     android:layout_alignParentLeft="true"/>
 
@@ -55,7 +56,7 @@
                     android:id="@+id/profile_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="48dp"
+                    android:layout_marginRight="56dp"
                     android:layout_toRightOf="@+id/ic_profile"
                     android:layout_alignParentRight="true"
                     android:spinnerStyle="@android:style/Widget.Spinner.DropDown"/>
@@ -63,9 +64,9 @@
 
             <RelativeLayout
                 android:id="@+id/tag_layout"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="48dp">
 
@@ -73,8 +74,9 @@
                     android:id="@+id/ic_tag"
                     android:src="@drawable/ic_action_tag"
                     android:contentDescription="@string/tag"
-                    android:layout_width="32dp"
+                    android:layout_width="24dp"
                     android:layout_height="match_parent"
+                    android:layout_marginRight="24dp"
                     android:layout_centerVertical="true"
                     android:layout_alignParentLeft="true"/>
 
@@ -94,6 +96,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:completionThreshold="2"
+                        android:background="@drawable/background_edittext_material"
                         android:hint="@string/tag"/>
 
                     <ProgressBar
@@ -113,7 +116,6 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="10dp"
                         android:layout_alignRight="@id/tag_text"/>
                 </RelativeLayout>
 
@@ -125,6 +127,7 @@
                     android:visibility="invisible"
                     android:layout_width="48dp"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
                     style="?android:borderlessButtonStyle"/>
@@ -144,8 +147,9 @@
                     android:id="@+id/ic_key"
                     android:src="@drawable/ic_action_key"
                     android:contentDescription="@string/master_key"
-                    android:layout_width="32dp"
+                    android:layout_width="24dp"
                     android:layout_height="match_parent"
+                    android:layout_marginRight="24dp"
                     android:layout_centerVertical="true"
                     android:layout_alignParentLeft="true"/>
 
@@ -160,6 +164,7 @@
                     android:layout_toRightOf="@+id/ic_key"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@drawable/background_edittext_material"
                     android:hint="@string/master_key"/>
 
                 <ImageView
@@ -168,6 +173,7 @@
                     android:layout_height="match_parent"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
+                    android:layout_marginLeft="8dp"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
                     android:gravity="center"/>
