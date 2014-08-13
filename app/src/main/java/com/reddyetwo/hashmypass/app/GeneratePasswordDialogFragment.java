@@ -3,6 +3,8 @@ package com.reddyetwo.hashmypass.app;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.FragmentManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -12,6 +14,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -67,6 +70,10 @@ public class GeneratePasswordDialogFragment extends DialogFragment
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        // Hide keyboard
+                        hideKeyboard();
+
+                        // Call listener
                         if (mListener != null) {
                             mListener.onDialogOkButton(mTag);
                         }
@@ -80,6 +87,8 @@ public class GeneratePasswordDialogFragment extends DialogFragment
                 (AutoCompleteTextView) view.findViewById(R.id.tag_text);
 
         mMasterKeyEditText = (EditText) view.findViewById(R.id.master_key_text);
+
+        // Manage focus
         if (mTag.getId() != Tag.NO_ID) {
             // Tag name already populated
             mMasterKeyEditText.requestFocus();
@@ -123,9 +132,26 @@ public class GeneratePasswordDialogFragment extends DialogFragment
                     .setText(HashMyPassApplication.getCachedMasterKey());
         }
 
+        // Manage keyboard status
+        if (mMasterKeyEditText.getText().length() == 0 ||
+                mTagEditAutoCompleteTextView.getText().length() == 0) {
+            showKeyboard();
+        }
+
         return builder.create();
     }
 
+    private void showKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mMasterKeyEditText.getWindowToken(), 0);
+    }
     private void updatePassword() {
         Profile profile = ProfileSettings.getProfile(getActivity(), mProfileId);
         String password = PasswordHasher.hashPassword(mTag.getName(),

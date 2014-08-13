@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -100,6 +101,8 @@ public class MainActivity extends Activity
                 dialog.setProfileId(mSelectedProfileId);
                 dialog.setTag(tag);
                 dialog.setDialogOkListener(MainActivity.this);
+
+                // Show dialog
                 dialog.show(getFragmentManager(), "addTag");
             }
         });
