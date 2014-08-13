@@ -26,23 +26,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.reddyetwo.hashmypass.app.cards.MasterKeyCard;
-import com.reddyetwo.hashmypass.app.cards.NewCardView;
-import com.reddyetwo.hashmypass.app.cards.OnMasterKeyChangedListener;
-import com.reddyetwo.hashmypass.app.cards.OnTagSelectedListener;
 import com.reddyetwo.hashmypass.app.cards.SelectedTagCard;
 import com.reddyetwo.hashmypass.app.cards.TagCardHeader;
 import com.reddyetwo.hashmypass.app.cards.TagListCard;
@@ -52,17 +46,14 @@ import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
-import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.Fab;
 import com.reddyetwo.hashmypass.app.util.FaviconLoader;
-import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 
 import java.util.List;
 
 
 public class MainActivity extends Activity
-        implements AddDefaultProfileDialog.OnProfileAddedListener,
-        OnTagSelectedListener, OnMasterKeyChangedListener {
+        implements AddDefaultProfileDialog.OnProfileAddedListener {
 
     // Constants
     private static final int ID_ADD_PROFILE = -1;
@@ -123,10 +114,10 @@ public class MainActivity extends Activity
                         TagSettings.ORDER_BY_HASH_COUNTER,
                         TagSettings.LIMIT_UNBOUNDED)));
 
-        Fab mFab = (Fab)findViewById(R.id.fabbutton);
+        Fab mFab = (Fab) findViewById(R.id.fabbutton);
         mFab.setFabColor(getResources().getColor(R.color.hashmypass_main));
-        mFab.setFabDrawable(getResources().getDrawable(R.drawable
-                .ic_action_add));
+        mFab.setFabDrawable(
+                getResources().getDrawable(R.drawable.ic_action_add));
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -368,9 +359,8 @@ public class MainActivity extends Activity
                             long selectedProfile =
                                     profiles.get(itemPosition).getId();
                             if (selectedProfile == ID_ADD_PROFILE) {
-                                Intent intent =
-                                        new Intent(MainActivity.this,
-                                                AddProfileActivity.class);
+                                Intent intent = new Intent(MainActivity.this,
+                                        AddProfileActivity.class);
                                 startActivityForResult(intent,
                                         REQUEST_ADD_PROFILE);
                             } else {
@@ -400,12 +390,11 @@ public class MainActivity extends Activity
 */
 
                                 // Recalculate hashed password
-                                onMasterKeyChanged(mMasterKey);
+                                //onMasterKeyChanged(mMasterKey);
                             }
                             return false;
                         }
-                    }
-            );
+                    });
 
             /* If we had previously selected a profile before pausing the
             activity and it still exists, select it in the spinner. */
@@ -440,80 +429,6 @@ public class MainActivity extends Activity
     public void onCanceled() {
         // You didn't add the profile! Nothing to do here!
         finish();
-    }
-
-    @Override
-    public void onTagSelected(Tag tag, boolean fromList, View view) {
-        CardView cardView = (CardView) findViewById(R.id.native_cardview);
-        Animation animationIn = AnimationUtils
-                .loadAnimation(MainActivity.this,
-                        R.anim.hashed_password_in);
-        cardView.setVisibility(View.VISIBLE);
-        cardView.setX(view.getX());
-        cardView.setY(view.getY());
-        cardView.startAnimation(animationIn);
-
-
-//        mTag = tag;
-//        // Save the profile used
-//        updateLastProfile();
-//
-//        // Add +1 to the hash counter
-//        mTag.setHashCounter(mTag.getHashCounter() + 1);
-//
-//        if (fromList) {
-//            mSelectedTagCard.setTag(tag);
-//            mSelectedTagCard.selectTag();
-//            updateHashedPassword();
-//
-//            // Save the tag to update the hash counter
-//            TagSettings.updateTag(this, mTag);
-//
-//            // Go to the top of ScrollView to show the password
-//            mBaseView.fullScroll(ScrollView.FOCUS_UP);
-//
-//        } else {
-//            // Save the tag in the case that it has been just created
-//            if (mTag.getId() == Tag.NO_ID) {
-//                mTag.setId(TagSettings.insertTag(this, mTag));
-//                // Update the list and the selected tag card
-//                mTagListCard.addTag(mTag);
-//                mSelectedTagCard.setTag(mTag);
-//            }
-//        }
-//
-//        mMasterKeyCard.getCardView().setVisibility(View.VISIBLE);
-//        /* The soft keyboard should be automatically shown only if the
-//        master key is not already filled.
-//         */
-//        if (mMasterKey == null || mMasterKey.length() == 0) {
-//            mMasterKeyCard.showSoftKeyboard();
-//        }
-    }
-
-    @Override
-    public void onTagSettingsChanged(Tag tag) {
-        updateHashedPassword();
-    }
-
-    @Override
-    public void onMasterKeyChanged(String masterKey) {
-        mMasterKey = masterKey;
-        updateHashedPassword();
-    }
-
-    private void updateHashedPassword() {
-        if (mTag != null && mMasterKey != null && mMasterKey.length() > 0) {
-            String hashedPassword = PasswordHasher
-                    .hashPassword(mTag.getName(), mMasterKey,
-                            ProfileSettings.getProfile(this, mSelectedProfileId)
-                                    .getPrivateKey(), mTag.getPasswordLength(),
-                            mTag.getPasswordType()
-                    );
-            //mSelectedTagCard.setHashedPassword(hashedPassword);
-        } else {
-            //mSelectedTagCard.setHashedPassword("");
-        }
     }
 
     private void updateLastProfile() {
@@ -622,8 +537,11 @@ public class MainActivity extends Activity
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    GeneratePasswordDialogFragment dialog = new
-                            GeneratePasswordDialogFragment();
+                    // Increase hash counter
+                    tag.setHashCounter(tag.getHashCounter() + 1);
+                    TagSettings.updateTag(MainActivity.this, tag);
+                    GeneratePasswordDialogFragment dialog =
+                            new GeneratePasswordDialogFragment();
                     dialog.setProfileId(mSelectedProfileId);
                     dialog.setTag(tag);
                     dialog.show(getFragmentManager(), "generatePassword");
