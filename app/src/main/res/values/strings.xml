@@ -138,7 +138,7 @@
     <string name="about_body">
 <![CDATA[
         <b>Hash my pass</b><br/>
-        Version 1.1.0 beta1<br/>
+        Version 1.2.0 beta1<br/>
         Copyright \u00A9 2014 Red Dye No. 2
         <br/><br/>
         <b>Hash my pass</b> is an application that makes it easier to generate
@@ -175,10 +175,6 @@
         <b><a href="https://github.com/davidhampgonsalves/Contact-Identicons/">Contact-Identicons</a></b><br/>
         <i>by David Hamp-Gonsalves.</i>
         <br/><br/>
-
-        <b><a href="https://github.com/gabrielemariotti/cardslib">Card Library</a></b><br/>
-        <i>by Gabriele Mariotti.</i><br/>
-        Apache 2.0 license.<br/><br/>
 
         <b><a href="http://jgilfelt.github.io/android-actionbarstylegenerator/">
         Android Action Bar Style Generator</a></b><br/>
