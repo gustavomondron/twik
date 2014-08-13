@@ -90,6 +90,15 @@ public class MainActivity extends Activity
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Profile profile = ProfileSettings
+                        .getProfile(MainActivity.this, mSelectedProfileId);
+                Tag tag = new Tag(Tag.NO_ID, mSelectedProfileId, 1, null, "",
+                        profile.getPasswordLength(), profile.getPasswordType());
+                GeneratePasswordDialogFragment dialog =
+                        new GeneratePasswordDialogFragment();
+                dialog.setProfileId(mSelectedProfileId);
+                dialog.setTag(tag);
+                dialog.show(getFragmentManager(), "addTag");
             }
         });
 
@@ -113,7 +122,6 @@ public class MainActivity extends Activity
     protected void onResume() {
         super.onResume();
         if (!showTutorial()) {
-            restoreCachedMasterKey();
             populateActionBarSpinner();
             populateTagList();
         }
@@ -317,24 +325,6 @@ public class MainActivity extends Activity
         } else {
             return false;
         }
-    }
-
-    private void restoreCachedMasterKey() {
-        /*MasterKeyAlarmManager.cancelAlarm(this);
-        String cachedMasterKey = HashMyPassApplication.getCachedMasterKey();
-        if (cachedMasterKey != null) {
-            mMasterKeyCard.setMasterKey(cachedMasterKey);
-            mMasterKeyCard.getCardView().setVisibility(View.VISIBLE);
-            mSelectedTagCard.showHashedPassword();
-
-            // Restore tag if cached
-            if (HashMyPassApplication.getCachedTag() != null &&
-                    HashMyPassApplication.getCachedTag().length() > 0) {
-                mTagToRestore = TagSettings.getTag(this, mSelectedProfileId,
-                        HashMyPassApplication.getCachedTag());
-            }
-        }
-        HashMyPassApplication.setCachedMasterKey("");*/
     }
 
     private void cacheMasterKey() {

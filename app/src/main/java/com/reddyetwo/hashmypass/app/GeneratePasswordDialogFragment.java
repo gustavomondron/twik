@@ -21,11 +21,9 @@ import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
-import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.FaviconLoader;
-import com.reddyetwo.hashmypass.app.util.IdenticonGenerator;
 
 public class GeneratePasswordDialogFragment extends DialogFragment
         implements TagSettingsDialogFragment.OnTagSettingsSavedListener,
@@ -75,7 +73,12 @@ public class GeneratePasswordDialogFragment extends DialogFragment
                 (AutoCompleteTextView) view.findViewById(R.id.tag_text);
 
         mMasterKeyEditText = (EditText) view.findViewById(R.id.master_key_text);
-        mMasterKeyEditText.requestFocus();
+        if (mTag.getId() != Tag.NO_ID) {
+            // Tag name already populated
+            mMasterKeyEditText.requestFocus();
+        } else {
+            mTagEditAutoCompleteTextView.requestFocus();
+        }
 
         mPasswordTextView = (TextView) view.findViewById(R.id.website_password);
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
