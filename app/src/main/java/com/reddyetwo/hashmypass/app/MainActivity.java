@@ -92,41 +92,6 @@ public class MainActivity extends Activity
             }
         });
 
-        // Create cards
-/*
-        mSelectedTagCard = new SelectedTagCard(this, this, mSelectedProfileId);
-        NewCardView selectedTagCardView =
-                (NewCardView) findViewById(R.id.card_selected_tag);
-        selectedTagCardView.setCard(mSelectedTagCard);
-
-        mMasterKeyCard = new MasterKeyCard(this, this);
-        NewCardView masterKeyCardView =
-                (NewCardView) findViewById(R.id.card_master_key);
-        masterKeyCardView.setCard(mMasterKeyCard);
-
-        NewCardView listCardView =
-                (NewCardView) findViewById(R.id.card_tags_list);
-        mTagListCard = new TagListCard(this, this);
-        mTagListCard.init();
-        listCardView.setCard(mTagListCard);
-
-        mBaseView = (ScrollView) findViewById(R.id.main_base);
-
-        if (savedInstanceState != null) {
-            restoreSelectedTagCardState(savedInstanceState);
-            if (savedInstanceState.getBoolean(STATE_CARD_MASTER_KEY_IS_SHOWN)) {
-                masterKeyCardView.setVisibility(View.VISIBLE);
-                mMasterKey = mMasterKeyCard.getMasterKey();
-            }
-
-            if (savedInstanceState
-                    .getBoolean(STATE_ORIENTATION_HAS_CHANGED, false)) {
-                mSelectedProfileId = savedInstanceState
-                        .getLong(STATE_SELECTED_PROFILE_ID, -1);
-            }
-        }
-*/
-
         /* Detect orientation changes.
         In the case of an orientation change, we do not select the last used
         profile but the currently selected profile.
@@ -149,12 +114,15 @@ public class MainActivity extends Activity
         if (!showTutorial()) {
             restoreCachedMasterKey();
             populateActionBarSpinner();
-            mTagListView.setAdapter(new TagAdapter(this, TagSettings
-                    .getProfileTags(this, mSelectedProfileId,
-                            TagSettings.ORDER_BY_HASH_COUNTER,
-                            TagSettings.LIMIT_UNBOUNDED)));
-
+            populateTagList();
         }
+    }
+
+    private void populateTagList() {
+        mTagListView.setAdapter(new TagAdapter(this, TagSettings
+                .getProfileTags(this, mSelectedProfileId,
+                        TagSettings.ORDER_BY_HASH_COUNTER,
+                        TagSettings.LIMIT_UNBOUNDED)));
     }
 
     @Override
@@ -172,32 +140,6 @@ public class MainActivity extends Activity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-/*        // Selected tag card
-        TagCardHeader tagHeader =
-                (TagCardHeader) mSelectedTagCard.getCardHeader();
-        outState.putBoolean(STATE_CARD_AUTOCOMPLETE_IS_SHOWN,
-                tagHeader.autoCompleteIsShown());
-        outState.putBoolean(STATE_CARD_TAG_SETTINGS_ARE_SHOWN,
-                mSelectedTagCard.tagSettingsAreShown());
-        outState.putBoolean(STATE_CARD_HASHED_PASSWORD_IS_SHOWN,
-                mSelectedTagCard.hashedPasswordIsShown());
-        Tag tag = tagHeader.getTag();
-        if (tag != null) {
-            outState.putLong(STATE_CARD_TAG_ID, tag.getId());
-            if (tag.getId() == Tag.NO_ID) {
-                // This data is not saved in storage
-                outState.putString(STATE_CARD_TAG_NAME, tag.getName());
-                outState.putInt(STATE_CARD_PASSWORD_LENGTH,
-                        tag.getPasswordLength());
-                outState.putInt(STATE_CARD_PASSWORD_TYPE,
-                        tag.getPasswordType().ordinal());
-            }
-        }
-
-        // Master key card
-        outState.putBoolean(STATE_CARD_MASTER_KEY_IS_SHOWN,
-                mMasterKeyCard.getCardView().getVisibility() == View.VISIBLE);*/
 
         // Activity state
         outState.putBoolean(STATE_ORIENTATION_HAS_CHANGED,
@@ -296,34 +238,8 @@ public class MainActivity extends Activity
                                         REQUEST_ADD_PROFILE);
                             } else {
                                 mSelectedProfileId = selectedProfile;
-                                // Update cards
-/*
-                                mSelectedTagCard
-                                        .setProfileId(mSelectedProfileId);
-                                List<Tag> tags = TagSettings
-                                        .getProfileTags(MainActivity.this,
-                                                mSelectedProfileId,
-                                                TagSettings.ORDER_BY_HASH_COUNTER,
-                                                TAG_LIST_MAX_SIZE);
-                                if (tags.size() > 0) {
-                                    mTagListCard.updateTags(tags);
-                                    if (mTagToRestore != null) {
-                                        mTag = mTagToRestore;
-                                        mTagToRestore = null;
-                                    } else {
-                                        mTag = tags.get(0);
-                                    }
-                                    mSelectedTagCard.setTag(mTag);
-                                } else {
-                                    mTagListCard.clearTags();
-                                    mSelectedTagCard.clear();
-                                }
-*/
-
-                                // Recalculate hashed password
-                                //onMasterKeyChanged(mMasterKey);
-                            }
-                            return false;
+                                populateTagList();
+                            } return false;
                         }
                     });
 
