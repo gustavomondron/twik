@@ -48,7 +48,8 @@ import java.util.List;
 
 
 public class MainActivity extends Activity
-        implements AddDefaultProfileDialog.OnProfileAddedListener {
+        implements AddDefaultProfileDialog.OnProfileAddedListener,
+        GeneratePasswordDialogFragment.GeneratePasswordDialogListener {
 
     // Constants
     private static final int ID_ADD_PROFILE = -1;
@@ -98,6 +99,7 @@ public class MainActivity extends Activity
                         new GeneratePasswordDialogFragment();
                 dialog.setProfileId(mSelectedProfileId);
                 dialog.setTag(tag);
+                dialog.setDialogOkListener(MainActivity.this);
                 dialog.show(getFragmentManager(), "addTag");
             }
         });
@@ -331,6 +333,15 @@ public class MainActivity extends Activity
         int masterKeyMins = Preferences.getRememberMasterKeyMins(this);
         if (masterKeyMins > 0) {
             MasterKeyAlarmManager.setAlarm(this, masterKeyMins);
+        }
+    }
+
+    @Override
+    public void onDialogOkButton(Tag tag) {
+        if (tag.getId() == Tag.NO_ID) {
+            // It is a new tag
+            TagSettings.insertTag(this, tag);
+            populateTagList();
         }
     }
 

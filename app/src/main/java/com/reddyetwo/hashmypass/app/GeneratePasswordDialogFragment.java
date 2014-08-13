@@ -33,6 +33,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     private Tag mTag;
     private boolean mCacheMasterKey;
     private IdenticonGenerationTask mTask;
+    private GeneratePasswordDialogListener mListener;
 
     private TextView mFaviconTextView;
     private AutoCompleteTextView mTagEditAutoCompleteTextView;
@@ -49,6 +50,10 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         mTag = tag;
     }
 
+    public void setDialogOkListener(GeneratePasswordDialogListener listener) {
+        mListener = listener;
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -62,7 +67,9 @@ public class GeneratePasswordDialogFragment extends DialogFragment
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        if (mListener != null) {
+                            mListener.onDialogOkButton(mTag);
+                        }
                     }
                 });
 
@@ -199,6 +206,10 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         mIdenticonImageView.setImageBitmap(bitmap);
         mIdenticonImageView.setVisibility(View.VISIBLE);
         mTask = null;
+    }
+
+    public interface GeneratePasswordDialogListener {
+        void onDialogOkButton(Tag tag);
     }
 
 }
