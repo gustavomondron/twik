@@ -296,7 +296,7 @@ public class MainActivity extends Activity
                 getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong(Preferences.PREFS_KEY_LAST_PROFILE, mSelectedProfileId);
-        editor.commit();
+        editor.apply();
     }
 
     private long getLastProfile() {
@@ -342,6 +342,9 @@ public class MainActivity extends Activity
             // It is a new tag
             TagSettings.insertTag(this, tag);
             populateTagList();
+
+            // Update last used profile
+            updateLastProfile();
         }
     }
 
@@ -376,6 +379,11 @@ public class MainActivity extends Activity
                     // Increase hash counter
                     tag.setHashCounter(tag.getHashCounter() + 1);
                     TagSettings.updateTag(MainActivity.this, tag);
+
+                    // Update last used profile
+                    updateLastProfile();
+
+                    // Show dialog
                     GeneratePasswordDialogFragment dialog =
                             new GeneratePasswordDialogFragment();
                     dialog.setProfileId(mSelectedProfileId);
