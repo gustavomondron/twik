@@ -19,7 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
@@ -161,12 +160,18 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     }
 
     private void updatePassword() {
-        Profile profile = ProfileSettings.getProfile(getActivity(), mProfileId);
-        String password = PasswordHasher.hashPassword(mTag.getName(),
-                mMasterKeyEditText.getText().toString(),
-                profile.getPrivateKey(), mTag.getPasswordLength(),
-                mTag.getPasswordType());
-        mPasswordTextView.setText(password);
+        if (mTagEditAutoCompleteTextView.getText().length() > 0 &&
+                mMasterKeyEditText.getText().length() > 0) {
+            Profile profile =
+                    ProfileSettings.getProfile(getActivity(), mProfileId);
+            String password = PasswordHasher.hashPassword(mTag.getName(),
+                    mMasterKeyEditText.getText().toString(),
+                    profile.getPrivateKey(), mTag.getPasswordLength(),
+                    mTag.getPasswordType());
+            mPasswordTextView.setText(password);
+        } else {
+            mPasswordTextView.setText("");
+        }
     }
 
     @Override
@@ -217,12 +222,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
             }
 
             // Update password
-            if (mTagEditAutoCompleteTextView.getText().length() > 0 &&
-                    mMasterKeyEditText.getText().length() > 0) {
-                updatePassword();
-            } else {
-                mPasswordTextView.setText("");
-            }
+            updatePassword();
 
             // Update tag settings icon visibility
             if (mTagEditAutoCompleteTextView.getText().length() > 0) {
