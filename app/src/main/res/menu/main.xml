@@ -27,11 +27,6 @@
         android:orderInCategory="100"
         android:showAsAction="never"/>
     <item
-        android:id="@+id/action_manage_tags"
-        android:title="@string/action_manage_tags"
-        android:orderInCategory="101"
-        android:showAsAction="never"/>
-    <item
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="102"

@@ -21,6 +21,8 @@ package com.reddyetwo.hashmypass.app;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.SensorManager;
@@ -35,7 +37,10 @@ import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.reddyetwo.hashmypass.app.data.Favicon;
+import com.reddyetwo.hashmypass.app.data.FaviconSettings;
 import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
@@ -176,12 +181,6 @@ public class MainActivity extends Activity
             return true;
         } else if (id == R.id.action_edit_profile) {
             Intent intent = new Intent(this, EditProfileActivity.class);
-            intent.putExtra(EditProfileActivity.EXTRA_PROFILE_ID,
-                    mSelectedProfileId);
-            startActivity(intent);
-            return true;
-        } else if (id == R.id.action_manage_tags) {
-            Intent intent = new Intent(this, ManageTagsActivity.class);
             intent.putExtra(EditProfileActivity.EXTRA_PROFILE_ID,
                     mSelectedProfileId);
             startActivity(intent);
@@ -350,7 +349,7 @@ public class MainActivity extends Activity
     private class TagAdapter extends RecyclerView.Adapter<TagListViewHolder> {
 
         private List<Tag> mTags;
-        private static final int mResource = R.layout.main_tag_list_item;
+        private static final int mResource = R.layout.tag_list_item;
 
         public TagAdapter(List<Tag> objects) {
             super();
@@ -387,6 +386,30 @@ public class MainActivity extends Activity
                             showGeneratePasswordDialog(tag);
                         }
                     });
+            tagListViewHolder.itemView
+                    .setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            AlertDialog.Builder builder =
+                                    new AlertDialog.Builder(MainActivity.this);
+                            builder.setMessage(
+                                    getString(R.string.confirm_delete_tag,
+                                            tag.getName()));
+                            builder.setPositiveButton(R.string.action_delete,
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(
+                                                DialogInterface dialog,
+                                                int which) {
+                                            deleteTag(tag);
+                                        }
+                                    });
+                            builder.setNegativeButton(android.R.string.cancel,
+                                    null);
+                            builder.create().show();
+                            return false;
+                        }
+                    });
         }
 
         @Override
@@ -394,6 +417,27 @@ public class MainActivity extends Activity
             return mTags.size();
         }
     }
+
+    private void deleteTag(Tag tag) {
+        if (TagSettings.deleteTag(this, tag)) {
+            // Update tags list
+            populateTagList();
+
+            // Check if we should delete favicon
+            String site = tag.getSite();
+            if (site != null) {
+                Favicon favicon = FaviconSettings.getFavicon(this, site);
+                if (favicon != null && !TagSettings.siteHasTags(this, site)) {
+                    FaviconSettings.deleteFavicon(this, favicon);
+                }
+
+            }
+        } else {
+            // Error!
+            Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();
+        }
+    }
+
 
     private void showGeneratePasswordDialog(Tag tag) {
         GeneratePasswordDialogFragment dialog =
