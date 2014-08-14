@@ -24,6 +24,7 @@ import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
+import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
 import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.FaviconLoader;
 
@@ -79,7 +80,19 @@ public class GeneratePasswordDialogFragment extends DialogFragment
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
+                        // Copy password to clipboard
+                        if (Preferences.getCopyToClipboard(getActivity()) &&
+                                mPasswordTextView.length() > 0) {
+                            ClipboardHelper.copyToClipboard(getActivity(),
+                                    ClipboardHelper.CLIPBOARD_LABEL_PASSWORD,
+                                    mPasswordTextView.getText().toString(),
+                                    R.string.copied_to_clipboard);
+                        }
+
+                        // Hide keyboard
                         hideKeyboard();
+
                         // Call listener
                         mListener.onDialogDismiss(mTag);
                     }

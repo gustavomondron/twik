@@ -106,7 +106,7 @@
 
     <!-- Notices -->
     <string name="no_tags">You got no websites!</string>
-    <string name="copied_to_clipboard">Hashed password copied to
+    <string name="copied_to_clipboard">Website password copied to
         clipboard</string>
 
     <!-- Settings titles -->
