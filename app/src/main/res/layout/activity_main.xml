@@ -12,6 +12,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <LinearLayout
+        android:id="@+id/list_empty"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:src="@drawable/list_empty"
+            android:layout_gravity="center"
+            android:layout_width="148dp"
+            android:layout_height="148dp"/>
+
+        <TextView
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="32dp"
+            android:text="@string/no_tags"
+            android:textSize="@dimen/text_large"
+            android:fontFamily="sans-serif-light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
     <com.reddyetwo.hashmypass.app.util.Fab
         android:id="@+id/fabbutton"
         android:layout_width="72dp"

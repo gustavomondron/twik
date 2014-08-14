@@ -133,10 +133,19 @@ public class MainActivity extends Activity
     }
 
     private void populateTagList() {
-        mTagRecyclerView.setAdapter(new TagAdapter(TagSettings
+        List<Tag> tags = TagSettings
                 .getProfileTags(this, mSelectedProfileId,
                         TagSettings.ORDER_BY_HASH_COUNTER,
-                        TagSettings.LIMIT_UNBOUNDED)));
+                        TagSettings.LIMIT_UNBOUNDED);
+        mTagRecyclerView.setAdapter(new TagAdapter(tags));
+        if (tags.size() == 0) {
+            mTagRecyclerView.setVisibility(View.GONE);
+            findViewById(R.id.list_empty).setVisibility(View.VISIBLE);
+        } else {
+            mTagRecyclerView.setVisibility(View.VISIBLE);
+            findViewById(R.id.list_empty).setVisibility(View.GONE);
+        }
+
     }
 
     @Override
