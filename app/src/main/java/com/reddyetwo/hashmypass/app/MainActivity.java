@@ -21,19 +21,19 @@ package com.reddyetwo.hashmypass.app;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.reddyetwo.hashmypass.app.data.Preferences;
@@ -67,7 +67,7 @@ public class MainActivity extends Activity
     private OrientationEventListener mOrientationEventListener;
     private boolean mOrientationHasChanged;
 
-    private ListView mTagListView;
+    private RecyclerView mTagRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +83,9 @@ public class MainActivity extends Activity
         // Select the last profile used for hashing a password
         mSelectedProfileId = getLastProfile();
 
-        mTagListView = (ListView) findViewById(R.id.new_tag_list);
+        mTagRecyclerView = (RecyclerView) findViewById(R.id.tag_list);
+        mTagRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mTagRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         Fab mFab = (Fab) findViewById(R.id.fabbutton);
         mFab.setFabColor(getResources().getColor(R.color.hashmypass_main));
@@ -133,7 +135,7 @@ public class MainActivity extends Activity
     }
 
     private void populateTagList() {
-        mTagListView.setAdapter(new TagAdapter(this, TagSettings
+        mTagRecyclerView.setAdapter(new TagAdapter(TagSettings
                 .getProfileTags(this, mSelectedProfileId,
                         TagSettings.ORDER_BY_HASH_COUNTER,
                         TagSettings.LIMIT_UNBOUNDED)));
@@ -351,51 +353,69 @@ public class MainActivity extends Activity
         }
     }
 
-    private class TagAdapter extends ArrayAdapter<Tag> {
+    private class TagAdapter extends RecyclerView.Adapter<TagListViewHolder> {
 
         private List<Tag> mTags;
         private static final int mResource = R.layout.main_tag_list_item;
 
-        public TagAdapter(Context context, List<Tag> objects) {
-            super(context, mResource, objects);
+        public TagAdapter(List<Tag> objects) {
+            super();
             mTags = objects;
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView =
-                        getLayoutInflater().inflate(mResource, parent, false);
-            }
+        public TagListViewHolder onCreateViewHolder(ViewGroup viewGroup,
+                                                    int i) {
+            View v = LayoutInflater.from(viewGroup.getContext())
+                    .inflate(mResource, viewGroup, false);
+            return new TagListViewHolder(v);
+        }
 
-            final Tag tag = mTags.get(position);
-            TextView faviconTextView =
-                    (TextView) convertView.findViewById(R.id.tag_favicon);
-            TextView tagName =
-                    (TextView) convertView.findViewById(R.id.tag_name);
-            tagName.setText(tag.getName());
-            FaviconLoader.setAsBackground(getContext(), faviconTextView, tag);
+        @Override
+        public void onBindViewHolder(TagListViewHolder tagListViewHolder,
+                                     int i) {
+            final Tag tag = mTags.get(i);
+            FaviconLoader.setAsBackground(getApplicationContext(),
+                    tagListViewHolder.mFaviconTextView, tag);
+            tagListViewHolder.mTagNameTextView.setText(tag.getName());
+            tagListViewHolder.itemView
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // Increase hash counter
+                            tag.setHashCounter(tag.getHashCounter() + 1);
+                            TagSettings.updateTag(MainActivity.this, tag);
 
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Increase hash counter
-                    tag.setHashCounter(tag.getHashCounter() + 1);
-                    TagSettings.updateTag(MainActivity.this, tag);
+                            // Update last used profile
+                            updateLastProfile();
 
-                    // Update last used profile
-                    updateLastProfile();
+                            // Show dialog
+                            GeneratePasswordDialogFragment dialog =
+                                    new GeneratePasswordDialogFragment();
+                            dialog.setProfileId(mSelectedProfileId);
+                            dialog.setTag(tag);
+                            dialog.show(getFragmentManager(),
+                                    "generatePassword");
+                        }
+                    });
+        }
 
-                    // Show dialog
-                    GeneratePasswordDialogFragment dialog =
-                            new GeneratePasswordDialogFragment();
-                    dialog.setProfileId(mSelectedProfileId);
-                    dialog.setTag(tag);
-                    dialog.show(getFragmentManager(), "generatePassword");
-                }
-            });
+        @Override
+        public int getItemCount() {
+            return mTags.size();
+        }
+    }
 
-            return convertView;
+    public class TagListViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView mFaviconTextView;
+        public TextView mTagNameTextView;
+
+        public TagListViewHolder(View itemView) {
+            super(itemView);
+            mFaviconTextView =
+                    (TextView) itemView.findViewById(R.id.tag_favicon);
+            mTagNameTextView = (TextView) itemView.findViewById(R.id.tag_name);
         }
     }
 }
