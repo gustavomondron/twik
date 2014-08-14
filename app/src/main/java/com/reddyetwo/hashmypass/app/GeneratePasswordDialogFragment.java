@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -20,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
@@ -57,6 +57,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         mListener = listener;
     }
 
+
     @Override
     public void onCancel(DialogInterface dialog) {
         mListener.onDialogDismiss(null);
@@ -64,6 +65,10 @@ public class GeneratePasswordDialogFragment extends DialogFragment
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        // Prevent destroy-and-create cycle on configuration change
+        // This introduces a bug: the dialog is dismissed, but at least no FC
+        setRetainInstance(true);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
