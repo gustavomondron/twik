@@ -3,7 +3,6 @@ package com.reddyetwo.hashmypass.app;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -12,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -58,6 +58,11 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     }
 
     @Override
+    public void onCancel(DialogInterface dialog) {
+        mListener.onDialogDismiss(null);
+    }
+
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -70,13 +75,9 @@ public class GeneratePasswordDialogFragment extends DialogFragment
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // Hide keyboard
                         hideKeyboard();
-
                         // Call listener
-                        if (mListener != null) {
-                            mListener.onDialogOkButton(mTag);
-                        }
+                        mListener.onDialogDismiss(mTag);
                     }
                 });
 
@@ -150,8 +151,10 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getActivity()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mMasterKeyEditText.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(
+                mTagEditAutoCompleteTextView.getWindowToken(), 0);
     }
+
     private void updatePassword() {
         Profile profile = ProfileSettings.getProfile(getActivity(), mProfileId);
         String password = PasswordHasher.hashPassword(mTag.getName(),
@@ -235,7 +238,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     }
 
     public interface GeneratePasswordDialogListener {
-        void onDialogOkButton(Tag tag);
+        void onDialogDismiss(Tag tag);
     }
 
 }

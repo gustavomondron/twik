@@ -21,6 +21,7 @@ package com.reddyetwo.hashmypass.app;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.SensorManager;
@@ -28,12 +29,14 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.reddyetwo.hashmypass.app.data.Preferences;
@@ -98,14 +101,7 @@ public class MainActivity extends Activity
                         .getProfile(MainActivity.this, mSelectedProfileId);
                 Tag tag = new Tag(Tag.NO_ID, mSelectedProfileId, 1, null, "",
                         profile.getPasswordLength(), profile.getPasswordType());
-                GeneratePasswordDialogFragment dialog =
-                        new GeneratePasswordDialogFragment();
-                dialog.setProfileId(mSelectedProfileId);
-                dialog.setTag(tag);
-                dialog.setDialogOkListener(MainActivity.this);
-
-                // Show dialog
-                dialog.show(getFragmentManager(), "addTag");
+                showGeneratePasswordDialog(tag);
             }
         });
 
@@ -342,8 +338,9 @@ public class MainActivity extends Activity
     }
 
     @Override
-    public void onDialogOkButton(Tag tag) {
-        if (tag.getId() == Tag.NO_ID && tag.getName().length() > 0) {
+    public void onDialogDismiss(Tag tag) {
+        if (tag != null && tag.getId() == Tag.NO_ID &&
+                tag.getName().length() > 0) {
             // It is a new tag
             TagSettings.insertTag(this, tag);
             populateTagList();
@@ -390,12 +387,7 @@ public class MainActivity extends Activity
                             updateLastProfile();
 
                             // Show dialog
-                            GeneratePasswordDialogFragment dialog =
-                                    new GeneratePasswordDialogFragment();
-                            dialog.setProfileId(mSelectedProfileId);
-                            dialog.setTag(tag);
-                            dialog.show(getFragmentManager(),
-                                    "generatePassword");
+                            showGeneratePasswordDialog(tag);
                         }
                     });
         }
@@ -404,6 +396,15 @@ public class MainActivity extends Activity
         public int getItemCount() {
             return mTags.size();
         }
+    }
+
+    private void showGeneratePasswordDialog(Tag tag) {
+        GeneratePasswordDialogFragment dialog =
+                new GeneratePasswordDialogFragment();
+        dialog.setProfileId(mSelectedProfileId);
+        dialog.setTag(tag);
+        dialog.setDialogOkListener(this);
+        dialog.show(getFragmentManager(), "generatePassword");
     }
 
     public class TagListViewHolder extends RecyclerView.ViewHolder {
