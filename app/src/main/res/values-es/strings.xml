@@ -140,6 +140,7 @@
     <string name="error">¡Ouch! ¡Ha ocurrido un error!</string>
     <string name="error_no_profiles">¡Oops! ¡Deberías crear un perfil
         primero!</string>
+    <string name="error_tag_exists">¡Ey, ya tienes esta web!</string>
 
     <!-- About Dialog -->
     <string name="about_body"><![CDATA[

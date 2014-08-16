@@ -3,7 +3,6 @@ package com.reddyetwo.hashmypass.app;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -25,6 +24,7 @@ import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
+import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
 import com.reddyetwo.hashmypass.app.util.Constants;
@@ -224,14 +224,31 @@ public class GeneratePasswordDialogFragment extends DialogFragment
 
         @Override
         public void afterTextChanged(Editable s) {
-
             // Warning: this code is called before the dialog show() method
             // is called, and getDialog() can return a null value
             AlertDialog dialog = (AlertDialog) getDialog();
+
+            // Check whether the tag already exists
+            String tagName = mTagEditAutoCompleteTextView.getText().toString();
             if (dialog != null) {
-                Button okButton = ((AlertDialog) getDialog())
-                        .getButton(AlertDialog.BUTTON_NEUTRAL);
-                okButton.setEnabled(mTagEditAutoCompleteTextView.length() > 0);
+                Button okButton =
+                        dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
+                if (tagName.length() == 0) {
+                    okButton.setEnabled(false);
+                } else {
+                    Tag storedTag = TagSettings
+                            .getTag(getActivity(), mProfileId, tagName);
+                    if (storedTag.getId() != Tag.NO_ID &&
+                            storedTag.getId() != mTag.getId()) {
+                        // Show error: the tag already exists
+                        mTagEditAutoCompleteTextView
+                                .setError(getString(R.string.error_tag_exists));
+                        okButton.setEnabled(false);
+                    } else {
+                        mTagEditAutoCompleteTextView.setError(null);
+                        okButton.setEnabled(true);
+                    }
+                }
             }
 
             // Store master key in the case that it is cached

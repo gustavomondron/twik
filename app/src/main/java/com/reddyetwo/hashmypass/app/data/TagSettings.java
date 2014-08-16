@@ -39,7 +39,8 @@ public class TagSettings {
      * @param context
      * @param profileID
      * @param name
-     * @return the tag settings, or the profile default settings if not found
+     * @return the tag settings, or a tag with NO_ID and the profile default
+     * settings if not found
      */
     public static Tag getTag(Context context, long profileID, String name) {
         DataOpenHelper helper = new DataOpenHelper(context);
