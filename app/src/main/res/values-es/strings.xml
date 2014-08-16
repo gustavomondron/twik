@@ -22,13 +22,11 @@
 <resources>
 
     <!-- Titles -->
-    <string name="tags_list">LISTA DE SITIOS WEB</string>
 
     <!-- Actions -->
     <string name="action_settings">Ajustes</string>
     <string name="action_add_profile">Añadir perfil</string>
     <string name="action_edit_profile">Editar perfil</string>
-    <string name="action_manage_tags">Gestionar sitios web</string>
     <string name="action_help">Ayuda</string>
     <string name="action_about">Acerca de</string>
     <string name="action_delete">Eliminar</string>
