@@ -133,10 +133,8 @@ public class MainActivity extends Activity
     }
 
     private void populateTagList() {
-        List<Tag> tags = TagSettings
-                .getProfileTags(this, mSelectedProfileId,
-                        TagSettings.ORDER_BY_HASH_COUNTER,
-                        TagSettings.LIMIT_UNBOUNDED);
+        List<Tag> tags = TagSettings.getProfileTags(this, mSelectedProfileId,
+                TagSettings.ORDER_BY_HASH_COUNTER, TagSettings.LIMIT_UNBOUNDED);
         mTagRecyclerView.setAdapter(new TagAdapter(tags));
         if (tags.size() == 0) {
             mTagRecyclerView.setVisibility(View.GONE);

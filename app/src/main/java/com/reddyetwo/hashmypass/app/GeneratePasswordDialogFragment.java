@@ -3,6 +3,7 @@ package com.reddyetwo.hashmypass.app;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -56,7 +58,6 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     public void setDialogOkListener(GeneratePasswordDialogListener listener) {
         mListener = listener;
     }
-
 
     @Override
     public void onCancel(DialogInterface dialog) {
@@ -156,7 +157,21 @@ public class GeneratePasswordDialogFragment extends DialogFragment
             showKeyboard();
         }
 
+
         return builder.create();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // Disable OK button when adding a new tag
+        if (mTag.getId() == Tag.NO_ID) {
+            ((AlertDialog) getDialog())
+                    .getButton(DialogInterface.BUTTON_NEUTRAL)
+                    .setEnabled(false);
+        }
+
     }
 
     private void showKeyboard() {
@@ -209,6 +224,16 @@ public class GeneratePasswordDialogFragment extends DialogFragment
 
         @Override
         public void afterTextChanged(Editable s) {
+
+            // Warning: this code is called before the dialog show() method
+            // is called, and getDialog() can return a null value
+            AlertDialog dialog = (AlertDialog) getDialog();
+            if (dialog != null) {
+                Button okButton = ((AlertDialog) getDialog())
+                        .getButton(AlertDialog.BUTTON_NEUTRAL);
+                okButton.setEnabled(mTagEditAutoCompleteTextView.length() > 0);
+            }
+
             // Store master key in the case that it is cached
             if (mCacheMasterKey) {
                 HashMyPassApplication.setCachedMasterKey(
