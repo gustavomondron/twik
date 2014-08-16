@@ -286,6 +286,7 @@ public class MainActivity extends Activity
     public void onProfileAdded() {
         // Refresh the action bar spinner
         populateActionBarSpinner();
+        populateTagList();
     }
 
     @Override
