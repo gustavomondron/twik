@@ -22,7 +22,8 @@
 <resources>
 
     <!-- Titles -->
-
+    <string name="app_name">Hash my pass</string>
+    
     <!-- Actions -->
     <string name="action_settings">Ajustes</string>
     <string name="action_add_profile">Añadir perfil</string>

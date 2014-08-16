@@ -82,7 +82,6 @@
 
         <activity
             android:name=".TutorialActivity"
-            android:label="@string/title_activity_tutorial"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/tutorialStyle" >

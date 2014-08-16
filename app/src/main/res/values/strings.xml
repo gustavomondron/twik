@@ -130,9 +130,6 @@
         first!</string>
     <string name="error_tag_exists">Hey, you already have this website!</string>
 
-    <string name="title_activity_tutorial">Tutorial</string>
-    <string name="title_activity_add_default_profile">Add default profile</string>
-
     <!-- About Dialog -->
     <string name="about_body">
 <![CDATA[
@@ -186,8 +183,4 @@
         Ubuntu Font Licence 1.0.
     ]]>
     </string>
-    <string name="title_activity_calculate_password">Calculate Password</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
 </resources>
