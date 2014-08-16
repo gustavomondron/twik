@@ -52,8 +52,7 @@ public class TagSettings {
                         DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE},
                 DataOpenHelper.COLUMN_TAGS_PROFILE_ID + "=" +
                         profileID + " AND " + DataOpenHelper.COLUMN_TAGS_NAME +
-                        " = ?", new String[]{name}, null, null, null
-        );
+                        " = ?", new String[]{name}, null, null, null);
 
         Tag tag = null;
         if (cursor.moveToFirst()) {
@@ -64,10 +63,9 @@ public class TagSettings {
                     DataOpenHelper.COLUMN_TAGS_HASH_COUNTER)), cursor.getString(
                     cursor.getColumnIndex(DataOpenHelper.COLUMN_TAGS_SITE)),
                     name, cursor.getInt(cursor.getColumnIndex(
-                            DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH)
-            ), PasswordType.values()[cursor.getInt(cursor
-                    .getColumnIndex(DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE))]
-            );
+                            DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH)),
+                    PasswordType.values()[cursor.getInt(cursor.getColumnIndex(
+                            DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE))]);
         } else {
             // Tag settings not found, use profile settings
             Profile profile = ProfileSettings.getProfile(context, profileID);
@@ -99,8 +97,7 @@ public class TagSettings {
                         DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH,
                         DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE},
                 DataOpenHelper.COLUMN_ID + "=" +
-                        tagId, null, null, null, null
-        );
+                        tagId, null, null, null, null);
 
         Tag tag = null;
         if (cursor.moveToFirst()) {
@@ -108,16 +105,14 @@ public class TagSettings {
             tag = new Tag(tagId, cursor.getLong(cursor.getColumnIndex(
                     DataOpenHelper.COLUMN_TAGS_PROFILE_ID)), cursor.getInt(
                     cursor.getColumnIndex(
-                            DataOpenHelper.COLUMN_TAGS_HASH_COUNTER)
-            ), cursor.getString(
-                    cursor.getColumnIndex(DataOpenHelper.COLUMN_TAGS_SITE)),
+                            DataOpenHelper.COLUMN_TAGS_HASH_COUNTER)),
                     cursor.getString(cursor.getColumnIndex(
-                            DataOpenHelper.COLUMN_TAGS_NAME)), cursor.getInt(
-                    cursor.getColumnIndex(
-                            DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH)
-            ), PasswordType.values()[cursor.getInt(cursor
-                    .getColumnIndex(DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE))]
-            );
+                            DataOpenHelper.COLUMN_TAGS_SITE)), cursor.getString(
+                    cursor.getColumnIndex(DataOpenHelper.COLUMN_TAGS_NAME)),
+                    cursor.getInt(cursor.getColumnIndex(
+                                    DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH)),
+                    PasswordType.values()[cursor.getInt(cursor.getColumnIndex(
+                            DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE))]);
         }
         return tag;
     }
@@ -163,6 +158,7 @@ public class TagSettings {
         SQLiteDatabase db = helper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        values.put(DataOpenHelper.COLUMN_TAGS_NAME, tag.getName());
         values.put(DataOpenHelper.COLUMN_TAGS_PASSWORD_LENGTH,
                 tag.getPasswordLength());
         values.put(DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE,
@@ -185,8 +181,7 @@ public class TagSettings {
         boolean deleted = db.delete(DataOpenHelper.TAGS_TABLE_NAME,
                 "_id=" + tag.getId() + " AND " +
                         DataOpenHelper.COLUMN_TAGS_PROFILE_ID +
-                        "=" + tag.getProfileId(), null
-        ) > 0;
+                        "=" + tag.getProfileId(), null) > 0;
 
         db.close();
         return deleted;
@@ -229,8 +224,7 @@ public class TagSettings {
                         DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE},
                 DataOpenHelper.COLUMN_TAGS_PROFILE_ID + "= ?",
                 new String[]{Long.toString(profileId)}, null, null, orderClause,
-                limitClause
-        );
+                limitClause);
 
         List<Tag> tagList = new ArrayList<Tag>();
         if (cursor.moveToFirst()) {
@@ -249,8 +243,7 @@ public class TagSettings {
                         .getInt(cursor.getColumnIndex(
                                 DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE))];
                 tagList.add(new Tag(tagId, profileId, hashCounter, site, name,
-                                passwordLength, passwordType)
-                );
+                                passwordLength, passwordType));
             } while (cursor.moveToNext());
         }
 
@@ -265,8 +258,7 @@ public class TagSettings {
                 new String[]{DataOpenHelper.COLUMN_TAGS_NAME},
                 DataOpenHelper.COLUMN_TAGS_PROFILE_ID + "=" + profileId + " " +
                         "AND " + DataOpenHelper.COLUMN_TAGS_SITE + " = ?",
-                new String[]{site}, null, null, null
-        );
+                new String[]{site}, null, null, null);
 
         Tag tag = null;
         if (cursor.moveToFirst()) {

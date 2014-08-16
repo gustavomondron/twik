@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -350,7 +351,13 @@ public class MainActivity extends Activity
 
             // Update last used profile
             updateLastProfile();
+        } else if (tag != null && tag.getName().length() > 0) {
+            // Save the tag and update the list because the name of a tag or
+            // its order in the list can have been modified
+            TagSettings.updateTag(this, tag);
+            populateTagList();
         }
+
     }
 
     private class TagAdapter extends RecyclerView.Adapter<TagListViewHolder> {
