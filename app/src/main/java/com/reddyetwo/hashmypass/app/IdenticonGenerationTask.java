@@ -26,7 +26,7 @@ import android.os.AsyncTask;
 
 import com.reddyetwo.hashmypass.app.util.IdenticonGenerator;
 
-public class IdenticonGenerationTask extends AsyncTask<String, Void, Void> {
+public class IdenticonGenerationTask extends AsyncTask<char[], Void, Void> {
 
     private Context mContext;
 
@@ -44,7 +44,7 @@ public class IdenticonGenerationTask extends AsyncTask<String, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(String... params) {
+    protected Void doInBackground(char[]... params) {
         if (params.length > 0) {
             mBitmap = IdenticonGenerator.generate(mContext, params[0]);
         }

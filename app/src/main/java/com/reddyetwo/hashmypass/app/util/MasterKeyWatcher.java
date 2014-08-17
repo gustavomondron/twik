@@ -61,7 +61,7 @@ public class MasterKeyWatcher implements TextWatcher,
         }
         if (s.toString().length() > 0) {
             mTask = new IdenticonGenerationTask(mContext, this);
-            mTask.execute(s.toString());
+            mTask.execute(SecurePassword.getPassword(s));
         }
     }
 

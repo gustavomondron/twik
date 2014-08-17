@@ -55,6 +55,7 @@ import com.reddyetwo.hashmypass.app.util.FaviconLoader;
 import com.reddyetwo.hashmypass.app.util.HelpToastOnLongPressClickListener;
 import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 import com.reddyetwo.hashmypass.app.util.MasterKeyWatcher;
+import com.reddyetwo.hashmypass.app.util.SecurePassword;
 import com.reddyetwo.hashmypass.app.util.TagAutocomplete;
 
 import java.util.List;
@@ -219,7 +220,9 @@ public class BrowserIntegrationActivity extends Activity
 
         /* Cancel the alarm and restore the cached master key */
         MasterKeyAlarmManager.cancelAlarm(this);
-        mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey());
+        mMasterKeyEditText
+                .setText(HashMyPassApplication.getCachedMasterKey(), 0,
+                        HashMyPassApplication.getCachedMasterKey().length);
 
         TagAutocomplete.populateTagAutocompleteTextView(this,
                 ((Profile) mProfileSpinner.getSelectedItem()).getId(),
@@ -234,7 +237,7 @@ public class BrowserIntegrationActivity extends Activity
         int masterKeyMins = Preferences.getRememberMasterKeyMins(this);
         if (masterKeyMins > 0) {
             HashMyPassApplication.setCachedMasterKey(
-                    mMasterKeyEditText.getText().toString());
+                    SecurePassword.getPassword(mMasterKeyEditText.getText()));
             MasterKeyAlarmManager.setAlarm(this, masterKeyMins);
         }
     }
@@ -285,9 +288,8 @@ public class BrowserIntegrationActivity extends Activity
 
     private void calculatePasswordHash() {
         String tagName = mTagEditText.getText().toString().trim();
-        String masterKey = mMasterKeyEditText.getText().toString();
 
-        if (tagName.length() > 0 && masterKey.length() > 0) {
+        if (tagName.length() > 0 && mMasterKeyEditText.length() > 0) {
             // Get the private key
             long profileId =
                     ((Profile) mProfileSpinner.getSelectedItem()).getId();
@@ -312,9 +314,10 @@ public class BrowserIntegrationActivity extends Activity
             }
 
             // Calculate hashed password
-            String hashedPassword = PasswordHasher
-                    .hashPassword(tagName, masterKey, profile.getPrivateKey(),
-                            tag.getPasswordLength(), tag.getPasswordType());
+            String hashedPassword = PasswordHasher.hashPassword(tagName,
+                    SecurePassword.getPassword(mMasterKeyEditText.getText()),
+                    profile.getPrivateKey(), tag.getPasswordLength(),
+                    tag.getPasswordType());
 
             // Copy hashed password to clipboard
             ClipboardHelper.copyToClipboard(getApplicationContext(),

@@ -26,6 +26,7 @@ package com.reddyetwo.hashmypass.app.hash;
 import android.util.Base64;
 
 import com.reddyetwo.hashmypass.app.data.PasswordType;
+import com.reddyetwo.hashmypass.app.util.SecurePassword;
 
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -46,7 +47,7 @@ public class PasswordHasher {
      */
     private static final String DIGEST_MD5 = "MD5";
 
-    private static String _hashPassword(String tag, String key, int length,
+    private static String _hashPassword(String tag, char[] key, int length,
                                         PasswordType type) {
 
         Mac hmac;
@@ -58,7 +59,8 @@ public class PasswordHasher {
 
         /* First, we have to calculate the hashing key as a result of hashing
          the tag and the private key */
-        SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), HMAC_SHA1);
+        SecretKeySpec keySpec = new SecretKeySpec(SecurePassword.toBytes(key),
+                HMAC_SHA1);
         try {
             hmac.init(keySpec);
         } catch (InvalidKeyException e) {
@@ -99,13 +101,13 @@ public class PasswordHasher {
         return hash.substring(0, length);
     }
 
-    public static String hashPassword(String tag, String masterKey,
+    public static String hashPassword(String tag, char[] masterKey,
                                       String privateKey, int length,
                                       PasswordType passwordType) {
         /* First, hash the tag with the private key (in the case that it is
         used) */
         if (privateKey != null) {
-            tag = _hashPassword(privateKey, tag, 24,
+            tag = _hashPassword(privateKey, tag.toCharArray(), 24,
                     PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
         }
 
@@ -119,13 +121,13 @@ public class PasswordHasher {
      * @param input the input string
      * @return the digest of the input string
      */
-    public static byte[] calculateDigest(String input) {
+    public static byte[] calculateDigest(char[] input) {
         MessageDigest messageDigest;
         byte[] result;
 
         try {
             messageDigest = MessageDigest.getInstance(DIGEST_MD5);
-            result = messageDigest.digest(input.getBytes());
+            result = messageDigest.digest(SecurePassword.toBytes(input));
         } catch (NoSuchAlgorithmException e) {
             result = null;
         }

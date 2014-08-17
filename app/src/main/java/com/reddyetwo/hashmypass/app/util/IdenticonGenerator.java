@@ -34,7 +34,7 @@ public class IdenticonGenerator {
     public static int height = 5;
     public static int width = 5;
 
-    public static Bitmap generate(Context context, String input) {
+    public static Bitmap generate(Context context, char[] input) {
 
         byte[] hash = PasswordHasher.calculateDigest(input);
 

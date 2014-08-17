@@ -1,3 +1,21 @@
+/*
+ * Copyright 2014 Red Dye No. 2
+ *
+ * This file is part of Hash My pass.
+ *
+ * Hash my pass is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Hash my pass is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Hash my pass.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.reddyetwo.hashmypass.app;
 
 import android.app.AlertDialog;
@@ -29,6 +47,7 @@ import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
 import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.FaviconLoader;
+import com.reddyetwo.hashmypass.app.util.SecurePassword;
 
 public class GeneratePasswordDialogFragment extends DialogFragment
         implements TagSettingsDialogFragment.OnTagSettingsSavedListener,
@@ -148,12 +167,13 @@ public class GeneratePasswordDialogFragment extends DialogFragment
                 Preferences.getRememberMasterKeyMins(getActivity()) > 0;
         if (mCacheMasterKey) {
             mMasterKeyEditText
-                    .setText(HashMyPassApplication.getCachedMasterKey());
+                    .setText(HashMyPassApplication.getCachedMasterKey(), 0,
+                            HashMyPassApplication.getCachedMasterKey().length);
         }
 
         // Manage keyboard status
-        if (mMasterKeyEditText.getText().length() == 0 ||
-                mTagEditAutoCompleteTextView.getText().length() == 0) {
+        if (mMasterKeyEditText.length() == 0 ||
+                mTagEditAutoCompleteTextView.length() == 0) {
             showKeyboard();
         }
 
@@ -188,12 +208,12 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     }
 
     private void updatePassword() {
-        if (mTagEditAutoCompleteTextView.getText().length() > 0 &&
-                mMasterKeyEditText.getText().length() > 0) {
+        if (mTagEditAutoCompleteTextView.length() > 0 &&
+                mMasterKeyEditText.length() > 0) {
             Profile profile =
                     ProfileSettings.getProfile(getActivity(), mProfileId);
             String password = PasswordHasher.hashPassword(mTag.getName(),
-                    mMasterKeyEditText.getText().toString(),
+                    SecurePassword.getPassword(mMasterKeyEditText.getText()),
                     profile.getPrivateKey(), mTag.getPasswordLength(),
                     mTag.getPasswordType());
             mPasswordTextView.setText(password);
@@ -253,8 +273,8 @@ public class GeneratePasswordDialogFragment extends DialogFragment
 
             // Store master key in the case that it is cached
             if (mCacheMasterKey) {
-                HashMyPassApplication.setCachedMasterKey(
-                        mMasterKeyEditText.getText().toString());
+                HashMyPassApplication.setCachedMasterKey(SecurePassword
+                        .getPassword(mMasterKeyEditText.getText()));
             }
 
             // Update favicon
@@ -270,10 +290,11 @@ public class GeneratePasswordDialogFragment extends DialogFragment
                     mTask.getStatus() == AsyncTask.Status.RUNNING) {
                 mTask.cancel(true);
             }
-            if (mMasterKeyEditText.getText().length() > 0) {
+            if (mMasterKeyEditText.length() > 0) {
                 mTask = new IdenticonGenerationTask(getActivity(),
                         GeneratePasswordDialogFragment.this);
-                mTask.execute(mMasterKeyEditText.getText().toString());
+                mTask.execute(SecurePassword
+                        .getPassword(mMasterKeyEditText.getText()));
             }
 
             // Update password

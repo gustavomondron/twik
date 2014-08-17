@@ -65,7 +65,7 @@ public class FaviconLoader {
                     .getDrawable(R.drawable.favicon_background);
 
             ((GradientDrawable) faviconDrawable)
-                    .setColor(getBackgroundColor(context, tag.getName()));
+                    .setColor(getBackgroundColor(context, tag.getName().toCharArray()));
         }
 
         setTextViewBackground(textView, faviconDrawable);
@@ -85,7 +85,7 @@ public class FaviconLoader {
         }
     }
 
-    private static int getBackgroundColor(Context context, String input) {
+    private static int getBackgroundColor(Context context, char[] input) {
         int[] colors = context.getResources()
                 .getIntArray(R.array.favicon_background_colors);
         byte[] digest = PasswordHasher.calculateDigest(input);

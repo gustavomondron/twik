@@ -23,13 +23,22 @@ import android.app.Application;
 
 public class HashMyPassApplication extends Application {
 
-    private static String mCachedMasterKey;
+    private static char[] mCachedMasterKey = new char[]{};
 
-    public static String getCachedMasterKey() {
+    public static char[] getCachedMasterKey() {
         return mCachedMasterKey;
     }
 
-    public static void setCachedMasterKey(String masterKey) {
+    public static void setCachedMasterKey(char[] masterKey) {
         mCachedMasterKey = masterKey;
+    }
+
+    public static void wipeCachedMasterKey() {
+        /* Rewrite the char array so we don't wait for garbage collection
+         to destroy it */
+        for (int i = 0; i < mCachedMasterKey.length; i++) {
+            mCachedMasterKey[i] = ' ';
+        }
+        mCachedMasterKey = new char[]{};
     }
 }

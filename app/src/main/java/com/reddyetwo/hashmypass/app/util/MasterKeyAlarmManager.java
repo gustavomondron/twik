@@ -19,7 +19,6 @@
 
 package com.reddyetwo.hashmypass.app.util;
 
-import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -37,10 +36,9 @@ public class MasterKeyAlarmManager extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         /* Remove cached master key */
-        HashMyPassApplication.setCachedMasterKey("");
+        HashMyPassApplication.wipeCachedMasterKey();
     }
 
-    @TargetApi(15)
     public static void setAlarm(Context context, int minutes) {
         AlarmManager alarmManager =
                 (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -54,7 +52,6 @@ public class MasterKeyAlarmManager extends BroadcastReceiver {
             alarmManager.set(AlarmManager.ELAPSED_REALTIME,
                     SystemClock.elapsedRealtime() + minutes * 60000, intent);
         }
-
     }
 
     public static void cancelAlarm(Context context) {
