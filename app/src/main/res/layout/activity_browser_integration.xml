@@ -97,6 +97,7 @@
                         android:layout_height="match_parent"
                         android:completionThreshold="2"
                         android:background="@drawable/background_edittext_material"
+                        android:imeOptions="actionNext"
                         android:hint="@string/tag"/>
 
                     <ProgressBar
@@ -165,6 +166,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/background_edittext_material"
+                    android:imeOptions="actionDone"
                     android:hint="@string/master_key"/>
 
                 <ImageView
