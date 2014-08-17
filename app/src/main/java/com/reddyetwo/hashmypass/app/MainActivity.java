@@ -73,6 +73,7 @@ public class MainActivity extends Activity
     private boolean mOrientationHasChanged;
 
     private RecyclerView mTagRecyclerView;
+    private AddDefaultProfileDialog mAddDefaultProfileDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +143,19 @@ public class MainActivity extends Activity
         } else {
             mTagRecyclerView.setVisibility(View.VISIBLE);
             findViewById(R.id.list_empty).setVisibility(View.GONE);
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        /* Dismiss add default profile dialog in the case that it is shown,
+        to prevent opening multiple dialogs simultaneously.
+         */
+        if (mAddDefaultProfileDialog != null) {
+            mAddDefaultProfileDialog.dismiss();
+            mAddDefaultProfileDialog = null;
         }
 
     }
@@ -324,10 +338,10 @@ public class MainActivity extends Activity
             return true;
         } else if (ProfileSettings.getList(this).size() == 0) {
             // Check if a profile is already defined
-            AddDefaultProfileDialog addProfileDialog =
-                    new AddDefaultProfileDialog();
-            addProfileDialog.setOnProfileAddedListener(this);
-            addProfileDialog.show(getFragmentManager(), "addDefaultProfile");
+            mAddDefaultProfileDialog = new AddDefaultProfileDialog();
+            mAddDefaultProfileDialog.setOnProfileAddedListener(this);
+            mAddDefaultProfileDialog
+                    .show(getFragmentManager(), "addDefaultProfile");
             return true;
         } else {
             return false;
