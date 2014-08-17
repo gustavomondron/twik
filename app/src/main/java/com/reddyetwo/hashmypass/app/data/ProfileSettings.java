@@ -23,6 +23,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.ContactsContract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +39,7 @@ public class ProfileSettings {
                         DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH,
                         DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE},
                 DataOpenHelper.COLUMN_ID + "=" + profileId, null, null, null,
-                null
-        );
+                null);
 
         Profile profile = null;
         if (cursor.moveToFirst()) {
@@ -144,6 +144,23 @@ public class ProfileSettings {
         return deleted;
     }
 
+    public static long getProfileId(Context context, String name) {
+        DataOpenHelper helper = new DataOpenHelper(context);
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.query(DataOpenHelper.PROFILES_TABLE_NAME,
+                new String[]{DataOpenHelper.COLUMN_ID},
+                DataOpenHelper.COLUMN_PROFILES_NAME + " = ?",
+                new String[]{name}, null, null, null);
+
+        long profileId = Profile.NO_ID;
+        if (cursor.moveToFirst()) {
+            profileId = cursor.getLong(
+                    cursor.getColumnIndex(DataOpenHelper.COLUMN_ID));
+        }
+
+        return profileId;
+    }
+
     public static List<Profile> getList(Context context) {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -154,8 +171,7 @@ public class ProfileSettings {
                         DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH,
                         DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE}, null,
                 null, null, null, DataOpenHelper.COLUMN_PROFILES_NAME + " " +
-                        "COLLATE NOCASE"
-        );
+                        "COLLATE NOCASE");
 
         List<Profile> list = new ArrayList<Profile>();
         if (cursor.moveToFirst()) {

@@ -90,9 +90,7 @@ public class AddProfileActivity extends Activity {
                             public void onPressed() {
                                 showDialog();
                             }
-                        }
-                )
-        );
+                        }));
 
         mPasswordTypeSpinner =
                 (Spinner) findViewById(R.id.password_type_spinner);
@@ -110,8 +108,7 @@ public class AddProfileActivity extends Activity {
                         Integer.decode((String) mPasswordLengthSpinner
                                 .getSelectedItem()),
                         PasswordType.values()[mPasswordTypeSpinner
-                                .getSelectedItemPosition()]
-                );
+                                .getSelectedItemPosition()]);
                 long profileId = ProfileSettings
                         .insertProfile(AddProfileActivity.this, profile);
                 if (profileId == -1) {
@@ -143,8 +140,8 @@ public class AddProfileActivity extends Activity {
 
         // Add form watcher for enabling/disabling Add button
         ProfileFormWatcher profileFormWatcher =
-                new ProfileFormWatcher(mNameEditText, mPrivateKeyEditText,
-                        addButton);
+                new ProfileFormWatcher(getApplicationContext(), Profile.NO_ID,
+                        mNameEditText, mPrivateKeyEditText, addButton);
         mNameEditText.addTextChangedListener(profileFormWatcher);
         mPrivateKeyEditText.addTextChangedListener(profileFormWatcher);
         mPrivateKeyEditText.setText(RandomPrivateKeyGenerator.generate());
@@ -154,8 +151,7 @@ public class AddProfileActivity extends Activity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_PASSWORD_LENGTH, Integer.parseInt(
-                        (String) mPasswordLengthSpinner.getSelectedItem())
-        );
+                        (String) mPasswordLengthSpinner.getSelectedItem()));
     }
 
     @Override
@@ -182,8 +178,7 @@ public class AddProfileActivity extends Activity {
                                 AddProfileActivity.this, mPasswordLengthSpinner,
                                 length);
                     }
-                }
-        );
+                });
 
         dialogFragment.show(getFragmentManager(), "passwordLength");
     }

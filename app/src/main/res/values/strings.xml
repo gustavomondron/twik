@@ -99,7 +99,8 @@
         You have to choose and remember a master key too,
         but you don\'t have to fill it out right now.</string>
 
-    <item name="profile_default_name" format="string" type="string">Default</item>
+    <item name="profile_default_name" format="string" type="string">Default
+    </item>
 
     <!-- Notices -->
     <string name="no_tags">You got no websites!</string>
@@ -129,6 +130,7 @@
     <string name="error_no_profiles">Oops! You should create a profile
         first!</string>
     <string name="error_tag_exists">Hey, you already have this website!</string>
+    <string name="error_profile_exists">This name already exists</string>
 
     <!-- About Dialog -->
     <string name="about_body">

@@ -142,6 +142,7 @@
     <string name="error_no_profiles">¡Oops! ¡Deberías crear un perfil
         primero!</string>
     <string name="error_tag_exists">¡Ey, ya tienes esta web!</string>
+    <string name="error_profile_exists">Este nombre ya existe</string>
 
     <!-- About Dialog -->
     <string name="about_body"><![CDATA[

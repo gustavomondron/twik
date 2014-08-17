@@ -111,9 +111,7 @@ public class EditProfileActivity extends Activity {
                             public void onPressed() {
                                 showDialog();
                             }
-                        }
-                )
-        );
+                        }));
 
         mPasswordTypeSpinner =
                 (Spinner) findViewById(R.id.password_type_spinner);
@@ -131,8 +129,7 @@ public class EditProfileActivity extends Activity {
                         Integer.decode((String) mPasswordLengthSpinner
                                 .getSelectedItem()),
                         PasswordType.values()[mPasswordTypeSpinner
-                                .getSelectedItemPosition()]
-                );
+                                .getSelectedItemPosition()]);
                 ProfileSettings
                         .updateProfile(EditProfileActivity.this, profile);
 
@@ -150,8 +147,8 @@ public class EditProfileActivity extends Activity {
 
         // Add form watcher for enabling/disabling Save button
         ProfileFormWatcher profileFormWatcher =
-                new ProfileFormWatcher(mNameEditText, mPrivateKeyEditText,
-                        saveButton);
+                new ProfileFormWatcher(getApplicationContext(), mProfileId,
+                        mNameEditText, mPrivateKeyEditText, saveButton);
         mNameEditText.addTextChangedListener(profileFormWatcher);
         mPrivateKeyEditText.addTextChangedListener(profileFormWatcher);
     }
@@ -160,8 +157,7 @@ public class EditProfileActivity extends Activity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_PASSWORD_LENGTH, Integer.parseInt(
-                        (String) mPasswordLengthSpinner.getSelectedItem())
-        );
+                        (String) mPasswordLengthSpinner.getSelectedItem()));
     }
 
     @Override
@@ -193,8 +189,7 @@ public class EditProfileActivity extends Activity {
                             NavUtils.navigateUpFromSameTask(
                                     EditProfileActivity.this);
                         }
-                    }
-            );
+                    });
             builder.setNegativeButton(android.R.string.cancel, null);
             builder.create().show();
 
@@ -217,8 +212,7 @@ public class EditProfileActivity extends Activity {
                                 EditProfileActivity.this,
                                 mPasswordLengthSpinner, length);
                     }
-                }
-        );
+                });
 
         dialogFragment.show(getFragmentManager(), "passwordLength");
     }

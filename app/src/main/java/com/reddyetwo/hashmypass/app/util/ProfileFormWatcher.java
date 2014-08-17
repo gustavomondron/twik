@@ -19,19 +19,29 @@
 
 package com.reddyetwo.hashmypass.app.util;
 
+import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.reddyetwo.hashmypass.app.R;
+import com.reddyetwo.hashmypass.app.data.Profile;
+import com.reddyetwo.hashmypass.app.data.ProfileSettings;
+
 public class ProfileFormWatcher implements TextWatcher {
 
+    private Context mContext;
+    private long mProfileId;
     private EditText mNameEditText;
     private EditText mPrivateKeyEditText;
     private Button mSaveButton;
 
-    public ProfileFormWatcher(EditText nameEditText,
+    public ProfileFormWatcher(Context context, long profileId,
+                              EditText nameEditText,
                               EditText privateKeyEditText, Button saveButton) {
+        mContext = context;
+        mProfileId = profileId;
         mNameEditText = nameEditText;
         mPrivateKeyEditText = privateKeyEditText;
         mSaveButton = saveButton;
@@ -59,7 +69,22 @@ public class ProfileFormWatcher implements TextWatcher {
                 mNameEditText.getText().toString().trim().length() > 0;
         boolean privateKeySet =
                 mPrivateKeyEditText.getText().toString().length() > 0;
-        mSaveButton.setEnabled(nameSet && privateKeySet);
+
+        if (!nameSet || !privateKeySet) {
+            mSaveButton.setEnabled(false);
+        } else if (nameSet) {
+            long storedProfileId = ProfileSettings
+                    .getProfileId(mContext, mNameEditText.getText().toString());
+            boolean repeated = storedProfileId != Profile.NO_ID &&
+                    storedProfileId != mProfileId;
+            mSaveButton.setEnabled(!repeated);
+            if (repeated) {
+                mNameEditText.setError(
+                        mContext.getString(R.string.error_profile_exists));
+            } else {
+                mNameEditText.setError(null);
+            }
+        }
     }
 
 
