@@ -180,6 +180,16 @@
                     android:layout_alignParentRight="true"
                     android:gravity="center"/>
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/website_password"
+                android:text="Website password"
+                android:textSize="@dimen/text_medium"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"/>
         </LinearLayout>
     </ScrollView>
 
@@ -205,20 +215,12 @@
             style="?android:buttonBarStyle">
 
             <Button
-                android:id="@+id/cancel_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                style="?android:buttonBarButtonStyle"
-                android:text="@string/cancel"/>
-
-            <Button
                 android:id="@+id/hash_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 style="?android:buttonBarButtonStyle"
                 android:layout_weight="1"
-                android:text="@string/hash"/>
+                android:text="@string/ok"/>
 
         </LinearLayout>
     </LinearLayout>

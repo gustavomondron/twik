@@ -130,6 +130,9 @@ public class MainActivity extends Activity
         if (!showTutorial()) {
             populateActionBarSpinner();
             populateTagList();
+
+            /* Cancel the master key alarm to clear cache */
+            MasterKeyAlarmManager.cancelAlarm(this);
         }
     }
 

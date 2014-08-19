@@ -34,6 +34,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -62,7 +63,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     private EditText mTagEditText;
     private EditText mMasterKeyEditText;
     private TextView mPasswordTextView;
-    private ImageView mTagSettingsImageView;
+    private ImageButton mTagSettingsImageButton;
     private ImageView mIdenticonImageView;
 
     public void setProfileId(long profileId) {
@@ -149,9 +150,9 @@ public class GeneratePasswordDialogFragment extends DialogFragment
             }
         });
 
-        mTagSettingsImageView =
-                (ImageView) view.findViewById(R.id.tag_settings);
-        mTagSettingsImageView.setOnClickListener(new View.OnClickListener() {
+        mTagSettingsImageButton =
+                (ImageButton) view.findViewById(R.id.tag_settings);
+        mTagSettingsImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 TagSettingsDialogFragment settingsDialog =
@@ -173,13 +174,16 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         // Populate fields
         mTagEditText.setText(mTag.getName());
 
+        // Restore cached master key
         mCacheMasterKey =
                 Preferences.getRememberMasterKeyMins(getActivity()) > 0;
         if (mCacheMasterKey) {
             mMasterKeyEditText
                     .setText(HashMyPassApplication.getCachedMasterKey(), 0,
                             HashMyPassApplication.getCachedMasterKey().length);
+
         }
+
 
         // Manage keyboard status
         if (mMasterKeyEditText.length() == 0 || mTagEditText.length() == 0) {
@@ -307,13 +311,13 @@ public class GeneratePasswordDialogFragment extends DialogFragment
             // Update password
             updatePassword();
 
-            // Update tag settings icon visibility
+            // Update tag settings button visibility
             if (mTagEditText.getText().length() > 0) {
-                mTagSettingsImageView.setVisibility(View.VISIBLE);
-                mTagSettingsImageView.setEnabled(true);
+                mTagSettingsImageButton.setVisibility(View.VISIBLE);
+                mTagSettingsImageButton.setEnabled(true);
             } else {
-                mTagSettingsImageView.setVisibility(View.INVISIBLE);
-                mTagSettingsImageView.setEnabled(false);
+                mTagSettingsImageButton.setVisibility(View.INVISIBLE);
+                mTagSettingsImageButton.setEnabled(false);
             }
         }
     }
