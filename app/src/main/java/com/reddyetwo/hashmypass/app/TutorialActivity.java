@@ -172,7 +172,7 @@ public class TutorialActivity extends FragmentActivity {
             ViewGroup.LayoutParams nextViewParams =
                     mProgressNextView.getLayoutParams();
             nextViewParams.width = (int) Math.ceil(mIndicatorBaseWidth *
-                    (mImageAlignment.length - position));
+                    (getCount() - 1 - position));
             mProgressNextView.setLayoutParams(nextViewParams);
         }
 
@@ -196,7 +196,7 @@ public class TutorialActivity extends FragmentActivity {
 
         @Override
         public void onMeasure(int width, int height) {
-            mIndicatorBaseWidth = (double) width / (mImageAlignment.length + 1);
+            mIndicatorBaseWidth = (double) width / (getCount());
             updateIndicators(mPager.getCurrentItem());
         }
 
@@ -209,7 +209,7 @@ public class TutorialActivity extends FragmentActivity {
         @Override
         public void onPageSelected(int position) {
             updateIndicators(position);
-            if (position == mImageAlignment.length) {
+            if (position == getCount() - 1) {
                 mSkipButton.setVisibility(View.GONE);
                 mNextButton.setVisibility(View.GONE);
                 mStartButton.setVisibility(View.VISIBLE);
