@@ -30,8 +30,8 @@
     <color name="button_text_enabled_pressed">#ffe6e6e6</color>
     <color name="pager_progress_current">@color/hashmypass_light</color>
     <color name="pager_progress_rest">#e5e5e5</color>
-    <color name="hashmypass_main">#0f9d58</color>
-    <color name="hashmypass_light">#15c770</color>
+    <color name="hashmypass_main">#9e9d24</color>
+    <color name="hashmypass_light">#d4e157</color>
     <color name="holo_light_background">#fff3f3f3</color>
     <color name="list_divider_color">#ffe5e5e5</color>
     <color name="card_action">@android:color/holo_blue_dark</color>
