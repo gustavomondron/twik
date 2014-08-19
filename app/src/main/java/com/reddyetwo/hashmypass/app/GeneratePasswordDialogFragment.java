@@ -139,6 +139,17 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
                 Constants.FONT_MONOSPACE);
         mPasswordTextView.setTypeface(tf);
+        mPasswordTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mPasswordTextView.length() > 0) {
+                    ClipboardHelper.copyToClipboard(getActivity(),
+                            ClipboardHelper.CLIPBOARD_LABEL_PASSWORD,
+                            mPasswordTextView.getText().toString(),
+                            R.string.copied_to_clipboard);
+                }
+            }
+        });
 
         mTagSettingsImageView =
                 (ImageView) view.findViewById(R.id.tag_settings);
