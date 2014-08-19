@@ -180,6 +180,10 @@ public class TutorialActivity extends FragmentActivity {
         public Fragment getItem(int position) {
             if (position == 0) {
                 return new TutorialSplashFragment();
+            } else if (position == 1) {
+                    return new TutorialIntroFragment();
+            } else if (position == 2) {
+                return new TutorialSetupFragment();
             } else {
                 return TutorialContentFragment
                         .newInstance(mImageAlignment[position - 1],
@@ -191,7 +195,7 @@ public class TutorialActivity extends FragmentActivity {
 
         @Override
         public int getCount() {
-            return mImageAlignment.length + 1;
+            return 3;
         }
 
         @Override

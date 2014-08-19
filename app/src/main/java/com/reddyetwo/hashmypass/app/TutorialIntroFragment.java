@@ -1,0 +1,117 @@
+package com.reddyetwo.hashmypass.app;
+
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.reddyetwo.hashmypass.app.data.PasswordType;
+import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
+import com.reddyetwo.hashmypass.app.util.Constants;
+
+import java.util.Random;
+
+public class TutorialIntroFragment extends Fragment {
+
+    private ViewGroup mRootView;
+    private ImageView mIcMasterKeyView;
+    private TextView mWebsiteTextView;
+    private TextView mWebsitePasswordView;
+
+    private AnimatorSet mAnimatorSet;
+
+    private Random mRandom;
+    private String mWebsite;
+
+    private final static String[] WEBSITES =
+            {"amazon", "google", "ebay", "bing", "yahoo", "reddit", "paypal",
+                    "spotify", "facebook", "twitter", "flickr", "steam",
+                    "feedly", "foursquare", "apple", "xda-developers",
+                    "bugzilla", "ssh", "wopr", "skynet"};
+    private final static char[] MASTER_KEY = {'m', 'a', 's', 't', 'e', 'r'};
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        mRootView = (ViewGroup) inflater
+                .inflate(R.layout.fragment_tutorial_intro, container, false);
+        mIcMasterKeyView =
+                (ImageView) mRootView.findViewById(R.id.ic_master_key);
+        mWebsiteTextView = (TextView) mRootView.findViewById(R.id.website_text);
+        mWebsitePasswordView =
+                (TextView) mRootView.findViewById(R.id.website_password);
+        Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
+                Constants.FONT_MONOSPACE);
+        mWebsitePasswordView.setTypeface(tf);
+
+        mRandom = new Random();
+
+        return mRootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        startAnimation();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopAnimation();
+    }
+
+    private void startAnimation() {
+        // Load and set up individual animators
+        AnimatorSet websiteAnimator = (AnimatorSet) AnimatorInflater
+                .loadAnimator(getActivity(), R.animator.intro_website);
+        websiteAnimator.setTarget(mWebsiteTextView);
+        AnimatorSet masterKeyAnimator = (AnimatorSet) AnimatorInflater
+                .loadAnimator(getActivity(), R.animator.intro_master_key);
+        masterKeyAnimator.setTarget(mIcMasterKeyView);
+        AnimatorSet passwordAnimator = (AnimatorSet) AnimatorInflater
+                .loadAnimator(getActivity(), R.animator.intro_password);
+        passwordAnimator.setTarget(mWebsitePasswordView);
+
+        // Prepare set with all animators, set up repeating and random data
+        mAnimatorSet = new AnimatorSet();
+        mAnimatorSet.playTogether(websiteAnimator, masterKeyAnimator,
+                passwordAnimator);
+        mAnimatorSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                generateRandomData();
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mAnimatorSet.start();
+            }
+        });
+
+        mAnimatorSet.start();
+    }
+
+    private void stopAnimation() {
+        mAnimatorSet.cancel();
+        mAnimatorSet = null;
+    }
+
+    private void generateRandomData() {
+        mWebsite = WEBSITES[mRandom.nextInt(WEBSITES.length)];
+        mWebsiteTextView.setText(mWebsite);
+        String password = PasswordHasher
+                .hashPassword(mWebsite, MASTER_KEY, "private", 8,
+                        PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
+        mWebsitePasswordView.setText(password);
+    }
+
+}

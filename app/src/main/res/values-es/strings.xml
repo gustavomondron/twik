@@ -109,6 +109,21 @@
         Predeterminado
     </item>
 
+    <string name="tutorial_intro_header">Contraseñas más seguras</string>
+    <string name="tutorial_intro_content">Cuando quieras generar una
+        contraseña para un sitio web tendrás que introducir tu clave
+        maestra, que sólo tu conoces. Hash my pass generará una
+        contraseña única para el sitio.</string>
+    <string name="tutorial_setup_header">Ya falta poco</string>
+    <string name="tutorial_setup_content_1">Necesitarás un par de cosas
+        antes de empezar:</string>
+    <string name="tutorial_setup_content_2"><ul><li>Una contraseña maestra. ¡No la
+        escribas ahora! Tan sólo elige una y recuérdala.</li></ul></string>
+    <string name="tutorial_setup_content_3"><ul><li>Una clave privada. Esta
+        clave se guardará en tu dispositivo.</li></ul></string>
+    <string name="tutorial_setup_sample_master_key">p.ej. "gato lavadora radio"</string>
+    <string name="tutorial_setup_sample_private_key">p.ej. "ASDF-QWER-DFGH"</string>
+
     <!-- Notices -->
     <string name="no_tags">¡No tienes sitios web!</string>
     <string name="copied_to_clipboard">Contraseña del sitio web copiada al

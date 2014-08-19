@@ -99,6 +99,21 @@
         You have to choose and remember a master key too,
         but you don\'t have to fill it out right now.</string>
 
+    <string name="tutorial_intro_header">Safer passwords</string>
+    <string name="tutorial_intro_content">To generate a password for a website
+        you have to enter your master key, that only you know. Hash my pass will
+        then generate a unique password for the site.</string>
+    <string name="tutorial_setup_header">Almost there</string>
+    <string name="tutorial_setup_content_1">You need a couple of
+        things before starting:</string>
+    <string name="tutorial_setup_content_2">• A master key. Don\'t type it now!
+        Just choose and remember one.</string>
+    <string name="tutorial_setup_content_3">• A private key. This key will
+        be stored in your device.</string>
+    <string name="tutorial_setup_sample_master_key">e.g. "correct horse
+        battery staple"</string>
+    <string name="tutorial_setup_sample_private_key">e.g. "ASDF-QWER-DFGH"</string>
+
     <item name="profile_default_name" format="string" type="string">Default
     </item>
 
