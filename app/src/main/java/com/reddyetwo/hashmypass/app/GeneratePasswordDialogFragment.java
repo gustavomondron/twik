@@ -90,7 +90,8 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         // This introduces a bug: the dialog is dismissed, but at least no FC
         setRetainInstance(true);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),
+                R.style.AlertDialog_Hashmypass);
 
         // Inflate the layout
         LayoutInflater inflater = getActivity().getLayoutInflater();
