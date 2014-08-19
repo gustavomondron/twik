@@ -32,7 +32,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -60,7 +59,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     private GeneratePasswordDialogListener mListener;
 
     private TextView mFaviconTextView;
-    private AutoCompleteTextView mTagEditAutoCompleteTextView;
+    private EditText mTagEditText;
     private EditText mMasterKeyEditText;
     private TextView mPasswordTextView;
     private ImageView mTagSettingsImageView;
@@ -122,8 +121,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         mFaviconTextView = (TextView) view.findViewById(R.id.tag_favicon);
         FaviconLoader.setAsBackground(getActivity(), mFaviconTextView, mTag);
 
-        mTagEditAutoCompleteTextView =
-                (AutoCompleteTextView) view.findViewById(R.id.tag_text);
+        mTagEditText = (EditText) view.findViewById(R.id.tag_text);
 
         mMasterKeyEditText = (EditText) view.findViewById(R.id.master_key_text);
 
@@ -132,7 +130,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
             // Tag name already populated
             mMasterKeyEditText.requestFocus();
         } else {
-            mTagEditAutoCompleteTextView.requestFocus();
+            mTagEditText.requestFocus();
         }
 
         mPasswordTextView = (TextView) view.findViewById(R.id.website_password);
@@ -169,11 +167,11 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         mIdenticonImageView = (ImageView) view.findViewById(R.id.identicon);
 
         PasswordTextWatcher watcher = new PasswordTextWatcher();
-        mTagEditAutoCompleteTextView.addTextChangedListener(watcher);
+        mTagEditText.addTextChangedListener(watcher);
         mMasterKeyEditText.addTextChangedListener(watcher);
 
         // Populate fields
-        mTagEditAutoCompleteTextView.setText(mTag.getName());
+        mTagEditText.setText(mTag.getName());
 
         mCacheMasterKey =
                 Preferences.getRememberMasterKeyMins(getActivity()) > 0;
@@ -184,8 +182,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         }
 
         // Manage keyboard status
-        if (mMasterKeyEditText.length() == 0 ||
-                mTagEditAutoCompleteTextView.length() == 0) {
+        if (mMasterKeyEditText.length() == 0 || mTagEditText.length() == 0) {
             showKeyboard();
         }
 
@@ -215,13 +212,11 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getActivity()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(
-                mTagEditAutoCompleteTextView.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(mTagEditText.getWindowToken(), 0);
     }
 
     private void updatePassword() {
-        if (mTagEditAutoCompleteTextView.length() > 0 &&
-                mMasterKeyEditText.length() > 0) {
+        if (mTagEditText.length() > 0 && mMasterKeyEditText.length() > 0) {
             Profile profile =
                     ProfileSettings.getProfile(getActivity(), mProfileId);
             String password = PasswordHasher.hashPassword(mTag.getName(),
@@ -261,7 +256,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
             AlertDialog dialog = (AlertDialog) getDialog();
 
             // Check whether the tag already exists
-            String tagName = mTagEditAutoCompleteTextView.getText().toString();
+            String tagName = mTagEditText.getText().toString();
             if (dialog != null) {
                 Button okButton =
                         dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
@@ -273,11 +268,11 @@ public class GeneratePasswordDialogFragment extends DialogFragment
                     if (storedTag.getId() != Tag.NO_ID &&
                             storedTag.getId() != mTag.getId()) {
                         // Show error: the tag already exists
-                        mTagEditAutoCompleteTextView
+                        mTagEditText
                                 .setError(getString(R.string.error_tag_exists));
                         okButton.setEnabled(false);
                     } else {
-                        mTagEditAutoCompleteTextView.setError(null);
+                        mTagEditText.setError(null);
                         okButton.setEnabled(true);
                     }
                 }
@@ -290,7 +285,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
             }
 
             // Update favicon
-            mTag.setName(mTagEditAutoCompleteTextView.getText().toString());
+            mTag.setName(mTagEditText.getText().toString());
             if (mTag.getSite() == null) {
                 FaviconLoader
                         .setAsBackground(getActivity(), mFaviconTextView, mTag);
@@ -313,7 +308,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
             updatePassword();
 
             // Update tag settings icon visibility
-            if (mTagEditAutoCompleteTextView.getText().length() > 0) {
+            if (mTagEditText.getText().length() > 0) {
                 mTagSettingsImageView.setVisibility(View.VISIBLE);
                 mTagSettingsImageView.setEnabled(true);
             } else {
