@@ -240,9 +240,6 @@ public class BrowserIntegrationActivity extends Activity
             }
         }
 
-        // Update tag name
-        mTag.setName(mTagEditText.getText().toString());
-
         // Increase hash counter
         mTag.setHashCounter(mTag.getHashCounter() + 1);
 
@@ -412,6 +409,7 @@ public class BrowserIntegrationActivity extends Activity
         if (mProfileId != 0 && mTagEditText.length() > 0 &&
                 mMasterKeyEditText.length() > 0) {
             Profile profile = ProfileSettings.getProfile(this, mProfileId);
+            mTag.setName(mTagEditText.getText().toString());
             String password = PasswordHasher.hashPassword(mTag.getName(),
                     SecurePassword.getPassword(mMasterKeyEditText.getText()),
                     profile.getPrivateKey(), mTag.getPasswordLength(),
