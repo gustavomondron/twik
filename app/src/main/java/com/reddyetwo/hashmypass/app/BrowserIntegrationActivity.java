@@ -259,8 +259,19 @@ public class BrowserIntegrationActivity extends Activity
         /* If the tag is not already stored in the database,
         save the current settings */
         mTag.setSite(mSite);
+
         if (mTag.getId() == Tag.NO_ID) {
-            TagSettings.insertTag(this, mTag);
+            // We have to check whether we are overwriting an existing tag
+            Tag storedTag = TagSettings.getTag(this, mProfileId,
+                    mTag.getName());
+            if (storedTag.getId() != Tag.NO_ID) {
+                // Overwrite current tag, using its hash counter
+                mTag.setHashCounter(storedTag.getHashCounter() + 1);
+                mTag.setId(storedTag.getId());
+                TagSettings.updateTag(this, mTag);
+            } else {
+                TagSettings.insertTag(this, mTag);
+            }
         } else {
             // Update the site-tag association
             TagSettings.updateTag(this, mTag);
