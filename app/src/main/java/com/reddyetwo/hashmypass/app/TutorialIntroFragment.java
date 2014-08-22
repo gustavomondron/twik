@@ -93,7 +93,9 @@ public class TutorialIntroFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                mAnimatorSet.start();
+                if (mAnimatorSet != null) {
+                    mAnimatorSet.start();
+                }
             }
         });
 
