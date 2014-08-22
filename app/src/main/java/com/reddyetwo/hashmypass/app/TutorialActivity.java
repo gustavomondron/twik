@@ -40,37 +40,6 @@ public class TutorialActivity extends FragmentActivity {
     private Button mStartButton;
     private MeasureViewPager mPager;
 
-    // bottom center center bottom bottom
-    private static final Integer[] imageAlignment =
-            new Integer[]{TutorialContentFragment.ALIGN_BOTTOM,
-                    TutorialContentFragment.ALIGN_CENTER,
-                    TutorialContentFragment.ALIGN_CENTER,
-                    TutorialContentFragment.ALIGN_BOTTOM,
-                    TutorialContentFragment.ALIGN_BOTTOM,
-                    TutorialContentFragment.ALIGN_BOTTOM};
-
-    private static final Integer[] imageResIds =
-            new Integer[]{R.drawable.tutorial_main_activity, R.drawable.shield,
-                    R.drawable.lock, R.drawable.tutorial_profiles,
-                    R.drawable.tutorial_tag_settings,
-                    R.drawable.tutorial_browser_dialog};
-
-    private static final Integer[] headerResIds =
-            new Integer[]{R.string.tutorial_one_password_header,
-                    R.string.tutorial_not_a_password_store_header,
-                    R.string.tutorial_private_key_header,
-                    R.string.tutorial_profiles_header,
-                    R.string.tutorial_tag_settings_header,
-                    R.string.tutorial_browser_dialog_header};
-
-    private static final Integer[] contentResIds =
-            new Integer[]{R.string.tutorial_one_password_content,
-                    R.string.tutorial_not_a_password_store_content,
-                    R.string.tutorial_private_key_content,
-                    R.string.tutorial_profiles_content,
-                    R.string.tutorial_tag_settings_content,
-                    R.string.tutorial_browser_dialog_content};
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,9 +47,7 @@ public class TutorialActivity extends FragmentActivity {
         setFinishOnTouchOutside(false);
 
         TutorialPagerAdapter pagerAdapter =
-                new TutorialPagerAdapter(getSupportFragmentManager(),
-                        imageAlignment, imageResIds, headerResIds,
-                        contentResIds);
+                new TutorialPagerAdapter(getSupportFragmentManager());
 
         mPager = (MeasureViewPager) findViewById(R.id.pager);
         mPager.setmOnMeasureListener(pagerAdapter);
@@ -137,24 +104,12 @@ public class TutorialActivity extends FragmentActivity {
         private View mProgressPrevView;
         private View mProgressCurrentView;
         private View mProgressNextView;
-        private Integer[] mImageAlignment;
-        private Integer[] mImageResIds;
-        private Integer[] mHeaderResIds;
-        private Integer[] mContentResIds;
 
-        public TutorialPagerAdapter(FragmentManager fm,
-                                    Integer[] imageAlignment,
-                                    Integer[] imageResIds,
-                                    Integer[] headerResIds,
-                                    Integer[] contentResIds) {
+        public TutorialPagerAdapter(FragmentManager fm) {
             super(fm);
             mProgressPrevView = findViewById(R.id.pager_progress_prev);
             mProgressCurrentView = findViewById(R.id.pager_progress_current);
             mProgressNextView = findViewById(R.id.pager_progress_next);
-            mImageAlignment = imageAlignment;
-            mImageResIds = imageResIds;
-            mHeaderResIds = headerResIds;
-            mContentResIds = contentResIds;
         }
 
         private void updateIndicators(int position) {
@@ -171,8 +126,8 @@ public class TutorialActivity extends FragmentActivity {
 
             ViewGroup.LayoutParams nextViewParams =
                     mProgressNextView.getLayoutParams();
-            nextViewParams.width = (int) Math.ceil(mIndicatorBaseWidth *
-                    (getCount() - 1 - position));
+            nextViewParams.width = (int) Math
+                    .ceil(mIndicatorBaseWidth * (getCount() - 1 - position));
             mProgressNextView.setLayoutParams(nextViewParams);
         }
 
@@ -181,15 +136,11 @@ public class TutorialActivity extends FragmentActivity {
             if (position == 0) {
                 return new TutorialSplashFragment();
             } else if (position == 1) {
-                    return new TutorialIntroFragment();
+                return new TutorialIntroFragment();
             } else if (position == 2) {
                 return new TutorialSetupFragment();
             } else {
-                return TutorialContentFragment
-                        .newInstance(mImageAlignment[position - 1],
-                                mImageResIds[position - 1],
-                                mHeaderResIds[position - 1],
-                                mContentResIds[position - 1]);
+                return null;
             }
         }
 
