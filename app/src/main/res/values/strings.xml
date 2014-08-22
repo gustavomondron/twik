@@ -106,10 +106,11 @@
     <string name="tutorial_setup_header">Almost there</string>
     <string name="tutorial_setup_content_1">You need a couple of
         things before starting:</string>
-    <string name="tutorial_setup_content_2">• A master key. Don\'t type it now!
-        Just choose and remember one.</string>
-    <string name="tutorial_setup_content_3">• A private key. This key will
-        be stored in your device.</string>
+    <string name="tutorial_setup_content_2"><ul><li>A master key. Don\'t type it
+        now!
+        Just choose and remember one.</li></ul></string>
+    <string name="tutorial_setup_content_3"><ul><li>A private key. This key will
+        be stored in your device.</li></ul></string>
     <string name="tutorial_setup_sample_master_key">e.g. "correct horse
         battery staple"</string>
     <string name="tutorial_setup_sample_private_key">e.g. "ASDF-QWER-DFGH"</string>
