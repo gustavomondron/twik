@@ -127,6 +127,15 @@ public class MainActivity extends Activity
     @Override
     protected void onResume() {
         super.onResume();
+
+        // If we have just dismissed the application, close the application
+        // because the user wants to exit
+        if (HashMyPassApplication.getTutorialDismissed()) {
+            HashMyPassApplication.setTutorialDismissed(false);
+            finish();
+            return;
+        }
+
         if (!showTutorial()) {
             populateActionBarSpinner();
             populateTagList();
@@ -330,21 +339,9 @@ public class MainActivity extends Activity
 
     private boolean showTutorial() {
         // Check if tutorial should be shown
-        SharedPreferences preferences =
-                getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
-        boolean showTutorial = preferences
-                .getBoolean(Preferences.PREFS_KEY_SHOW_TUTORIAL, getResources()
-                        .getBoolean(R.bool.settings_default_show_tutorial));
-        if (showTutorial) {
+        if (ProfileSettings.getList(this).size() == 0) {
             Intent intent = new Intent(this, TutorialActivity.class);
             startActivity(intent);
-            return true;
-        } else if (ProfileSettings.getList(this).size() == 0) {
-            // Check if a profile is already defined
-            mAddDefaultProfileDialog = new AddDefaultProfileDialog();
-            mAddDefaultProfileDialog.setOnProfileAddedListener(this);
-            mAddDefaultProfileDialog
-                    .show(getFragmentManager(), "addDefaultProfile");
             return true;
         } else {
             return false;

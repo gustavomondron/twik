@@ -15,24 +15,23 @@ public class TutorialSetupFragment extends Fragment {
 
     private ViewGroup mRootView;
     private EditText mPrivateKeyText;
-    private StartButtonManager mStartButtonManager;
+    private PrivateKeyManager mPrivateKeyManager;
 
-    public interface StartButtonManager {
-        public void setEnabled(boolean enabled);
+    public interface PrivateKeyManager {
+        public void setPrivateKey(String privateKey);
     }
 
-    public void setStartButtonManager(StartButtonManager startButtonManager) {
-        mStartButtonManager = startButtonManager;
+    public void setPrivateKeyManager(PrivateKeyManager privateKeyManager) {
+        mPrivateKeyManager = privateKeyManager;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRootView = (ViewGroup) inflater
-                .inflate(R.layout.fragment_tutorial_setup, container,
-                        false);
-        mPrivateKeyText = (EditText) mRootView.findViewById(R.id
-                .private_key_text);
+                .inflate(R.layout.fragment_tutorial_setup, container, false);
+        mPrivateKeyText =
+                (EditText) mRootView.findViewById(R.id.private_key_text);
         mPrivateKeyText.setText(RandomPrivateKeyGenerator.generate());
         mPrivateKeyText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -47,10 +46,10 @@ public class TutorialSetupFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                mStartButtonManager.setEnabled(mPrivateKeyText.length() > 0);
+                mPrivateKeyManager
+                        .setPrivateKey(mPrivateKeyText.getText().toString());
             }
         });
         return mRootView;
     }
-
 }

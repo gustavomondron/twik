@@ -16,6 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with Hash my pass.  If not, see <http://www.gnu.org/licenses/>.
  */
+/*
+ * Copyright 2014 Red Dye No. 2
+ *
+ * This file is part of Hash My pass.
+ *
+ * Hash my pass is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Hash my pass is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Hash my pass.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package com.reddyetwo.hashmypass.app;
 
@@ -30,16 +48,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.reddyetwo.hashmypass.app.data.PasswordLength;
+import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Preferences;
+import com.reddyetwo.hashmypass.app.data.Profile;
+import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 
 public class TutorialActivity extends FragmentActivity {
 
-    private boolean mTutorialCompleted = false;
     private Button mSkipButton;
     private Button mNextButton;
     private Button mStartButton;
     private MeasureViewPager mPager;
-    private TutorialSetupFragment.StartButtonManager mStartButtonManager;
+    private TutorialSetupFragment.PrivateKeyManager mPrivateKeyManager;
+    private String mPrivateKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +88,27 @@ public class TutorialActivity extends FragmentActivity {
             }
         });
 
-        TutorialFinishedListener tutorialFinishedListener =
-                new TutorialFinishedListener();
-        mSkipButton.setOnClickListener(tutorialFinishedListener);
-        mStartButton.setOnClickListener(tutorialFinishedListener);
+        mSkipButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Go to last page
+                mPager.setCurrentItem(2);
+            }
+        });
+
+        mStartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Save profile and show main activity
+                Profile profile = new Profile(-1,
+                        getString(R.string.profile_default_name), mPrivateKey,
+                        PasswordLength.DEFAULT,
+                        PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
+                ProfileSettings.insertProfile(TutorialActivity.this, profile);
+                HashMyPassApplication.setTutorialDismissed(false);
+                finish();
+            }
+        });
 
         // Restore the current page
         SharedPreferences preferences =
@@ -78,10 +117,10 @@ public class TutorialActivity extends FragmentActivity {
                 preferences.getInt(Preferences.PREFS_KEY_TUTORIAL_PAGE, 0);
         mPager.setCurrentItem(position);
 
-        mStartButtonManager = new TutorialSetupFragment.StartButtonManager() {
+        mPrivateKeyManager = new TutorialSetupFragment.PrivateKeyManager() {
             @Override
-            public void setEnabled(boolean enabled) {
-                mStartButton.setEnabled(enabled);
+            public void setPrivateKey(String privateKeyManager) {
+                mPrivateKey = privateKeyManager;
             }
         };
     }
@@ -89,7 +128,7 @@ public class TutorialActivity extends FragmentActivity {
     @Override
     public void onBackPressed() {
         if (mPager.getCurrentItem() == 0) {
-            disableTutorial();
+            HashMyPassApplication.setTutorialDismissed(true);
             super.onBackPressed();
         } else {
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
@@ -99,9 +138,7 @@ public class TutorialActivity extends FragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (!mTutorialCompleted) {
-            saveTutorialPage(mPager.getCurrentItem());
-        }
+        saveTutorialPage(mPager.getCurrentItem());
     }
 
     private class TutorialPagerAdapter extends FragmentStatePagerAdapter
@@ -147,7 +184,7 @@ public class TutorialActivity extends FragmentActivity {
                 return new TutorialIntroFragment();
             } else if (position == 2) {
                 TutorialSetupFragment fragment = new TutorialSetupFragment();
-                fragment.setStartButtonManager(mStartButtonManager);
+                fragment.setPrivateKeyManager(mPrivateKeyManager);
                 return fragment;
             } else {
                 return null;
@@ -188,26 +225,6 @@ public class TutorialActivity extends FragmentActivity {
         @Override
         public void onPageScrollStateChanged(int state) {
 
-        }
-    }
-
-    private void disableTutorial() {
-        SharedPreferences preferences =
-                getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(Preferences.PREFS_KEY_SHOW_TUTORIAL, false);
-        editor.commit();
-    }
-
-    private class TutorialFinishedListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            disableTutorial();
-            // The next time the tutorial is shown, open the first page
-            saveTutorialPage(0);
-            mTutorialCompleted = true;
-            finish();
         }
     }
 

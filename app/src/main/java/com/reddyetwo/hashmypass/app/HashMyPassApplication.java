@@ -24,6 +24,15 @@ import android.app.Application;
 public class HashMyPassApplication extends Application {
 
     private static char[] mCachedMasterKey = new char[]{};
+    private static boolean mTutorialDismissed = false;
+
+    public static void setTutorialDismissed(boolean tutorialDismissed) {
+        mTutorialDismissed = tutorialDismissed;
+    }
+
+    public static boolean getTutorialDismissed() {
+        return mTutorialDismissed;
+    }
 
     public static char[] getCachedMasterKey() {
         return mCachedMasterKey;
