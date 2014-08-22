@@ -39,6 +39,7 @@ public class TutorialActivity extends FragmentActivity {
     private Button mNextButton;
     private Button mStartButton;
     private MeasureViewPager mPager;
+    private TutorialSetupFragment.StartButtonManager mStartButtonManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +77,13 @@ public class TutorialActivity extends FragmentActivity {
         int position =
                 preferences.getInt(Preferences.PREFS_KEY_TUTORIAL_PAGE, 0);
         mPager.setCurrentItem(position);
+
+        mStartButtonManager = new TutorialSetupFragment.StartButtonManager() {
+            @Override
+            public void setEnabled(boolean enabled) {
+                mStartButton.setEnabled(enabled);
+            }
+        };
     }
 
     @Override
@@ -138,7 +146,9 @@ public class TutorialActivity extends FragmentActivity {
             } else if (position == 1) {
                 return new TutorialIntroFragment();
             } else if (position == 2) {
-                return new TutorialSetupFragment();
+                TutorialSetupFragment fragment = new TutorialSetupFragment();
+                fragment.setStartButtonManager(mStartButtonManager);
+                return fragment;
             } else {
                 return null;
             }

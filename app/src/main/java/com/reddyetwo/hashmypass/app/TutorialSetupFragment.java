@@ -15,6 +15,15 @@ public class TutorialSetupFragment extends Fragment {
 
     private ViewGroup mRootView;
     private EditText mPrivateKeyText;
+    private StartButtonManager mStartButtonManager;
+
+    public interface StartButtonManager {
+        public void setEnabled(boolean enabled);
+    }
+
+    public void setStartButtonManager(StartButtonManager startButtonManager) {
+        mStartButtonManager = startButtonManager;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,8 +47,7 @@ public class TutorialSetupFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                boolean enableButton = mPrivateKeyText.getText().toString()
-                        .length() > 0;
+                mStartButtonManager.setEnabled(mPrivateKeyText.length() > 0);
             }
         });
         return mRootView;
