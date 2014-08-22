@@ -94,7 +94,8 @@ public class MainActivity extends Activity
         mTagRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         Fab mFab = (Fab) findViewById(R.id.fabbutton);
-        mFab.setFabColor(getResources().getColor(R.color.hashmypass_main));
+        mFab.setFabColor(
+                getResources().getColor(R.color.hashmypass_complementary));
         mFab.setFabDrawable(
                 getResources().getDrawable(R.drawable.ic_action_add));
         mFab.setOnClickListener(new View.OnClickListener() {
