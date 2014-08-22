@@ -51,7 +51,6 @@ public class TutorialSetupFragment extends Fragment {
                 .inflate(R.layout.fragment_tutorial_setup, container, false);
         mPrivateKeyText =
                 (EditText) mRootView.findViewById(R.id.private_key_text);
-        mPrivateKeyText.setText(RandomPrivateKeyGenerator.generate());
         mPrivateKeyText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
@@ -69,6 +68,7 @@ public class TutorialSetupFragment extends Fragment {
                         .setPrivateKey(mPrivateKeyText.getText().toString());
             }
         });
+        mPrivateKeyText.setText(RandomPrivateKeyGenerator.generate());
         return mRootView;
     }
 }
