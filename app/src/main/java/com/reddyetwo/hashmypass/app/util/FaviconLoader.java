@@ -151,6 +151,7 @@ public class FaviconLoader {
             public void onPageFinished(WebView view, String url) {
                 handler.removeCallbacks(timeoutRunnable);
                 loadFavicon(mTouchIconUrlList);
+                view.clearCache(true);
                 super.onPageFinished(view, url);
             }
         });
