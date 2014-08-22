@@ -54,7 +54,7 @@ import java.util.List;
 
 
 public class MainActivity extends Activity
-        implements AddDefaultProfileDialog.OnProfileAddedListener,
+        implements
         GeneratePasswordDialogFragment.GeneratePasswordDialogListener {
 
     // Constants
@@ -73,7 +73,6 @@ public class MainActivity extends Activity
     private boolean mOrientationHasChanged;
 
     private RecyclerView mTagRecyclerView;
-    private AddDefaultProfileDialog mAddDefaultProfileDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,14 +162,6 @@ public class MainActivity extends Activity
     @Override
     protected void onPause() {
         super.onPause();
-        /* Dismiss add default profile dialog in the case that it is shown,
-        to prevent opening multiple dialogs simultaneously.
-         */
-        if (mAddDefaultProfileDialog != null) {
-            mAddDefaultProfileDialog.dismiss();
-            mAddDefaultProfileDialog = null;
-        }
-
     }
 
     @Override
@@ -307,19 +298,6 @@ public class MainActivity extends Activity
             position = position % profiles.size();
             actionBar.setSelectedNavigationItem(position);
         }
-    }
-
-    @Override
-    public void onProfileAdded() {
-        // Refresh the action bar spinner
-        populateActionBarSpinner();
-        populateTagList();
-    }
-
-    @Override
-    public void onCanceled() {
-        // You didn't add the profile! Nothing to do here!
-        finish();
     }
 
     private void updateLastProfile() {
