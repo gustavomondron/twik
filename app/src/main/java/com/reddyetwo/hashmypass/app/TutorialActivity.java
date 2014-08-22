@@ -103,6 +103,7 @@ public class TutorialActivity extends FragmentActivity {
             @Override
             public void setPrivateKey(String privateKeyManager) {
                 mPrivateKey = privateKeyManager;
+                mStartButton.setEnabled(mPrivateKey.length() > 0);
             }
         };
     }
