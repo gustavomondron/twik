@@ -63,52 +63,6 @@
     <!-- Tutorial -->
     <string name="tutorial_splash_subtitle">Una contraseña diferente
         para cada sitio.\nSin almacenar contraseñas.</string>
-    <string name="tutorial_one_password_header">Una contraseña para
-       dominarlas a todas</string>
-    <string name="tutorial_one_password_content">Sólo tienes que
-        recordar una contraseña maestra. A partir de ella,
-        se genera una contraseña diferente para cada sitio web.</string>
-    <string name="tutorial_not_a_password_store_header">
-        Más seguro que un almacén de contraseñas
-    </string>
-    <string name="tutorial_not_a_password_store_content">
-        Las contraseñas nunca se almacenan, así que no pueden ser robadas. Se
-        generan cada vez usando un algoritmo de cifrado seguro.
-    </string>
-    <string name="tutorial_private_key_header">A prueba de bombas</string>
-    <string name="tutorial_private_key_content">Tus contraseñas se generan
-        usando también una clave privada, que se almacena en tu dispositivo.
-        Sin ella, nadie podrá generar tus contraseñas aunque conozca tu
-        contraseña maestra.</string>
-    <string name="tutorial_profiles_header">Úsalo en cada faceta de tu
-        vida</string>
-    <string name="tutorial_profiles_content">Puedes definir múltiples
-        perfiles. Por ejemplo, uno personal y otro para el trabajo, que
-        puedes compartir con tus compañeros. Cada perfil tiene su propia
-        clave privada y sus preferencias.
-    </string>
-    <string name="tutorial_tag_settings_header">Seguro pero flexible</string>
-    <string name="tutorial_tag_settings_content">Algunas webs tienen
-        sus requisitos, como una longitud de contraseña concreta.
-        ¡No hay problema! Puedes definir ajustes específicos para estos
-        sitios. Hash my pass los recordará.</string>
-    <string name="tutorial_browser_dialog_header">Inicia sesión
-        cómodamente mientras navegas</string>
-    <string name="tutorial_browser_dialog_content">Comparte la página con
-        Hash my pass desde tu navegador favorito. Obtendrás la contraseña del
-        sitio web en un abrir y cerrar de ojos.</string>
-    <string name="tutorial_first_profile">Antes de empezar, crearemos tu
-        primer perfil de Hash my pass y elegiremos una clave privada. Me he
-        tomado la libertad de generarte una aleatoriamente, pero puedes usar
-        una diferente si quieres.</string>
-    <string name="tutorial_first_profile_master_key">No tienes que recordar
-        esta clave, ¡sólo asegúrate de que no la pierdes! También tienes que
-        elegir y recordar una contraseña maestra, pero no tienes que
-        escribirla ahora.</string>
-    <item name="profile_default_name" format="string" type="string">
-        Predeterminado
-    </item>
-
     <string name="tutorial_intro_header">Contraseñas más seguras</string>
     <string name="tutorial_intro_content">Cuando quieras generar una
         contraseña para un sitio web tendrás que introducir tu clave

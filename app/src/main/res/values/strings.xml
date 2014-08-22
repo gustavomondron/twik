@@ -61,44 +61,6 @@
     <!-- Tutorial -->
     <string name="tutorial_splash_subtitle">A different password for each site.
      \nNo passwords stored.</string>
-    <string name="tutorial_one_password_header">One password to rule
-        them all</string>
-    <string name="tutorial_one_password_content">You just have to
-        remember a master key. Using it, a different password is
-        generated for each website.</string>
-    <string name="tutorial_not_a_password_store_header">It\'s safer than a password store</string>
-    <string name="tutorial_not_a_password_store_content">Passwords are never stored, so they can\'t be stolen. They are
-        generated each time using a secure encryption algorithm.</string>
-    <string name="tutorial_private_key_header">Bulletproof</string>
-    <string name="tutorial_private_key_content">Your passwords are generated
-        using also a private key, which is stored in the device.
-        An attacker would need both your master and private keys to generate
-        your passwords.</string>
-    <string name="tutorial_profiles_header">Use it in every facet of
-        your life</string>
-    <string name="tutorial_profiles_content">You can define multiple
-        profiles. For example, a personal profile and a work profile, which
-        you can share with your co-workers.
-        Each profile has its own private key and settings.</string>
-    <string name="tutorial_tag_settings_header">Flexibility is my
-        middle name</string>
-    <string name="tutorial_tag_settings_content">Some websites have specific
-        requirements, like an specific password length.
-        No problem! You can specify different settings for
-        those websites, and Hash my pass will remember them.</string>
-    <string name="tutorial_browser_dialog_header">Login made easy</string>
-    <string name="tutorial_browser_dialog_content">When using your
-        favourite browser, share the page with Hash my Pass. You\'ll
-        generate the website password in the blink of an eye.</string>
-    <string name="tutorial_first_profile">First of all, we\'ll create your
-        first profile and a private key. I have taken the
-        liberty to generate a random one for you, but you can use a different
-        one if you prefer.</string>
-    <string name="tutorial_first_profile_master_key">You don\'t have
-        to remember this key, just make sure that you don\'t lose it!
-        You have to choose and remember a master key too,
-        but you don\'t have to fill it out right now.</string>
-
     <string name="tutorial_intro_header">Safer passwords</string>
     <string name="tutorial_intro_content">To generate a password for a website
         you have to enter your master key, that only you know. Hash my pass will
