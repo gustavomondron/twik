@@ -260,20 +260,29 @@ public class BrowserIntegrationActivity extends Activity
         save the current settings */
         mTag.setSite(mSite);
 
-        if (mTag.getId() == Tag.NO_ID) {
-            // We have to check whether we are overwriting an existing tag
-            Tag storedTag = TagSettings.getTag(this, mProfileId,
-                    mTag.getName());
-            if (storedTag.getId() != Tag.NO_ID) {
-                // Overwrite current tag, using its hash counter
-                mTag.setHashCounter(storedTag.getHashCounter() + 1);
-                mTag.setId(storedTag.getId());
-                TagSettings.updateTag(this, mTag);
-            } else {
+        // We have to check whether we are overwriting an existing tag
+        Tag storedTag = TagSettings.getTag(this, mProfileId, mTag.getName());
+        if (storedTag.getId() == Tag.NO_ID) {
+            // Not overwriting
+            if (mTag.getId() == Tag.NO_ID) {
                 TagSettings.insertTag(this, mTag);
+            } else {
+                TagSettings.updateTag(this, mTag);
             }
         } else {
-            // Update the site-tag association
+            /* Overwrite the current tag with the new site and the updated
+            tag settings and hash counter */
+
+            if (mTag.getId() != Tag.NO_ID) {
+                // Unlink the current tag from this site
+                Tag oldTag = TagSettings.getTag(this, mTag.getId());
+                oldTag.setSite(null);
+                TagSettings.updateTag(this, oldTag);
+            }
+
+            // Update the tag
+            mTag.setHashCounter(storedTag.getHashCounter() + 1);
+            mTag.setId(storedTag.getId());
             TagSettings.updateTag(this, mTag);
         }
 
