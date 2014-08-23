@@ -61,6 +61,7 @@ public class MainActivity extends Activity
     private static final int ID_ADD_PROFILE = -1;
     private static final int REQUEST_ADD_PROFILE = 1;
     private static final int REQUEST_CREATE_DEFAULT_PROFILE = 2;
+    private static final String FRAGMENT_GENERATE_PASSWORD = "generatePassword";
 
     // State keys
     private static final String STATE_SELECTED_PROFILE_ID = "profile_id";
@@ -122,6 +123,18 @@ public class MainActivity extends Activity
             }
         };
         mOrientationEventListener.enable();
+
+        /* If the password generation dialog fragment is shown and the
+        screen, we have to restore the listener */
+        if (savedInstanceState != null) {
+            GeneratePasswordDialogFragment fragment =
+                    (GeneratePasswordDialogFragment) getFragmentManager()
+                    .findFragmentByTag(FRAGMENT_GENERATE_PASSWORD);
+            if (fragment != null) {
+                fragment.setDialogOkListener(this);
+            }
+        }
+
     }
 
     @Override
@@ -350,7 +363,6 @@ public class MainActivity extends Activity
             TagSettings.updateTag(this, tag);
             populateTagList();
         }
-
     }
 
     private class TagAdapter extends RecyclerView.Adapter<TagListViewHolder> {
@@ -452,7 +464,7 @@ public class MainActivity extends Activity
         dialog.setProfileId(mSelectedProfileId);
         dialog.setTag(tag);
         dialog.setDialogOkListener(this);
-        dialog.show(getFragmentManager(), "generatePassword");
+        dialog.show(getFragmentManager(), FRAGMENT_GENERATE_PASSWORD);
     }
 
     public class TagListViewHolder extends RecyclerView.ViewHolder {

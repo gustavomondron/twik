@@ -55,6 +55,9 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         implements TagSettingsDialogFragment.OnTagSettingsSavedListener,
         IdenticonGenerationTask.OnIconGeneratedListener {
 
+    private static final String STATE_PROFILE_ID = "profileId";
+    private static final String STATE_TAG = "tag";
+
     private long mProfileId;
     private Tag mTag;
     private boolean mCacheMasterKey;
@@ -86,12 +89,14 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(STATE_TAG, mTag);
+        outState.putLong(STATE_PROFILE_ID, mProfileId);
+    }
+
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-        // Prevent destroy-and-create cycle on configuration change
-        // This introduces a bug: the dialog is dismissed, but at least no FC
-        setRetainInstance(true);
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),
                 R.style.AlertDialog_Hashmypass);
 
@@ -127,6 +132,12 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         mTagEditText = (EditText) view.findViewById(R.id.tag_text);
 
         mMasterKeyEditText = (EditText) view.findViewById(R.id.master_key_text);
+
+        // Restore tag if the device configuration has changed
+        if (savedInstanceState != null) {
+            mProfileId = savedInstanceState.getLong(STATE_PROFILE_ID);
+            mTag = savedInstanceState.getParcelable(STATE_TAG);
+        }
 
         // Manage focus
         if (mTag.getId() != Tag.NO_ID) {
