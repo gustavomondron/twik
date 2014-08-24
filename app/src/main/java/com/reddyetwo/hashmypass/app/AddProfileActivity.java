@@ -53,6 +53,9 @@ public class AddProfileActivity extends Activity {
     private EditText mPrivateKeyEditText;
     private Spinner mPasswordTypeSpinner;
     private Spinner mPasswordLengthSpinner;
+    private ColorPaletteView mColorPaletteView;
+
+    private int mColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +112,7 @@ public class AddProfileActivity extends Activity {
                         Integer.decode((String) mPasswordLengthSpinner
                                 .getSelectedItem()),
                         PasswordType.values()[mPasswordTypeSpinner
-                                .getSelectedItemPosition()]);
+                                .getSelectedItemPosition()], mColor);
                 long profileId = ProfileSettings
                         .insertProfile(AddProfileActivity.this, profile);
                 if (profileId == -1) {
@@ -146,13 +149,23 @@ public class AddProfileActivity extends Activity {
         mNameEditText.addTextChangedListener(profileFormWatcher);
         mPrivateKeyEditText.addTextChangedListener(profileFormWatcher);
         mPrivateKeyEditText.setText(RandomPrivateKeyGenerator.generate());
+
+        mColorPaletteView = (ColorPaletteView) findViewById(R.id.profile_color);
+        mColorPaletteView.setOnColorSelectedListener(
+                new ColorPaletteView.OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(ColorPaletteView source,
+                                                int color) {
+                        mColor = color;
+                    }
+                });
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_PASSWORD_LENGTH, Integer.parseInt(
-                        (String) mPasswordLengthSpinner.getSelectedItem()));
+                (String) mPasswordLengthSpinner.getSelectedItem()));
     }
 
     @Override

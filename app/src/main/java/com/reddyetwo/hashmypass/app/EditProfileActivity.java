@@ -51,10 +51,12 @@ public class EditProfileActivity extends Activity {
     private EditText mPrivateKeyEditText;
     private Spinner mPasswordLengthSpinner;
     private Spinner mPasswordTypeSpinner;
+    private ColorPaletteView mColorPaletteView;
 
     // Activity status
     private long mProfileId;
     private String mOriginalName;
+    private int mColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +132,7 @@ public class EditProfileActivity extends Activity {
                         Integer.decode((String) mPasswordLengthSpinner
                                 .getSelectedItem()),
                         PasswordType.values()[mPasswordTypeSpinner
-                                .getSelectedItemPosition()]);
+                                .getSelectedItemPosition()], mColor);
                 ProfileSettings
                         .updateProfile(EditProfileActivity.this, profile);
 
@@ -152,13 +154,25 @@ public class EditProfileActivity extends Activity {
                         mNameEditText, mPrivateKeyEditText, saveButton);
         mNameEditText.addTextChangedListener(profileFormWatcher);
         mPrivateKeyEditText.addTextChangedListener(profileFormWatcher);
+
+        mColorPaletteView = (ColorPaletteView) findViewById(R.id.profile_color);
+        mColorPaletteView.setSelectedColorIndex(profile.getColorIndex());
+        mColorPaletteView.setOnColorSelectedListener(
+                new ColorPaletteView.OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(ColorPaletteView source,
+                                                int color) {
+                        mColor = color;
+                    }
+                });
+
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_PASSWORD_LENGTH, Integer.parseInt(
-                        (String) mPasswordLengthSpinner.getSelectedItem()));
+                (String) mPasswordLengthSpinner.getSelectedItem()));
     }
 
     @Override

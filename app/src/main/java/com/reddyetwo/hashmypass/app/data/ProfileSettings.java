@@ -24,7 +24,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.ContactsContract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,8 @@ public class ProfileSettings {
                 new String[]{DataOpenHelper.COLUMN_PROFILES_NAME,
                         DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY,
                         DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH,
-                        DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE},
+                        DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE,
+                        DataOpenHelper.COLUMN_PROFILES_COLOR_INDEX},
                 DataOpenHelper.COLUMN_ID + "=" + profileId, null, null, null,
                 null);
 
@@ -54,8 +54,10 @@ public class ProfileSettings {
             PasswordType passwordType = PasswordType.values()[cursor
                     .getInt(cursor.getColumnIndex(
                             DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE))];
+            int colorIndex = cursor.getInt(cursor.getColumnIndex(
+                    DataOpenHelper.COLUMN_PROFILES_COLOR_INDEX));
             profile = new Profile(profileId, name, privateKey, passwordLength,
-                    passwordType);
+                    passwordType, colorIndex);
         }
 
         db.close();
@@ -82,6 +84,8 @@ public class ProfileSettings {
                 profile.getPasswordLength());
         values.put(DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE,
                 profile.getPasswordType().ordinal());
+        values.put(DataOpenHelper.COLUMN_PROFILES_COLOR_INDEX,
+                profile.getColorIndex());
 
         long id = db.insertOrThrow(DataOpenHelper.PROFILES_TABLE_NAME, null,
                 values);
@@ -109,6 +113,8 @@ public class ProfileSettings {
                 profile.getPasswordLength());
         values.put(DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE,
                 profile.getPasswordType().ordinal());
+        values.put(DataOpenHelper.COLUMN_PROFILES_COLOR_INDEX,
+                profile.getColorIndex());
 
         boolean updated = db.update(DataOpenHelper.PROFILES_TABLE_NAME, values,
                 DataOpenHelper.COLUMN_ID + " = ?",
@@ -170,8 +176,9 @@ public class ProfileSettings {
                         DataOpenHelper.COLUMN_PROFILES_NAME,
                         DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY,
                         DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH,
-                        DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE}, null,
-                null, null, null, DataOpenHelper.COLUMN_PROFILES_NAME + " " +
+                        DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE,
+                        DataOpenHelper.COLUMN_PROFILES_COLOR_INDEX}, null, null,
+                null, null, DataOpenHelper.COLUMN_PROFILES_NAME + " " +
                         "COLLATE NOCASE");
 
         List<Profile> list = new ArrayList<Profile>();
@@ -188,8 +195,10 @@ public class ProfileSettings {
                 PasswordType passwordType = PasswordType.values()[cursor
                         .getInt(cursor.getColumnIndex(
                                 DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE))];
+                int colorIndex = cursor.getInt(cursor.getColumnIndex(
+                        DataOpenHelper.COLUMN_PROFILES_COLOR_INDEX));
                 list.add(new Profile(id, name, privateKey, passwordLength,
-                        passwordType));
+                        passwordType, colorIndex));
             } while (cursor.moveToNext());
         }
 

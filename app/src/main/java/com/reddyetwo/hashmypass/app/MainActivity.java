@@ -53,8 +53,7 @@ import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 import java.util.List;
 
 
-public class MainActivity extends Activity
-        implements
+public class MainActivity extends Activity implements
         GeneratePasswordDialogFragment.GeneratePasswordDialogListener {
 
     // Constants
@@ -73,7 +72,9 @@ public class MainActivity extends Activity
     private OrientationEventListener mOrientationEventListener;
     private boolean mOrientationHasChanged;
 
+    private int[] mColors;
     private RecyclerView mTagRecyclerView;
+    private Fab mFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,9 +94,13 @@ public class MainActivity extends Activity
         mTagRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mTagRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        Fab mFab = (Fab) findViewById(R.id.fabbutton);
-        mFab.setFabColor(
-                getResources().getColor(R.color.hashmypass_complementary));
+        mColors = getResources().getIntArray(R.array.favicon_background_colors);
+        mFab = (Fab) findViewById(R.id.fabbutton);
+        if (mSelectedProfileId != Profile.NO_ID) {
+            mFab.setFabColor(
+                    mColors[ProfileSettings.getProfile(this, mSelectedProfileId)
+                            .getColorIndex()]);
+        }
         mFab.setFabDrawable(
                 getResources().getDrawable(R.drawable.ic_action_add));
         mFab.setOnClickListener(new View.OnClickListener() {
@@ -129,7 +134,7 @@ public class MainActivity extends Activity
         if (savedInstanceState != null) {
             GeneratePasswordDialogFragment fragment =
                     (GeneratePasswordDialogFragment) getFragmentManager()
-                    .findFragmentByTag(FRAGMENT_GENERATE_PASSWORD);
+                            .findFragmentByTag(FRAGMENT_GENERATE_PASSWORD);
             if (fragment != null) {
                 fragment.setDialogOkListener(this);
             }
@@ -244,6 +249,9 @@ public class MainActivity extends Activity
                     case RESULT_OK:
                         mSelectedProfileId = data.getLongExtra(
                                 AddProfileActivity.RESULT_KEY_PROFILE_ID, 0);
+                        mFab.setFabColor(mColors[ProfileSettings
+                                .getProfile(this, mSelectedProfileId)
+                                .getColorIndex()]);
                         break;
                     default:
                 }
@@ -284,6 +292,10 @@ public class MainActivity extends Activity
                                         REQUEST_ADD_PROFILE);
                             } else {
                                 mSelectedProfileId = selectedProfile;
+                                mFab.setFabColor(mColors[ProfileSettings
+                                        .getProfile(MainActivity.this,
+                                                mSelectedProfileId)
+                                        .getColorIndex()]);
                                 populateTagList();
                             }
                             return false;

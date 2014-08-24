@@ -28,18 +28,20 @@ public class Profile {
     private String mName;
     private String mPrivateKey;
     private int mPasswordLength;
+    private int mColorIndex;
     private PasswordType mPasswordType;
 
     public Profile() {
     }
 
     public Profile(long id, String name, String privateKey, int passwordLength,
-                   PasswordType passwordType) {
+                   PasswordType passwordType, int colorIndex) {
         mId = id;
         mName = name;
         mPrivateKey = privateKey;
         mPasswordLength = passwordLength;
         mPasswordType = passwordType;
+        mColorIndex = colorIndex;
     }
 
     public long getId() {
@@ -80,5 +82,11 @@ public class Profile {
 
     public void setPasswordType(PasswordType passwordType) {
         mPasswordType = passwordType;
+    }
+
+    public int getColorIndex() { return mColorIndex; }
+
+    public void setColorIndex(int colorIndex) {
+        mColorIndex = colorIndex;
     }
 }

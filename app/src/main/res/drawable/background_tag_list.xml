@@ -22,6 +22,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/holo_light_background"
           android:state_enabled="true" android:state_pressed="false"/>
-    <item android:drawable="@color/button_text_enabled_pressed"
+    <item android:drawable="@color/list_item_pressed"
           android:state_enabled="true" android:state_pressed="true"/>
 </selector>

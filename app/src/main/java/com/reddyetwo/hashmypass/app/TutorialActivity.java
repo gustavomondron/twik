@@ -85,7 +85,7 @@ public class TutorialActivity extends FragmentActivity {
                 Profile profile = new Profile(-1,
                         getString(R.string.profile_default_name), mPrivateKey,
                         PasswordLength.DEFAULT,
-                        PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
+                        PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS, 4);
                 ProfileSettings.insertProfile(TutorialActivity.this, profile);
                 HashMyPassApplication.setTutorialDismissed(false);
                 finish();

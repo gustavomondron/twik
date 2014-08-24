@@ -58,6 +58,7 @@
     <string name="master_key">Master key</string>
     <string name="tag">Website</string>
     <string name="tag_settings">Website settings</string>
+    <string name="color">Color</string>
 
     <!-- Tutorial -->
     <string name="tutorial_splash_subtitle">A different password for each site.
@@ -115,7 +116,7 @@
     <string name="about_body">
 <![CDATA[
         <b>Twik</b><br/>
-        Version 1.2.0 beta1<br/>
+        Version 1.2.1<br/>
         Copyright \u00A9 2014 Red Dye No. 2
         <br/><br/>
         <b>Twik</b> is an application that makes it easier to generate

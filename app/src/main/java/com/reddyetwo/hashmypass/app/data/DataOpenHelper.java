@@ -27,7 +27,7 @@ public class DataOpenHelper extends SQLiteOpenHelper {
 
     // TODO Typo in the db name... we should fix it... or maybe it's too late
     private static final String DATABASE_NAME = "hassmypass.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     public static final String COLUMN_ID = "_id";
 
@@ -38,13 +38,16 @@ public class DataOpenHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PROFILES_PASSWORD_LENGTH =
             "password_length";
     public static final String COLUMN_PROFILES_PASSWORD_TYPE = "password_type";
+    public static final String COLUMN_PROFILES_COLOR_INDEX = "color_index";
     private static final String PROFILES_TABLE_CREATE =
             "CREATE TABLE " + PROFILES_TABLE_NAME + " (" +
                     COLUMN_ID + " INTEGER PRIMARY KEY, " +
                     COLUMN_PROFILES_NAME + " TEXT, " +
                     COLUMN_PROFILES_PRIVATE_KEY + " TEXT, " +
                     COLUMN_PROFILES_PASSWORD_LENGTH + " INTEGER, " +
-                    COLUMN_PROFILES_PASSWORD_TYPE + " INTEGER" +
+                    COLUMN_PROFILES_PASSWORD_TYPE + " INTEGER, " +
+                    COLUMN_PROFILES_COLOR_INDEX + " INTEGER NOT NULL DEFAULT " +
+                    "0" +
                     ");";
 
     /* Table "tags" */
@@ -75,6 +78,10 @@ public class DataOpenHelper extends SQLiteOpenHelper {
             "ALTER TABLE " + TAGS_TABLE_NAME + " ADD COLUMN " +
             COLUMN_TAGS_HASH_COUNTER + " INTEGER NOT NULL DEFAULT 0;";
 
+    private static final String PROFILES_TABLE_ADD_COLOR_INDEX_COLUMN = "" +
+            "ALTER TABLE " + PROFILES_TABLE_NAME + " ADD COLUMN " +
+            COLUMN_PROFILES_COLOR_INDEX + " INTEGER NOT NULL DEFAULT 0;";
+
     /* Table "favicons" */
     public static final String FAVICONS_TABLE_NAME = "favicons";
     public static final String COLUMN_FAVICONS_SITE = "site";
@@ -101,6 +108,8 @@ public class DataOpenHelper extends SQLiteOpenHelper {
                 db.execSQL(FAVICONS_TABLE_CREATE);
             case 2:
                 db.execSQL(TAGS_TABLE_ADD_HASH_COUNTER_COLUMN);
+            case 3:
+                db.execSQL(PROFILES_TABLE_ADD_COLOR_INDEX_COLUMN);
         }
     }
 }
