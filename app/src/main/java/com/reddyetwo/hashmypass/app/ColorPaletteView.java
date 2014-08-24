@@ -24,7 +24,6 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -34,9 +33,9 @@ public class ColorPaletteView extends View {
 
     /* Sizes (dip) */
     private static final int SIZE_BORDER_WIDTH = 2;
-    private static final int SIZE_RECTANGLE_WIDTH = 40;
+    private static final int SIZE_RECTANGLE_WIDTH = 41;
     private static final int SIZE_SPACING = 16;
-    private static final int SIZE_PADDING = 4;
+    private static final int SIZE_PADDING = 5;
 
     private int mRectangleSize;
     private int mSpacing;
@@ -73,12 +72,44 @@ public class ColorPaletteView extends View {
                 getResources().getDisplayMetrics());
     }
 
+    /**
+     * Calculates the X position that should be set in the horizontal scroll
+     * view containing the palette, according to the selected item.
+     *
+     * @return the X coordinate
+     */
+    public int getSelectedColorScrollX() {
+        int position = 0;
+        if (mIndex > 0) {
+            int itemCenterX = (mRectangleSize + 2 * mPadding +
+                    mSpacing) * mIndex + mPadding +
+                    mRectangleSize / 2;
+            int paletteWidth = getPaletteWidth();
+            int parentWidth = ((View) getParent()).getWidth();
+            // Check if we can center on the item
+            if (itemCenterX >= parentWidth / 2 &&
+                    (paletteWidth - itemCenterX) >= parentWidth / 2) {
+                // We can center on the item
+                position = itemCenterX - parentWidth / 2;
+            } else if (itemCenterX < parentWidth / 2) {
+                /* We are at the beginning of the palette */
+                position = 0;
+            } else {
+                /* We are at the end of the palette */
+                position = paletteWidth - parentWidth;
+            }
+        }
+
+        return position;
+    }
+
     public int[] getColors() {
         return mColors;
     }
 
     public void setColors(int[] colors) {
         mColors = colors;
+        init();
         invalidate();
         requestLayout();
     }
@@ -93,6 +124,8 @@ public class ColorPaletteView extends View {
 
     public void setAccentColor(int accentColor) {
         mAccentColor = accentColor;
+        init();
+        invalidate();
     }
 
     public int getAccentColor() {
@@ -102,13 +135,6 @@ public class ColorPaletteView extends View {
     public void setOnColorSelectedListener(OnColorSelectedListener listener) {
         mColorSelectedListener = listener;
     }
-
-    /*private int getComplementaryColor(int color) {
-        float[] hsv = new float[3];
-        Color.colorToHSV(color, hsv);
-        hsv[0] = (hsv[0] + 180) % 360;
-        return Color.HSVToColor(hsv);
-    }*/
 
     private void init() {
         /* Translate sizes from dp to px */
@@ -137,9 +163,9 @@ public class ColorPaletteView extends View {
         super.onDraw(canvas);
         for (int i = 0; i < mFillPaint.length; i++) {
             /* Draw all colors */
-            canvas.drawRect(mBorderWidth +
-                            (mRectangleSize + 2 * mPadding + mSpacing) * i +
-                            mPadding, mPadding + mBorderWidth,
+            canvas.drawRect(
+                    (mRectangleSize + 2 * mPadding + mSpacing) * i + mPadding,
+                    mPadding,
                     (mRectangleSize + 2 * mPadding + mSpacing) * i + mPadding +
                             mRectangleSize, mPadding + mRectangleSize,
                     mFillPaint[i]);
@@ -147,20 +173,24 @@ public class ColorPaletteView extends View {
 
         /* Remark selected color */
         if (mIndex >= 0 && mIndex < mColors.length) {
-            canvas.drawRect(mBorderWidth + (mRectangleSize + 2 * mPadding +
-                            mSpacing) * mIndex, mBorderWidth,
+            canvas.drawRect(mBorderWidth / 2 + (mRectangleSize + 2 * mPadding +
+                            mSpacing) * mIndex, mBorderWidth / 2,
                     (mRectangleSize + 2 * mPadding + mSpacing) * mIndex +
                             mRectangleSize +
-                            2 * mPadding, 2 * mPadding + mRectangleSize,
+                            2 * mPadding - mBorderWidth / 2,
+                    2 * mPadding + mRectangleSize - mBorderWidth / 2,
                     mAccentPaint);
         }
     }
 
+    private int getPaletteWidth() {
+        return (mRectangleSize + 2 * mPadding) * mColors.length +
+                mSpacing * (mColors.length - 1) + mBorderWidth;
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        //super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        setMeasuredDimension((mRectangleSize + 2 * mPadding) * mColors.length +
-                        mSpacing * (mColors.length - 1) + 2 * mBorderWidth,
+        setMeasuredDimension(getPaletteWidth(),
                 mRectangleSize + mPadding * 2 + mBorderWidth);
     }
 
@@ -186,7 +216,7 @@ public class ColorPaletteView extends View {
 
         @Override
         public boolean onDown(MotionEvent e) {
-            mColorSelected= false;
+            mColorSelected = false;
             return true;
         }
 

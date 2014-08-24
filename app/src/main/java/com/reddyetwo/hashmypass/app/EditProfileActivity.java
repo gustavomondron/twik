@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.Spinner;
 
 import com.reddyetwo.hashmypass.app.data.PasswordType;
@@ -166,6 +167,20 @@ public class EditProfileActivity extends Activity {
                     }
                 });
 
+        final HorizontalScrollView colorPaletteScrollview =
+                (HorizontalScrollView) findViewById(
+                        R.id.profile_color_scrollview);
+        /*
+        We can't scroll until the scroll has been inflated and its measures
+        have been calculated
+         */
+        colorPaletteScrollview.post(new Runnable() {
+            @Override
+            public void run() {
+                colorPaletteScrollview
+                        .scrollTo(mColorPaletteView.getSelectedColorScrollX(), 0);
+            }
+        });
     }
 
     @Override
