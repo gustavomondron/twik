@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    * Copyright 2014 Red Dye No. 2
+    *
+    * This file is part of Twik.
+    *
+    * Twik is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * Twik is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * You should have received a copy of the GNU General Public License
+    * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
+    *
+    -->
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:custom="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="@dimen/activity_vertical_margin">
+
+    <ScrollView
+        android:layout_above="@+id/button_bar_layout"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/name"
+                android:textAllCaps="true"
+                android:textColor="@color/text_gray"/>
+
+            <EditText
+                android:inputType="text"
+                android:id="@+id/profile_name_text"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/background_edittext_material"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:maxLength="@integer/text_profile_name_max_length"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/color"
+                android:textAllCaps="true"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="16dp"
+                android:textColor="@color/text_gray"/>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.reddyetwo.hashmypass.app.ColorPaletteView
+                    android:id="@+id/profile_color"
+                    custom:colors="@array/favicon_background_colors"
+                    custom:index="0"
+                    custom:accent_color="@color/item_focused"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </HorizontalScrollView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="@string/private_key"
+                android:textAllCaps="true"
+                android:textColor="@color/text_gray"/>
+
+            <EditText
+                android:inputType="text"
+                android:id="@+id/private_key_text"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/background_edittext_material"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:maxLength="@integer/text_private_key_max_length"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="@string/password_length"
+                android:textAllCaps="true"
+                android:textColor="@color/text_gray"/>
+
+            <Spinner
+                android:id="@+id/password_length_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:spinnerStyle="@android:style/Widget.Spinner.DropDown"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="@string/password_type"
+                android:textAllCaps="true"
+                android:textColor="@color/text_gray"/>
+
+            <Spinner
+                android:id="@+id/password_type_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:spinnerStyle="@android:style/Widget.Spinner.DropDown"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/button_bar_layout"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:showDividers="middle"
+        android:divider="?android:dividerHorizontal">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:divider="?android:dividerHorizontal"
+            style="?android:buttonBarStyle">
+
+            <Button
+                android:id="@+id/discard_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="?android:buttonBarButtonStyle"
+                android:text="@string/discard"/>
+
+            <Button
+                android:id="@+id/add_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="?android:buttonBarButtonStyle"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:text="@string/save"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

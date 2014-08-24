@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    * Copyright 2014 Red Dye No. 2
+    *
+    * This file is part of Twik.
+    *
+    * Twik is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * Twik is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * You should have received a copy of the GNU General Public License
+    * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
+    *
+    -->
+
+<resources>
+    <item name="settings_default_remember_master_key"
+          format="integer" type="string">0
+    </item>
+    <item name="settings_default_copy_to_clipboard" format="boolean"
+          type="bool">false
+    </item>
+    <item name="settings_default_show_tutorial" format="boolean" type="bool"
+        >true</item>
+    <item name="text_profile_name_max_length" format="integer" type="integer">15
+    </item>
+    <item name="text_private_key_max_length" format="integer" type="integer">48
+    </item>
+</resources>

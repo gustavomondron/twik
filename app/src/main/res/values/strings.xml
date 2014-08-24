@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    * Copyright 2014 Red Dye No. 2
+    *
+    * This file is part of Twik.
+    *
+    * Twik is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * Twik is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * You should have received a copy of the GNU General Public License
+    * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
+    *
+    -->
+
+<resources>
+
+    <!-- Titles -->
+    <string name="app_name">Twik</string>
+
+    <!-- Actions -->
+    <string name="action_settings">Settings</string>
+    <string name="action_add_profile">Add profile</string>
+    <string name="action_edit_profile">Edit profile</string>
+    <string name="action_help">Help</string>
+    <string name="action_about">About</string>
+    <string name="action_delete">Delete</string>
+    <string name="discard">Discard</string>
+    <string name="ok">OK</string>
+    <string name="copy_to_clipboard">Copy to clipboard</string>
+    <string name="cancel">Cancel</string>
+    <string name="add">Add</string>
+    <string name="save">Save</string>
+    <string name="hash">Hash</string>
+    <string name="skip">Skip tutorial</string>
+    <string name="next">Next</string>
+    <string name="start">Start</string>
+    <string name="ready">I\'m ready to go!</string>
+    <string name="add_first_profile">Add your first profile</string>
+
+    <!-- Dialogs -->
+    <string name="confirm_delete">Delete \"%s\" profile?</string>
+    <string name="confirm_delete_tag">Delete \"%s\" website?</string>
+    <string name="warning_lose_settings">You\'ll lose all its settings!</string>
+
+    <!-- Descriptions / Hints -->
+    <string name="profile">Profile</string>
+    <string name="password_length">Password length</string>
+    <string name="password_type">Password type</string>
+    <string name="private_key">Private key</string>
+    <string name="name">Name</string>
+    <string name="master_key">Master key</string>
+    <string name="tag">Website</string>
+    <string name="tag_settings">Website settings</string>
+    <string name="color">Color</string>
+
+    <!-- Tutorial -->
+    <string name="tutorial_splash_subtitle">A different password for each site.
+     \nNo passwords stored.</string>
+    <string name="tutorial_intro_header">Safer passwords</string>
+    <string name="tutorial_intro_content">To generate a password for a website
+        you have to enter your master key, that only you know. Twik will
+        then generate a unique password for the site.</string>
+    <string name="tutorial_setup_header">Almost there</string>
+    <string name="tutorial_setup_content_1">You need a couple of
+        things before starting:</string>
+    <string name="tutorial_setup_content_2"><ul><li>A master key. Don\'t type it
+        now!
+        Just choose and remember one.</li></ul></string>
+    <string name="tutorial_setup_content_3"><ul><li>A private key. This key will
+        be stored in your device.</li></ul></string>
+    <string name="tutorial_setup_sample_master_key">e.g. "correct horse
+        battery staple"</string>
+    <string name="tutorial_setup_sample_private_key">e.g. "ASDF-QWER-DFGH"</string>
+
+    <item name="profile_default_name" format="string" type="string">Default
+    </item>
+
+    <!-- Notices -->
+    <string name="no_tags">You got no websites!</string>
+    <string name="copied_to_clipboard">Website password copied to
+        clipboard</string>
+
+    <!-- Settings titles -->
+    <string name="settings_title_remember_master_key">Remember master
+        key</string>
+    <string name="settings_title_copy_to_clipboard">Copy password to
+        clipboard</string>
+
+    <!-- Settings summaries -->
+    <string name="settings_summary_remember_master_key_never">Master key
+        will not be remembered when you leave the app</string>
+    <string name="settings_summary_remember_master_key_minutes">Master
+        key will be remembered for %d minutes after you leave the app</string>
+    <string name="settings_summary_remember_master_key_hours"> Master key wil
+        l be remembered for %d hours after you leave the app</string>
+    <string name="settings_summary_copy_to_clipboard_enabled">The hashed
+        password is automatically copied to the clipboard</string>
+    <string name="settings_summary_copy_to_clipboard_disabled">The hashed
+        password is not automatically copied to the clipboard</string>
+
+    <!-- Errors -->
+    <string name="error">Ouch! Something happened!</string>
+    <string name="error_no_profiles">Oops! You should create a profile
+        first!</string>
+    <string name="error_tag_exists">Hey, you already have this website!</string>
+    <string name="error_profile_exists">This name already exists</string>
+
+    <!-- About Dialog -->
+    <string name="about_body">
+<![CDATA[
+        <b>Twik</b><br/>
+        Version 1.2.1<br/>
+        Copyright \u00A9 2014 Red Dye No. 2
+        <br/><br/>
+        <b>Twik</b> is an application that makes it easier to generate
+        secure and different passwords for each website.
+        <br/><br/>
+        Twik is based on the password generation mechanism of Password
+        Hasher by Steve Cooper and Password Hasher Plus by Eric Woodruff.
+        <br/><br/>
+        Twik is compatible with the Google Chrome Password Hasher Plus
+        extension by Eric Woodruff.
+        <br/><br/>
+
+        <b>License</b><br/>
+        Twik is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.<br/><br/>
+        Twik is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+        <br/><br/>
+
+        <b>Open source licenses</b>
+        <br /><br />
+        <b><a href="https://addons.mozilla.org/en-US/firefox/addon/password-hasher/">
+        Password Hasher</a></b><br/><i>by Steve Cooper.</i><br/>
+        MPL 1.1/GPL 2.0/LGPL 2.1 licenses.<br/><br/>
+
+        <b><a href="http://passwordhasherplus.com">Password Hasher Plus</a></b><br/>
+        <i>by Eric Woodruff.</i><br/>
+        MPL 1.1/GPL 2.0/LGPL 2.1 licenses.<br/><br/>
+
+        <b><a href="https://github.com/davidhampgonsalves/Contact-Identicons/">Contact-Identicons</a></b><br/>
+        <i>by David Hamp-Gonsalves.</i>
+        <br/><br/>
+
+        <b><a href="http://jgilfelt.github.io/android-actionbarstylegenerator/">
+        Android Action Bar Style Generator</a></b><br/>
+        <i>by The Android Open Source Project</i> y
+        <i>readyState Software Ltd.</i> <br/>
+        Apache 2.0 license.<br/> <br/>
+
+        <b><a href="http://font.ubuntu.com/">Ubuntu Mono</a></b> <br/>
+        <i>by Canonical Ltd.</i> <br/>
+        Ubuntu Font Licence 1.0.
+    ]]>
+    </string>
+</resources>

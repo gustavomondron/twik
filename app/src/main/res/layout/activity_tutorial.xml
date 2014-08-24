@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    * Copyright 2014 Red Dye No. 2
+    *
+    * This file is part of Twik.
+    *
+    * Twik is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * Twik is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * You should have received a copy of the GNU General Public License
+    * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
+    *
+    -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              style="@style/tutorialLayoutStyle"
+              android:orientation="vertical">
+
+    <com.reddyetwo.hashmypass.app.MeasureViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/viewpager_indicator_height"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/pager_progress_prev"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/pager_progress_rest"/>
+
+        <View
+            android:id="@+id/pager_progress_current"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/pager_progress_current"/>
+
+        <View
+            android:id="@+id/pager_progress_next"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/pager_progress_rest"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_size"
+        android:orientation="vertical"
+        android:showDividers="none"
+        android:divider="?android:dividerHorizontal">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:divider="?android:dividerVertical"
+            style="?android:buttonBarStyle">
+
+            <Button
+                android:id="@+id/skip_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="?android:buttonBarButtonStyle"
+                android:text="@string/skip"/>
+
+            <Button
+                android:id="@+id/next_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="?android:buttonBarButtonStyle"
+                android:layout_weight="1"
+                android:text="@string/next"/>
+
+            <Button
+                android:id="@+id/start_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="?android:buttonBarButtonStyle"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:text="@string/start"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
