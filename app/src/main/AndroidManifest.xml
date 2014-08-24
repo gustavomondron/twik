@@ -47,6 +47,7 @@
         </activity>
         <activity
             android:name=".AddProfileActivity"
+            android:windowSoftInputMode="stateHidden"
             android:label="@string/action_add_profile" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -54,6 +55,7 @@
         </activity>
         <activity
             android:name=".EditProfileActivity"
+            android:windowSoftInputMode="stateHidden"
             android:label="@string/action_edit_profile" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
