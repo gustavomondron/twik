@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    * Copyright 2014 Red Dye No. 2
+    *
+    * This file is part of Twik.
+    *
+    * Twik is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * Twik is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * You should have received a copy of the GNU General Public License
+    * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
+    *
+    -->
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:fillViewport="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="@drawable/tutorial_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/tutorial_content_padding_vertical">
+
+        <TextView
+            android:id="@+id/tutorial_header_text"
+            android:text="@string/tutorial_setup_header"
+            android:gravity="center"
+            android:textSize="@dimen/tutorial_splash_title_size"
+            android:textColor="@android:color/white"
+            android:fontFamily="sans-serif-light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@string/tutorial_setup_content_1"
+            android:gravity="left"
+            android:textSize="@dimen/text_medium"
+            android:textColor="@android:color/white"
+            android:fontFamily="sans-serif-light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/tutorial_content_text_margin_top"/>
+
+        <TextView
+            android:text="@string/tutorial_setup_content_2"
+            android:gravity="left"
+            android:textSize="@dimen/text_medium"
+            android:textColor="@android:color/white"
+            android:fontFamily="sans-serif-light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/tutorial_content_text_padding_inter"/>
+
+        <RelativeLayout
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="48dp">
+
+            <ImageView
+                android:id="@+id/ic_master_key"
+                android:src="@drawable/ic_action_key_white"
+                android:contentDescription="@string/profile"
+                android:layout_width="32dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="24dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"/>
+
+            <EditText
+                android:id="@+id/master_key_text"
+                android:enabled="false"
+                android:focusable="false"
+                android:fontFamily="sans-serif"
+                android:textColor="@android:color/white"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:maxLength="25"
+                android:layout_toRightOf="@+id/ic_master_key"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/background_edittext_material"
+                android:imeOptions="actionDone"
+                android:text="@string/tutorial_setup_sample_master_key"/>
+        </RelativeLayout>
+
+        <TextView
+            android:text="@string/tutorial_setup_content_3"
+            android:gravity="left"
+            android:textSize="@dimen/text_medium"
+            android:textColor="@android:color/white"
+            android:fontFamily="sans-serif-light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/tutorial_content_text_padding_inter"/>
+
+        <RelativeLayout
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="64dp">
+
+            <ImageView
+                android:id="@+id/ic_private_key"
+                android:src="@drawable/ic_action_lock_closed"
+                android:contentDescription="@string/profile"
+                android:layout_width="32dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="24dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"/>
+
+            <EditText
+                android:id="@+id/private_key_text"
+                android:fontFamily="sans-serif"
+                android:textColor="@android:color/white"
+                android:singleLine="false"
+                android:maxLines="2"
+                android:maxLength="@integer/text_private_key_max_length"
+                android:layout_toRightOf="@+id/ic_private_key"
+                android:layout_centerVertical="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:imeOptions="actionDone"
+                android:hint="@string/tutorial_setup_sample_private_key"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+</ScrollView>

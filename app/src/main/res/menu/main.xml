@@ -1,0 +1,46 @@
+<!--
+    * Copyright 2014 Red Dye No. 2
+    *
+    * This file is part of Twik.
+    *
+    * Twik is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * Twik is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * You should have received a copy of the GNU General Public License
+    * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
+    *
+    -->
+
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".MainActivity">
+    <item
+        android:id="@+id/action_edit_profile"
+        android:title="@string/action_edit_profile"
+        android:orderInCategory="100"
+        android:showAsAction="never"/>
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="102"
+        android:showAsAction="never"/>
+    <item
+        android:visible="false"
+        android:id="@+id/action_help"
+        android:title="@string/action_help"
+        android:orderInCategory="103"
+        android:showAsAction="never"/>
+    <item
+        android:id="@+id/action_about"
+        android:title="@string/action_about"
+        android:orderInCategory="104"
+        android:showAsAction="never"/>
+</menu>

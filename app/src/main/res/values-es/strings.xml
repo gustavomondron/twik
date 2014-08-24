@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    * Copyright 2014 Red Dye No. 2
+    *
+    * This file is part of Twik.
+    *
+    * Twik is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * Twik is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * You should have received a copy of the GNU General Public License
+    * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
+    *
+    -->
+
+<resources>
+
+    <!-- Titles -->
+    <string name="app_name">Twik</string>
+
+    <!-- Actions -->
+    <string name="action_settings">Ajustes</string>
+    <string name="action_add_profile">Añadir perfil</string>
+    <string name="action_edit_profile">Editar perfil</string>
+    <string name="action_help">Ayuda</string>
+    <string name="action_about">Acerca de</string>
+    <string name="action_delete">Eliminar</string>
+    <string name="discard">Descartar</string>
+    <string name="ok">OK</string>
+    <string name="copy_to_clipboard">Copiar al portapapeles</string>
+    <string name="cancel">Cancelar</string>
+    <string name="add">Añadir</string>
+    <string name="save">Guardar</string>
+    <string name="hash">Hash</string>
+    <string name="skip">Saltar tutorial</string>
+    <string name="next">Siguiente</string>
+    <string name="start">Comenzar</string>
+    <string name="ready">¡Estoy listo para empezar!</string>
+    <string name="add_first_profile">Añade tu primer perfil</string>
+    <string name="hash_this_tag">Generar contraseña</string>
+
+    <!-- Dialogs -->
+    <string name="confirm_delete">¿Eliminar el perfil \"%s\"?</string>
+    <string name="confirm_delete_tag">¿Eliminar el sitio web \"%s\"?</string>
+    <string name="warning_lose_settings">¡Perderás todos sus ajustes!</string>
+
+    <!-- Descriptions / Hints -->
+    <string name="profile">Perfil</string>
+    <string name="password_length">Longitud de la contraseña</string>
+    <string name="password_type">Tipo de contraseña</string>
+    <string name="private_key">Clave privada</string>
+    <string name="name">Nombre</string>
+    <string name="master_key">Contraseña maestra</string>
+    <string name="tag">Sitio web</string>
+    <string name="tag_settings">Ajustes del sitio web</string>
+    <string name="color">Color</string>
+
+    <!-- Tutorial -->
+    <string name="tutorial_splash_subtitle">Una contraseña diferente
+        para cada sitio.\nSin almacenar contraseñas.</string>
+    <string name="tutorial_intro_header">Contraseñas más seguras</string>
+    <string name="tutorial_intro_content">Cuando quieras generar una
+        contraseña para un sitio web tendrás que introducir tu clave
+        maestra, que sólo tu conoces. Twik generará una
+        contraseña única para el sitio.</string>
+    <string name="tutorial_setup_header">Ya falta poco</string>
+    <string name="tutorial_setup_content_1">Necesitarás un par de cosas
+        antes de empezar:</string>
+    <string name="tutorial_setup_content_2"><ul><li>Una contraseña maestra. ¡No la
+        escribas ahora! Tan sólo elige una y recuérdala.</li></ul></string>
+    <string name="tutorial_setup_content_3"><ul><li>Una clave privada. Esta
+        clave se guardará en tu dispositivo.</li></ul></string>
+    <string name="tutorial_setup_sample_master_key">p.ej. "gato lavadora radio"</string>
+    <string name="tutorial_setup_sample_private_key">p.ej. "ASDF-QWER-DFGH"</string>
+
+    <!-- Notices -->
+    <string name="no_tags">¡No tienes sitios web!</string>
+    <string name="copied_to_clipboard">Contraseña del sitio web copiada al
+        portapapeles</string>
+
+    <!-- Settings titles -->
+    <string name="settings_title_remember_master_key">Recordar contraseña
+        maestra</string>
+    <string name="settings_title_copy_to_clipboard">Copiar contraseña al
+        portapapeles</string>
+
+    <!-- Settings summaries -->
+    <string name="settings_summary_remember_master_key_never">
+        La contraseña maestra no se recordará cuando abandones la aplicación
+    </string>
+    <string name="settings_summary_remember_master_key_minutes">
+        La contraseña maestra se recordará durante %d minutos cuando
+        abandones la aplicación
+    </string>
+    <string name="settings_summary_remember_master_key_hours">
+        La contraseña maestra se recordará durante %d horas cuando abandones
+        la aplicación
+    </string>
+    <string name="settings_summary_copy_to_clipboard_enabled">La contraseña
+        generada se copia automáticamente al portapapeles</string>
+    <string name="settings_summary_copy_to_clipboard_disabled">La contraseña
+        generada no se copia automáticamente al portapapeles</string>
+
+    <!-- Errors -->
+    <string name="error">¡Ouch! ¡Ha ocurrido un error!</string>
+    <string name="error_no_profiles">¡Oops! ¡Deberías crear un perfil
+        primero!</string>
+    <string name="error_tag_exists">¡Ey, ya tienes esta web!</string>
+    <string name="error_profile_exists">Este nombre ya existe</string>
+
+    <!-- About Dialog -->
+    <string name="about_body"><![CDATA[
+        <b>Twik</b><br/>
+        Versión 1.2.1<br/>
+        Copyright \u00A9 2014 Red Dye No. 2
+        <br/><br/>
+        <b>Twik</b> es una aplicación que hace más fácil generar
+        contraseñas seguras y diferentes para cada sitio web.
+        <br/><br/>
+        Está basado en el mecanismo de generación de contraseñas de Password
+        Hasher por Steve Cooper y Password Hasher Plus por Eric Woodruff.
+        <br/><br/>
+        Es compatible con la extensión Password Hasher Plus para Google Chrome
+        de Eric Woodruff.
+        <br/><br/>
+
+        <b>Licencia</b><br/>
+        Twik is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.<br/><br/>
+        Twik is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+        <br/><br/>
+
+        <b>Licencias de código abierto</b>
+        <br /><br />
+        <b><a href="https://addons.mozilla.org/en-US/firefox/addon/password-hasher/">
+        Password Hasher</a></b><br/><i>por Steve Cooper.</i><br/>
+        MPL 1.1/GPL 2.0/LGPL 2.1 licenses.<br/><br/>
+
+        <b><a href="http://passwordhasherplus.com">Password Hasher Plus</a></b><br/>
+        <i>por Eric Woodruff.</i><br/>
+        MPL 1.1/GPL 2.0/LGPL 2.1 licenses.<br/><br/>
+
+        <b><a href="https://github.com/davidhampgonsalves/Contact-Identicons/">Contact-Identicons</a></b><br/>
+        <i>por David Hamp-Gonsalves.</i>
+        <br/><br/>
+
+        <b><a href="http://jgilfelt.github.io/android-actionbarstylegenerator/">
+        Android Action Bar Style Generator</a></b><br/>
+        <i>por The Android Open Source Project</i> y
+        <i>readyState Software Ltd.</i> <br/>
+        Apache 2.0 license.<br/> <br/>
+
+        <b><a href="http://font.ubuntu.com/">Ubuntu Mono</a></b> <br/>
+        <i>por Canonical Ltd.</i> <br/>
+        Ubuntu Font Licence 1.0.
+    ]]></string>
+</resources>

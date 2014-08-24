@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    * Copyright 2014 Red Dye No. 2
+    *
+    * This file is part of Twik.
+    *
+    * Twik is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * Twik is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * You should have received a copy of the GNU General Public License
+    * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
+    *
+    -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:background="@drawable/tutorial_background"
+        android:layout_width="match_parent"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/tutorial_content_padding_vertical"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tutorial_header_text"
+            android:text="@string/tutorial_intro_header"
+            android:gravity="center"
+            android:textSize="@dimen/tutorial_splash_title_size"
+            android:textColor="@android:color/white"
+            android:fontFamily="sans-serif-light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@string/tutorial_intro_content"
+            android:gravity="left"
+            android:textSize="@dimen/text_medium"
+            android:textColor="@android:color/white"
+            android:fontFamily="sans-serif-light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/tutorial_content_text_margin_top"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_marginLeft="48dp"
+            android:layout_marginRight="16dp">
+
+            <TextView
+                android:enabled="false"
+                android:focusable="false"
+                android:fontFamily="sans-serif"
+                android:textSize="@dimen/text_medium"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:maxLength="25"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tutorial_intro_edit_text_height"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/ic_private_key"
+                android:background="@drawable/background_edittext_material"
+                android:imeOptions="actionDone"/>
+
+            <TextView
+                android:id="@+id/website_text"
+                android:alpha="0.0"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_medium"
+                android:gravity="bottom"
+                android:paddingBottom="@dimen/tutorial_intro_edit_text_padding_bottom"
+                android:fontFamily="sans-serif"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:maxLength="25"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tutorial_intro_edit_text_height"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/ic_private_key"
+                android:background="@drawable/background_edittext_material"
+                android:imeOptions="actionDone"/>
+
+            <ImageView
+                android:id="@+id/ic_private_key"
+                android:src="@drawable/ic_action_lock_closed"
+                android:contentDescription="@string/profile"
+                android:layout_width="@dimen/tutorial_intro_lock_icon_width"
+                android:layout_height="@dimen/tutorial_intro_lock_icon_height"
+                android:layout_marginLeft="@dimen/tutorial_intro_lock_icon_margin_left"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/ic_master_key"
+                android:layout_alignParentTop="true"/>
+
+            <ImageView
+                android:id="@+id/ic_master_key"
+                android:src="@drawable/ic_action_key_white_horizontal"
+                android:alpha="0.0"
+                android:contentDescription="@string/profile"
+                android:layout_width="@dimen/tutorial_intro_key_icon_width"
+                android:layout_height="@dimen/tutorial_intro_key_icon_height"
+                android:layout_marginLeft="@dimen/tutorial_intro_key_icon_margin_left"
+                android:layout_marginTop="@dimen/tutorial_intro_key_icon_margin_top"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"/>
+
+            <TextView
+                android:id="@+id/website_password"
+                android:text="password"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_medium"
+                android:alpha="0.0"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tutorial_intro_edit_text_height"
+                android:layout_below="@id/website_text"/>
+        </RelativeLayout>
+
+</LinearLayout>
