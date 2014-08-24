@@ -118,6 +118,11 @@ public class MainActivity extends Activity implements
         In the case of an orientation change, we do not select the last used
         profile but the currently selected profile.
          */
+        if (savedInstanceState != null &&
+                savedInstanceState.getBoolean(STATE_ORIENTATION_HAS_CHANGED)) {
+            mSelectedProfileId =
+                    savedInstanceState.getLong(STATE_SELECTED_PROFILE_ID);
+        }
         mOrientationHasChanged = false;
         mOrientationEventListener = new OrientationEventListener(this,
                 SensorManager.SENSOR_DELAY_NORMAL) {
