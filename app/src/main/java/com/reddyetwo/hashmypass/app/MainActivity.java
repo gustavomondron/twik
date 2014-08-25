@@ -19,6 +19,8 @@
 
 package com.reddyetwo.hashmypass.app;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -101,7 +103,7 @@ public class MainActivity extends Activity implements
         mColors = getResources().getIntArray(R.array.favicon_background_colors);
         mFab = (Fab) findViewById(R.id.fabbutton);
         if (mSelectedProfileId != Profile.NO_ID) {
-            mFab.setFabColor(
+            setFabColor(
                     mColors[ProfileSettings.getProfile(this, mSelectedProfileId)
                             .getColorIndex()]);
         }
@@ -280,7 +282,7 @@ public class MainActivity extends Activity implements
                     case RESULT_OK:
                         mSelectedProfileId = data.getLongExtra(
                                 AddProfileActivity.RESULT_KEY_PROFILE_ID, 0);
-                        mFab.setFabColor(mColors[ProfileSettings
+                        setFabColor(mColors[ProfileSettings
                                 .getProfile(this, mSelectedProfileId)
                                 .getColorIndex()]);
                         break;
@@ -297,6 +299,21 @@ public class MainActivity extends Activity implements
                 break;
             default:
         }
+    }
+
+    private void setFabColor(int color) {
+        int colorFrom = mFab.getFabColor();
+        ValueAnimator colorAnimation =
+                ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, color);
+        colorAnimation
+                .addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        mFab.setFabColor(
+                                (Integer) animation.getAnimatedValue());
+                    }
+                });
+        colorAnimation.start();
     }
 
     private void populateActionBarSpinner() {
@@ -323,11 +340,22 @@ public class MainActivity extends Activity implements
                                         REQUEST_ADD_PROFILE);
                             } else {
                                 mSelectedProfileId = selectedProfile;
-                                mFab.setFabColor(mColors[ProfileSettings
-                                        .getProfile(MainActivity.this,
-                                                mSelectedProfileId)
-                                        .getColorIndex()]);
                                 populateTagList();
+
+                                /* Animate fab color transition,
+                                but delay it a bit to let the tag list
+                                populate without affecting the animation
+                                 */
+                                mFab.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        setFabColor(mColors[ProfileSettings
+                                                .getProfile(MainActivity.this,
+                                                        mSelectedProfileId)
+                                                .getColorIndex()]);
+
+                                    }
+                                }, 100);
                             }
                             return false;
                         }
