@@ -36,6 +36,7 @@ import android.view.MenuItem;
 import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,6 +75,8 @@ public class MainActivity extends Activity implements
 
     private int[] mColors;
     private RecyclerView mTagRecyclerView;
+    private LinearLayout mEmptyListLayout;
+    private TagAdapter mAdapter;
     private Fab mFab;
 
     @Override
@@ -93,6 +96,7 @@ public class MainActivity extends Activity implements
         mTagRecyclerView = (RecyclerView) findViewById(R.id.tag_list);
         mTagRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mTagRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mEmptyListLayout = (LinearLayout) findViewById(R.id.list_empty);
 
         mColors = getResources().getIntArray(R.array.favicon_background_colors);
         mFab = (Fab) findViewById(R.id.fabbutton);
@@ -168,10 +172,33 @@ public class MainActivity extends Activity implements
         }
     }
 
+    private int getTagPosition(Tag tag) {
+        List<Tag> tags = TagSettings.getProfileTags(this, mSelectedProfileId,
+                TagSettings.ORDER_BY_HASH_COUNTER, TagSettings.LIMIT_UNBOUNDED);
+        int position = 0;
+        int size = tags.size();
+        while (position < size &&
+                !tags.get(position).getName().equals(tag.getName())) {
+            position++;
+        }
+        return position;
+    }
+
+    private void setTagListVisibility(boolean visible) {
+        if (visible) {
+            mTagRecyclerView.setVisibility(View.VISIBLE);
+            mEmptyListLayout.setVisibility(View.GONE);
+        } else {
+            mTagRecyclerView.setVisibility(View.GONE);
+            mEmptyListLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void populateTagList() {
         List<Tag> tags = TagSettings.getProfileTags(this, mSelectedProfileId,
                 TagSettings.ORDER_BY_HASH_COUNTER, TagSettings.LIMIT_UNBOUNDED);
-        mTagRecyclerView.setAdapter(new TagAdapter(tags));
+        mAdapter = new TagAdapter(tags);
+        mTagRecyclerView.setAdapter(mAdapter);
         if (tags.size() == 0) {
             mTagRecyclerView.setVisibility(View.GONE);
             findViewById(R.id.list_empty).setVisibility(View.VISIBLE);
@@ -179,7 +206,6 @@ public class MainActivity extends Activity implements
             mTagRecyclerView.setVisibility(View.VISIBLE);
             findViewById(R.id.list_empty).setVisibility(View.GONE);
         }
-
     }
 
     @Override
@@ -369,16 +395,22 @@ public class MainActivity extends Activity implements
         if (tag != null && tag.getId() == Tag.NO_ID &&
                 tag.getName().length() > 0) {
             // It is a new tag
-            TagSettings.insertTag(this, tag);
-            populateTagList();
+            tag.setId(TagSettings.insertTag(this, tag));
+            int position = getTagPosition(tag);
+            mAdapter.add(tag, position);
 
             // Update last used profile
             updateLastProfile();
         } else if (tag != null && tag.getName().length() > 0) {
-            // Save the tag and update the list because the name of a tag or
-            // its order in the list can have been modified
+            /* Save the tag and update the list because the name of a tag can
+             alter its position in the list
+              */
+            int oldPosition = getTagPosition(tag);
             TagSettings.updateTag(this, tag);
-            populateTagList();
+            int newPosition = getTagPosition(tag);
+            if (oldPosition != newPosition) {
+                mAdapter.move(oldPosition, newPosition);
+            }
         }
     }
 
@@ -411,9 +443,14 @@ public class MainActivity extends Activity implements
                     .setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            // Increase hash counter
+                            // Increase hash counter. This may affect tag list.
+                            int oldPosition = getTagPosition(tag);
                             tag.setHashCounter(tag.getHashCounter() + 1);
                             TagSettings.updateTag(MainActivity.this, tag);
+                            int newPosition = getTagPosition(tag);
+                            if (oldPosition != newPosition) {
+                                mAdapter.move(oldPosition, newPosition);
+                            }
 
                             // Update last used profile
                             updateLastProfile();
@@ -448,6 +485,31 @@ public class MainActivity extends Activity implements
                     });
         }
 
+        public void add(Tag tag, int position) {
+            mTags.add(position, tag);
+            if (mTags.size() == 1) {
+                setTagListVisibility(true);
+            }
+            notifyItemInserted(position);
+        }
+
+        public void remove(Tag tag) {
+            int position = mTags.indexOf(tag);
+            mTags.remove(position);
+            notifyItemRemoved(position);
+            if (mTags.size() == 0) {
+                setTagListVisibility(false);
+            }
+        }
+
+        public void move(int start, int end) {
+            Tag movedTag = mTags.get(start);
+            mTags.remove(movedTag);
+            mTags.add(end, movedTag);
+            notifyItemRemoved(start);
+            notifyItemInserted(end);
+        }
+
         @Override
         public int getItemCount() {
             return mTags.size();
@@ -456,8 +518,9 @@ public class MainActivity extends Activity implements
 
     private void deleteTag(Tag tag) {
         if (TagSettings.deleteTag(this, tag)) {
+
             // Update tags list
-            populateTagList();
+            mAdapter.remove(tag);
 
             // Check if we should delete favicon
             String site = tag.getSite();
@@ -473,7 +536,6 @@ public class MainActivity extends Activity implements
             Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();
         }
     }
-
 
     private void showGeneratePasswordDialog(Tag tag) {
         GeneratePasswordDialogFragment dialog =
