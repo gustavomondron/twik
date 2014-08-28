@@ -36,6 +36,7 @@ import com.reddyetwo.hashmypass.app.data.PasswordLength;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
+import com.reddyetwo.hashmypass.app.util.KeyboardManager;
 import com.reddyetwo.hashmypass.app.util.ProfileFormInflater;
 import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
 import com.reddyetwo.hashmypass.app.util.RandomPrivateKeyGenerator;
@@ -166,6 +167,12 @@ public class AddProfileActivity extends Activity {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_PASSWORD_LENGTH, Integer.parseInt(
                 (String) mPasswordLengthSpinner.getSelectedItem()));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        KeyboardManager.hide(this, getCurrentFocus());
     }
 
     @Override
