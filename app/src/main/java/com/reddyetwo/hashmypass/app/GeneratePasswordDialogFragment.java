@@ -187,23 +187,6 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         // Populate fields
         mTagEditText.setText(mTag.getName());
 
-        // Restore cached master key
-        mCacheMasterKey =
-                Preferences.getRememberMasterKeyMins(getActivity()) > 0;
-        if (mCacheMasterKey) {
-            mMasterKeyEditText
-                    .setText(HashMyPassApplication.getCachedMasterKey(), 0,
-                            HashMyPassApplication.getCachedMasterKey().length);
-
-        }
-
-
-        // Manage keyboard status
-        if (mMasterKeyEditText.length() == 0 || mTagEditText.length() == 0) {
-            showKeyboard();
-        }
-
-
         return builder.create();
     }
 
@@ -218,6 +201,23 @@ public class GeneratePasswordDialogFragment extends DialogFragment
                     .setEnabled(false);
         }
 
+        // Restore cached master key
+        mCacheMasterKey =
+                Preferences.getRememberMasterKeyMins(getActivity()) > 0;
+        if (mCacheMasterKey) {
+            mMasterKeyEditText
+                    .setText(HashMyPassApplication.getCachedMasterKey(), 0,
+                            HashMyPassApplication.getCachedMasterKey().length);
+
+        } else {
+            mMasterKeyEditText.setText("");
+        }
+
+
+        // Manage keyboard status
+        if (mMasterKeyEditText.length() == 0 || mTagEditText.length() == 0) {
+            showKeyboard();
+        }
     }
 
     private void showKeyboard() {
