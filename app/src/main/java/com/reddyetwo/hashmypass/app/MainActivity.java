@@ -19,6 +19,9 @@
 
 package com.reddyetwo.hashmypass.app;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.app.ActionBar;
@@ -64,6 +67,9 @@ public class MainActivity extends Activity implements
     private static final int REQUEST_ADD_PROFILE = 1;
     private static final int REQUEST_CREATE_DEFAULT_PROFILE = 2;
     private static final String FRAGMENT_GENERATE_PASSWORD = "generatePassword";
+    private static final int LIST_EMPTY = 1;
+    private static final int LIST_CONTAINS_ITEMS = 2;
+    private static final int LIST_UNDEFINED = 3;
 
     // State keys
     private static final String STATE_SELECTED_PROFILE_ID = "profile_id";
@@ -167,7 +173,6 @@ public class MainActivity extends Activity implements
 
         if (!showTutorial()) {
             populateActionBarSpinner();
-            populateTagList();
 
             /* Cancel the master key alarm to clear cache */
             MasterKeyAlarmManager.cancelAlarm(this);
@@ -186,28 +191,118 @@ public class MainActivity extends Activity implements
         return position;
     }
 
-    private void setTagListVisibility(boolean visible) {
-        if (visible) {
-            mTagRecyclerView.setVisibility(View.VISIBLE);
-            mEmptyListLayout.setVisibility(View.GONE);
+    /**
+     * Updates the visibility of the tag list
+     *
+     * @param listContainsItems indicates whether the list contains items
+     * @param prevState         previous state of the list
+     * @param tags              list of tags, used when prevState =
+     *                          LIST_UNDEFINED or LIST_CONTAINS_ITEMS. Null
+     *                          if list items should not be modified.
+     */
+    private void updateTagListVisibility(boolean listContainsItems,
+                                         int prevState, final List<Tag> tags) {
+        AnimatorSet invisibleAnimator = (AnimatorSet) AnimatorInflater
+                .loadAnimator(this, R.animator.invisible);
+        final AnimatorSet visibleAnimator = (AnimatorSet) AnimatorInflater
+                .loadAnimator(this, R.animator.visible);
+        AnimatorSet animator;
+
+        if (listContainsItems) {
+            switch (prevState) {
+                case LIST_UNDEFINED:
+                    if (tags != null) {
+                        mAdapter = new TagAdapter(tags);
+                        mTagRecyclerView.setAdapter(mAdapter);
+                        visibleAnimator.setTarget(mTagRecyclerView);
+                        visibleAnimator.start();
+                    }
+                    break;
+                case LIST_EMPTY:
+                    if (tags != null) {
+                        mAdapter = new TagAdapter(tags);
+                        mTagRecyclerView.setAdapter(mAdapter);
+                    }
+                    invisibleAnimator.setTarget(mEmptyListLayout);
+                    visibleAnimator.setTarget(mTagRecyclerView);
+                    animator = new AnimatorSet();
+                    animator.playTogether(visibleAnimator, invisibleAnimator);
+                    animator.start();
+                    break;
+                case LIST_CONTAINS_ITEMS:
+                    if (tags != null) {
+                        invisibleAnimator.setTarget(mTagRecyclerView);
+                        invisibleAnimator.setDuration(150);
+                        visibleAnimator.setTarget(mTagRecyclerView);
+                        visibleAnimator.setDuration(150);
+                        invisibleAnimator
+                                .addListener(new Animator.AnimatorListener() {
+                                    @Override
+                                    public void onAnimationStart(
+                                            Animator animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(
+                                            Animator animation) {
+                                        mAdapter = new TagAdapter(tags);
+                                        mTagRecyclerView.setAdapter(mAdapter);
+                                        visibleAnimator.start();
+                                    }
+
+                                    @Override
+                                    public void onAnimationCancel(
+                                            Animator animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(
+                                            Animator animation) {
+
+                                    }
+                                });
+                        invisibleAnimator.start();
+                    }
+                    break;
+            }
         } else {
-            mTagRecyclerView.setVisibility(View.GONE);
-            mEmptyListLayout.setVisibility(View.VISIBLE);
+            if (tags != null) {
+                mAdapter = new TagAdapter(tags);
+                mTagRecyclerView.setAdapter(mAdapter);
+            }
+
+            switch (prevState) {
+                case LIST_UNDEFINED:
+                    visibleAnimator.setTarget(mEmptyListLayout);
+                    visibleAnimator.start();
+                    break;
+                case LIST_CONTAINS_ITEMS:
+                    invisibleAnimator.setTarget(mTagRecyclerView);
+                    visibleAnimator.setTarget(mEmptyListLayout);
+                    animator = new AnimatorSet();
+                    animator.playTogether(invisibleAnimator, visibleAnimator);
+                    animator.start();
+                    break;
+            }
         }
     }
 
     private void populateTagList() {
+        // Determine previous state
+        int prevState;
+        if (mAdapter == null) {
+            prevState = LIST_UNDEFINED;
+        } else if (mAdapter.getItemCount() == 0) {
+            prevState = LIST_EMPTY;
+        } else {
+            prevState = LIST_CONTAINS_ITEMS;
+        }
+
         List<Tag> tags = TagSettings.getProfileTags(this, mSelectedProfileId,
                 TagSettings.ORDER_BY_HASH_COUNTER, TagSettings.LIMIT_UNBOUNDED);
-        mAdapter = new TagAdapter(tags);
-        mTagRecyclerView.setAdapter(mAdapter);
-        if (tags.size() == 0) {
-            mTagRecyclerView.setVisibility(View.GONE);
-            findViewById(R.id.list_empty).setVisibility(View.VISIBLE);
-        } else {
-            mTagRecyclerView.setVisibility(View.VISIBLE);
-            findViewById(R.id.list_empty).setVisibility(View.GONE);
-        }
+        updateTagListVisibility(tags.size() > 0, prevState, tags);
     }
 
     @Override
@@ -285,6 +380,7 @@ public class MainActivity extends Activity implements
                         setFabColor(mColors[ProfileSettings
                                 .getProfile(this, mSelectedProfileId)
                                 .getColorIndex()]);
+                        populateTagList();
                         break;
                     default:
                 }
@@ -339,23 +435,25 @@ public class MainActivity extends Activity implements
                                 startActivityForResult(intent,
                                         REQUEST_ADD_PROFILE);
                             } else {
-                                mSelectedProfileId = selectedProfile;
-                                populateTagList();
-
-                                /* Animate fab color transition,
-                                but delay it a bit to let the tag list
-                                populate without affecting the animation
-                                 */
-                                mFab.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        setFabColor(mColors[ProfileSettings
-                                                .getProfile(MainActivity.this,
-                                                        mSelectedProfileId)
-                                                .getColorIndex()]);
-
-                                    }
-                                }, 100);
+                                if (mAdapter == null ||
+                                        selectedProfile != mSelectedProfileId) {
+                                    mSelectedProfileId = selectedProfile;
+                                    populateTagList();
+                                    /* Animate fab color transition,
+                                    but delay it a bit to let the tag list
+                                    populate without affecting the animation
+                                     */
+                                    mFab.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            setFabColor(mColors[ProfileSettings
+                                                    .getProfile(
+                                                            MainActivity.this,
+                                                            mSelectedProfileId)
+                                                    .getColorIndex()]);
+                                        }
+                                    }, 100);
+                                }
                             }
                             return false;
                         }
@@ -516,7 +614,7 @@ public class MainActivity extends Activity implements
         public void add(Tag tag, int position) {
             mTags.add(position, tag);
             if (mTags.size() == 1) {
-                setTagListVisibility(true);
+                updateTagListVisibility(true, LIST_EMPTY, null);
             }
             notifyItemInserted(position);
         }
@@ -526,7 +624,7 @@ public class MainActivity extends Activity implements
             mTags.remove(position);
             notifyItemRemoved(position);
             if (mTags.size() == 0) {
-                setTagListVisibility(false);
+                updateTagListVisibility(false, LIST_CONTAINS_ITEMS, null);
             }
         }
 
