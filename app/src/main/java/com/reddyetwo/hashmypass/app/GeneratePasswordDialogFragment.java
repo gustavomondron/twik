@@ -23,7 +23,6 @@ package com.reddyetwo.hashmypass.app;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -33,7 +32,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -49,6 +47,7 @@ import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
 import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.FaviconLoader;
+import com.reddyetwo.hashmypass.app.util.KeyboardManager;
 import com.reddyetwo.hashmypass.app.util.SecurePassword;
 
 public class GeneratePasswordDialogFragment extends DialogFragment
@@ -119,7 +118,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
                         }
 
                         // Hide keyboard
-                        hideKeyboard();
+                        KeyboardManager.hide(getActivity(), mTagEditText);
 
                         // Call listener
                         mListener.onDialogDismiss(mTag);
@@ -187,23 +186,6 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         // Populate fields
         mTagEditText.setText(mTag.getName());
 
-        // Restore cached master key
-        mCacheMasterKey =
-                Preferences.getRememberMasterKeyMins(getActivity()) > 0;
-        if (mCacheMasterKey) {
-            mMasterKeyEditText
-                    .setText(HashMyPassApplication.getCachedMasterKey(), 0,
-                            HashMyPassApplication.getCachedMasterKey().length);
-
-        }
-
-
-        // Manage keyboard status
-        if (mMasterKeyEditText.length() == 0 || mTagEditText.length() == 0) {
-            showKeyboard();
-        }
-
-
         return builder.create();
     }
 
@@ -218,18 +200,23 @@ public class GeneratePasswordDialogFragment extends DialogFragment
                     .setEnabled(false);
         }
 
-    }
+        // Restore cached master key
+        mCacheMasterKey =
+                Preferences.getRememberMasterKeyMins(getActivity()) > 0;
+        if (mCacheMasterKey) {
+            mMasterKeyEditText
+                    .setText(HashMyPassApplication.getCachedMasterKey(), 0,
+                            HashMyPassApplication.getCachedMasterKey().length);
 
-    private void showKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getActivity()
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-    }
+        } else {
+            mMasterKeyEditText.setText("");
+        }
 
-    private void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getActivity()
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mTagEditText.getWindowToken(), 0);
+
+        // Manage keyboard status
+        if (mMasterKeyEditText.length() == 0 || mTagEditText.length() == 0) {
+            KeyboardManager.show(getActivity());
+        }
     }
 
     private void updatePassword() {

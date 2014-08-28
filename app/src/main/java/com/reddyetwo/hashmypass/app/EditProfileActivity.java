@@ -37,6 +37,7 @@ import android.widget.Spinner;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
+import com.reddyetwo.hashmypass.app.util.KeyboardManager;
 import com.reddyetwo.hashmypass.app.util.ProfileFormInflater;
 import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
 
@@ -178,7 +179,8 @@ public class EditProfileActivity extends Activity {
             @Override
             public void run() {
                 colorPaletteScrollview
-                        .scrollTo(mColorPaletteView.getSelectedColorScrollX(), 0);
+                        .scrollTo(mColorPaletteView.getSelectedColorScrollX(),
+                                0);
             }
         });
     }
@@ -188,6 +190,12 @@ public class EditProfileActivity extends Activity {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_PASSWORD_LENGTH, Integer.parseInt(
                 (String) mPasswordLengthSpinner.getSelectedItem()));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        KeyboardManager.hide(this, getCurrentFocus());
     }
 
     @Override
@@ -246,5 +254,4 @@ public class EditProfileActivity extends Activity {
 
         dialogFragment.show(getFragmentManager(), "passwordLength");
     }
-
 }

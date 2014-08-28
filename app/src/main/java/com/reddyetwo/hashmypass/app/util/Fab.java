@@ -42,6 +42,7 @@ public class Fab extends View {
     Context _context;
     Paint mButtonPaint, mDrawablePaint;
     Bitmap mBitmap;
+    int mFabColor;
     int mScreenHeight;
     float currentY;
     boolean mHidden = false;
@@ -63,6 +64,10 @@ public class Fab extends View {
         init(fabColor);
     }
 
+    public int getFabColor() {
+        return mFabColor;
+    }
+
     public void setFabDrawable(Drawable fabDrawable) {
         mBitmap = ((BitmapDrawable) fabDrawable).getBitmap();
         invalidate();
@@ -70,6 +75,7 @@ public class Fab extends View {
 
 
     public void init(int fabColor) {
+        mFabColor = fabColor;
         setWillNotDraw(false);
         this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mButtonPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -110,8 +116,8 @@ public class Fab extends View {
     public int dpToPx(int dp) {
         DisplayMetrics displayMetrics =
                 getContext().getResources().getDisplayMetrics();
-        return Math.round(
-                dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return Math.round(dp *
+                (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
     public void hideFab() {

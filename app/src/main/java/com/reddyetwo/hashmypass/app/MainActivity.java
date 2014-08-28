@@ -19,6 +19,11 @@
 
 package com.reddyetwo.hashmypass.app;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -36,6 +41,7 @@ import android.view.MenuItem;
 import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +67,9 @@ public class MainActivity extends Activity implements
     private static final int REQUEST_ADD_PROFILE = 1;
     private static final int REQUEST_CREATE_DEFAULT_PROFILE = 2;
     private static final String FRAGMENT_GENERATE_PASSWORD = "generatePassword";
+    private static final int LIST_EMPTY = 1;
+    private static final int LIST_CONTAINS_ITEMS = 2;
+    private static final int LIST_UNDEFINED = 3;
 
     // State keys
     private static final String STATE_SELECTED_PROFILE_ID = "profile_id";
@@ -74,6 +83,8 @@ public class MainActivity extends Activity implements
 
     private int[] mColors;
     private RecyclerView mTagRecyclerView;
+    private LinearLayout mEmptyListLayout;
+    private TagAdapter mAdapter;
     private Fab mFab;
 
     @Override
@@ -93,11 +104,12 @@ public class MainActivity extends Activity implements
         mTagRecyclerView = (RecyclerView) findViewById(R.id.tag_list);
         mTagRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mTagRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mEmptyListLayout = (LinearLayout) findViewById(R.id.list_empty);
 
         mColors = getResources().getIntArray(R.array.favicon_background_colors);
         mFab = (Fab) findViewById(R.id.fabbutton);
         if (mSelectedProfileId != Profile.NO_ID) {
-            mFab.setFabColor(
+            setFabColor(
                     mColors[ProfileSettings.getProfile(this, mSelectedProfileId)
                             .getColorIndex()]);
         }
@@ -161,25 +173,136 @@ public class MainActivity extends Activity implements
 
         if (!showTutorial()) {
             populateActionBarSpinner();
-            populateTagList();
 
             /* Cancel the master key alarm to clear cache */
             MasterKeyAlarmManager.cancelAlarm(this);
         }
     }
 
-    private void populateTagList() {
+    private int getTagPosition(Tag tag) {
         List<Tag> tags = TagSettings.getProfileTags(this, mSelectedProfileId,
                 TagSettings.ORDER_BY_HASH_COUNTER, TagSettings.LIMIT_UNBOUNDED);
-        mTagRecyclerView.setAdapter(new TagAdapter(tags));
-        if (tags.size() == 0) {
-            mTagRecyclerView.setVisibility(View.GONE);
-            findViewById(R.id.list_empty).setVisibility(View.VISIBLE);
+        int position = 0;
+        int size = tags.size();
+        while (position < size &&
+                !tags.get(position).getName().equals(tag.getName())) {
+            position++;
+        }
+        return position;
+    }
+
+    /**
+     * Updates the visibility of the tag list
+     *
+     * @param listContainsItems indicates whether the list contains items
+     * @param prevState         previous state of the list
+     * @param tags              list of tags, used when prevState =
+     *                          LIST_UNDEFINED or LIST_CONTAINS_ITEMS. Null
+     *                          if list items should not be modified.
+     */
+    private void updateTagListVisibility(boolean listContainsItems,
+                                         int prevState, final List<Tag> tags) {
+        AnimatorSet invisibleAnimator = (AnimatorSet) AnimatorInflater
+                .loadAnimator(this, R.animator.invisible);
+        final AnimatorSet visibleAnimator = (AnimatorSet) AnimatorInflater
+                .loadAnimator(this, R.animator.visible);
+        AnimatorSet animator;
+
+        if (listContainsItems) {
+            switch (prevState) {
+                case LIST_UNDEFINED:
+                    if (tags != null) {
+                        mAdapter = new TagAdapter(tags);
+                        mTagRecyclerView.setAdapter(mAdapter);
+                        visibleAnimator.setTarget(mTagRecyclerView);
+                        visibleAnimator.start();
+                    }
+                    break;
+                case LIST_EMPTY:
+                    if (tags != null) {
+                        mAdapter = new TagAdapter(tags);
+                        mTagRecyclerView.setAdapter(mAdapter);
+                    }
+                    invisibleAnimator.setTarget(mEmptyListLayout);
+                    visibleAnimator.setTarget(mTagRecyclerView);
+                    animator = new AnimatorSet();
+                    animator.playTogether(visibleAnimator, invisibleAnimator);
+                    animator.start();
+                    break;
+                case LIST_CONTAINS_ITEMS:
+                    if (tags != null) {
+                        invisibleAnimator.setTarget(mTagRecyclerView);
+                        invisibleAnimator.setDuration(150);
+                        visibleAnimator.setTarget(mTagRecyclerView);
+                        visibleAnimator.setDuration(150);
+                        invisibleAnimator
+                                .addListener(new Animator.AnimatorListener() {
+                                    @Override
+                                    public void onAnimationStart(
+                                            Animator animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(
+                                            Animator animation) {
+                                        mAdapter = new TagAdapter(tags);
+                                        mTagRecyclerView.setAdapter(mAdapter);
+                                        visibleAnimator.start();
+                                    }
+
+                                    @Override
+                                    public void onAnimationCancel(
+                                            Animator animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(
+                                            Animator animation) {
+
+                                    }
+                                });
+                        invisibleAnimator.start();
+                    }
+                    break;
+            }
         } else {
-            mTagRecyclerView.setVisibility(View.VISIBLE);
-            findViewById(R.id.list_empty).setVisibility(View.GONE);
+            if (tags != null) {
+                mAdapter = new TagAdapter(tags);
+                mTagRecyclerView.setAdapter(mAdapter);
+            }
+
+            switch (prevState) {
+                case LIST_UNDEFINED:
+                    visibleAnimator.setTarget(mEmptyListLayout);
+                    visibleAnimator.start();
+                    break;
+                case LIST_CONTAINS_ITEMS:
+                    invisibleAnimator.setTarget(mTagRecyclerView);
+                    visibleAnimator.setTarget(mEmptyListLayout);
+                    animator = new AnimatorSet();
+                    animator.playTogether(invisibleAnimator, visibleAnimator);
+                    animator.start();
+                    break;
+            }
+        }
+    }
+
+    private void populateTagList() {
+        // Determine previous state
+        int prevState;
+        if (mAdapter == null) {
+            prevState = LIST_UNDEFINED;
+        } else if (mAdapter.getItemCount() == 0) {
+            prevState = LIST_EMPTY;
+        } else {
+            prevState = LIST_CONTAINS_ITEMS;
         }
 
+        List<Tag> tags = TagSettings.getProfileTags(this, mSelectedProfileId,
+                TagSettings.ORDER_BY_HASH_COUNTER, TagSettings.LIMIT_UNBOUNDED);
+        updateTagListVisibility(tags.size() > 0, prevState, tags);
     }
 
     @Override
@@ -254,9 +377,10 @@ public class MainActivity extends Activity implements
                     case RESULT_OK:
                         mSelectedProfileId = data.getLongExtra(
                                 AddProfileActivity.RESULT_KEY_PROFILE_ID, 0);
-                        mFab.setFabColor(mColors[ProfileSettings
+                        setFabColor(mColors[ProfileSettings
                                 .getProfile(this, mSelectedProfileId)
                                 .getColorIndex()]);
+                        populateTagList();
                         break;
                     default:
                 }
@@ -271,6 +395,21 @@ public class MainActivity extends Activity implements
                 break;
             default:
         }
+    }
+
+    private void setFabColor(int color) {
+        int colorFrom = mFab.getFabColor();
+        ValueAnimator colorAnimation =
+                ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, color);
+        colorAnimation
+                .addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        mFab.setFabColor(
+                                (Integer) animation.getAnimatedValue());
+                    }
+                });
+        colorAnimation.start();
     }
 
     private void populateActionBarSpinner() {
@@ -296,12 +435,25 @@ public class MainActivity extends Activity implements
                                 startActivityForResult(intent,
                                         REQUEST_ADD_PROFILE);
                             } else {
-                                mSelectedProfileId = selectedProfile;
-                                mFab.setFabColor(mColors[ProfileSettings
-                                        .getProfile(MainActivity.this,
-                                                mSelectedProfileId)
-                                        .getColorIndex()]);
-                                populateTagList();
+                                if (mAdapter == null ||
+                                        selectedProfile != mSelectedProfileId) {
+                                    mSelectedProfileId = selectedProfile;
+                                    populateTagList();
+                                    /* Animate fab color transition,
+                                    but delay it a bit to let the tag list
+                                    populate without affecting the animation
+                                     */
+                                    mFab.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            setFabColor(mColors[ProfileSettings
+                                                    .getProfile(
+                                                            MainActivity.this,
+                                                            mSelectedProfileId)
+                                                    .getColorIndex()]);
+                                        }
+                                    }, 100);
+                                }
                             }
                             return false;
                         }
@@ -369,16 +521,22 @@ public class MainActivity extends Activity implements
         if (tag != null && tag.getId() == Tag.NO_ID &&
                 tag.getName().length() > 0) {
             // It is a new tag
-            TagSettings.insertTag(this, tag);
-            populateTagList();
+            tag.setId(TagSettings.insertTag(this, tag));
+            int position = getTagPosition(tag);
+            mAdapter.add(tag, position);
 
             // Update last used profile
             updateLastProfile();
         } else if (tag != null && tag.getName().length() > 0) {
-            // Save the tag and update the list because the name of a tag or
-            // its order in the list can have been modified
+            /* Save the tag and update the list because the name of a tag can
+             alter its position in the list
+              */
+            int oldPosition = getTagPosition(tag);
             TagSettings.updateTag(this, tag);
-            populateTagList();
+            int newPosition = getTagPosition(tag);
+            if (oldPosition != newPosition) {
+                mAdapter.move(oldPosition, newPosition);
+            }
         }
     }
 
@@ -411,9 +569,14 @@ public class MainActivity extends Activity implements
                     .setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            // Increase hash counter
+                            // Increase hash counter. This may affect tag list.
+                            int oldPosition = getTagPosition(tag);
                             tag.setHashCounter(tag.getHashCounter() + 1);
                             TagSettings.updateTag(MainActivity.this, tag);
+                            int newPosition = getTagPosition(tag);
+                            if (oldPosition != newPosition) {
+                                mAdapter.move(oldPosition, newPosition);
+                            }
 
                             // Update last used profile
                             updateLastProfile();
@@ -448,6 +611,31 @@ public class MainActivity extends Activity implements
                     });
         }
 
+        public void add(Tag tag, int position) {
+            mTags.add(position, tag);
+            if (mTags.size() == 1) {
+                updateTagListVisibility(true, LIST_EMPTY, null);
+            }
+            notifyItemInserted(position);
+        }
+
+        public void remove(Tag tag) {
+            int position = mTags.indexOf(tag);
+            mTags.remove(position);
+            notifyItemRemoved(position);
+            if (mTags.size() == 0) {
+                updateTagListVisibility(false, LIST_CONTAINS_ITEMS, null);
+            }
+        }
+
+        public void move(int start, int end) {
+            Tag movedTag = mTags.get(start);
+            mTags.remove(movedTag);
+            mTags.add(end, movedTag);
+            notifyItemRemoved(start);
+            notifyItemInserted(end);
+        }
+
         @Override
         public int getItemCount() {
             return mTags.size();
@@ -456,8 +644,9 @@ public class MainActivity extends Activity implements
 
     private void deleteTag(Tag tag) {
         if (TagSettings.deleteTag(this, tag)) {
+
             // Update tags list
-            populateTagList();
+            mAdapter.remove(tag);
 
             // Check if we should delete favicon
             String site = tag.getSite();
@@ -473,7 +662,6 @@ public class MainActivity extends Activity implements
             Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();
         }
     }
-
 
     private void showGeneratePasswordDialog(Tag tag) {
         GeneratePasswordDialogFragment dialog =
