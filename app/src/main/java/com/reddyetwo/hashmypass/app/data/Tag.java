@@ -38,6 +38,12 @@ public class Tag implements Parcelable {
     public Tag() {
     }
 
+    public Tag(Tag tag) {
+        this(tag.getId(), tag.getProfileId(), tag.getHashCounter(),
+                tag.getSite(), tag.getName(), tag.getPasswordLength(),
+                tag.getPasswordType());
+    }
+
     public Tag(long id, long profileId, int hashCounter, String site,
                String name, int passwordLength, PasswordType passwordType) {
         mId = id;
