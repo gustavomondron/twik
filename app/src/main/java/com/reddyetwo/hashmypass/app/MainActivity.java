@@ -179,13 +179,12 @@ public class MainActivity extends Activity implements
         }
     }
 
-    private int getTagPosition(Tag tag) {
+    private int getTagPosition(long id) {
         List<Tag> tags = TagSettings.getProfileTags(this, mSelectedProfileId,
                 TagSettings.ORDER_BY_HASH_COUNTER, TagSettings.LIMIT_UNBOUNDED);
         int position = 0;
         int size = tags.size();
-        while (position < size &&
-                !tags.get(position).getName().equals(tag.getName())) {
+        while (position < size && tags.get(position).getId() != id) {
             position++;
         }
         return position;
@@ -522,7 +521,7 @@ public class MainActivity extends Activity implements
                 tag.getName().length() > 0) {
             // It is a new tag
             tag.setId(TagSettings.insertTag(this, tag));
-            int position = getTagPosition(tag);
+            int position = getTagPosition(tag.getId());
             mAdapter.add(tag, position);
 
             // Update last used profile
@@ -531,12 +530,8 @@ public class MainActivity extends Activity implements
             /* Save the tag and update the list because the name of a tag can
              alter its position in the list
               */
-            int oldPosition = getTagPosition(tag);
             TagSettings.updateTag(this, tag);
-            int newPosition = getTagPosition(tag);
-            if (oldPosition != newPosition) {
-                mAdapter.move(oldPosition, newPosition);
-            }
+            mAdapter.update(tag);
         }
     }
 
@@ -570,19 +565,15 @@ public class MainActivity extends Activity implements
                         @Override
                         public void onClick(View v) {
                             // Increase hash counter. This may affect tag list.
-                            int oldPosition = getTagPosition(tag);
                             tag.setHashCounter(tag.getHashCounter() + 1);
                             TagSettings.updateTag(MainActivity.this, tag);
-                            int newPosition = getTagPosition(tag);
-                            if (oldPosition != newPosition) {
-                                mAdapter.move(oldPosition, newPosition);
-                            }
+                            mAdapter.update(tag);
 
                             // Update last used profile
                             updateLastProfile();
 
                             // Show dialog
-                            showGeneratePasswordDialog(tag);
+                            showGeneratePasswordDialog(new Tag(tag));
                         }
                     });
             tagListViewHolder.itemView
@@ -628,12 +619,31 @@ public class MainActivity extends Activity implements
             }
         }
 
-        public void move(int start, int end) {
-            Tag movedTag = mTags.get(start);
-            mTags.remove(movedTag);
-            mTags.add(end, movedTag);
-            notifyItemRemoved(start);
-            notifyItemInserted(end);
+        public void update(Tag tag) {
+            int oldPosition = 0;
+            while (oldPosition < mTags.size() &&
+                    mTags.get(oldPosition).getId() != tag.getId()) {
+                oldPosition++;
+            }
+            if (oldPosition >= mTags.size()) {
+                /* The tag is stored in the database but not in the list,
+                because it's a new tag but its customs settings were saved
+                during its creation.
+                 */
+                int newPosition = getTagPosition(tag.getId());
+                mTags.add(newPosition, tag);
+                notifyItemInserted(newPosition);
+            }
+            int newPosition = getTagPosition(tag.getId());
+            if (oldPosition != newPosition) {
+                mTags.remove(tag);
+                mTags.add(newPosition, tag);
+                notifyItemRemoved(oldPosition);
+                notifyItemInserted(newPosition);
+            } else {
+                mTags.set(oldPosition, tag);
+                notifyItemChanged(oldPosition);
+            }
         }
 
         @Override
