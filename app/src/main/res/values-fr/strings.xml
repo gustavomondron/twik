@@ -69,18 +69,18 @@
         mot de passe pour un site web vous devrez renseigner la clé
         principale, connue de vous seul. Twik générera un
         mot de passe unique pour le site.</string>
-    <string name="tutorial_setup_header">C'est presque fini</string>
+    <string name="tutorial_setup_header">C\'est presque fini</string>
     <string name="tutorial_setup_content_1">Vous avez besoin de plusieurs choses
         avant de commencer:</string>
     <string name="tutorial_setup_content_2"><ul><li>Une clé principale. Ne
-        l'écrivez pas maintenant! Choisissez en une et souvenez-vous en.</li></ul></string>
+        l\'écrivez pas maintenant! Choisissez en une et souvenez-vous en.</li></ul></string>
     <string name="tutorial_setup_content_3"><ul><li>Une clé privée. Cette
         clé sera stockée dans sur appareil.</li></ul></string>
     <string name="tutorial_setup_sample_master_key">ex. "chat machine à laver radio"</string>
     <string name="tutorial_setup_sample_private_key">ex. "ASDF-QWER-DFGH"</string>
 
     <!-- Notices -->
-    <string name="no_tags">Vous n'avez pas de sites web!</string>
+    <string name="no_tags">Vous n\'avez pas de sites web!</string>
     <string name="copied_to_clipboard">Mot de passe du site web copié dans le
      presse-papier</string>
 
@@ -92,15 +92,15 @@
 
     <!-- Settings summaries -->
     <string name="settings_summary_remember_master_key_never">
-        La clé principale sera oubliée quand vous quitterez l'application
+        La clé principale sera oubliée quand vous quitterez l\'application
     </string>
     <string name="settings_summary_remember_master_key_minutes">
         La clé principale ne sera pas oubliée pendant %d minutes après
-        avoir quitté l'application
+        avoir quitté l\'application
     </string>
     <string name="settings_summary_remember_master_key_hours">
         La clé principale ne sera pas oubliée pendant %d heures après
-        avoir quitté l'application
+        avoir quitté l\'application
     </string>
     <string name="settings_summary_copy_to_clipboard_enabled">Le mot de passe
         généré sera copié automatiquement dans le presse-papier</string>
@@ -110,7 +110,7 @@
     <!-- Errors -->
     <string name="error">Ouille! Il y a eu une erreur!</string>
     <string name="error_no_profiles">Oups! Vous devriez créer un profil
-        d'abord!</string>
+        d\'abord!</string>
     <string name="error_tag_exists">Hey, vous avez déjà ce site web!</string>
     <string name="error_profile_exists">Ce nom existe déjà</string>
 
@@ -126,8 +126,12 @@
 	Elle est basée sur le mécanisme de génération de mots de passe de Password
 	Hasher par Steve Cooper et Password Hasher Plus par Eric Woodruff.
         <br/><br/>
-	Elle est compatible avec l'extension Password Hasher Plus pour Google Chrome
+	Elle est compatible avec l\'extension Password Hasher Plus pour Google Chrome
 	développée par Eric Woodruff.
+        <br/><br/>
+
+        <b>Acknowledgements</b><br/>
+        French translation by Andrés Álvarez and greizgh
         <br/><br/>
 
         <b>License</b><br/>

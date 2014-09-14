@@ -23,6 +23,11 @@ Building
 The source code includes an Android Studio project. Just open the project and 
 build it to generate the apk file, which can be installed on the device.
 
+Acknowledgments
+---------------
+
+French translation by Andrés Álvarez and greizgh.
+
 License
 -------
 
