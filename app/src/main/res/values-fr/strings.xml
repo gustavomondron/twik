@@ -126,8 +126,8 @@
 	Elle est basée sur le mécanisme de génération de mots de passe de Password
 	Hasher par Steve Cooper et Password Hasher Plus par Eric Woodruff.
         <br/><br/>
-	Elle est compatible avec l\'extension Password Hasher Plus pour Google Chrome
-	développée par Eric Woodruff.
+        Twik is also available as a
+        <a href="https://chrome.google.com/webstore/detail/twik-password-generator/aabbbcmaljeehpfjoepomhbocldfkinc">Chrome Extension</a> in the Chrome Web Store.
         <br/><br/>
 
         <b>Acknowledgements</b><br/>
