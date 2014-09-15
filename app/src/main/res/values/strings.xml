@@ -116,7 +116,7 @@
     <string name="about_body">
 <![CDATA[
         <b>Twik</b><br/>
-        Version 1.2.3<br/>
+        Version 1.2.4<br/>
         Copyright \u00A9 2014 Red Dye No. 2
         <br/><br/>
         <b>Twik</b> is an application that makes it easier to generate
@@ -125,8 +125,12 @@
         Twik is based on the password generation mechanism of Password
         Hasher by Steve Cooper and Password Hasher Plus by Eric Woodruff.
         <br/><br/>
-        Twik is compatible with the Google Chrome Password Hasher Plus
-        extension by Eric Woodruff.
+        Twik is also available as a
+        <a href="https://chrome.google.com/webstore/detail/twik-password-generator/aabbbcmaljeehpfjoepomhbocldfkinc">Chrome Extension</a> in the Chrome Web Store.
+        <br/><br/>
+
+        <b>Acknowledgements</b><br/>
+        French translation by Andrés Álvarez and greizgh
         <br/><br/>
 
         <b>License</b><br/>
