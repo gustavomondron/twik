@@ -37,22 +37,28 @@
         android:layout_gravity="top"
         android:alpha="0"
         android:orientation="vertical"
-        android:gravity="center_vertical"
+        android:gravity="top"
+        android:layout_marginTop="@dimen/list_empty_top_vertical_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:src="@drawable/list_empty"
-            android:layout_gravity="center"
-            android:layout_width="148dp"
-            android:layout_height="148dp"/>
+        <TextView
+            android:layout_gravity="left"
+            android:text="@string/lets_start"
+            android:textSize="@dimen/text_large"
+            android:fontFamily="sans-serif-light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <TextView
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="32dp"
+            android:layout_gravity="left"
+            android:layout_marginTop="@dimen/list_empty_middle_vertical_margin"
             android:text="@string/no_tags"
             android:textSize="@dimen/text_large"
             android:fontFamily="sans-serif-light"
+            android:lineSpacingMultiplier="1.5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

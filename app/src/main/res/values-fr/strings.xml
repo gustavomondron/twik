@@ -80,7 +80,10 @@
     <string name="tutorial_setup_sample_private_key">ex. "ASDF-QWER-DFGH"</string>
 
     <!-- Notices -->
-    <string name="no_tags">Vous n\'avez pas de sites web!</string>
+    <string name="lets_start"><b>Commençons!</b></string>
+    <string name="no_tags">Générez de nouveaux mots de passe en appuyant sur le
+        bouton ci-dessous ou en partageant le site web avec Twik depuis votre
+        navigateur.</string>
     <string name="copied_to_clipboard">Mot de passe du site web copié dans le
      presse-papier</string>
 

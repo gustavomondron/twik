@@ -56,6 +56,8 @@
     <dimen name="card_inner_text_size">18sp</dimen>
     <dimen name="card_hashed_password_text_size">20sp</dimen>
     <dimen name="favicon_size">24dp</dimen>
+    <dimen name="list_empty_top_vertical_margin">32dp</dimen>
+    <dimen name="list_empty_middle_vertical_margin">24dp</dimen>
 
     <dimen name="text_micro">12sp</dimen>
     <dimen name="text_small">14sp</dimen>
