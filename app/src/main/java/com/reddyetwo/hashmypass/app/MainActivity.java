@@ -175,9 +175,15 @@ public class MainActivity extends Activity implements
 
         // Update FAB color
         if (mSelectedProfileId != Profile.NO_ID) {
-            setFabColor(
-                    mColors[ProfileSettings.getProfile(this, mSelectedProfileId)
-                            .getColorIndex()]);
+            Profile profile =
+                    ProfileSettings.getProfile(this, mSelectedProfileId);
+            /* Warning: the profile could have been removed. In that case,
+            we'll select the first profile in the list */
+            if (profile == null) {
+                profile = ProfileSettings.getList(this).get(0);
+                mSelectedProfileId = profile.getId();
+            }
+            setFabColor(mColors[profile.getColorIndex()]);
         }
     }
 
