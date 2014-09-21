@@ -33,7 +33,7 @@
     <dimen name="tutorial_content_text_size">15sp</dimen>
     <dimen name="tutorial_splash_vertical_margin">96dp</dimen>
     <dimen name="tutorial_splash_title_size">42sp</dimen>
-    <dimen name="tutorial_splash_title_height">96dp</dimen>
+    <dimen name="tutorial_splash_title_height">112dp</dimen>
     <dimen name="tutorial_splash_subtitle_size">22sp</dimen>
     <dimen name="tutorial_splash_image_size">144dp</dimen>
     <dimen name="tutorial_content_image_padding_horizontal">32dp</dimen>
