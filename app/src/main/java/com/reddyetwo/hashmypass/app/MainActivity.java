@@ -108,11 +108,6 @@ public class MainActivity extends Activity implements
 
         mColors = getResources().getIntArray(R.array.favicon_background_colors);
         mFab = (Fab) findViewById(R.id.fabbutton);
-        if (mSelectedProfileId != Profile.NO_ID) {
-            setFabColor(
-                    mColors[ProfileSettings.getProfile(this, mSelectedProfileId)
-                            .getColorIndex()]);
-        }
         mFab.setFabDrawable(
                 getResources().getDrawable(R.drawable.ic_action_add));
         mFab.setOnClickListener(new View.OnClickListener() {
@@ -176,6 +171,19 @@ public class MainActivity extends Activity implements
 
             /* Cancel the master key alarm to clear cache */
             MasterKeyAlarmManager.cancelAlarm(this);
+        }
+
+        // Update FAB color
+        if (mSelectedProfileId != Profile.NO_ID) {
+            Profile profile =
+                    ProfileSettings.getProfile(this, mSelectedProfileId);
+            /* Warning: the profile could have been removed. In that case,
+            we'll select the first profile in the list */
+            if (profile == null) {
+                profile = ProfileSettings.getList(this).get(0);
+                mSelectedProfileId = profile.getId();
+            }
+            setFabColor(mColors[profile.getColorIndex()]);
         }
     }
 

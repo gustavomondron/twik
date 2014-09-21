@@ -80,7 +80,10 @@
     <string name="tutorial_setup_sample_private_key">p.ej. "ASDF-QWER-DFGH"</string>
 
     <!-- Notices -->
-    <string name="no_tags">¡No tienes sitios web!</string>
+    <string name="lets_start"><b>¡Comencemos!</b></string>
+    <string name="no_tags">Genera nuevas contraseñas pulsando el botón
+        o compartiendo el sitio web con <i>Twik</i> desde
+        tu navegador.</string>
     <string name="copied_to_clipboard">Contraseña del sitio web copiada al
         portapapeles</string>
 
@@ -117,7 +120,7 @@
     <!-- About Dialog -->
     <string name="about_body"><![CDATA[
         <b>Twik</b><br/>
-        Versión 1.2.4<br/>
+        Versión 1.2.5<br/>
         Copyright \u00A9 2014 Red Dye No. 2
         <br/><br/>
         <b>Twik</b> es una aplicación que hace más fácil generar

@@ -83,7 +83,10 @@
     </item>
 
     <!-- Notices -->
-    <string name="no_tags">You got no websites!</string>
+    <string name="lets_start"><b>Let\'s start!</b></string>
+    <string name="no_tags">Generate new passwords by pressing the
+        button below or by sharing the website with <i>Twik</i> from your
+        browser.</string>
     <string name="copied_to_clipboard">Website password copied to
         clipboard</string>
 
