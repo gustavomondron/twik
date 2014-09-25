@@ -347,6 +347,11 @@ public class BrowserIntegrationActivity extends Activity
             Uri uri = Uri.parse(intent.getStringExtra(Intent.EXTRA_TEXT));
             String host = uri.getHost();
 
+            if (host == null) {
+                // Invalid URI
+                finish();
+            }
+
             Matcher siteExtractor = SITE_PATTERN.matcher(host);
             if (!siteExtractor.matches()) {
                 // TODO Show error
