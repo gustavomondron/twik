@@ -157,6 +157,7 @@ public class EditProfileActivity extends Activity {
         mNameEditText.addTextChangedListener(profileFormWatcher);
         mPrivateKeyEditText.addTextChangedListener(profileFormWatcher);
 
+        mColor = profile.getColorIndex();
         mColorPaletteView = (ColorPaletteView) findViewById(R.id.profile_color);
         mColorPaletteView.setSelectedColorIndex(profile.getColorIndex());
         mColorPaletteView.setOnColorSelectedListener(

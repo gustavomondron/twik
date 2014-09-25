@@ -185,6 +185,9 @@ public class MainActivity extends Activity implements
             }
             setFabColor(mColors[profile.getColorIndex()]);
         }
+
+        /* Update tag list (may have been changed from web browser) */
+        populateTagList();
     }
 
     private int getTagPosition(long id) {

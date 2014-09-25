@@ -56,7 +56,7 @@ public class AddProfileActivity extends Activity {
     private Spinner mPasswordLengthSpinner;
     private ColorPaletteView mColorPaletteView;
 
-    private int mColor;
+    private int mColor = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
