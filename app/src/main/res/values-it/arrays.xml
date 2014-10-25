@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    * Copyright 2014 Red Dye No. 2
+    *
+    * This file is part of Twik.
+    *
+    * Twik is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * Twik is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * You should have received a copy of the GNU General Public License
+    * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
+    *
+    -->
+
+<resources>
+    <string-array name="RememberMasterKeyEntries">
+        <item>Mai</item>
+        <item>5 minuti</item>
+        <item>30 minuti</item>
+        <item>1 ora</item>
+        <item>2 ore</item>
+        <item>4 ore</item>
+    </string-array>
+
+    <string-array name="RememberMasterKeyEntryValues">
+        <item>0</item>
+        <item>5</item>
+        <item>30</item>
+        <item>60</item>
+        <item>120</item>
+        <item>240</item>
+    </string-array>
+
+    <string-array name="password_types_array">
+        <item>Alfanumerica + caratteri speciali</item>
+        <item>Alfanumerica</item>
+        <item>Numerica</item>
+    </string-array>
+
+    <array name="favicon_background_colors">
+        <item>@color/favicon_background_1</item>
+        <item>@color/favicon_background_2</item>
+        <item>@color/favicon_background_3</item>
+        <item>@color/favicon_background_4</item>
+        <item>@color/favicon_background_5</item>
+        <item>@color/favicon_background_6</item>
+        <item>@color/favicon_background_7</item>
+        <item>@color/favicon_background_8</item>
+        <item>@color/favicon_background_9</item>
+        <item>@color/favicon_background_10</item>
+    </array>
+
+</resources>
