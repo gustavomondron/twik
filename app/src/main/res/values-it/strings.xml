@@ -97,11 +97,14 @@
 
     <!-- Settings summaries -->
     <string name="settings_summary_remember_master_key_never">La chiave
-        princiaple non verrà ricordata dopo la chiusura dell'applicazione</string>
+        princiaple non verrà ricordata dopo la chiusura
+        dell\'applicazione</string>
     <string name="settings_summary_remember_master_key_minutes">La chiave
-        principale verrà ricordata per %s minuti dopo la chiusura dell'applicazione</string>
+        principale verrà ricordata per %s minuti dopo la chiusura
+        dell\'applicazione</string>
     <string name="settings_summary_remember_master_key_hours"> La chiave
-        principale verrà ricordata %d ore dopo la chiusura dell'applicazione</string>
+        principale verrà ricordata %d ore dopo la chiusura
+        dell\'applicazione</string>
     <string name="settings_summary_copy_to_clipboard_enabled">La password con 
         valori hash viene automaticamente copiata negli appunti</string>
     <string name="settings_summary_copy_to_clipboard_disabled">La password con
