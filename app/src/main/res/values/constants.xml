@@ -28,8 +28,4 @@
     </item>
     <item name="settings_default_show_tutorial" format="boolean" type="bool"
         >true</item>
-    <item name="text_profile_name_max_length" format="integer" type="integer">15
-    </item>
-    <item name="text_private_key_max_length" format="integer" type="integer">48
-    </item>
 </resources>

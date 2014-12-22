@@ -128,7 +128,6 @@
                 android:textColor="@android:color/white"
                 android:singleLine="false"
                 android:maxLines="2"
-                android:maxLength="@integer/text_private_key_max_length"
                 android:layout_toRightOf="@+id/ic_private_key"
                 android:layout_centerVertical="true"
                 android:layout_width="match_parent"
