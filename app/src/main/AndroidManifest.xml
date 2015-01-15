@@ -23,8 +23,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.reddyetwo.hashmypass.app" >
 
-    <uses-sdk tools:node="replace" />
-
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
