@@ -3,6 +3,8 @@
 /.idea/workspace.xml
 /.idea/libraries/*.xml
 /.idea/
+*.iml
+app/app.iml
 .DS_Store
 build
 app.apk
