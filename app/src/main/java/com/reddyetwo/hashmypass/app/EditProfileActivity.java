@@ -24,6 +24,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.Menu;
@@ -34,9 +35,11 @@ import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.Spinner;
 
+import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
+import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.KeyboardManager;
 import com.reddyetwo.hashmypass.app.util.ProfileFormInflater;
 import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
@@ -94,6 +97,11 @@ public class EditProfileActivity extends Activity {
 
         mPrivateKeyEditText = (EditText) findViewById(R.id.private_key_text);
         mPrivateKeyEditText.setText(profile.getPrivateKey());
+
+        // Setting PrivateKeyEditText Font - not possible via XML
+        Typeface monospacedTypeface = Typeface.createFromAsset(getAssets(),
+                Constants.FONT_MONOSPACE);
+        mPrivateKeyEditText.setTypeface(monospacedTypeface);
 
         // Populating password length spinner is a bit more tricky
         // We have to restore its value from savedInstanceState...
@@ -156,6 +164,10 @@ public class EditProfileActivity extends Activity {
                         mNameEditText, mPrivateKeyEditText, saveButton);
         mNameEditText.addTextChangedListener(profileFormWatcher);
         mPrivateKeyEditText.addTextChangedListener(profileFormWatcher);
+
+        Typeface monoSpacedFace = Typeface.createFromAsset(getAssets(),
+                Constants.FONT_MONOSPACE);
+        mPrivateKeyEditText.setTypeface(monoSpacedFace);
 
         mColor = profile.getColorIndex();
         mColorPaletteView = (ColorPaletteView) findViewById(R.id.profile_color);
