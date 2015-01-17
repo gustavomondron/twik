@@ -39,6 +39,7 @@ import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
+import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.KeyboardManager;
 import com.reddyetwo.hashmypass.app.util.ProfileFormInflater;
 import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
@@ -96,6 +97,11 @@ public class EditProfileActivity extends Activity {
 
         mPrivateKeyEditText = (EditText) findViewById(R.id.private_key_text);
         mPrivateKeyEditText.setText(profile.getPrivateKey());
+
+        // Setting PrivateKeyEditText Font - not possible via XML
+        Typeface monospacedTypeface = Typeface.createFromAsset(getAssets(),
+                Constants.FONT_MONOSPACE);
+        mPrivateKeyEditText.setTypeface(monospacedTypeface);
 
         // Populating password length spinner is a bit more tricky
         // We have to restore its value from savedInstanceState...
