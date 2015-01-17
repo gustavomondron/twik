@@ -23,6 +23,7 @@ package com.reddyetwo.hashmypass.app;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
@@ -32,6 +33,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.data.PasswordLength;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Profile;
@@ -73,6 +75,9 @@ public class AddProfileActivity extends Activity {
         mNameEditText = (EditText) findViewById(R.id.profile_name_text);
         mPrivateKeyEditText = (EditText) findViewById(R.id.private_key_text);
 
+        Typeface monoSpacedFace = Typeface.createFromAsset(getAssets(),
+                Constants.FONT_MONOSPACE);
+        mPrivateKeyEditText.setTypeface(monoSpacedFace);
 
         // Populating password length spinner is a bit more tricky
         // We have to restore its value from savedInstanceState...
