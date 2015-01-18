@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content">
                 <com.reddyetwo.hashmypass.app.ColorPaletteView
                     android:id="@+id/profile_color"
-                    app:colors="@array/favicon_background_colors"
+                    app:colors="@array/color_palette_normal"
                     app:index="0"
                     app:accent_color="@color/item_focused"
                     android:layout_width="wrap_content"

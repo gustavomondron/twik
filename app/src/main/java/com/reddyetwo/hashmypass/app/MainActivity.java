@@ -22,8 +22,6 @@ package com.reddyetwo.hashmypass.app;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
-import android.animation.ArgbEvaluator;
-import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -53,6 +51,7 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.melnykov.fab.FloatingActionButton;
 import com.reddyetwo.hashmypass.app.data.Favicon;
 import com.reddyetwo.hashmypass.app.data.FaviconSettings;
 import com.reddyetwo.hashmypass.app.data.Preferences;
@@ -60,7 +59,6 @@ import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
-import com.reddyetwo.hashmypass.app.util.Fab;
 import com.reddyetwo.hashmypass.app.util.FaviconLoader;
 import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 
@@ -90,11 +88,13 @@ public class MainActivity extends ActionBarActivity
     private OrientationEventListener mOrientationEventListener;
     private boolean mOrientationHasChanged;
 
-    private int[] mColors;
+    private int[] mColorsNormal;
+    private int[] mColorsPressed;
+    private int[] mColorsRipple;
     private RecyclerView mTagRecyclerView;
     private LinearLayout mEmptyListLayout;
     private TagAdapter mAdapter;
-    private Fab mFab;
+    private FloatingActionButton mFab;
     private Toolbar mToolbar;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -119,9 +119,12 @@ public class MainActivity extends ActionBarActivity
         mTagRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mEmptyListLayout = (LinearLayout) findViewById(R.id.list_empty);
 
-        mColors = getResources().getIntArray(R.array.favicon_background_colors);
-        mFab = (Fab) findViewById(R.id.fabbutton);
-        mFab.setFabDrawable(getResources().getDrawable(R.drawable.ic_action_add));
+        mColorsNormal = getResources().getIntArray(R.array.color_palette_normal);
+        mColorsPressed = getResources().getIntArray(R.array.color_palette_pressed);
+        mColorsRipple = getResources().getIntArray(R.array.color_palette_ripple);
+
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.attachToRecyclerView(mTagRecyclerView);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -192,7 +195,9 @@ public class MainActivity extends ActionBarActivity
                 profile = ProfileSettings.getList(this).get(0);
                 mSelectedProfileId = profile.getId();
             }
-            setFabColor(mColors[profile.getColorIndex()]);
+            int colorIndex = profile.getColorIndex();
+            setFabColor(mColorsNormal[colorIndex], mColorsPressed[colorIndex],
+                    mColorsRipple[colorIndex]);
         }
 
         /* Update tag list (may have been changed from web browser) */
@@ -385,8 +390,10 @@ public class MainActivity extends ActionBarActivity
                     case RESULT_OK:
                         mSelectedProfileId =
                                 data.getLongExtra(AddProfileActivity.RESULT_KEY_PROFILE_ID, 0);
-                        setFabColor(mColors[ProfileSettings.getProfile(this, mSelectedProfileId)
-                                .getColorIndex()]);
+                        int colorIndex = ProfileSettings.getProfile(this, mSelectedProfileId)
+                                .getColorIndex();
+                        setFabColor(mColorsNormal[colorIndex], mColorsPressed[colorIndex],
+                                mColorsRipple[colorIndex]);
                         populateTagList();
                         break;
                     default:
@@ -404,17 +411,22 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    private void setFabColor(int color) {
-        int colorFrom = mFab.getFabColor();
+    private void setFabColor(int colorNormal, int colorPressed, int colorRipple) {
+/*
+        int colorFrom = mFab.getColorNormal();
         ValueAnimator colorAnimation =
-                ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, color);
+                ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorNormal);
         colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                mFab.setFabColor((Integer) animation.getAnimatedValue());
+                Log.d("TWIK", ((Integer) animation.getAnimatedValue()).toString());
+                mFab.setColorNormal((Integer) animation.getAnimatedValue());
             }
         });
-        colorAnimation.start();
+*/
+        mFab.setColorNormal(colorNormal);
+        mFab.setColorPressed(colorPressed);
+        mFab.setColorRipple(colorRipple);
     }
 
     private void populateToolBarSpinner() {
@@ -445,9 +457,11 @@ public class MainActivity extends ActionBarActivity
                         mFab.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                setFabColor(mColors[ProfileSettings
+                                int colorIndex = ProfileSettings
                                         .getProfile(MainActivity.this, mSelectedProfileId)
-                                        .getColorIndex()]);
+                                        .getColorIndex();
+                                setFabColor(mColorsNormal[colorIndex], mColorsPressed[colorIndex],
+                                        mColorsRipple[colorIndex]);
                             }
                         }, 100);
                     }

@@ -101,7 +101,7 @@ public class FaviconLoader {
     }
 
     private static int getBackgroundColor(Context context, char[] input) {
-        int[] colors = context.getResources().getIntArray(R.array.favicon_background_colors);
+        int[] colors = context.getResources().getIntArray(R.array.color_palette_normal);
         byte[] digest = PasswordHasher.calculateDigest(input);
 
         // Unsigned int, module colors length
