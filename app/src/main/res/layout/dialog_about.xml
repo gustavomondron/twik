@@ -23,13 +23,11 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:divider="?android:dividerVertical"
     android:showDividers="middle">
 
     <TextView android:id="@+id/app_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_launcher"
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
         android:fontFamily="sans-serif-condensed"
@@ -48,9 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="16dp"
-            android:textSize="14sp"
-            android:background="@android:color/white"
-            android:textColor="@android:color/black" />
+            android:textSize="14sp" />
 
     </ScrollView>
 

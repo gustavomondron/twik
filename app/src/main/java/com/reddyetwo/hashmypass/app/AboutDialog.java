@@ -40,8 +40,6 @@ import android.widget.TextView;
  */
 public class AboutDialog extends DialogFragment {
 
-    private static final String VERSION_UNAVAILABLE = "N/A";
-
     public static void showAbout(Activity activity) {
 
         FragmentManager fm = activity.getFragmentManager();
@@ -60,11 +58,6 @@ public class AboutDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
-        // Build the about body view and append the link to see OSS licenses
-        //SpannableStringBuilder aboutBody = new SpannableStringBuilder();
-        //aboutBody.append(Html.fromHtml(getString(R.string.about_body, versionName)));
-
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
         View rootView = layoutInflater.inflate(R.layout.dialog_about, null);
         TextView nameView = (TextView) rootView.findViewById(R.id.app_name);
@@ -75,7 +68,6 @@ public class AboutDialog extends DialogFragment {
         aboutBodyView.setMovementMethod(new LinkMovementMethod());
 
         return new AlertDialog.Builder(getActivity())
-                //.setTitle(R.string.title_about)
                 .setView(rootView)
                 .setPositiveButton(R.string.ok,
                         new DialogInterface.OnClickListener() {

@@ -119,7 +119,6 @@
 
     <!-- About Dialog -->
     <string name="about_body"><![CDATA[
-        <b>Twik</b><br/>
         Versión 1.2.6<br/>
         Copyright \u00A9 2014 Red Dye No. 2
         <br/><br/>
@@ -162,12 +161,6 @@
         <b><a href="https://github.com/davidhampgonsalves/Contact-Identicons/">Contact-Identicons</a></b><br/>
         <i>por David Hamp-Gonsalves.</i>
         <br/><br/>
-
-        <b><a href="http://jgilfelt.github.io/android-actionbarstylegenerator/">
-        Android Action Bar Style Generator</a></b><br/>
-        <i>por The Android Open Source Project</i> y
-        <i>readyState Software Ltd.</i> <br/>
-        Apache 2.0 license.<br/> <br/>
 
         <b><a href="http://font.ubuntu.com/">Ubuntu Mono</a></b> <br/>
         <i>por Canonical Ltd.</i> <br/>
