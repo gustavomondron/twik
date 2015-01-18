@@ -23,7 +23,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class DataOpenHelper extends SQLiteOpenHelper {
+class DataOpenHelper extends SQLiteOpenHelper {
 
     // TODO Typo in the db name... we should fix it... or maybe it's too late
     private static final String DATABASE_NAME = "hassmypass.db";
@@ -85,7 +85,7 @@ public class DataOpenHelper extends SQLiteOpenHelper {
     /* Table "favicons" */
     public static final String FAVICONS_TABLE_NAME = "favicons";
     public static final String COLUMN_FAVICONS_SITE = "site";
-    public static final String FAVICONS_TABLE_CREATE = "CREATE TABLE " +
+    private static final String FAVICONS_TABLE_CREATE = "CREATE TABLE " +
             FAVICONS_TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY, " +
             COLUMN_FAVICONS_SITE + " TEXT, " +
             "UNIQUE (" + COLUMN_FAVICONS_SITE + "));";

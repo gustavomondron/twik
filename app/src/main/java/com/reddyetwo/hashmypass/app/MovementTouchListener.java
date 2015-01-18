@@ -24,7 +24,7 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class MovementTouchListener implements View.OnTouchListener {
+class MovementTouchListener implements View.OnTouchListener {
 
     private static final int STATE_PRESSING = 1;
     private static final int STATE_RELEASED = 2;

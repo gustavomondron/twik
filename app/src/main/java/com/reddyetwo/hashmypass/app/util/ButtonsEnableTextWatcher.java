@@ -62,14 +62,14 @@ public class ButtonsEnableTextWatcher implements TextWatcher {
         updateHashButtonEnabled();
     }
 
-    public void updateHashButtonEnabled() {
+    void updateHashButtonEnabled() {
         boolean tagSet = mTagEditText.getText().toString().trim().length() > 0;
         boolean masterKeySet =
                 mMasterKeyEditText.length() > 0;
         mHashButton.setEnabled(tagSet && masterKeySet);
     }
 
-    public void updateTagSettingsButtonEnabled() {
+    void updateTagSettingsButtonEnabled() {
         boolean tagSet = mTagEditText.getText().toString().trim().length() > 0;
         mTagSettingsButton.setEnabled(tagSet);
         if (tagSet) {

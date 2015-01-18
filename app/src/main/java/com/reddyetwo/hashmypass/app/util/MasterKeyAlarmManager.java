@@ -32,7 +32,7 @@ import com.reddyetwo.hashmypass.app.HashMyPassApplication;
 
 public class MasterKeyAlarmManager extends BroadcastReceiver {
 
-    public static final int REQUEST_REMOVE_MASTER_KEY = 1;
+    private static final int REQUEST_REMOVE_MASTER_KEY = 1;
 
     @Override
     public void onReceive(Context context, Intent intent) {

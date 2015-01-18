@@ -39,13 +39,14 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
 public class Fab extends View {
-    Context _context;
-    Paint mButtonPaint, mDrawablePaint;
-    Bitmap mBitmap;
-    int mFabColor;
-    int mScreenHeight;
-    float currentY;
-    boolean mHidden = false;
+    private Context _context;
+    private Paint mButtonPaint;
+    private Paint mDrawablePaint;
+    private Bitmap mBitmap;
+    private int mFabColor;
+    private int mScreenHeight;
+    private float currentY;
+    private boolean mHidden = false;
 
     public Fab(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -74,7 +75,7 @@ public class Fab extends View {
     }
 
 
-    public void init(int fabColor) {
+    void init(int fabColor) {
         mFabColor = fabColor;
         setWillNotDraw(false);
         this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);

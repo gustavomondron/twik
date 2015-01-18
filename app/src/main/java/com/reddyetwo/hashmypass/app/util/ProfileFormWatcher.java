@@ -65,7 +65,7 @@ public class ProfileFormWatcher implements TextWatcher {
         updateSaveButtonEnabled();
     }
 
-    public void updateSaveButtonEnabled() {
+    void updateSaveButtonEnabled() {
         boolean nameSet =
                 mNameEditText.getText().toString().trim().length() > 0;
         boolean privateKeySet =

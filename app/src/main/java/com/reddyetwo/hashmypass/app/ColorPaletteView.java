@@ -212,7 +212,7 @@ public class ColorPaletteView extends View {
         void onColorSelected(ColorPaletteView source, int color);
     }
 
-    class mGestureListener extends GestureDetector.SimpleOnGestureListener {
+    private class mGestureListener extends GestureDetector.SimpleOnGestureListener {
 
         @Override
         public boolean onDown(MotionEvent e) {
