@@ -21,26 +21,27 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:tools="http://schemas.android.com/tools"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
       tools:context=".MainActivity">
     <item
         android:id="@+id/action_edit_profile"
         android:title="@string/action_edit_profile"
         android:orderInCategory="100"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
     <item
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="102"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
     <item
         android:visible="false"
         android:id="@+id/action_help"
         android:title="@string/action_help"
         android:orderInCategory="103"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
     <item
         android:id="@+id/action_about"
         android:title="@string/action_about"
         android:orderInCategory="104"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 </menu>
