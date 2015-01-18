@@ -114,32 +114,4 @@ public class Fab extends View {
         return super.onTouchEvent(event);
     }
 
-    public int dpToPx(int dp) {
-        DisplayMetrics displayMetrics =
-                getContext().getResources().getDisplayMetrics();
-        return Math.round(dp *
-                (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-    }
-
-    public void hideFab() {
-        if (!mHidden) {
-            currentY = getY();
-            ObjectAnimator mHideAnimation =
-                    ObjectAnimator.ofFloat(this, "Y", mScreenHeight);
-            mHideAnimation.setInterpolator(new AccelerateInterpolator());
-            mHideAnimation.start();
-            mHidden = true;
-        }
-    }
-
-    public void showFab() {
-        if (mHidden) {
-            ObjectAnimator mShowAnimation =
-                    ObjectAnimator.ofFloat(this, "Y", currentY);
-            mShowAnimation.setInterpolator(new DecelerateInterpolator());
-            mShowAnimation.start();
-            mHidden = false;
-        }
-    }
-
 }
