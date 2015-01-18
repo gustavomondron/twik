@@ -20,6 +20,7 @@
     -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
@@ -50,7 +51,8 @@
             android:fontFamily="sans-serif-light"
             android:text="@string/app_name"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/tutorial_splash_title_height"/>
+            android:layout_height="@dimen/tutorial_splash_title_height"
+            tools:ignore="UnusedAttribute"/>
 
         <TextView
             android:gravity="center"

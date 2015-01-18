@@ -20,7 +20,8 @@
     -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
         android:background="@drawable/tutorial_background"
         android:layout_width="match_parent"
         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -36,7 +37,8 @@
             android:textColor="@android:color/white"
             android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            tools:ignore="UnusedAttribute"/>
 
         <TextView
             android:text="@string/tutorial_intro_content"
