@@ -115,7 +115,6 @@
 
             <TextView
                 android:id="@+id/website_password"
-                android:text="password"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/text_medium"
                 android:alpha="0.0"

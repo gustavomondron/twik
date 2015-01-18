@@ -186,7 +186,6 @@
 
             <TextView
                 android:id="@+id/website_password"
-                android:text="Website password"
                 android:textSize="@dimen/text_medium"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_vertical"
