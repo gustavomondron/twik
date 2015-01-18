@@ -24,6 +24,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Spinner;
@@ -145,7 +146,7 @@ public class TagSettingsDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLong(KEY_PROFILE_ID, mProfileId);
         outState.putLong(KEY_TAG_ID, mTag.getId());

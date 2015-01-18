@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.GestureDetector;
@@ -195,7 +196,7 @@ public class ColorPaletteView extends View {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
         boolean result = mDetector.onTouchEvent(event);
         if (result && mColorSelected) {
             mIndex = (int) (event.getX() / (mRectangleSize + 2 * mPadding +

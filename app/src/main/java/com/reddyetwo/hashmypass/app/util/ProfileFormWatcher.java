@@ -73,7 +73,7 @@ public class ProfileFormWatcher implements TextWatcher {
 
         if (!nameSet || !privateKeySet) {
             mSaveButton.setEnabled(false);
-        } else if (nameSet) {
+        } else {
             long storedProfileId = ProfileSettings
                     .getProfileId(mContext, mNameEditText.getText().toString());
             boolean repeated = storedProfileId != Profile.NO_ID &&

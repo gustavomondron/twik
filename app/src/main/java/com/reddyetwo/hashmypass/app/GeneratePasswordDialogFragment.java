@@ -28,6 +28,7 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -87,7 +88,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(STATE_TAG, mTag);
         outState.putLong(STATE_PROFILE_ID, mProfileId);

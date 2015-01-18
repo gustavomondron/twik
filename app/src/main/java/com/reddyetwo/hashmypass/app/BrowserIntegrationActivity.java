@@ -349,6 +349,7 @@ public class BrowserIntegrationActivity extends Activity
             if (host == null) {
                 // Invalid URI
                 finish();
+                return null;
             }
 
             Matcher siteExtractor = SITE_PATTERN.matcher(host);
