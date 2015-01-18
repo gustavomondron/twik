@@ -20,17 +20,19 @@
     -->
 
 <resources>
-    <declare-styleable name="ColorPaletteView">
-        <attr name="colors" format="reference"/>
-        <attr name="index" format="integer"/>
-        <attr name="accent_color" format="color"/>
-    </declare-styleable>
+    <string-array name="RememberMasterKeyEntries">
+        <item>Mai</item>
+        <item>5 minuti</item>
+        <item>30 minuti</item>
+        <item>1 ora</item>
+        <item>2 ore</item>
+        <item>4 ore</item>
+    </string-array>
 
-    <declare-styleable name="MaterialColorPalette">
-        <attr name="color_palette_button_size" format="integer"/>
-        <attr name="color_palette_accent_color" format="color"/>
-        <attr name="color_palette_normal_list" format="reference"/>
-        <attr name="color_palette_pressed_list" format="reference"/>
-        <attr name="color_palette_ripple_list" format="reference"/>
-    </declare-styleable>
+    <string-array name="password_types_array">
+        <item>Alfanumerico + Caratteri speciali</item>
+        <item>Alfanumerico</item>
+        <item>Numerico</item>
+    </string-array>
+
 </resources>

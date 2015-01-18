@@ -29,15 +29,6 @@
         <item>4 heures</item>
     </string-array>
 
-    <string-array name="RememberMasterKeyEntryValues">
-        <item>0</item>
-        <item>5</item>
-        <item>30</item>
-        <item>60</item>
-        <item>120</item>
-        <item>240</item>
-    </string-array>
-
     <string-array name="password_types_array">
         <item>Alphanumérique + Caractères spéciaux</item>
         <item>Alphanumérique</item>

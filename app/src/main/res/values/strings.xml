@@ -52,8 +52,8 @@
     <string name="tag">Website</string>
     <string name="tag_settings">Website settings</string>
     <string name="color">Color</string>
-    <string name="logo">Logo</string>
-    <string name="identicon">Identicon</string>
+    <string name="logo" translatable="false">Logo</string>
+    <string name="identicon" translatable="false">Identicon</string>
 
     <!-- Tutorial -->
     <string name="tutorial_splash_subtitle">A different password for each site.
