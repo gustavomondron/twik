@@ -26,7 +26,7 @@
               android:endColor="@color/hashmypass_dark"
               android:centerX="50%"
               android:centerY="50%"
-              android:gradientRadius="360"
+              android:gradientRadius="50%p"
               android:type="radial"/>
 
 </shape>
