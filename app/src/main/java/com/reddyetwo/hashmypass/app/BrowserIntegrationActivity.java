@@ -30,6 +30,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -68,7 +69,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BrowserIntegrationActivity extends Activity
+public class BrowserIntegrationActivity extends ActionBarActivity
         implements TagSettingsDialogFragment.OnTagSettingsSavedListener,
         IdenticonGenerationTask.OnIconGeneratedListener {
 

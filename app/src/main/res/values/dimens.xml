@@ -26,6 +26,9 @@
     <dimen name="dialog_padding">16dp</dimen>
     <dimen name="section_margin_top">16dp</dimen>
 
+    <!-- Toolbar -->
+    <dimen name="toolbar_height">48dp</dimen>
+
     <!-- Specific Hash my Pass dimensions -->
     <dimen name="small_spacing">8dp</dimen>
     <dimen name="hashed_password_text_size">32sp</dimen>

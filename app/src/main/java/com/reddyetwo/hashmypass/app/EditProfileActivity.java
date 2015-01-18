@@ -20,12 +20,12 @@
 
 package com.reddyetwo.hashmypass.app;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,7 +41,7 @@ import com.reddyetwo.hashmypass.app.util.KeyboardManager;
 import com.reddyetwo.hashmypass.app.util.ProfileFormInflater;
 import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
 
-public class EditProfileActivity extends Activity {
+public class EditProfileActivity extends ActionBarActivity {
 
     public static final String EXTRA_PROFILE_ID = "profile_id";
 
@@ -75,12 +75,12 @@ public class EditProfileActivity extends Activity {
             return;
         }
 
-        // Setup action bar
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-            getActionBar().setSubtitle(profile.getName());
-        }
+        // Add and setup toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setSubtitle(profile.getName());
 
         mPasswordTypeSpinner =
                 (Spinner) findViewById(R.id.password_type_spinner);

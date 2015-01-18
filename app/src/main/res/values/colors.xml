@@ -24,8 +24,9 @@
     <color name="list_item_pressed">#ffe6e6e6</color>
     <color name="pager_progress_current">@color/hashmypass_light</color>
     <color name="pager_progress_rest">#e5e5e5</color>
-    <color name="hashmypass_main">#25b924</color>
-    <color name="hashmypass_light">#72d572</color>
+    <color name="hashmypass_main">#43A047</color>
+    <color name="hashmypass_dark">#2E7D32</color>
+    <color name="hashmypass_light">#A5D6A7</color>
     <color name="hashmypass_complementary">#9A239B</color>
     <color name="holo_light_background">#fff3f3f3</color>
 

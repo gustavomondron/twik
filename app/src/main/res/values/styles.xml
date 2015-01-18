@@ -19,60 +19,26 @@
     *
     -->
 
-<!-- File created by the Android Action Bar Style Generator
-
-     Copyright (C) 2011 The Android Open Source Project
-     Copyright (C) 2012 readyState Software Ltd
-
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
-
-          http://www.apache.org/licenses/LICENSE-2.0
-
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
--->
-
 <resources>
 
     <style name="Theme.Hashmypass"
-           parent="@android:style/Theme.Holo.Light.DarkActionBar">
-        <!-- Needed for emulator bug - Holo light color is white instead of gray -->
-        <item name="android:windowBackground">@color/holo_light_background
-        </item>
-        <item name="android:actionBarItemBackground">
-            @drawable/selectable_background_hashmypass
-        </item>
-        <item name="android:popupMenuStyle">@style/PopupMenu.Hashmypass</item>
-        <item name="android:dropDownListViewStyle">
-            @style/DropDownListView.Hashmypass
-        </item>
-        <item name="android:actionBarTabStyle">
-            @style/ActionBarTabStyle.Hashmypass
-        </item>
-        <item name="android:actionDropDownStyle">@style/DropDownNav.Hashmypass
-        </item>
-        <item name="android:actionBarStyle">@style/ActionBar.Solid.Hashmypass
-        </item>
-        <item name="android:actionModeBackground">
-            @drawable/cab_background_top_hashmypass
-        </item>
-        <item name="android:actionModeSplitBackground">
-            @drawable/cab_background_bottom_hashmypass
-        </item>
-        <item name="android:actionModeCloseButtonStyle">
-            @style/ActionButton.CloseMode.Hashmypass
-        </item>
+           parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- colorPrimary is used for the default action bar background -->
+        <item name="colorPrimary">@color/hashmypass_main</item>
 
-        <!-- Light.DarkActionBar specific -->
-        <item name="android:actionBarWidgetTheme">
-            @style/Theme.Hashmypass.Widget
-        </item>
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/hashmypass_dark</item>
 
+        <!-- colorAccent is used as the default value for colorControlActivated,
+             which is used to tint widgets -->
+        <item name="colorAccent">@color/hashmypass_main</item>
+    </style>
+
+    <!-- Theme for toolbar -->
+    <style name="Theme.Hashmypass.Toolbar"
+           parent="Theme.Hashmypass">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
     </style>
 
     <style name="AlertDialog.Hashmypass"
@@ -156,13 +122,6 @@
     </style>
 
     <!-- End of ActionBar style -->
-
-    <style name="DropDownItem"
-           parent="android:Widget.Holo.Light.DropDownItem.Spinner">
-        <item name="android:textAppearance">
-            ?android:attr/textAppearanceInverse
-        </item>
-    </style>
 
     <style
         name="tutorialStyle"

@@ -21,14 +21,25 @@
 
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:custom="http://schemas.android.com/apk/res-auto"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingTop="@dimen/activity_vertical_margin">
+                android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_height="@dimen/toolbar_height"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:minHeight="@dimen/toolbar_height"
+        app:theme="@style/Theme.Hashmypass.Toolbar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:background="?attr/colorPrimary">
+    </android.support.v7.widget.Toolbar>
 
     <ScrollView
         android:layout_above="@+id/button_bar_layout"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/toolbar"
+        android:paddingTop="@dimen/activity_vertical_margin"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -71,8 +82,8 @@
 
                 <com.reddyetwo.hashmypass.app.ColorPaletteView
                     android:id="@+id/profile_color"
-                    custom:colors="@array/favicon_background_colors"
-                    custom:accent_color="@color/item_focused"
+                    app:colors="@array/favicon_background_colors"
+                    app:accent_color="@color/item_focused"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 

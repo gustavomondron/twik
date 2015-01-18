@@ -25,6 +25,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -41,7 +43,7 @@ import com.reddyetwo.hashmypass.app.util.ProfileFormInflater;
 import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
 import com.reddyetwo.hashmypass.app.util.RandomPrivateKeyGenerator;
 
-public class AddProfileActivity extends Activity {
+public class AddProfileActivity extends ActionBarActivity {
 
     // Result codes
     public static final String RESULT_KEY_PROFILE_ID = "profile_id";
@@ -63,11 +65,11 @@ public class AddProfileActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_profile);
 
-        // Setup action bar
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        // Add and setup toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         /* Get UI widgets */
         mNameEditText = (EditText) findViewById(R.id.profile_name_text);

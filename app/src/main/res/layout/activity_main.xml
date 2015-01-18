@@ -19,57 +19,78 @@
     *
     -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:orientation="vertical"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/tag_list"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_height="@dimen/toolbar_height"
         android:layout_gravity="top"
-        android:choiceMode="singleChoice"
-        android:alpha="0"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:minHeight="@dimen/toolbar_height"
+        app:theme="@style/Theme.Hashmypass.Toolbar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:background="?attr/colorPrimary">
 
-    <LinearLayout
-        android:id="@+id/list_empty"
-        android:layout_gravity="top"
-        android:alpha="0"
-        android:orientation="vertical"
-        android:gravity="top"
-        android:layout_marginTop="@dimen/list_empty_top_vertical_margin"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        <Spinner
+            android:id="@+id/spinner_nav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </android.support.v7.widget.Toolbar>
+
+    <FrameLayout
+        android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/tag_list"
+            android:layout_gravity="bottom"
+            android:choiceMode="singleChoice"
+            android:alpha="0"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
-        <TextView
-            android:layout_gravity="left"
-            android:text="@string/lets_start"
-            android:textSize="@dimen/text_large"
-            android:fontFamily="sans-serif-light"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:id="@+id/list_empty"
+            android:layout_gravity="bottom"
+            android:alpha="0"
+            android:orientation="vertical"
+            android:gravity="top"
+            android:layout_marginTop="@dimen/list_empty_top_vertical_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:layout_gravity="left"
-            android:layout_marginTop="@dimen/list_empty_middle_vertical_margin"
-            android:text="@string/no_tags"
-            android:textSize="@dimen/text_large"
-            android:fontFamily="sans-serif-light"
-            android:lineSpacingMultiplier="1.5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_gravity="left"
+                android:text="@string/lets_start"
+                android:textSize="@dimen/text_large"
+                android:fontFamily="sans-serif-light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_gravity="left"
+                android:layout_marginTop="@dimen/list_empty_middle_vertical_margin"
+                android:text="@string/no_tags"
+                android:textSize="@dimen/text_large"
+                android:fontFamily="sans-serif-light"
+                android:lineSpacingMultiplier="1.5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 
-    <com.reddyetwo.hashmypass.app.util.Fab
-        android:id="@+id/fabbutton"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"/>
-
-</FrameLayout>
+        <com.reddyetwo.hashmypass.app.util.Fab
+            android:id="@+id/fabbutton"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"/>
+    </FrameLayout>
+</RelativeLayout>
