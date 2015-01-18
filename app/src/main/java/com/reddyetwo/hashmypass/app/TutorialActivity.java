@@ -216,6 +216,6 @@ public class TutorialActivity extends FragmentActivity {
                 getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt(Preferences.PREFS_KEY_TUTORIAL_PAGE, page);
-        editor.commit();
+        editor.apply();
     }
 }
