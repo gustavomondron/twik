@@ -68,8 +68,7 @@
                 android:layout_height="@dimen/tutorial_intro_edit_text_height"
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@+id/ic_private_key"
-                android:background="@drawable/background_edittext_material"
-                android:imeOptions="actionDone"/>
+                android:background="@drawable/background_edittext_material"/>
 
             <TextView
                 android:id="@+id/website_text"
@@ -86,8 +85,7 @@
                 android:layout_height="@dimen/tutorial_intro_edit_text_height"
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@+id/ic_private_key"
-                android:background="@drawable/background_edittext_material"
-                android:imeOptions="actionDone"/>
+                android:background="@drawable/background_edittext_material"/>
 
             <ImageView
                 android:id="@+id/ic_private_key"
