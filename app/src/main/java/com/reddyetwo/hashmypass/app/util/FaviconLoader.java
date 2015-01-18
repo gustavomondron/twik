@@ -92,6 +92,7 @@ public class FaviconLoader {
 
     private static void setTextViewBackground(TextView textView, Drawable background) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            //noinspection deprecation
             textView.setBackgroundDrawable(background);
         } else {
             textView.setBackground(background);
@@ -112,7 +113,10 @@ public class FaviconLoader {
         mUrl = url;
         mOnFaviconLoaded = onFaviconLoaded;
 
-        CookieSyncManager.createInstance(mContext);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            //noinspection deprecation
+            CookieSyncManager.createInstance(mContext);
+        }
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(false);
 
