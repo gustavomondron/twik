@@ -62,8 +62,7 @@ public class FaviconLoader {
         public void onFaviconLoaded(BitmapDrawable icon);
     }
 
-    public static void setAsBackground(Context context, TextView textView,
-                                       Tag tag) {
+    public static void setAsBackground(Context context, TextView textView, Tag tag) {
         if (tag == null || tag.getName().length() == 0) {
             setTextViewBackground(textView, null);
             return;
@@ -71,17 +70,14 @@ public class FaviconLoader {
 
         Drawable faviconDrawable = null;
         if (tag.getSite() != null) {
-            Favicon favicon =
-                    FaviconSettings.getFavicon(context, tag.getSite());
+            Favicon favicon = FaviconSettings.getFavicon(context, tag.getSite());
             if (favicon != null) {
-                faviconDrawable = new BitmapDrawable(context.getResources(),
-                        favicon.getIcon());
+                faviconDrawable = new BitmapDrawable(context.getResources(), favicon.getIcon());
             }
         }
         boolean writeInitial = faviconDrawable == null;
         if (faviconDrawable == null) {
-            faviconDrawable = context.getResources()
-                    .getDrawable(R.drawable.favicon_background);
+            faviconDrawable = context.getResources().getDrawable(R.drawable.favicon_background);
 
             ((GradientDrawable) faviconDrawable)
                     .setColor(getBackgroundColor(context, tag.getName().toCharArray()));
@@ -94,8 +90,7 @@ public class FaviconLoader {
         }
     }
 
-    private static void setTextViewBackground(TextView textView,
-                                              Drawable background) {
+    private static void setTextViewBackground(TextView textView, Drawable background) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
             textView.setBackgroundDrawable(background);
         } else {
@@ -105,8 +100,7 @@ public class FaviconLoader {
     }
 
     private static int getBackgroundColor(Context context, char[] input) {
-        int[] colors = context.getResources()
-                .getIntArray(R.array.favicon_background_colors);
+        int[] colors = context.getResources().getIntArray(R.array.favicon_background_colors);
         byte[] digest = PasswordHasher.calculateDigest(input);
 
         // Unsigned int, module colors length
@@ -143,8 +137,8 @@ public class FaviconLoader {
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
-            public void onReceivedError(WebView view, int errorCode,
-                                        String description, String failingUrl) {
+            public void onReceivedError(WebView view, int errorCode, String description,
+                                        String failingUrl) {
             }
 
             @Override
@@ -170,17 +164,14 @@ public class FaviconLoader {
         try {
             // Generate URL
             if (touchIconUrlList.size() > 0) {
-                faviconURL = new URL(touchIconUrlList
-                        .get(touchIconUrlList.size() - 1));
+                faviconURL = new URL(touchIconUrlList.get(touchIconUrlList.size() - 1));
             } else {
                 // Look for favicon
                 URL inputUrl = new URL(mUrl);
                 faviconURL = new URL(inputUrl.getProtocol() + "://" +
                         inputUrl.getHost() +
                         "/favicon.ico");
-                fallbackURL =
-                        new URL("http://www.google.com/s2/favicons?domain=" +
-                                mUrl);
+                fallbackURL = new URL("http://www.google.com/s2/favicons?domain=" + mUrl);
             }
 
             // Get bitmap from URL
@@ -229,8 +220,7 @@ public class FaviconLoader {
         }
 
         @Override
-        public void onReceivedTouchIconUrl(WebView view, String url,
-                                           boolean precomposed) {
+        public void onReceivedTouchIconUrl(WebView view, String url, boolean precomposed) {
             /* Awesome Android feature: sometimes we get an url which is just
              the host name... */
             if (url.endsWith(".png")) {
@@ -240,17 +230,9 @@ public class FaviconLoader {
             }
             super.onReceivedTouchIconUrl(view, url, precomposed);
         }
-
-        @Override
-        public void onProgressChanged(WebView view, int newProgress) {
-            // Sometimes, a 100% progress is received before the touch icons...
-            // Thank you, AOSP.
-            super.onProgressChanged(view, newProgress);
-        }
     }
 
-    private class RetrieveImageTask
-            extends AsyncTask<URL, Void, BitmapDrawable> {
+    private class RetrieveImageTask extends AsyncTask<URL, Void, BitmapDrawable> {
 
 
         public RetrieveImageTask() {
@@ -271,8 +253,7 @@ public class FaviconLoader {
 
             try {
                 return (BitmapDrawable) BitmapDrawable
-                        .createFromStream((InputStream) url.getContent(),
-                                "favicon");
+                        .createFromStream((InputStream) url.getContent(), "favicon");
             } catch (IOException e) {
                 e.printStackTrace();
                 return null;

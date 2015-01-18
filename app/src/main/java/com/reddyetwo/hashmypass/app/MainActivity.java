@@ -322,11 +322,6 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
         cacheMasterKey();
@@ -435,7 +430,8 @@ public class MainActivity extends ActionBarActivity
             spinner.setAdapter(spinnerAdapter);
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                public void onItemSelected(AdapterView<?> parent, View view, int position,
+                                           long id) {
                     if (id == ID_ADD_PROFILE) {
                         Intent intent = new Intent(MainActivity.this, AddProfileActivity.class);
                         startActivityForResult(intent, REQUEST_ADD_PROFILE);
@@ -695,8 +691,8 @@ public class MainActivity extends ActionBarActivity
 
         @Override
         public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null || convertView.getTag() == null || !convertView.getTag()
-                    .equals(TAG_TOOLBAR_SPINNER_ITEM_DROPDOWN)) {
+            if (convertView == null || convertView.getTag() == null ||
+                    !convertView.getTag().equals(TAG_TOOLBAR_SPINNER_ITEM_DROPDOWN)) {
                 convertView = LayoutInflater.from(getSupportActionBar().getThemedContext())
                         .inflate(R.layout.toolbar_spinner_item_dropdown, parent, false);
                 convertView.setTag(TAG_TOOLBAR_SPINNER_ITEM_DROPDOWN);
@@ -748,8 +744,8 @@ public class MainActivity extends ActionBarActivity
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null || convertView.getTag() == null || !convertView.getTag()
-                    .equals(TAG_TOOLBAR_SPINNER_ITEM_ACTIONBAR)) {
+            if (convertView == null || convertView.getTag() == null ||
+                    !convertView.getTag().equals(TAG_TOOLBAR_SPINNER_ITEM_ACTIONBAR)) {
                 convertView = LayoutInflater.from(getSupportActionBar().getThemedContext())
                         .inflate(R.layout.toolbar_spinner_item_actionbar, parent, false);
                 convertView.setTag(TAG_TOOLBAR_SPINNER_ITEM_ACTIONBAR);
