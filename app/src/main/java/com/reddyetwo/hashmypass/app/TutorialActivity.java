@@ -129,9 +129,9 @@ public class TutorialActivity extends FragmentActivity {
             ViewPager.OnPageChangeListener {
 
         private double mIndicatorBaseWidth;
-        private View mProgressPrevView;
-        private View mProgressCurrentView;
-        private View mProgressNextView;
+        private final View mProgressPrevView;
+        private final View mProgressCurrentView;
+        private final View mProgressNextView;
 
         public TutorialPagerAdapter(FragmentManager fm) {
             super(fm);

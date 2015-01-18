@@ -31,8 +31,8 @@ import android.util.TypedValue;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 
 public class IdenticonGenerator {
-    private static int height = 5;
-    private static int width = 5;
+    private static final int height = 5;
+    private static final int width = 5;
 
     public static Bitmap generate(Context context, char[] input) {
 

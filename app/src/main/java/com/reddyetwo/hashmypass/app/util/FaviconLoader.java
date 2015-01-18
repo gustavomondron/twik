@@ -52,7 +52,7 @@ public class FaviconLoader {
     private List<String> mTouchIconUrlList;
     private String mUrl;
     private OnFaviconLoaded mOnFaviconLoaded;
-    private Context mContext;
+    private final Context mContext;
 
     public FaviconLoader(Context context) {
         mContext = context;

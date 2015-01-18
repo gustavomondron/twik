@@ -28,13 +28,13 @@ import com.reddyetwo.hashmypass.app.util.IdenticonGenerator;
 
 public class IdenticonGenerationTask extends AsyncTask<char[], Void, Void> {
 
-    private Context mContext;
+    private final Context mContext;
 
     public interface OnIconGeneratedListener {
         public void onIconGenerated(Bitmap bitmap);
     }
 
-    private OnIconGeneratedListener mListener;
+    private final OnIconGeneratedListener mListener;
     private Bitmap mBitmap;
 
     public IdenticonGenerationTask(Context context,

@@ -539,7 +539,7 @@ public class MainActivity extends ActionBarActivity
 
     private class TagAdapter extends RecyclerView.Adapter<TagListViewHolder> {
 
-        private List<Tag> mTags;
+        private final List<Tag> mTags;
         private static final int mResource = R.layout.tag_list_item;
 
         public TagAdapter(List<Tag> objects) {
@@ -675,8 +675,8 @@ public class MainActivity extends ActionBarActivity
 
     public class TagListViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView mFaviconTextView;
-        public TextView mTagNameTextView;
+        public final TextView mFaviconTextView;
+        public final TextView mTagNameTextView;
 
         public TagListViewHolder(View itemView) {
             super(itemView);
@@ -687,7 +687,7 @@ public class MainActivity extends ActionBarActivity
 
     private class ProfileSpinnerAdapter implements SpinnerAdapter {
 
-        private List<Profile> mProfiles;
+        private final List<Profile> mProfiles;
 
         public ProfileSpinnerAdapter(List<Profile> profiles) {
             mProfiles = profiles;

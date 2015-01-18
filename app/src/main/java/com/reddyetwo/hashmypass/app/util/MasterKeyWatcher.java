@@ -33,9 +33,9 @@ import com.reddyetwo.hashmypass.app.IdenticonGenerationTask;
 public class MasterKeyWatcher implements TextWatcher,
         IdenticonGenerationTask.OnIconGeneratedListener {
 
-    private ImageView mIdenticonImageView;
+    private final ImageView mIdenticonImageView;
     private IdenticonGenerationTask mTask;
-    private Context mContext;
+    private final Context mContext;
 
     public MasterKeyWatcher(Context context, ImageView identiconImageView) {
         mContext = context;

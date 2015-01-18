@@ -400,7 +400,7 @@ public class BrowserIntegrationActivity extends Activity
 
     private class ProfileAdapter extends ArrayAdapter<Profile> {
 
-        private List<Profile> mProfiles;
+        private final List<Profile> mProfiles;
         private static final int mResource =
                 android.R.layout.simple_spinner_dropdown_item;
 

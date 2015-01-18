@@ -32,11 +32,11 @@ import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 
 public class ProfileFormWatcher implements TextWatcher {
 
-    private Context mContext;
-    private long mProfileId;
-    private EditText mNameEditText;
-    private EditText mPrivateKeyEditText;
-    private Button mSaveButton;
+    private final Context mContext;
+    private final long mProfileId;
+    private final EditText mNameEditText;
+    private final EditText mPrivateKeyEditText;
+    private final Button mSaveButton;
 
     public ProfileFormWatcher(Context context, long profileId,
                               EditText nameEditText,

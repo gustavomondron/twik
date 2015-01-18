@@ -32,8 +32,8 @@ class MovementTouchListener implements View.OnTouchListener {
     private static final int MOVEMENT_THRESHOLD_DP = 15; // 15 dp ~ 3 mm
 
     private int mState = STATE_RELEASED;
-    private OnPressedListener mOnPressedListener;
-    private float mMovementThresholdPx;
+    private final OnPressedListener mOnPressedListener;
+    private final float mMovementThresholdPx;
     private float mX;
     private float mY;
 

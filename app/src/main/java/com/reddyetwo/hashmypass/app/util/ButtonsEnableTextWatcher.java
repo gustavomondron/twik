@@ -29,10 +29,10 @@ import android.widget.ImageButton;
 
 public class ButtonsEnableTextWatcher implements TextWatcher {
 
-    private AutoCompleteTextView mTagEditText;
-    private EditText mMasterKeyEditText;
-    private ImageButton mTagSettingsButton;
-    private Button mHashButton;
+    private final AutoCompleteTextView mTagEditText;
+    private final EditText mMasterKeyEditText;
+    private final ImageButton mTagSettingsButton;
+    private final Button mHashButton;
 
     public ButtonsEnableTextWatcher(AutoCompleteTextView tagEditText,
                                     EditText masterKeyEditText,

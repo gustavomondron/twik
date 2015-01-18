@@ -39,7 +39,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
 public class Fab extends View {
-    private Context _context;
+    private final Context _context;
     private Paint mButtonPaint;
     private Paint mDrawablePaint;
     private Bitmap mBitmap;
