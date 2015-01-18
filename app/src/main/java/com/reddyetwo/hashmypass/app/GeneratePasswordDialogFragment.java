@@ -99,8 +99,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         // Inflate the layout
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_generate_password, null);
+        View view = View.inflate(getActivity(), R.layout.dialog_generate_password, null);
         builder.setView(view);
         builder.setPositiveButton(android.R.string.ok,
                 new DialogInterface.OnClickListener() {

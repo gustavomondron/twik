@@ -62,8 +62,7 @@ public class PasswordLengthDialogFragment extends DialogFragment {
         builder.setTitle(getString(R.string.password_length));
 
         // Inflate the layout
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_number_picker, null);
+        View view = View.inflate(getActivity(), R.layout.dialog_number_picker, null);
 
         // Set up number picker
         final NumberPicker picker =

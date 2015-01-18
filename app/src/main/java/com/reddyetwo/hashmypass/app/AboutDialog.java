@@ -58,8 +58,8 @@ public class AboutDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-        View rootView = layoutInflater.inflate(R.layout.dialog_about, null);
+
+        View rootView = View.inflate(getActivity(), R.layout.dialog_about, null);
         TextView nameView = (TextView) rootView.findViewById(R.id.app_name);
         nameView.setText(Html.fromHtml(getString(R.string.app_name)));
 

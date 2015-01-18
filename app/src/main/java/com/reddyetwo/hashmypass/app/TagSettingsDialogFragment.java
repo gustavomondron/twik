@@ -86,8 +86,7 @@ public class TagSettingsDialogFragment extends DialogFragment {
         builder.setTitle(getString(R.string.tag_settings));
 
         // Inflate the layout
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_tag_settings, null);
+        View view = View.inflate(getActivity(), R.layout.dialog_tag_settings, null);
 
         if (savedInstanceState != null) {
             // Restore the state (e.g. when the screen is rotated)
