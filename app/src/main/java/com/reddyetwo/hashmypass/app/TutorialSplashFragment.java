@@ -28,9 +28,6 @@ import android.widget.ImageView;
 
 public class TutorialSplashFragment extends Fragment {
 
-    private ViewGroup mRootView;
-    private ImageView mImageView;
-
     public TutorialSplashFragment() {
         super();
     }
@@ -38,12 +35,9 @@ public class TutorialSplashFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRootView = (ViewGroup) inflater
-                .inflate(R.layout.fragment_tutorial_splash_screen, container,
-                        false);
+        ViewGroup rootView = (ViewGroup) inflater
+                .inflate(R.layout.fragment_tutorial_splash_screen, container, false);
 
-        mImageView = (ImageView) mRootView.findViewById(R.id
-                .tutorial_content_image);
-        return mRootView;
+        return rootView;
     }
 }

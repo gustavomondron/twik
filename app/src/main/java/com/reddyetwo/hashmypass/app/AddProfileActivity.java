@@ -56,7 +56,6 @@ public class AddProfileActivity extends ActionBarActivity {
     private EditText mPrivateKeyEditText;
     private Spinner mPasswordTypeSpinner;
     private Spinner mPasswordLengthSpinner;
-    private ColorPaletteView mColorPaletteView;
 
     private int mColor = 0;
 
@@ -153,12 +152,11 @@ public class AddProfileActivity extends ActionBarActivity {
         mPrivateKeyEditText.addTextChangedListener(profileFormWatcher);
         mPrivateKeyEditText.setText(RandomPrivateKeyGenerator.generate());
 
-        mColorPaletteView = (ColorPaletteView) findViewById(R.id.profile_color);
-        mColorPaletteView.setOnColorSelectedListener(
-                new ColorPaletteView.OnColorSelectedListener() {
+        ColorPaletteView colorPaletteView = (ColorPaletteView) findViewById(R.id.profile_color);
+        colorPaletteView
+                .setOnColorSelectedListener(new ColorPaletteView.OnColorSelectedListener() {
                     @Override
-                    public void onColorSelected(ColorPaletteView source,
-                                                int color) {
+                    public void onColorSelected(ColorPaletteView source, int color) {
                         mColor = color;
                     }
                 });
