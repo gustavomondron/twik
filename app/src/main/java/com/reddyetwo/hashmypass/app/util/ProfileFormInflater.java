@@ -33,7 +33,7 @@ public class ProfileFormInflater {
                                                 Spinner spinner,
                                                int passwordLength) {
         ArrayAdapter<String> passwordLengthAdapter =
-                new ArrayAdapter<String>(context,
+                new ArrayAdapter<>(context,
                         android.R.layout.simple_spinner_item,
                         new String[]{String.valueOf(passwordLength)});
         passwordLengthAdapter.setDropDownViewResource(

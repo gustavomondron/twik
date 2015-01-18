@@ -220,7 +220,7 @@ public class FaviconLoader {
 
         public FaviconChromeClient() {
             super();
-            mTouchIconUrlList = new ArrayList<String>();
+            mTouchIconUrlList = new ArrayList<>();
         }
 
         @Override

@@ -181,7 +181,7 @@ public class ProfileSettings {
                 null, null, DataOpenHelper.COLUMN_PROFILES_NAME + " " +
                         "COLLATE NOCASE");
 
-        List<Profile> list = new ArrayList<Profile>();
+        List<Profile> list = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
                 long id = cursor.getLong(

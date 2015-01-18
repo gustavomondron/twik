@@ -38,12 +38,12 @@ public class TagAutocomplete {
 
         List<Tag> tags = TagSettings.getProfileTags(context, profileId,
                 TagSettings.ORDER_BY_HASH_COUNTER, TagSettings.LIMIT_UNBOUNDED);
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         for (Tag tag : tags) {
             names.add(tag.getName());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
                 android.R.layout.simple_list_item_1, names);
 
         tagTextView.setAdapter(adapter);

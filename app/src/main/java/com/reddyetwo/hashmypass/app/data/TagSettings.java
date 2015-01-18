@@ -228,7 +228,7 @@ public class TagSettings {
                 new String[]{Long.toString(profileId)}, null, null, orderClause,
                 limitClause);
 
-        List<Tag> tagList = new ArrayList<Tag>();
+        List<Tag> tagList = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
                 long tagId = cursor.getLong(
