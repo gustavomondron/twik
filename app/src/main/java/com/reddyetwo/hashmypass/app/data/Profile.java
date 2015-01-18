@@ -48,6 +48,7 @@ public class Profile {
         return mId;
     }
 
+    @SuppressWarnings("SameParameterValue")
     public void setId(long id) {
         mId = id;
     }

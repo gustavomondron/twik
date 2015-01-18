@@ -196,6 +196,7 @@ public class TagSettings {
      * @param orderBy
      * @return
      */
+    @SuppressWarnings("SameParameterValue")
     public static List<Tag> getProfileTags(Context context, long profileId,
                                            int orderBy, int limit) {
         DataOpenHelper helper = new DataOpenHelper(context);

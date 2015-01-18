@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.reddyetwo.hashmypass.app.R;
 
+@SuppressWarnings("SameParameterValue")
 public class ClipboardHelper {
 
     public static final String CLIPBOARD_LABEL_PASSWORD = "password";

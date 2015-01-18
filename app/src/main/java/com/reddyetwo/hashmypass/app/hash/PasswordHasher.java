@@ -196,6 +196,7 @@ public class PasswordHasher {
      * @param cNum     number of valid character codes starting from cStart
      * @return the string with the injected chars
      */
+    @SuppressWarnings("SameParameterValue")
     private static String injectCharacter(String input, int offset,
                                           int reserved, int seed, int length,
                                           char cStart, int cNum) {
