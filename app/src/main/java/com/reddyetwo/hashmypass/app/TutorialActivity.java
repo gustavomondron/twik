@@ -180,7 +180,7 @@ public class TutorialActivity extends FragmentActivity {
         }
 
         @Override
-        public void onMeasure(int width, int height) {
+        public void onMeasure(int width) {
             mIndicatorBaseWidth = (double) width / (getCount());
             updateIndicators(mPager.getCurrentItem());
         }

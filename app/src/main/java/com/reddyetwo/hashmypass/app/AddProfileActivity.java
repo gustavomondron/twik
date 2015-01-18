@@ -20,8 +20,6 @@
 
 package com.reddyetwo.hashmypass.app;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -156,7 +154,7 @@ public class AddProfileActivity extends ActionBarActivity {
         colorPaletteView
                 .setOnColorSelectedListener(new ColorPaletteView.OnColorSelectedListener() {
                     @Override
-                    public void onColorSelected(ColorPaletteView source, int color) {
+                    public void onColorSelected(int color) {
                         mColor = color;
                     }
                 });

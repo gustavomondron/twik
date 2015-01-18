@@ -29,7 +29,6 @@ public class Preferences {
 
     public static final String PREFS_NAME = "MyPreferences";
     public static final String PREFS_KEY_LAST_PROFILE = "LastProfile";
-    public static final String PREFS_KEY_SHOW_TUTORIAL = "showTutorial";
     public static final String PREFS_KEY_TUTORIAL_PAGE = "tutorialPage";
 
     public static int getRememberMasterKeyMins(Context context) {

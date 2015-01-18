@@ -163,8 +163,7 @@ public class EditProfileActivity extends ActionBarActivity {
         mColorPaletteView.setOnColorSelectedListener(
                 new ColorPaletteView.OnColorSelectedListener() {
                     @Override
-                    public void onColorSelected(ColorPaletteView source,
-                                                int color) {
+                    public void onColorSelected(int color) {
                         mColor = color;
                     }
                 });

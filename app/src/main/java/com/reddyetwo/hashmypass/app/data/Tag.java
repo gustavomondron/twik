@@ -35,9 +35,6 @@ public class Tag implements Parcelable {
     private int mPasswordLength;
     private PasswordType mPasswordType;
 
-    public Tag() {
-    }
-
     public Tag(Tag tag) {
         this(tag.getId(), tag.getProfileId(), tag.getHashCounter(),
                 tag.getSite(), tag.getName(), tag.getPasswordLength(),

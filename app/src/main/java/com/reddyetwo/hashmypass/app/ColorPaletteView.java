@@ -202,14 +202,14 @@ public class ColorPaletteView extends View {
                     mSpacing));
             if (mColorSelectedListener != null) {
                 invalidate();
-                mColorSelectedListener.onColorSelected(this, mIndex);
+                mColorSelectedListener.onColorSelected(mIndex);
             }
         }
         return result;
     }
 
     public interface OnColorSelectedListener {
-        void onColorSelected(ColorPaletteView source, int color);
+        void onColorSelected(int color);
     }
 
     private class mGestureListener extends GestureDetector.SimpleOnGestureListener {
