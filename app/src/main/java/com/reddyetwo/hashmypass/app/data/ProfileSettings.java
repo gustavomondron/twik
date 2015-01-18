@@ -68,8 +68,8 @@ public class ProfileSettings {
     /**
      * Inserts a profile in the database
      *
-     * @param context
-     * @param profile
+     * @param context The application context
+     * @param profile The profile
      * @return the ID of the inserted row, or -1 if an error occurred
      */
     public static long insertProfile(Context context, Profile profile) {
@@ -97,8 +97,8 @@ public class ProfileSettings {
     /**
      * Updates a profile in the database
      *
-     * @param context
-     * @param profile
+     * @param context The application context
+     * @param profile The profile
      * @return true in case of success, false if an error occurred
      */
     public static boolean updateProfile(Context context, Profile profile) {
@@ -127,8 +127,8 @@ public class ProfileSettings {
     /**
      * Deletes a profile in the database
      *
-     * @param context
-     * @param profileId
+     * @param context The application context
+     * @param profileId The profile ID
      * @return true in case of success, false if no profile was deleted
      */
     public static boolean deleteProfile(Context context, long profileId) {

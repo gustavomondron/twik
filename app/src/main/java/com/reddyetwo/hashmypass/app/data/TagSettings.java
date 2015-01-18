@@ -36,9 +36,9 @@ public class TagSettings {
     /**
      * Gets tag settings from database
      *
-     * @param context
-     * @param profileID
-     * @param name
+     * @param context The application context
+     * @param profileID The profile ID
+     * @param name The tag name
      * @return the tag settings, or a tag with NO_ID and the profile default
      * settings if not found
      */
@@ -83,8 +83,8 @@ public class TagSettings {
     /**
      * Gets tag settings from database
      *
-     * @param context
-     * @param tagId   the tag identifier
+     * @param context The application context
+     * @param tagId   the tag ID
      * @return the tag settings, or null if not found
      */
     public static Tag getTag(Context context, long tagId) {
@@ -121,8 +121,8 @@ public class TagSettings {
     /**
      * Inserts a tag in the database
      *
-     * @param context
-     * @param tag
+     * @param context The application context
+     * @param tag The tag
      * @return the ID of the new tag, or -1 if an error occurred
      */
     public static long insertTag(Context context, Tag tag) {
@@ -150,8 +150,8 @@ public class TagSettings {
     /**
      * Updates a tag in the database
      *
-     * @param context
-     * @param tag
+     * @param context The application context
+     * @param tag The tag
      * @return true if success, false in case of error
      */
     public static boolean updateTag(Context context, Tag tag) {
@@ -191,10 +191,11 @@ public class TagSettings {
     /**
      * Returns an ordered list of tags of a profile
      *
-     * @param context
-     * @param profileId
-     * @param orderBy
-     * @return
+     * @param context The application context
+     * @param profileId The profile ID
+     * @param orderBy The profiles ordering
+     * @param limit The maximum number of results
+     * @return The list of tags
      */
     @SuppressWarnings("SameParameterValue")
     public static List<Tag> getProfileTags(Context context, long profileId,
