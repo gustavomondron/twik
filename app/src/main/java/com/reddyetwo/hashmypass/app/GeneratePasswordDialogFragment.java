@@ -96,14 +96,13 @@ public class GeneratePasswordDialogFragment extends DialogFragment
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),
-                R.style.AlertDialog_Hashmypass);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         // Inflate the layout
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_generate_password, null);
         builder.setView(view);
-        builder.setNeutralButton(android.R.string.ok,
+        builder.setPositiveButton(android.R.string.ok,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
