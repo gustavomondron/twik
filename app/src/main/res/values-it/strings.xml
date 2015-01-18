@@ -100,7 +100,7 @@
         princiaple non verrà ricordata dopo la chiusura
         dell\'applicazione</string>
     <string name="settings_summary_remember_master_key_minutes">La chiave
-        principale verrà ricordata per %s minuti dopo la chiusura
+        principale verrà ricordata per %d minuti dopo la chiusura
         dell\'applicazione</string>
     <string name="settings_summary_remember_master_key_hours"> La chiave
         principale verrà ricordata %d ore dopo la chiusura
