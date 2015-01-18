@@ -20,7 +20,6 @@
 package com.reddyetwo.hashmypass.app.util;
 
 import android.text.Editable;
-import android.widget.EditText;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -41,9 +40,8 @@ public class SecurePassword {
     public static byte[] toBytes(char[] chars) {
         CharBuffer charBuffer = CharBuffer.wrap(chars);
         ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
-        byte[] bytes = Arrays
-                .copyOfRange(byteBuffer.array(), byteBuffer.position(),
-                        byteBuffer.limit());
+        byte[] bytes =
+                Arrays.copyOfRange(byteBuffer.array(), byteBuffer.position(), byteBuffer.limit());
         Arrays.fill(charBuffer.array(), '\u0000'); // clear sensitive data
         Arrays.fill(byteBuffer.array(), (byte) 0); // clear sensitive data
         return bytes;

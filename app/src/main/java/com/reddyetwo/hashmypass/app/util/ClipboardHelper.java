@@ -24,8 +24,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.reddyetwo.hashmypass.app.R;
-
 @SuppressWarnings("SameParameterValue")
 public class ClipboardHelper {
 
