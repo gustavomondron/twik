@@ -40,9 +40,9 @@ public class SettingsFragment extends PreferenceFragment
 
         addPreferencesFromResource(R.xml.settings);
 
-        mRememberMasterKeyPreference = (Preference) findPreference(
+        mRememberMasterKeyPreference = findPreference(
                 getString(R.string.settings_key_remember_master_key));
-        mCopyToClipboardPreference = (Preference) findPreference(
+        mCopyToClipboardPreference = findPreference(
                 getString(R.string.settings_key_copy_to_clipboard));
     }
 

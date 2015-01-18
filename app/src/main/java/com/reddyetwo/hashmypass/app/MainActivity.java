@@ -703,10 +703,10 @@ public class MainActivity extends ActionBarActivity
 
             if (mProfiles.get(position).getId() == ID_ADD_PROFILE) {
                 // Set to italic if this is the last option in the dropdown
-                ((TextView) profileNameTextView).setTypeface(null, Typeface.ITALIC);
+                profileNameTextView.setTypeface(null, Typeface.ITALIC);
             } else {
                 // Explicitly set to normal, in case convertView was in italics
-                ((TextView) profileNameTextView).setTypeface(null, Typeface.NORMAL);
+                profileNameTextView.setTypeface(null, Typeface.NORMAL);
             }
 
             return profileNameTextView;
