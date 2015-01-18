@@ -33,7 +33,6 @@
     <string name="action_about">Über</string>
     <string name="action_delete">Löschen</string>
     <string name="discard">Verwerfen</string>
-    <string name="ok">OK</string>
     <string name="cancel">Abbrechen</string>
     <string name="save">Speichern</string>
     <string name="skip">Überspringen</string>
@@ -135,7 +134,7 @@
 
         <b><a href="https://github.com/makovkastar/FloatingActionButton/">FloatingActionButton</a></b><br/>
         <i>von Oleksandr Melnykov.</i><br/>
-        MIT License.<br/><br/>
+        MIT Licensebr/><br/>
 
         <b><a href="http://font.ubuntu.com/">Ubuntu Mono</a></b> <br/>
         <i>von Canonical Ltd.</i> <br/>

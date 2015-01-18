@@ -68,7 +68,7 @@ public class AboutDialog extends DialogFragment {
 
         return new AlertDialog.Builder(getActivity())
                 .setView(rootView)
-                .setPositiveButton(R.string.ok,
+                .setPositiveButton(android.R.string.ok,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 dialog.dismiss();

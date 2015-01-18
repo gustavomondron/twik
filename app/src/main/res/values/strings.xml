@@ -32,7 +32,6 @@
     <string name="action_about">About</string>
     <string name="action_delete">Delete</string>
     <string name="discard">Discard</string>
-    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="skip">Skip tutorial</string>
