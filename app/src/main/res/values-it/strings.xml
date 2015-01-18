@@ -33,16 +33,11 @@
     <string name="action_delete">Elimina</string>
     <string name="discard">Scarta</string>
     <string name="ok">OK</string>
-    <string name="copy_to_clipboard">Copia negli appunti</string>
     <string name="cancel">Annulla</string>
-    <string name="add">Aggiungi</string>
     <string name="save">Salva</string>
-    <string name="hash">Hash</string>
     <string name="skip">Salta lìintroduzione</string>
     <string name="next">Avanti</string>
     <string name="start">Avvia</string>
-    <string name="ready">Sono pronto per iniziare!</string>
-    <string name="add_first_profile">Aggiungi il primo profilo</string>
 
     <!-- Dialogs -->
     <string name="confirm_delete">Eliminare il profilo \"%s\"?</string>

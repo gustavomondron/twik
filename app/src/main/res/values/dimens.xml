@@ -23,47 +23,25 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="dialog_padding">16dp</dimen>
-    <dimen name="section_margin_top">16dp</dimen>
 
     <!-- Toolbar -->
     <dimen name="toolbar_height">48dp</dimen>
 
     <!-- Specific Hash my Pass dimensions -->
-    <dimen name="small_spacing">8dp</dimen>
-    <dimen name="hashed_password_text_size">32sp</dimen>
-    <dimen name="tutorial_header_text_size">17sp</dimen>
-    <dimen name="tutorial_content_text_size">15sp</dimen>
     <dimen name="tutorial_splash_vertical_margin">96dp</dimen>
     <dimen name="tutorial_splash_title_size">42sp</dimen>
     <dimen name="tutorial_splash_title_height">112dp</dimen>
     <dimen name="tutorial_splash_subtitle_size">22sp</dimen>
     <dimen name="tutorial_splash_image_size">144dp</dimen>
-    <dimen name="tutorial_content_image_padding_horizontal">32dp</dimen>
-    <dimen name="tutorial_content_image_padding_vertical">48dp</dimen>
     <dimen name="tutorial_content_padding_vertical">48dp</dimen>
     <dimen name="tutorial_content_text_margin_top">32dp</dimen>
     <dimen name="tutorial_content_text_padding_inter">16dp</dimen>
-    <dimen name="tutorial_content_height">144dp</dimen>
-    <dimen name="tutorial_content_header_height">48dp</dimen>
-    <dimen name="tutorial_content_content_height">96dp</dimen>
-    <dimen name="add_default_profile_logo_size">48dp</dimen>
-    <dimen name="add_default_profile_logo_text_size">30sp</dimen>
-    <dimen name="add_default_profile_vertical_margin">
-        @dimen/activity_vertical_margin_large
-    </dimen>
     <dimen name="viewpager_indicator_height">2dp</dimen>
-    <dimen name="empty_list_text_size">22sp</dimen>
-    <dimen name="empty_list_image_size">112dp</dimen>
     <dimen name="button_size">48dp</dimen>
-    <dimen name="card_inner_text_size">18sp</dimen>
-    <dimen name="card_hashed_password_text_size">20sp</dimen>
     <dimen name="favicon_size">24dp</dimen>
     <dimen name="list_empty_top_vertical_margin">32dp</dimen>
     <dimen name="list_empty_middle_vertical_margin">24dp</dimen>
 
-    <dimen name="text_micro">12sp</dimen>
-    <dimen name="text_small">14sp</dimen>
     <dimen name="text_medium">18sp</dimen>
     <dimen name="text_large">22sp</dimen>
     <dimen name="text_input">16sp</dimen>

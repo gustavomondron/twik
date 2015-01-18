@@ -34,16 +34,11 @@
     <string name="action_delete">Löschen</string>
     <string name="discard">Verwerfen</string>
     <string name="ok">OK</string>
-    <string name="copy_to_clipboard">In die Zwischenablage kopieren</string>
     <string name="cancel">Abbrechen</string>
-    <string name="add">Neu</string>
     <string name="save">Speichern</string>
-    <string name="hash">Generieren</string>
     <string name="skip">Überspringen</string>
     <string name="next">Weiter</string>
     <string name="start">Los</string>
-    <string name="ready">Alles klar</string>
-    <string name="add_first_profile">Erstelle Dein erstes Profil</string>
 
     <!-- Dialogs -->
     <string name="confirm_delete">\"%s\" wirklich löschen?</string>

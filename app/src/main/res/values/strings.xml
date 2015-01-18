@@ -33,16 +33,11 @@
     <string name="action_delete">Delete</string>
     <string name="discard">Discard</string>
     <string name="ok">OK</string>
-    <string name="copy_to_clipboard">Copy to clipboard</string>
     <string name="cancel">Cancel</string>
-    <string name="add">Add</string>
     <string name="save">Save</string>
-    <string name="hash">Hash</string>
     <string name="skip">Skip tutorial</string>
     <string name="next">Next</string>
     <string name="start">Start</string>
-    <string name="ready">I\'m ready to go!</string>
-    <string name="add_first_profile">Add your first profile</string>
 
     <!-- Dialogs -->
     <string name="confirm_delete">Delete \"%s\" profile?</string>
