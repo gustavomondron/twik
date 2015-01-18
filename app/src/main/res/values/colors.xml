@@ -27,7 +27,6 @@
     <color name="hashmypass_main">#43A047</color>
     <color name="hashmypass_dark">#2E7D32</color>
     <color name="hashmypass_light">#A5D6A7</color>
-    <color name="holo_light_background">#fff3f3f3</color>
 
     <color name="edittext_background_focused">#2196f3</color>
     <color name="item_focused">#ff2095f6</color>
