@@ -81,6 +81,7 @@
 
             <EditText
                 android:id="@+id/master_key_text"
+                android:inputType="text"
                 android:enabled="false"
                 android:focusable="false"
                 android:fontFamily="sans-serif"
