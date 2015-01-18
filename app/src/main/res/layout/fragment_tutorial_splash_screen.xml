@@ -38,6 +38,7 @@
         <ImageView
             android:id="@+id/tutorial_content_image"
             android:src="@drawable/app_logo"
+            android:contentDescription="@string/logo"
             android:layout_gravity="center"
             android:layout_width="@dimen/tutorial_splash_image_size"
             android:layout_height="@dimen/tutorial_splash_image_size"/>
