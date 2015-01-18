@@ -69,7 +69,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BrowserIntegrationActivity extends ActionBarActivity
+public class BrowserIntegrationActivity extends Activity
         implements TagSettingsDialogFragment.OnTagSettingsSavedListener,
         IdenticonGenerationTask.OnIconGeneratedListener {
 
@@ -95,6 +95,7 @@ public class BrowserIntegrationActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         setContentView(R.layout.activity_browser_integration);
 
         final ImageView faviconImageView =

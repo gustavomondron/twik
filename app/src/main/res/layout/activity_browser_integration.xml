@@ -94,6 +94,7 @@
                         android:maxLines="1"
                         android:maxLength="25"
                         android:paddingRight="48dp"
+                        android:textSize="@dimen/text_input"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:completionThreshold="2"
@@ -162,6 +163,7 @@
                     android:singleLine="true"
                     android:maxLines="1"
                     android:maxLength="25"
+                    android:textSize="@dimen/text_input"
                     android:layout_toLeftOf="@+id/identicon"
                     android:layout_toRightOf="@+id/ic_key"
                     android:layout_width="match_parent"
@@ -213,15 +215,17 @@
             android:layout_height="@dimen/button_size"
             android:orientation="horizontal"
             android:divider="?android:dividerHorizontal"
+            android:paddingRight="8dp"
             style="?android:buttonBarStyle">
 
             <Button
+                android:gravity="right"
                 android:id="@+id/hash_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 style="?android:buttonBarButtonStyle"
                 android:layout_weight="1"
-                android:text="@string/ok"/>
+                android:text="@android:string/ok"/>
 
         </LinearLayout>
     </LinearLayout>
