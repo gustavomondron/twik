@@ -40,6 +40,7 @@ import com.reddyetwo.hashmypass.app.util.KeyboardManager;
 import com.reddyetwo.hashmypass.app.util.ProfileFormInflater;
 import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
 import com.reddyetwo.hashmypass.app.util.RandomPrivateKeyGenerator;
+import com.reddyetwo.hashmypass.app.views.MaterialColorPalette;
 
 public class AddProfileActivity extends ActionBarActivity {
 
@@ -75,8 +76,7 @@ public class AddProfileActivity extends ActionBarActivity {
 
         // Populating password length spinner is a bit more tricky
         // We have to restore its value from savedInstanceState...
-        mPasswordLengthSpinner =
-                (Spinner) findViewById(R.id.password_length_spinner);
+        mPasswordLengthSpinner = (Spinner) findViewById(R.id.password_length_spinner);
         int passwordLength;
         if (savedInstanceState != null) {
             passwordLength = savedInstanceState.getInt(KEY_PASSWORD_LENGTH);
@@ -84,41 +84,34 @@ public class AddProfileActivity extends ActionBarActivity {
             passwordLength = PasswordLength.DEFAULT;
         }
         ProfileFormInflater
-                .populatePasswordLengthSpinner(this, mPasswordLengthSpinner,
-                        passwordLength);
+                .populatePasswordLengthSpinner(this, mPasswordLengthSpinner, passwordLength);
         // Show number picker dialog when the spinner is touched
         mPasswordLengthSpinner.setOnTouchListener(
-                new MovementTouchListener(this,
-                        new MovementTouchListener.OnPressedListener() {
-                            @Override
-                            public void onPressed() {
-                                showDialog();
-                            }
-                        }));
+                new MovementTouchListener(this, new MovementTouchListener.OnPressedListener() {
+                    @Override
+                    public void onPressed() {
+                        showDialog();
+                    }
+                }));
 
-        mPasswordTypeSpinner =
-                (Spinner) findViewById(R.id.password_type_spinner);
-        ProfileFormInflater
-                .populatePasswordTypeSpinner(this, mPasswordTypeSpinner,
-                        PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
+        mPasswordTypeSpinner = (Spinner) findViewById(R.id.password_type_spinner);
+        ProfileFormInflater.populatePasswordTypeSpinner(this, mPasswordTypeSpinner,
+                PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
 
         Button addButton = (Button) findViewById(R.id.add_button);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Profile profile = new Profile(Profile.NO_ID,
-                        mNameEditText.getText().toString(),
+                Profile profile = new Profile(Profile.NO_ID, mNameEditText.getText().toString(),
                         mPrivateKeyEditText.getText().toString(),
-                        Integer.decode((String) mPasswordLengthSpinner
-                                .getSelectedItem()),
-                        PasswordType.values()[mPasswordTypeSpinner
-                                .getSelectedItemPosition()], mColor);
-                long profileId = ProfileSettings
-                        .insertProfile(AddProfileActivity.this, profile);
+                        Integer.decode((String) mPasswordLengthSpinner.getSelectedItem()),
+                        PasswordType.values()[mPasswordTypeSpinner.getSelectedItemPosition()],
+                        mColor);
+                long profileId = ProfileSettings.insertProfile(AddProfileActivity.this, profile);
                 if (profileId == -1) {
                     // Error!
-                    Toast.makeText(AddProfileActivity.this, R.string.error,
-                            Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddProfileActivity.this, R.string.error, Toast.LENGTH_LONG)
+                            .show();
                     setResult(RESULT_CANCELED);
                 } else {
                     Intent resultIntent = new Intent();
@@ -144,27 +137,27 @@ public class AddProfileActivity extends ActionBarActivity {
 
         // Add form watcher for enabling/disabling Add button
         ProfileFormWatcher profileFormWatcher =
-                new ProfileFormWatcher(getApplicationContext(), Profile.NO_ID,
-                        mNameEditText, mPrivateKeyEditText, addButton);
+                new ProfileFormWatcher(getApplicationContext(), Profile.NO_ID, mNameEditText,
+                        mPrivateKeyEditText, addButton);
         mNameEditText.addTextChangedListener(profileFormWatcher);
         mPrivateKeyEditText.addTextChangedListener(profileFormWatcher);
         mPrivateKeyEditText.setText(RandomPrivateKeyGenerator.generate());
 
-        ColorPaletteView colorPaletteView = (ColorPaletteView) findViewById(R.id.profile_color);
-        colorPaletteView
-                .setOnColorSelectedListener(new ColorPaletteView.OnColorSelectedListener() {
-                    @Override
-                    public void onColorSelected(int color) {
-                        mColor = color;
-                    }
-                });
+        MaterialColorPalette colorPalette =
+                (MaterialColorPalette) findViewById(R.id.profile_color_palette);
+        colorPalette.setOnColorSelectedListener(new MaterialColorPalette.OnColorSelectedListener() {
+            @Override
+            public void onColorSelected(int color) {
+                mColor = color;
+            }
+        });
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(KEY_PASSWORD_LENGTH, Integer.parseInt(
-                (String) mPasswordLengthSpinner.getSelectedItem()));
+        outState.putInt(KEY_PASSWORD_LENGTH,
+                Integer.parseInt((String) mPasswordLengthSpinner.getSelectedItem()));
     }
 
     @Override
@@ -185,19 +178,16 @@ public class AddProfileActivity extends ActionBarActivity {
 
     /* Shows a number picker dialog for choosing the password length */
     private void showDialog() {
-        PasswordLengthDialogFragment dialogFragment =
-                new PasswordLengthDialogFragment();
-        dialogFragment.setPasswordLength(Integer.parseInt(
-                (String) mPasswordLengthSpinner.getSelectedItem()));
-        dialogFragment.setOnSelectedListener(
-                new PasswordLengthDialogFragment.OnSelectedListener() {
-                    @Override
-                    public void onPasswordLengthSelected(int length) {
-                        ProfileFormInflater.populatePasswordLengthSpinner(
-                                AddProfileActivity.this, mPasswordLengthSpinner,
-                                length);
-                    }
-                });
+        PasswordLengthDialogFragment dialogFragment = new PasswordLengthDialogFragment();
+        dialogFragment.setPasswordLength(
+                Integer.parseInt((String) mPasswordLengthSpinner.getSelectedItem()));
+        dialogFragment.setOnSelectedListener(new PasswordLengthDialogFragment.OnSelectedListener() {
+            @Override
+            public void onPasswordLengthSelected(int length) {
+                ProfileFormInflater.populatePasswordLengthSpinner(AddProfileActivity.this,
+                        mPasswordLengthSpinner, length);
+            }
+        });
 
         dialogFragment.show(getFragmentManager(), "passwordLength");
     }

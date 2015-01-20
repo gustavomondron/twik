@@ -76,18 +76,13 @@
                 android:layout_marginBottom="16dp"
                 android:textColor="@color/text_gray"/>
 
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.reddyetwo.hashmypass.app.ColorPaletteView
-                    android:id="@+id/profile_color"
-                    app:colors="@array/color_palette_normal"
-                    app:index="0"
-                    app:accent_color="@color/item_focused"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-            </HorizontalScrollView>
+            <com.reddyetwo.hashmypass.app.views.MaterialColorPalette
+                android:id="@+id/profile_color_palette"
+                app:color_palette_normal="@array/color_palette_normal"
+                app:color_palette_pressed="@array/color_palette_pressed"
+                app:color_palette_ripple="@array/color_palette_ripple"
+                android:layout_width="wrap_content"
+                android:layout_height="68dp"/>
 
             <TextView
                 android:layout_width="wrap_content"

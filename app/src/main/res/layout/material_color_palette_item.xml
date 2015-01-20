@@ -19,11 +19,13 @@
     *
     -->
 
-<resources>
-    <declare-styleable name="MaterialColorPalette">
-        <attr name="color_palette_normal" format="reference"/>
-        <attr name="color_palette_pressed" format="reference"/>
-        <attr name="color_palette_ripple" format="reference"/>
-        <attr name="button_size" format="integer"/>
-    </declare-styleable>
-</resources>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content">
+    <com.reddyetwo.hashmypass.app.views.MaterialColorPaletteButton
+        android:id="@+id/material_color_palette_button"
+        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

@@ -28,7 +28,6 @@
     <color name="hashmypass_light">#A5D6A7</color>
 
     <color name="edittext_background_focused">#2196f3</color>
-    <color name="item_focused">#ff2095f6</color>
 
     <!-- Color palette for normal state -->
     <color name="color_palette_1">#F44336</color>
