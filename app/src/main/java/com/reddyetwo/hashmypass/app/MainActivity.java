@@ -712,7 +712,7 @@ public class MainActivity extends ActionBarActivity
                 convertView.setTag(TAG_TOOLBAR_SPINNER_ITEM_DROPDOWN);
             }
 
-            TextView profileNameTextView = (TextView) convertView.findViewById(R.id.profile_name);
+            TextView profileNameTextView = (TextView) convertView;
             profileNameTextView.setText(mProfiles.get(position).getName());
 
             if (mProfiles.get(position).getId() == ID_ADD_PROFILE) {
