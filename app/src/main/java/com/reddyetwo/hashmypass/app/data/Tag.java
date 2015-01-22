@@ -28,7 +28,16 @@ public class Tag implements Parcelable {
     public final static long NO_ID = -1;
 
     private long mId = NO_ID;
-    private long mProfileId;
+    public static final Parcelable.Creator<Tag> CREATOR = new Parcelable.Creator<Tag>() {
+        public Tag createFromParcel(Parcel in) {
+            return new Tag(in);
+        }
+
+        public Tag[] newArray(int size) {
+            return new Tag[size];
+        }
+    };
+    private final long mProfileId;
     private int mHashCounter = 0;
     private String mSite;
     private String mName;
@@ -36,13 +45,12 @@ public class Tag implements Parcelable {
     private PasswordType mPasswordType;
 
     public Tag(Tag tag) {
-        this(tag.getId(), tag.getProfileId(), tag.getHashCounter(),
-                tag.getSite(), tag.getName(), tag.getPasswordLength(),
-                tag.getPasswordType());
+        this(tag.getId(), tag.getProfileId(), tag.getHashCounter(), tag.getSite(), tag.getName(),
+                tag.getPasswordLength(), tag.getPasswordType());
     }
 
-    public Tag(long id, long profileId, int hashCounter, String site,
-               String name, int passwordLength, PasswordType passwordType) {
+    public Tag(long id, long profileId, int hashCounter, String site, String name,
+               int passwordLength, PasswordType passwordType) {
         mId = id;
         mProfileId = profileId;
         mHashCounter = hashCounter;
@@ -50,6 +58,16 @@ public class Tag implements Parcelable {
         mName = name;
         mPasswordLength = passwordLength;
         mPasswordType = passwordType;
+    }
+
+    private Tag(Parcel in) {
+        mId = in.readLong();
+        mProfileId = in.readLong();
+        mHashCounter = in.readInt();
+        mSite = in.readString();
+        mName = in.readString();
+        mPasswordLength = in.readInt();
+        mPasswordType = PasswordType.values()[in.readInt()];
     }
 
     public long getId() {
@@ -62,10 +80,6 @@ public class Tag implements Parcelable {
 
     public long getProfileId() {
         return mProfileId;
-    }
-
-    public void setProfileId(long profileId) {
-        mProfileId = profileId;
     }
 
     public int getHashCounter() {
@@ -122,26 +136,5 @@ public class Tag implements Parcelable {
         dest.writeString(mName);
         dest.writeInt(mPasswordLength);
         dest.writeInt(mPasswordType.ordinal());
-    }
-
-    public static final Parcelable.Creator<Tag> CREATOR =
-            new Parcelable.Creator<Tag>() {
-                public Tag createFromParcel(Parcel in) {
-                    return new Tag(in);
-                }
-
-                public Tag[] newArray(int size) {
-                    return new Tag[size];
-                }
-            };
-
-    private Tag(Parcel in) {
-        mId = in.readLong();
-        mProfileId = in.readLong();
-        mHashCounter = in.readInt();
-        mSite = in.readString();
-        mName = in.readString();
-        mPasswordLength = in.readInt();
-        mPasswordType = PasswordType.values()[in.readInt()];
     }
 }

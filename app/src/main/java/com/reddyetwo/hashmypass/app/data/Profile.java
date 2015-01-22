@@ -48,7 +48,6 @@ public class Profile {
         return mId;
     }
 
-    @SuppressWarnings("SameParameterValue")
     public void setId(long id) {
         mId = id;
     }
@@ -65,29 +64,15 @@ public class Profile {
         return mPrivateKey;
     }
 
-    public void setPrivateKey(String privateKey) {
-        mPrivateKey = privateKey;
-    }
-
     public int getPasswordLength() {
         return mPasswordLength;
-    }
-
-    public void setPasswordLength(int passwordLength) {
-        mPasswordLength = passwordLength;
     }
 
     public PasswordType getPasswordType() {
         return mPasswordType;
     }
 
-    public void setPasswordType(PasswordType passwordType) {
-        mPasswordType = passwordType;
-    }
-
-    public int getColorIndex() { return mColorIndex; }
-
-    public void setColorIndex(int colorIndex) {
-        mColorIndex = colorIndex;
+    public int getColorIndex() {
+        return mColorIndex;
     }
 }
