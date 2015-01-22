@@ -21,106 +21,109 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/tutorial_background"
               android:orientation="vertical"
-        android:background="@drawable/tutorial_background"
+              android:paddingLeft="@dimen/activity_horizontal_margin"
+              android:paddingRight="@dimen/activity_horizontal_margin"
+              android:paddingTop="@dimen/tutorial_content_padding_vertical">
+
+    <TextView
+        android:id="@+id/tutorial_header_text"
         android:layout_width="match_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/tutorial_content_padding_vertical"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center"
+        android:text="@string/tutorial_intro_header"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/tutorial_splash_title_size"
+        tools:ignore="UnusedAttribute"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/tutorial_content_text_margin_top"
+        android:fontFamily="sans-serif-light"
+        android:gravity="left"
+        android:text="@string/tutorial_intro_content"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_medium"
+        tools:ignore="UnusedAttribute"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginRight="16dp"
+        android:layout_weight="1"
+        android:gravity="center">
 
         <TextView
-            android:id="@+id/tutorial_header_text"
-            android:text="@string/tutorial_intro_header"
-            android:gravity="center"
-            android:textSize="@dimen/tutorial_splash_title_size"
-            android:textColor="@android:color/white"
-            android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/tutorial_intro_edit_text_height"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/ic_private_key"
+            android:background="@drawable/background_edittext_material"
+            android:enabled="false"
+            android:focusable="false"
+            android:fontFamily="sans-serif"
+            android:maxLength="25"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textSize="@dimen/text_medium"
             tools:ignore="UnusedAttribute"/>
 
         <TextView
-            android:text="@string/tutorial_intro_content"
-            android:gravity="left"
-            android:textSize="@dimen/text_medium"
+            android:id="@+id/website_text"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tutorial_intro_edit_text_height"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/ic_private_key"
+            android:alpha="0.0"
+            android:background="@drawable/background_edittext_material"
+            android:fontFamily="sans-serif"
+            android:gravity="bottom"
+            android:maxLength="25"
+            android:maxLines="1"
+            android:paddingBottom="@dimen/tutorial_intro_edit_text_padding_bottom"
+            android:singleLine="true"
             android:textColor="@android:color/white"
-            android:fontFamily="sans-serif-light"
+            android:textSize="@dimen/text_medium"
+            tools:ignore="UnusedAttribute"/>
+
+        <ImageView
+            android:id="@+id/ic_private_key"
+            android:layout_width="@dimen/tutorial_intro_lock_icon_width"
+            android:layout_height="@dimen/tutorial_intro_lock_icon_height"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/tutorial_intro_lock_icon_margin_left"
+            android:layout_toLeftOf="@+id/ic_master_key"
+            android:contentDescription="@string/profile"
+            android:src="@drawable/ic_action_lock_closed"/>
+
+        <ImageView
+            android:id="@+id/ic_master_key"
+            android:layout_width="@dimen/tutorial_intro_key_icon_width"
+            android:layout_height="@dimen/tutorial_intro_key_icon_height"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/tutorial_intro_key_icon_margin_left"
+            android:layout_marginTop="@dimen/tutorial_intro_key_icon_margin_top"
+            android:alpha="0.0"
+            android:contentDescription="@string/profile"
+            android:src="@drawable/ic_action_key_white_horizontal"/>
+
+        <TextView
+            android:id="@+id/website_password"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/tutorial_content_text_margin_top"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:layout_marginLeft="48dp"
-            android:layout_marginRight="16dp">
-
-            <TextView
-                android:enabled="false"
-                android:focusable="false"
-                android:fontFamily="sans-serif"
-                android:textSize="@dimen/text_medium"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:maxLength="25"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/tutorial_intro_edit_text_height"
-                android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@+id/ic_private_key"
-                android:background="@drawable/background_edittext_material"/>
-
-            <TextView
-                android:id="@+id/website_text"
-                android:alpha="0.0"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/text_medium"
-                android:gravity="bottom"
-                android:paddingBottom="@dimen/tutorial_intro_edit_text_padding_bottom"
-                android:fontFamily="sans-serif"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:maxLength="25"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/tutorial_intro_edit_text_height"
-                android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@+id/ic_private_key"
-                android:background="@drawable/background_edittext_material"/>
-
-            <ImageView
-                android:id="@+id/ic_private_key"
-                android:src="@drawable/ic_action_lock_closed"
-                android:contentDescription="@string/profile"
-                android:layout_width="@dimen/tutorial_intro_lock_icon_width"
-                android:layout_height="@dimen/tutorial_intro_lock_icon_height"
-                android:layout_marginLeft="@dimen/tutorial_intro_lock_icon_margin_left"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/ic_master_key"
-                android:layout_alignParentTop="true"/>
-
-            <ImageView
-                android:id="@+id/ic_master_key"
-                android:src="@drawable/ic_action_key_white_horizontal"
-                android:alpha="0.0"
-                android:contentDescription="@string/profile"
-                android:layout_width="@dimen/tutorial_intro_key_icon_width"
-                android:layout_height="@dimen/tutorial_intro_key_icon_height"
-                android:layout_marginLeft="@dimen/tutorial_intro_key_icon_margin_left"
-                android:layout_marginTop="@dimen/tutorial_intro_key_icon_margin_top"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"/>
-
-            <TextView
-                android:id="@+id/website_password"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/text_medium"
-                android:alpha="0.0"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/tutorial_intro_edit_text_height"
-                android:layout_below="@id/website_text"/>
-        </RelativeLayout>
+            android:layout_height="@dimen/tutorial_intro_edit_text_height"
+            android:layout_below="@id/website_text"
+            android:alpha="0.0"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_medium"/>
+    </RelativeLayout>
 
 </LinearLayout>

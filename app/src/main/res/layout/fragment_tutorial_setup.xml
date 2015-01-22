@@ -21,123 +21,128 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
-            android:fillViewport="true"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:background="@drawable/tutorial_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/tutorial_background"
+        android:orientation="vertical"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/tutorial_content_padding_vertical">
 
         <TextView
             android:id="@+id/tutorial_header_text"
-            android:text="@string/tutorial_setup_header"
-            android:gravity="center"
-            android:textSize="@dimen/tutorial_splash_title_size"
-            android:textColor="@android:color/white"
-            android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:text="@string/tutorial_setup_header"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/tutorial_splash_title_size"
             tools:ignore="UnusedAttribute"/>
 
         <TextView
-            android:text="@string/tutorial_setup_content_1"
-            android:gravity="left"
-            android:textSize="@dimen/text_medium"
-            android:textColor="@android:color/white"
-            android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/tutorial_content_text_margin_top"/>
+            android:layout_marginTop="@dimen/tutorial_content_text_margin_top"
+            android:fontFamily="sans-serif-light"
+            android:gravity="left"
+            android:text="@string/tutorial_setup_content_1"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_medium"
+            tools:ignore="UnusedAttribute"/>
 
         <TextView
-            android:text="@string/tutorial_setup_content_2"
-            android:gravity="left"
-            android:textSize="@dimen/text_medium"
-            android:textColor="@android:color/white"
-            android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/tutorial_content_text_padding_inter"/>
+            android:fontFamily="sans-serif-light"
+            android:gravity="left"
+            android:paddingTop="@dimen/tutorial_content_text_padding_inter"
+            android:text="@string/tutorial_setup_content_2"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_medium"
+            tools:ignore="UnusedAttribute"/>
 
         <RelativeLayout
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_width="match_parent"
-            android:layout_height="48dp">
+            android:layout_height="48dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
 
             <ImageView
                 android:id="@+id/ic_master_key"
-                android:src="@drawable/ic_action_key_white"
-                android:contentDescription="@string/profile"
                 android:layout_width="32dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="24dp"
+                android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"/>
+                android:layout_marginRight="24dp"
+                android:contentDescription="@string/profile"
+                android:src="@drawable/ic_action_key_white"/>
 
             <EditText
                 android:id="@+id/master_key_text"
-                android:inputType="text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/ic_master_key"
+                android:background="@drawable/background_edittext_material"
                 android:enabled="false"
                 android:focusable="false"
                 android:fontFamily="sans-serif"
-                android:textColor="@android:color/white"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:maxLength="25"
-                android:layout_toRightOf="@+id/ic_master_key"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/background_edittext_material"
                 android:imeOptions="actionDone"
-                android:text="@string/tutorial_setup_sample_master_key"/>
+                android:inputType="text"
+                android:maxLength="25"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="@string/tutorial_setup_sample_master_key"
+                android:textColor="@android:color/white"
+                tools:ignore="UnusedAttribute"/>
         </RelativeLayout>
 
         <TextView
-            android:text="@string/tutorial_setup_content_3"
-            android:gravity="left"
-            android:textSize="@dimen/text_medium"
-            android:textColor="@android:color/white"
-            android:fontFamily="sans-serif-light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/tutorial_content_text_padding_inter"/>
+            android:fontFamily="sans-serif-light"
+            android:gravity="left"
+            android:paddingTop="@dimen/tutorial_content_text_padding_inter"
+            android:text="@string/tutorial_setup_content_3"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_medium"
+            tools:ignore="UnusedAttribute"/>
 
         <RelativeLayout
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_width="match_parent"
-            android:layout_height="64dp">
+            android:layout_height="64dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
 
             <ImageView
                 android:id="@+id/ic_private_key"
-                android:src="@drawable/ic_action_lock_closed"
-                android:contentDescription="@string/profile"
                 android:layout_width="32dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="24dp"
+                android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"/>
+                android:layout_marginRight="24dp"
+                android:contentDescription="@string/profile"
+                android:src="@drawable/ic_action_lock_closed"/>
 
             <EditText
                 android:id="@+id/private_key_text"
-                android:fontFamily="sans-serif"
-                android:textColor="@android:color/white"
-                android:singleLine="false"
-                android:maxLines="2"
-                android:layout_toRightOf="@+id/ic_private_key"
-                android:layout_centerVertical="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/ic_private_key"
+                android:fontFamily="sans-serif"
+                android:hint="@string/tutorial_setup_sample_private_key"
                 android:imeOptions="actionDone"
-                android:hint="@string/tutorial_setup_sample_private_key"/>
+                android:maxLines="2"
+
+                android:singleLine="false"
+                android:textColor="@android:color/white"
+                tools:ignore="UnusedAttribute"/>
         </RelativeLayout>
 
     </LinearLayout>
