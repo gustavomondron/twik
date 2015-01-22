@@ -69,7 +69,6 @@ public class MainActivity extends ActionBarActivity
         implements GeneratePasswordDialogFragment.GeneratePasswordDialogListener {
 
     // Constants
-    private static final int ID_ADD_PROFILE = -1;
     private static final int REQUEST_ADD_PROFILE = 1;
     private static final int REQUEST_CREATE_DEFAULT_PROFILE = 2;
     private static final String FRAGMENT_GENERATE_PASSWORD = "generatePassword";
@@ -439,7 +438,6 @@ public class MainActivity extends ActionBarActivity
         if (mToolbar != null) {
             final List<Profile> profiles = ProfileSettings.getList(this);
             Profile addProfile = new Profile();
-            addProfile.setId(ID_ADD_PROFILE);
             addProfile.setName(getString(R.string.action_add_profile));
             profiles.add(addProfile);
             ProfileSpinnerAdapter spinnerAdapter = new ProfileSpinnerAdapter(profiles);
@@ -450,7 +448,7 @@ public class MainActivity extends ActionBarActivity
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position,
                                            long id) {
-                    if (id == ID_ADD_PROFILE) {
+                    if (id == Profile.NO_ID) {
                         Intent intent = new Intent(MainActivity.this, AddProfileActivity.class);
                         startActivityForResult(intent, REQUEST_ADD_PROFILE);
                     } else if (id != mSelectedProfileId) {
@@ -486,7 +484,7 @@ public class MainActivity extends ActionBarActivity
             /* If mSelectedProfileId == ID_ADD_PROFILE is because we have
             never hashed any password and there is no "last profile used for
             hashing" */
-            if (mSelectedProfileId != ID_ADD_PROFILE) {
+            if (mSelectedProfileId != Profile.NO_ID) {
                 for (Profile p : profiles) {
                     if (p.getId() == mSelectedProfileId) {
                         break;
@@ -721,7 +719,7 @@ public class MainActivity extends ActionBarActivity
             TextView profileNameTextView = (TextView) convertView;
             profileNameTextView.setText(mProfiles.get(position).getName());
 
-            if (mProfiles.get(position).getId() == ID_ADD_PROFILE) {
+            if (mProfiles.get(position).getId() == Profile.NO_ID) {
                 // Set to italic if this is the last option in the dropdown
                 profileNameTextView.setTypeface(null, Typeface.ITALIC);
             } else {

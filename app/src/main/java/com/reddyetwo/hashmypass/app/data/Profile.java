@@ -48,10 +48,6 @@ public class Profile {
         return mId;
     }
 
-    public void setId(long id) {
-        mId = id;
-    }
-
     public String getName() {
         return mName;
     }
