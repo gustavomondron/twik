@@ -79,8 +79,14 @@
 
     <!-- Settings summaries -->
     <string name="settings_summary_remember_master_key_never">Master-Passwort wird nach dem Beenden der App nicht gespeichert</string>
-    <string name="settings_summary_remember_master_key_minutes"> Master-Passwort wird nach dem Beenden der App für maximal %d Minuten gespeichert</string>
-    <string name="settings_summary_remember_master_key_hours"> Master-Passwort wird nach dem Beenden der App für maximal %d Stunde(n) gespeichert</string>
+    <plurals name="settings_summary_remember_master_key_minutes">
+        <item quantity="one">Master-Passwort wird nach dem Beenden der App für maximal %d Minute gespeichert</item>
+        <item quantity="other">Master-Passwort wird nach dem Beenden der App für maximal %d Minuten gespeichert</item>
+    </plurals>
+    <plurals name="settings_summary_remember_master_key_hours">
+        <item quantity="one">Master-Passwort wird nach dem Beenden der App für maximal %d Stunde gespeichert</item>
+        <item quantity="other">Master-Passwort wird nach dem Beenden der App für maximal %d Stunden gespeichert</item>
+    </plurals>
     <string name="settings_summary_copy_to_clipboard_enabled">Das generierte Passwort wird automatisch in die Zwischenablage kopiert</string>
     <string name="settings_summary_copy_to_clipboard_disabled">Das generierte Passwort wird nicht automatisch in die Zwischenablage kopiert</string>
 

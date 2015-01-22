@@ -40,10 +40,10 @@ public class SettingsFragment extends PreferenceFragment
 
         addPreferencesFromResource(R.xml.settings);
 
-        mRememberMasterKeyPreference = findPreference(
-                getString(R.string.settings_key_remember_master_key));
-        mCopyToClipboardPreference = findPreference(
-                getString(R.string.settings_key_copy_to_clipboard));
+        mRememberMasterKeyPreference =
+                findPreference(getString(R.string.settings_key_remember_master_key));
+        mCopyToClipboardPreference =
+                findPreference(getString(R.string.settings_key_copy_to_clipboard));
     }
 
     @Override
@@ -69,13 +69,14 @@ public class SettingsFragment extends PreferenceFragment
             setSummary(mRememberMasterKeyPreference,
                     R.string.settings_summary_remember_master_key_never);
         } else if (masterKeyMins < 60) {
-            setSummary(mRememberMasterKeyPreference,
-                    R.string.settings_summary_remember_master_key_minutes,
-                    masterKeyMins);
+            mRememberMasterKeyPreference.setSummary(getResources()
+                    .getQuantityString(R.plurals.settings_summary_remember_master_key_minutes,
+                            masterKeyMins, masterKeyMins));
         } else {
-            setSummary(mRememberMasterKeyPreference,
-                    R.string.settings_summary_remember_master_key_hours,
-                    masterKeyMins / 60);
+            int hours = masterKeyMins / 60;
+            mRememberMasterKeyPreference.setSummary(getResources()
+                    .getQuantityString(R.plurals.settings_summary_remember_master_key_hours, hours,
+                            hours));
         }
     }
 
@@ -90,18 +91,15 @@ public class SettingsFragment extends PreferenceFragment
         }
     }
 
-    private void setSummary(Preference preference, int summaryId,
-                            Object... args) {
+    private void setSummary(Preference preference, int summaryId, Object... args) {
         preference.setSummary(getString(summaryId, args));
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-                                          String key) {
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.settings_key_remember_master_key))) {
             updateRememberMasterKeySummary();
-        } else if (key
-                .equals(getString(R.string.settings_key_copy_to_clipboard))) {
+        } else if (key.equals(getString(R.string.settings_key_copy_to_clipboard))) {
             updateCopyToClipboardSummary();
         }
     }

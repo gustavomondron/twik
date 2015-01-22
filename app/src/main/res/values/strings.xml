@@ -94,10 +94,16 @@
     <!-- Settings summaries -->
     <string name="settings_summary_remember_master_key_never">Master key
         will not be remembered when you leave the app</string>
-    <string name="settings_summary_remember_master_key_minutes">Master
-        key will be remembered for %d minutes after you leave the app</string>
-    <string name="settings_summary_remember_master_key_hours"> Master key wil
-        l be remembered for %d hours after you leave the app</string>
+    <plurals name="settings_summary_remember_master_key_minutes">
+        <item quantity="one">Master
+        key will be remembered for %d minute after you leave the app</item>
+        <item quantity="other">Master
+        key will be remembered for %d minutes after you leave the app</item>
+    </plurals>
+    <plurals name="settings_summary_remember_master_key_hours">
+        <item quantity="one">Master key will be remembered for %d hour after you leave the app</item>
+        <item quantity="other">Master key will be remembered for %d hours after you leave the app</item>
+    </plurals>
     <string name="settings_summary_copy_to_clipboard_enabled">The hashed
         password is automatically copied to the clipboard</string>
     <string name="settings_summary_copy_to_clipboard_disabled">The hashed

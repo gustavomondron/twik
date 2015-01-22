@@ -89,14 +89,17 @@
     <string name="settings_summary_remember_master_key_never">
         La contraseña maestra no se recordará cuando abandones la aplicación
     </string>
-    <string name="settings_summary_remember_master_key_minutes">
-        La contraseña maestra se recordará durante %d minutos cuando
-        abandones la aplicación
-    </string>
-    <string name="settings_summary_remember_master_key_hours">
-        La contraseña maestra se recordará durante %d horas cuando abandones
-        la aplicación
-    </string>
+    <plurals name="settings_summary_remember_master_key_minutes">
+        <item quantity="one">La contraseña maestra se recordará durante %d minuto cuando
+        abandones la aplicación</item>
+        <item quantity="other">La contraseña maestra se recordará durante %d minutos cuando
+        abandones la aplicación</item>
+    </plurals>
+    <plurals name="settings_summary_remember_master_key_hours">
+        <item quantity="one">La contraseña maestra se recordará durante %d hora cuando abandones la aplicación</item>
+        <item quantity="other">La contraseña maestra se recordará durante %d horas cuando abandones
+        la aplicación</item>
+    </plurals>
     <string name="settings_summary_copy_to_clipboard_enabled">La contraseña
         generada se copia automáticamente al portapapeles</string>
     <string name="settings_summary_copy_to_clipboard_disabled">La contraseña

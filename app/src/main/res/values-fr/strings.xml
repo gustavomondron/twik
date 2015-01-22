@@ -89,14 +89,18 @@
     <string name="settings_summary_remember_master_key_never">
         La clé principale sera oubliée quand vous quitterez l\'application
     </string>
-    <string name="settings_summary_remember_master_key_minutes">
-        La clé principale ne sera pas oubliée pendant %d minutes après
-        avoir quitté l\'application
-    </string>
-    <string name="settings_summary_remember_master_key_hours">
-        La clé principale ne sera pas oubliée pendant %d heures après
-        avoir quitté l\'application
-    </string>
+    <plurals name="settings_summary_remember_master_key_minutes">
+        <item quantity="one">La clé principale ne sera pas oubliée pendant %d minute après
+        avoir quitté l\'application</item>
+        <item quantity="other">La clé principale ne sera pas oubliée pendant %d minutes après
+        avoir quitté l\'application</item>
+    </plurals>
+    <plurals name="settings_summary_remember_master_key_hours">
+        <item quantity="one">La clé principale ne sera pas oubliée pendant %d heure après
+        avoir quitté l\'application</item>
+        <item quantity="other">La clé principale ne sera pas oubliée pendant %d heures après
+        avoir quitté l\'application</item>
+    </plurals>
     <string name="settings_summary_copy_to_clipboard_enabled">Le mot de passe
         généré sera copié automatiquement dans le presse-papier</string>
     <string name="settings_summary_copy_to_clipboard_disabled">Le mot de passe
