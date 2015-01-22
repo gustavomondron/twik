@@ -60,6 +60,7 @@ public class ProfileSettings {
                     passwordType, colorIndex);
         }
 
+        cursor.close();
         db.close();
 
         return profile;
@@ -164,6 +165,7 @@ public class ProfileSettings {
             profileId = cursor.getLong(
                     cursor.getColumnIndex(DataOpenHelper.COLUMN_ID));
         }
+        cursor.close();
 
         return profileId;
     }
@@ -202,6 +204,7 @@ public class ProfileSettings {
             } while (cursor.moveToNext());
         }
 
+        cursor.close();
         db.close();
         return list;
     }

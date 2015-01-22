@@ -57,6 +57,7 @@ public class FaviconSettings {
             }
         }
 
+        cursor.close();
         db.close();
         return favicon;
     }

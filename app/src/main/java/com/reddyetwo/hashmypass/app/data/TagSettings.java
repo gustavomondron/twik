@@ -29,9 +29,9 @@ import java.util.List;
 
 public class TagSettings {
 
-    private static final int ORDER_BY_NAME = 1;
     public static final int ORDER_BY_HASH_COUNTER = 2;
     public static final int LIMIT_UNBOUNDED = -1;
+    private static final int ORDER_BY_NAME = 1;
 
     /**
      * Gets tag settings from database
@@ -76,6 +76,7 @@ public class TagSettings {
             }
         }
 
+        cursor.close();
         db.close();
         return tag;
     }
@@ -115,6 +116,8 @@ public class TagSettings {
                     PasswordType.values()[cursor.getInt(cursor.getColumnIndex(
                             DataOpenHelper.COLUMN_TAGS_PASSWORD_TYPE))]);
         }
+
+        cursor.close();
         return tag;
     }
 
@@ -250,6 +253,7 @@ public class TagSettings {
             } while (cursor.moveToNext());
         }
 
+        cursor.close();
         db.close();
         return tagList;
     }
@@ -270,6 +274,7 @@ public class TagSettings {
             tag = getTag(context, profileId, tagName);
         }
 
+        cursor.close();
         db.close();
         return tag;
     }
@@ -281,6 +286,9 @@ public class TagSettings {
                 new String[]{DataOpenHelper.COLUMN_ID},
                 DataOpenHelper.COLUMN_TAGS_SITE + " = ?", new String[]{site},
                 null, null, null);
-        return cursor.getCount() > 0;
+        boolean hasTags = cursor.getCount() > 0;
+
+        cursor.close();
+        return hasTags;
     }
 }
