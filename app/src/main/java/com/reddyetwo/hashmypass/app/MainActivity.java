@@ -22,7 +22,7 @@ package com.reddyetwo.hashmypass.app;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -97,14 +97,16 @@ public class MainActivity extends ActionBarActivity
     private FloatingActionButton mFab;
     private Toolbar mToolbar;
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @SuppressLint("InlinedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         // Use primary dark color for the status bar
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        if (hasLollipopApi()) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        }
 
         // Add toolbar to the activity
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -165,6 +167,10 @@ public class MainActivity extends ActionBarActivity
             }
         }
 
+    }
+
+    private boolean hasLollipopApi() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
     @Override
@@ -547,10 +553,39 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+    private void deleteTag(Tag tag) {
+        if (TagSettings.deleteTag(this, tag)) {
+
+            // Update tags list
+            mAdapter.remove(tag);
+
+            // Check if we should delete favicon
+            String site = tag.getSite();
+            if (site != null) {
+                Favicon favicon = FaviconSettings.getFavicon(this, site);
+                if (favicon != null && !TagSettings.siteHasTags(this, site)) {
+                    FaviconSettings.deleteFavicon(this, favicon);
+                }
+
+            }
+        } else {
+            // Error!
+            Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void showGeneratePasswordDialog(Tag tag) {
+        GeneratePasswordDialogFragment dialog = new GeneratePasswordDialogFragment();
+        dialog.setProfileId(mSelectedProfileId);
+        dialog.setTag(tag);
+        dialog.setDialogOkListener(this);
+        dialog.show(getFragmentManager(), FRAGMENT_GENERATE_PASSWORD);
+    }
+
     private class TagAdapter extends RecyclerView.Adapter<TagListViewHolder> {
 
-        private final List<Tag> mTags;
         private static final int mResource = R.layout.tag_list_item;
+        private final List<Tag> mTags;
 
         public TagAdapter(List<Tag> objects) {
             super();
@@ -652,35 +687,6 @@ public class MainActivity extends ActionBarActivity
         public int getItemCount() {
             return mTags.size();
         }
-    }
-
-    private void deleteTag(Tag tag) {
-        if (TagSettings.deleteTag(this, tag)) {
-
-            // Update tags list
-            mAdapter.remove(tag);
-
-            // Check if we should delete favicon
-            String site = tag.getSite();
-            if (site != null) {
-                Favicon favicon = FaviconSettings.getFavicon(this, site);
-                if (favicon != null && !TagSettings.siteHasTags(this, site)) {
-                    FaviconSettings.deleteFavicon(this, favicon);
-                }
-
-            }
-        } else {
-            // Error!
-            Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void showGeneratePasswordDialog(Tag tag) {
-        GeneratePasswordDialogFragment dialog = new GeneratePasswordDialogFragment();
-        dialog.setProfileId(mSelectedProfileId);
-        dialog.setTag(tag);
-        dialog.setDialogOkListener(this);
-        dialog.show(getFragmentManager(), FRAGMENT_GENERATE_PASSWORD);
     }
 
     public class TagListViewHolder extends RecyclerView.ViewHolder {
