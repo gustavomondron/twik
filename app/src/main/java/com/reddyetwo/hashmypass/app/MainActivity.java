@@ -417,18 +417,6 @@ public class MainActivity extends ActionBarActivity
     }
 
     private void setFabColor(int colorNormal, int colorPressed, int colorRipple) {
-/*
-        int colorFrom = mFab.getColorNormal();
-        ValueAnimator colorAnimation =
-                ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorNormal);
-        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                Log.d("TWIK", ((Integer) animation.getAnimatedValue()).toString());
-                mFab.setColorNormal((Integer) animation.getAnimatedValue());
-            }
-        });
-*/
         mFab.setColorNormal(colorNormal);
         mFab.setColorPressed(colorPressed);
         mFab.setColorRipple(colorRipple);
