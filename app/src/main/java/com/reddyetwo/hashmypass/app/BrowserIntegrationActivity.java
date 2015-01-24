@@ -177,7 +177,7 @@ public class BrowserIntegrationActivity extends Activity
 
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {
-
+                        // Nothing to do
                     }
                 });
 
@@ -455,13 +455,13 @@ public class BrowserIntegrationActivity extends Activity
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count,
                                       int after) {
-
+            // Do nothing because it is not necessary
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before,
                                   int count) {
-
+            // Do nothing because it is not necessary
         }
 
         @Override
