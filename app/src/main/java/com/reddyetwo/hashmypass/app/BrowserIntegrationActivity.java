@@ -370,7 +370,7 @@ public class BrowserIntegrationActivity extends Activity
 
     private boolean populateProfileSpinner() {
         List<Profile> profileList = ProfileSettings.getList(this);
-        boolean availableProfiles = profileList.size() > 0;
+        boolean availableProfiles = !profileList.isEmpty();
 
         // Check that we have added at least one profile
         if (availableProfiles) {
