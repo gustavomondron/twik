@@ -39,6 +39,9 @@ import android.widget.TextView;
  */
 public class AboutDialog extends DialogFragment {
 
+    public AboutDialog() {
+    }
+
     public static void showAbout(Activity activity) {
 
         FragmentManager fm = activity.getFragmentManager();
@@ -49,10 +52,7 @@ public class AboutDialog extends DialogFragment {
         }
         ft.addToBackStack(null);
 
-        new AboutDialog().show(ft,"dialog_about");
-    }
-
-    public AboutDialog() {
+        new AboutDialog().show(ft, "dialog_about");
     }
 
     @Override
@@ -66,15 +66,11 @@ public class AboutDialog extends DialogFragment {
         aboutBodyView.setText(Html.fromHtml(getString(R.string.about_body)));
         aboutBodyView.setMovementMethod(new LinkMovementMethod());
 
-        return new AlertDialog.Builder(getActivity())
-                .setView(rootView)
-                .setPositiveButton(android.R.string.ok,
-                        new DialogInterface.OnClickListener() {
+        return new AlertDialog.Builder(getActivity()).setView(rootView)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 dialog.dismiss();
                             }
-                        }
-                )
-                .create();
+                        }).create();
     }
 }
