@@ -386,17 +386,17 @@ public class BrowserIntegrationActivity extends Activity
     private class ProfileAdapter extends ArrayAdapter<Profile> {
 
         private final List<Profile> mProfiles;
-        private static final int mResource = android.R.layout.simple_spinner_dropdown_item;
+        private static final int RESOURCE = android.R.layout.simple_spinner_dropdown_item;
 
         public ProfileAdapter(Context context, List<Profile> objects) {
-            super(context, mResource, objects);
+            super(context, RESOURCE, objects);
             mProfiles = objects;
         }
 
         @Override
         public View getDropDownView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(mResource, parent, false);
+                convertView = getLayoutInflater().inflate(RESOURCE, parent, false);
             }
             ((TextView) convertView).setText(mProfiles.get(position).getName());
 
@@ -406,7 +406,7 @@ public class BrowserIntegrationActivity extends Activity
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(mResource, parent, false);
+                convertView = getLayoutInflater().inflate(RESOURCE, parent, false);
             }
 
             ((TextView) convertView).setText(mProfiles.get(position).getName());
