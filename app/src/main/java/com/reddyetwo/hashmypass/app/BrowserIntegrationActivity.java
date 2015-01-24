@@ -224,11 +224,9 @@ public class BrowserIntegrationActivity extends Activity
     }
 
     private void closeDialog() {
-        if (mFavicon != null) {
-            if (mFavicon.getId() == Favicon.NO_ID) {
-                // Save the favicon in the storage
-                FaviconSettings.insertFavicon(this, mFavicon);
-            }
+        if (mFavicon != null && mFavicon.getId() == Favicon.NO_ID) {
+            // Save the favicon in the storage
+            FaviconSettings.insertFavicon(this, mFavicon);
         }
 
         saveTag();
