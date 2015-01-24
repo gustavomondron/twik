@@ -32,6 +32,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -338,7 +339,7 @@ public class BrowserIntegrationActivity extends Activity
 
             Matcher siteExtractor = SITE_PATTERN.matcher(host);
             if (!siteExtractor.matches()) {
-                // TODO Show error
+                Log.e(HashMyPassApplication.LOG_TAG, "Site pattern does not match");
                 finish();
             }
 
