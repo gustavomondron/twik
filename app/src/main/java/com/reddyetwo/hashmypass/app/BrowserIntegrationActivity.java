@@ -63,6 +63,7 @@ import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 import com.reddyetwo.hashmypass.app.util.SecurePassword;
 import com.reddyetwo.hashmypass.app.util.TagAutocomplete;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -382,11 +383,14 @@ public class BrowserIntegrationActivity extends Activity
                     preferences.getLong(Preferences.PREFS_KEY_LAST_PROFILE, -1);
             if (lastProfileId != -1) {
                 int position = 0;
-                for (Profile f : profileList) {
-                    if (f.getId() == lastProfileId) {
-                        break;
-                    }
+                boolean found = false;
+                Iterator<Profile> profileIterator = profileList.iterator();
+                while (!found && profileIterator.hasNext()) {
+                    found = profileIterator.next().getId() == lastProfileId;
                     position++;
+                }
+                if (found) {
+                    position--;
                 }
                 position = position % profileList.size();
                 mProfileSpinner.setSelection(position);
