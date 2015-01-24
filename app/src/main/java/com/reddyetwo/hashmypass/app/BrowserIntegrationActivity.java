@@ -231,6 +231,34 @@ public class BrowserIntegrationActivity extends Activity
             }
         }
 
+        saveTag();
+
+        // Update last used profile preference
+        SharedPreferences preferences = getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong(Preferences.PREFS_KEY_LAST_PROFILE, mProfileId);
+        editor.apply();
+
+        // Cache master key
+        int masterKeyMins = Preferences.getRememberMasterKeyMins(BrowserIntegrationActivity.this);
+        if (masterKeyMins > 0) {
+            HashMyPassApplication
+                    .setCachedMasterKey(SecurePassword.getPassword(mMasterKeyEditText.getText()));
+
+            MasterKeyAlarmManager.setAlarm(this, masterKeyMins);
+        }
+
+        // Copy password to clipboard
+        if (Preferences.getCopyToClipboard(this) && mPasswordTextView.length() > 0) {
+            ClipboardHelper.copyToClipboard(this, ClipboardHelper.CLIPBOARD_LABEL_PASSWORD,
+                    mPasswordTextView.getText().toString(), R.string.copied_to_clipboard);
+        }
+
+        // Close the dialog activity
+        finish();
+    }
+
+    private void saveTag() {
         // Increase hash counter
         mTag.setHashCounter(mTag.getHashCounter() + 1);
 
@@ -274,32 +302,8 @@ public class BrowserIntegrationActivity extends Activity
             mTag.setId(storedTag.getId());
             TagSettings.updateTag(this, mTag);
         }
-
-        // Update last used profile preference
-        SharedPreferences preferences = getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putLong(Preferences.PREFS_KEY_LAST_PROFILE, mProfileId);
-        editor.apply();
-
-        // Cache master key
-        int masterKeyMins = Preferences.getRememberMasterKeyMins(BrowserIntegrationActivity.this);
-        if (masterKeyMins > 0) {
-            HashMyPassApplication
-                    .setCachedMasterKey(SecurePassword.getPassword(mMasterKeyEditText.getText()));
-
-            MasterKeyAlarmManager.setAlarm(this, masterKeyMins);
-        }
-
-        // Copy password to clipboard
-        if (Preferences.getCopyToClipboard(this) && mPasswordTextView.length() > 0) {
-            ClipboardHelper.copyToClipboard(this, ClipboardHelper.CLIPBOARD_LABEL_PASSWORD,
-                    mPasswordTextView.getText().toString(), R.string.copied_to_clipboard);
-        }
-
-        // Close the dialog activity
-        finish();
     }
-
+    
     private void updateTag() {
         if (mProfileId > 0) {
             mTag = TagSettings.getSiteTag(this, mProfileId, mSite);
