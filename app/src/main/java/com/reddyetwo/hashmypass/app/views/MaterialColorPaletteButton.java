@@ -42,7 +42,7 @@ import android.widget.ImageButton;
 
 import com.reddyetwo.hashmypass.app.R;
 
-class MaterialColorPaletteButton extends ImageButton {
+public class MaterialColorPaletteButton extends ImageButton {
 
     private int mColorNormal;
     private int mColorPressed;
