@@ -303,7 +303,7 @@ public class BrowserIntegrationActivity extends Activity
             TagSettings.updateTag(this, mTag);
         }
     }
-    
+
     private void updateTag() {
         if (mProfileId > 0) {
             mTag = TagSettings.getSiteTag(this, mProfileId, mSite);
@@ -399,22 +399,28 @@ public class BrowserIntegrationActivity extends Activity
 
         @Override
         public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            TextView textView;
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(RESOURCE, parent, false);
+                textView = (TextView) getLayoutInflater().inflate(RESOURCE, parent, false);
+            } else {
+                textView = (TextView) convertView;
             }
-            ((TextView) convertView).setText(mProfiles.get(position).getName());
+            textView.setText(mProfiles.get(position).getName());
 
-            return convertView;
+            return textView;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            TextView textView;
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(RESOURCE, parent, false);
+                textView = (TextView) getLayoutInflater().inflate(RESOURCE, parent, false);
+            } else {
+                textView = (TextView) convertView;
             }
 
-            ((TextView) convertView).setText(mProfiles.get(position).getName());
-            return convertView;
+            textView.setText(mProfiles.get(position).getName());
+            return textView;
         }
     }
 
