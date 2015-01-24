@@ -99,30 +99,7 @@ public class AddProfileActivity extends ActionBarActivity {
                 PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
 
         Button addButton = (Button) findViewById(R.id.add_button);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Profile profile = new Profile(Profile.NO_ID, mNameEditText.getText().toString(),
-                        mPrivateKeyEditText.getText().toString(),
-                        Integer.decode((String) mPasswordLengthSpinner.getSelectedItem()),
-                        PasswordType.values()[mPasswordTypeSpinner.getSelectedItemPosition()],
-                        mColor);
-                long profileId = ProfileSettings.insertProfile(AddProfileActivity.this, profile);
-                if (profileId == -1) {
-                    // Error!
-                    Toast.makeText(AddProfileActivity.this, R.string.error, Toast.LENGTH_LONG)
-                            .show();
-                    setResult(RESULT_CANCELED);
-                } else {
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra(RESULT_KEY_PROFILE_ID, profileId);
-                    setResult(RESULT_OK, resultIntent);
-                }
-
-                // Navigate to previous activity
-                NavUtils.navigateUpFromSameTask(AddProfileActivity.this);
-            }
-        });
+        addButton.setOnClickListener(new AddProfileButtonOnClickListener());
 
         Button discardButton = (Button) findViewById(R.id.discard_button);
         discardButton.setOnClickListener(new View.OnClickListener() {
@@ -190,5 +167,30 @@ public class AddProfileActivity extends ActionBarActivity {
         });
 
         dialogFragment.show(getFragmentManager(), "passwordLength");
+    }
+
+    private class AddProfileButtonOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            Profile profile = new Profile(Profile.NO_ID, mNameEditText.getText().toString(),
+                    mPrivateKeyEditText.getText().toString(),
+                    Integer.decode((String) mPasswordLengthSpinner.getSelectedItem()),
+                    PasswordType.values()[mPasswordTypeSpinner.getSelectedItemPosition()],
+                    mColor);
+            long profileId = ProfileSettings.insertProfile(AddProfileActivity.this, profile);
+            if (profileId == -1) {
+                // Error!
+                Toast.makeText(AddProfileActivity.this, R.string.error, Toast.LENGTH_LONG)
+                        .show();
+                setResult(RESULT_CANCELED);
+            } else {
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra(RESULT_KEY_PROFILE_ID, profileId);
+                setResult(RESULT_OK, resultIntent);
+            }
+
+            // Navigate to previous activity
+            NavUtils.navigateUpFromSameTask(AddProfileActivity.this);
+        }
     }
 }
