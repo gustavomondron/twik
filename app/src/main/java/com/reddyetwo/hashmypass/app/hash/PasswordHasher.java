@@ -24,7 +24,9 @@
 package com.reddyetwo.hashmypass.app.hash;
 
 import android.util.Base64;
+import android.util.Log;
 
+import com.reddyetwo.hashmypass.app.HashMyPassApplication;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.util.SecurePassword;
 
@@ -64,7 +66,7 @@ public class PasswordHasher {
         try {
             hmac.init(keySpec);
         } catch (InvalidKeyException e) {
-            e.printStackTrace();
+            Log.e(HashMyPassApplication.LOG_TAG, "Invalid secret key");
             return null;
         }
 

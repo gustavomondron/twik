@@ -26,6 +26,7 @@ public class HashMyPassApplication extends Application {
 
     private static char[] mCachedMasterKey = new char[]{};
     private static boolean mTutorialDismissed = false;
+    public static final String LOG_TAG = "TWIK";
 
     public static void setTutorialDismissed(boolean tutorialDismissed) {
         mTutorialDismissed = tutorialDismissed;

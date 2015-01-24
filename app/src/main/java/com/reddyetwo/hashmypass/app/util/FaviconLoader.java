@@ -26,6 +26,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
+import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
@@ -33,6 +34,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
+import com.reddyetwo.hashmypass.app.HashMyPassApplication;
 import com.reddyetwo.hashmypass.app.R;
 import com.reddyetwo.hashmypass.app.data.Favicon;
 import com.reddyetwo.hashmypass.app.data.FaviconSettings;
@@ -181,7 +183,7 @@ public class FaviconLoader {
             // Get bitmap from URL
             new RetrieveImageTask().execute(faviconURL, fallbackURL);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(HashMyPassApplication.LOG_TAG, "Error loading favicon");
         }
     }
 
@@ -211,7 +213,7 @@ public class FaviconLoader {
                 return null;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(HashMyPassApplication.LOG_TAG, "Error getting favicon URL");
             return null;
         }
     }
@@ -259,7 +261,7 @@ public class FaviconLoader {
                 return (BitmapDrawable) BitmapDrawable
                         .createFromStream((InputStream) url.getContent(), "favicon");
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(HashMyPassApplication.LOG_TAG, "Error downloading favicon");
                 return null;
             }
         }
