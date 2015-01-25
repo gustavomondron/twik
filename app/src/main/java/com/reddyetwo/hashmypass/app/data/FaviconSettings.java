@@ -27,6 +27,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.reddyetwo.hashmypass.app.HashMyPassApplication;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -34,6 +36,7 @@ import java.io.FileOutputStream;
 public class FaviconSettings {
 
     private static final String FILE_NAME = "favicon-%d.png";
+    private static final int FAVICON_QUALITY = 100;
 
     private FaviconSettings() {
 
@@ -57,6 +60,7 @@ public class FaviconSettings {
                 favicon = new Favicon(id, site, icon);
             } catch (FileNotFoundException e) {
                 // Favicon not found in storage
+                Log.d(HashMyPassApplication.LOG_TAG, "Favicon file not found");
             }
         }
 
@@ -76,7 +80,8 @@ public class FaviconSettings {
             id = db.insertOrThrow(DataOpenHelper.FAVICONS_TABLE_NAME, null, values);
             String filename = String.format(FILE_NAME, id);
             FileOutputStream fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
-            boolean stored = favicon.getIcon().compress(Bitmap.CompressFormat.PNG, 100, fos);
+            boolean stored =
+                    favicon.getIcon().compress(Bitmap.CompressFormat.PNG, FAVICON_QUALITY, fos);
             fos.close();
             if (stored) {
                 db.setTransactionSuccessful();
@@ -84,9 +89,7 @@ public class FaviconSettings {
                 id = -1;
             }
         } catch (Exception e) {
-            Log.d("TEST", "Error: " + e.getMessage());
-            //} catch (FileNotFoundException e) {
-            //   id = -1;
+            Log.d(HashMyPassApplication.LOG_TAG, "Error saving favicon: " + e.getMessage());
         } finally {
             db.endTransaction();
             db.close();
