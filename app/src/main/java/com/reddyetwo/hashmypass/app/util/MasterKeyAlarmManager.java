@@ -33,6 +33,7 @@ import com.reddyetwo.hashmypass.app.HashMyPassApplication;
 public class MasterKeyAlarmManager extends BroadcastReceiver {
 
     private static final int REQUEST_REMOVE_MASTER_KEY = 1;
+    private static final int MILLIS_IN_A_MINUTE = 60000;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -41,26 +42,22 @@ public class MasterKeyAlarmManager extends BroadcastReceiver {
     }
 
     public static void setAlarm(Context context, int minutes) {
-        AlarmManager alarmManager =
-                (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        PendingIntent intent = PendingIntent
-                .getBroadcast(context, REQUEST_REMOVE_MASTER_KEY,
-                        new Intent(context, MasterKeyAlarmManager.class), 0);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        PendingIntent intent = PendingIntent.getBroadcast(context, REQUEST_REMOVE_MASTER_KEY,
+                new Intent(context, MasterKeyAlarmManager.class), 0);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             alarmManager.setExact(AlarmManager.ELAPSED_REALTIME,
-                    SystemClock.elapsedRealtime() + minutes * 60000, intent);
+                    SystemClock.elapsedRealtime() + minutes * MILLIS_IN_A_MINUTE, intent);
         } else {
             alarmManager.set(AlarmManager.ELAPSED_REALTIME,
-                    SystemClock.elapsedRealtime() + minutes * 60000, intent);
+                    SystemClock.elapsedRealtime() + minutes * MILLIS_IN_A_MINUTE, intent);
         }
     }
 
     public static void cancelAlarm(Context context) {
-        PendingIntent intent = PendingIntent
-                .getBroadcast(context, REQUEST_REMOVE_MASTER_KEY,
-                        new Intent(context, MasterKeyAlarmManager.class), 0);
-        AlarmManager alarmManager =
-                (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        PendingIntent intent = PendingIntent.getBroadcast(context, REQUEST_REMOVE_MASTER_KEY,
+                new Intent(context, MasterKeyAlarmManager.class), 0);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(intent);
     }
 }

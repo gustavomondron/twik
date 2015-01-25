@@ -38,6 +38,9 @@ public class IdenticonGenerator {
     private static final int MASK_UNSIGNED = 255;
     private static final int ALPHA_OPAQUE = 255;
     private static final String COLOR_BACKGROUND = "#00f0f0f0";
+    private static final int BYTE_RED = 0;
+    private static final int BYTE_GREEN = 1;
+    private static final int BYTE_BLUE = 2;
 
     private IdenticonGenerator() {
 
@@ -49,10 +52,10 @@ public class IdenticonGenerator {
 
         Bitmap identicon = Bitmap.createBitmap(IDENTICON_WIDTH, IDENTICON_HEIGHT, Config.ARGB_8888);
 
-        // get byte values as unsigned ints
-        int r = hash[0] & MASK_UNSIGNED;
-        int g = hash[1] & MASK_UNSIGNED;
-        int b = hash[2] & MASK_UNSIGNED;
+        // Get color byte values as unsigned integers
+        int r = hash[BYTE_RED] & MASK_UNSIGNED;
+        int g = hash[BYTE_GREEN] & MASK_UNSIGNED;
+        int b = hash[BYTE_BLUE] & MASK_UNSIGNED;
 
         int background = Color.parseColor(COLOR_BACKGROUND);
         int foreground = Color.argb(ALPHA_OPAQUE, r, g, b);
