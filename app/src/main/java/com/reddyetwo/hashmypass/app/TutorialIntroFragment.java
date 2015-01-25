@@ -48,12 +48,12 @@ public class TutorialIntroFragment extends Fragment {
 
     private Random mRandom;
 
-    private final static String[] WEBSITES =
+    private static final String[] WEBSITES =
             {"amazon", "google", "ebay", "bing", "yahoo", "reddit", "paypal",
                     "spotify", "facebook", "twitter", "flickr", "steam",
                     "feedly", "foursquare", "apple", "xda-developers",
                     "bugzilla", "ssh", "wopr", "skynet"};
-    private final static char[] MASTER_KEY = {'m', 'a', 's', 't', 'e', 'r'};
+    private static final char[] MASTER_KEY = {'m', 'a', 's', 't', 'e', 'r'};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
