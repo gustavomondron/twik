@@ -188,7 +188,7 @@ public class TutorialActivity extends FragmentActivity {
         @Override
         public void onPageScrolled(int position, float positionOffset,
                                    int positionOffsetPixels) {
-
+            // Nothing to do
         }
 
         @Override
@@ -207,7 +207,7 @@ public class TutorialActivity extends FragmentActivity {
 
         @Override
         public void onPageScrollStateChanged(int state) {
-
+            // Nothing to do
         }
     }
 
