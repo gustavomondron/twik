@@ -60,7 +60,7 @@ public class FaviconSettings {
                 favicon = new Favicon(id, site, icon);
             } catch (FileNotFoundException e) {
                 // Favicon not found in storage
-                Log.d(HashMyPassApplication.LOG_TAG, "Favicon file not found");
+                Log.d(HashMyPassApplication.LOG_TAG, "Favicon file not found: " + e);
             }
         }
 
@@ -89,7 +89,7 @@ public class FaviconSettings {
                 id = -1;
             }
         } catch (Exception e) {
-            Log.d(HashMyPassApplication.LOG_TAG, "Error saving favicon: " + e.getMessage());
+            Log.d(HashMyPassApplication.LOG_TAG, "Error saving favicon: " + e);
         } finally {
             db.endTransaction();
             db.close();

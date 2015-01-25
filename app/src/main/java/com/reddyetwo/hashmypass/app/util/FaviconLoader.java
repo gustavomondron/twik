@@ -187,7 +187,7 @@ public class FaviconLoader {
             // Get bitmap from URL
             new RetrieveImageTask().execute(faviconURL, fallbackURL);
         } catch (Exception e) {
-            Log.e(HashMyPassApplication.LOG_TAG, "Error loading favicon: " + e.getMessage());
+            Log.e(HashMyPassApplication.LOG_TAG, "Error loading favicon: " + e);
         }
     }
 
@@ -217,7 +217,7 @@ public class FaviconLoader {
                 return null;
             }
         } catch (Exception e) {
-            Log.e(HashMyPassApplication.LOG_TAG, "Error getting favicon URL: " + e.getMessage());
+            Log.e(HashMyPassApplication.LOG_TAG, "Error getting favicon URL: " + e);
             return null;
         }
     }
@@ -265,7 +265,7 @@ public class FaviconLoader {
                 return (BitmapDrawable) BitmapDrawable
                         .createFromStream((InputStream) url.getContent(), "favicon");
             } catch (IOException e) {
-                Log.e(HashMyPassApplication.LOG_TAG, "Error downloading favicon: " + e.getMessage());
+                Log.e(HashMyPassApplication.LOG_TAG, "Error downloading favicon: " + e);
                 return null;
             }
         }
