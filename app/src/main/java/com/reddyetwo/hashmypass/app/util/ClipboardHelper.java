@@ -29,10 +29,14 @@ public class ClipboardHelper {
 
     public static final String CLIPBOARD_LABEL_PASSWORD = "password";
 
-    public static void copyToClipboard(Context context, String label,
-                                       String string, int toastMessageId) {
-        ClipboardManager clipboard = (ClipboardManager) context
-                .getSystemService(Context.CLIPBOARD_SERVICE);
+    private ClipboardHelper() {
+
+    }
+
+    public static void copyToClipboard(Context context, String label, String string,
+                                       int toastMessageId) {
+        ClipboardManager clipboard =
+                (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText(label, string);
         clipboard.setPrimaryClip(clip);
 
