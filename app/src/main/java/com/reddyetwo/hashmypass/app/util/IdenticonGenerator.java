@@ -34,6 +34,10 @@ public class IdenticonGenerator {
     private static final int height = 5;
     private static final int width = 5;
 
+    private IdenticonGenerator() {
+        
+    }
+
     public static Bitmap generate(Context context, char[] input) {
 
         byte[] hash = PasswordHasher.calculateDigest(input);
@@ -55,8 +59,11 @@ public class IdenticonGenerator {
             int pixelColor;
             for (int y = 0; y < height; y++) {
 
-                if ((hash[i] >> y & 1) == 1) pixelColor = foreground;
-                else pixelColor = background;
+                if ((hash[i] >> y & 1) == 1) {
+                    pixelColor = foreground;
+                } else {
+                    pixelColor = background;
+                }
 
                 identicon.setPixel(x, y, pixelColor);
             }
@@ -65,14 +72,11 @@ public class IdenticonGenerator {
         // scale image by 2 to add border
         Resources res = context.getResources();
         int size = (int) TypedValue
-                .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32,
-                        res.getDisplayMetrics());
-        Bitmap bmpWithBorder =
-                Bitmap.createBitmap(size, size, identicon.getConfig());
+                .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, res.getDisplayMetrics());
+        Bitmap bmpWithBorder = Bitmap.createBitmap(size, size, identicon.getConfig());
         Canvas canvas = new Canvas(bmpWithBorder);
         canvas.drawColor(background);
-        identicon =
-                Bitmap.createScaledBitmap(identicon, size - 2, size - 2, false);
+        identicon = Bitmap.createScaledBitmap(identicon, size - 2, size - 2, false);
         canvas.drawBitmap(identicon, 1, 1, null);
 
         return bmpWithBorder;
