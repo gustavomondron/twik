@@ -30,6 +30,8 @@ import com.reddyetwo.hashmypass.app.data.Preferences;
 public class SettingsFragment extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+    private static final int MINUTES_IN_HOUR = 60;
+
     private Preference mRememberMasterKeyPreference;
     private Preference mCopyToClipboardPreference;
 
@@ -68,12 +70,12 @@ public class SettingsFragment extends PreferenceFragment
         if (masterKeyMins == 0) {
             setSummary(mRememberMasterKeyPreference,
                     R.string.settings_summary_remember_master_key_never);
-        } else if (masterKeyMins < 60) {
+        } else if (masterKeyMins < MINUTES_IN_HOUR) {
             mRememberMasterKeyPreference.setSummary(getResources()
                     .getQuantityString(R.plurals.settings_summary_remember_master_key_minutes,
                             masterKeyMins, masterKeyMins));
         } else {
-            int hours = masterKeyMins / 60;
+            int hours = masterKeyMins / MINUTES_IN_HOUR;
             mRememberMasterKeyPreference.setSummary(getResources()
                     .getQuantityString(R.plurals.settings_summary_remember_master_key_hours, hours,
                             hours));
