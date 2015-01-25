@@ -59,6 +59,7 @@ public class PasswordHasher {
         try {
             hmac = Mac.getInstance(HMAC_SHA1);
         } catch (NoSuchAlgorithmException e) {
+            Log.e(HashMyPassApplication.LOG_TAG, "HMAC error: " + e);
             return null;
         }
 
@@ -68,7 +69,7 @@ public class PasswordHasher {
         try {
             hmac.init(keySpec);
         } catch (InvalidKeyException e) {
-            Log.e(HashMyPassApplication.LOG_TAG, "Invalid secret key");
+            Log.e(HashMyPassApplication.LOG_TAG, "Invalid secret key: " + e);
             return null;
         }
 
