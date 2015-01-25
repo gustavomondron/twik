@@ -48,14 +48,16 @@ public class ProfileSpinnerAdapter implements SpinnerAdapter {
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
+        TextView profileNameTextView;
         if (convertView == null || convertView.getTag() == null ||
                 !convertView.getTag().equals(TAG_TOOLBAR_SPINNER_ITEM_DROPDOWN)) {
-            convertView = LayoutInflater.from(mThemedContext)
+            profileNameTextView = (TextView) LayoutInflater.from(mThemedContext)
                     .inflate(R.layout.toolbar_spinner_item_dropdown, parent, false);
-            convertView.setTag(TAG_TOOLBAR_SPINNER_ITEM_DROPDOWN);
+            profileNameTextView.setTag(TAG_TOOLBAR_SPINNER_ITEM_DROPDOWN);
+        } else {
+            profileNameTextView = (TextView) convertView;
         }
 
-        TextView profileNameTextView = (TextView) convertView;
         profileNameTextView.setText(mProfiles.get(position).getName());
 
         if (mProfiles.get(position).getId() == Profile.NO_ID) {
@@ -71,12 +73,12 @@ public class ProfileSpinnerAdapter implements SpinnerAdapter {
 
     @Override
     public void registerDataSetObserver(DataSetObserver observer) {
-
+        // Nothing to do
     }
 
     @Override
     public void unregisterDataSetObserver(DataSetObserver observer) {
-
+        // Nothing to do
     }
 
     @Override
@@ -101,14 +103,16 @@ public class ProfileSpinnerAdapter implements SpinnerAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        TextView profileNameTextView;
         if (convertView == null || convertView.getTag() == null ||
                 !convertView.getTag().equals(TAG_TOOLBAR_SPINNER_ITEM_ACTIONBAR)) {
-            convertView = LayoutInflater.from(mThemedContext)
+            profileNameTextView = (TextView) LayoutInflater.from(mThemedContext)
                     .inflate(R.layout.toolbar_spinner_item_actionbar, parent, false);
-            convertView.setTag(TAG_TOOLBAR_SPINNER_ITEM_ACTIONBAR);
+            profileNameTextView.setTag(TAG_TOOLBAR_SPINNER_ITEM_ACTIONBAR);
+        } else {
+            profileNameTextView = (TextView) convertView;
         }
 
-        TextView profileNameTextView = (TextView) convertView.findViewById(R.id.profile_name);
         profileNameTextView.setText(mProfiles.get(position).getName());
         return profileNameTextView;
     }
@@ -125,6 +129,6 @@ public class ProfileSpinnerAdapter implements SpinnerAdapter {
 
     @Override
     public boolean isEmpty() {
-        return mProfiles.size() == 0;
+        return mProfiles.isEmpty();
     }
 }
