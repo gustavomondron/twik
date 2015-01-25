@@ -202,9 +202,10 @@ public class TagSettings {
                         "DESC";
                 break;
             case ORDER_BY_NAME:
-            default:
-                orderClause += DataOpenHelper.COLUMN_TAGS_NAME + " COLLATE " +
+                orderClause = DataOpenHelper.COLUMN_TAGS_NAME + " COLLATE " +
                         "NOCASE";
+                break;
+            default:
         }
         String limitClause = null;
         if (limit != LIMIT_UNBOUNDED) {
