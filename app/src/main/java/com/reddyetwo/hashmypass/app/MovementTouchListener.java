@@ -28,22 +28,18 @@ class MovementTouchListener implements View.OnTouchListener {
 
     private static final int STATE_PRESSING = 1;
     private static final int STATE_RELEASED = 2;
-
+    private int mState = STATE_RELEASED;
     // Threshold ~= 3 mm
     private static final int MOVEMENT_THRESHOLD_DP = 15;
-
-    private int mState = STATE_RELEASED;
     private final OnPressedListener mOnPressedListener;
     private final float mMovementThresholdPx;
     private float mX;
     private float mY;
 
-    public MovementTouchListener(Context context,
-                                 OnPressedListener onPressedListener) {
+    public MovementTouchListener(Context context, OnPressedListener onPressedListener) {
         mOnPressedListener = onPressedListener;
         mMovementThresholdPx = TypedValue
-                .applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                        MOVEMENT_THRESHOLD_DP,
+                .applyDimension(TypedValue.COMPLEX_UNIT_DIP, MOVEMENT_THRESHOLD_DP,
                         context.getResources().getDisplayMetrics());
 
     }
@@ -61,10 +57,8 @@ class MovementTouchListener implements View.OnTouchListener {
                     mOnPressedListener.onPressed();
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    if (Math.abs(event.getX() - mX) >
-                            mMovementThresholdPx ||
-                            Math.abs(event.getY() - mY) >
-                                    mMovementThresholdPx) {
+                    if (Math.abs(event.getX() - mX) > mMovementThresholdPx ||
+                            Math.abs(event.getY() - mY) > mMovementThresholdPx) {
                         mState = STATE_RELEASED;
                     }
                     break;
