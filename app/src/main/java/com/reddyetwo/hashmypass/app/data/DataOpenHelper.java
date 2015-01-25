@@ -25,7 +25,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 class DataOpenHelper extends SQLiteOpenHelper {
 
-    // TODO Typo in the db name... we should fix it... or maybe it's too late
+    // Typo in the database name
     private static final String DATABASE_NAME = "hassmypass.db";
     private static final int DATABASE_VERSION = 4;
 
