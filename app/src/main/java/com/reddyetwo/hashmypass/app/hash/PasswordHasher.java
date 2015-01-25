@@ -50,10 +50,10 @@ public class PasswordHasher {
     private static final String DIGEST_MD5 = "MD5";
 
     private PasswordHasher() {
-        
+
     }
 
-    private static String _hashPassword(String tag, char[] key, int length, PasswordType type) {
+    private static String hashKey(String tag, char[] key, int length, PasswordType type) {
 
         Mac hmac;
         try {
@@ -106,17 +106,17 @@ public class PasswordHasher {
         return hash.substring(0, length);
     }
 
-    public static String hashPassword(String tag, char[] masterKey, String privateKey, int length,
-                                      PasswordType passwordType) {
+    public static String hashTagWithKeys(String tag, char[] masterKey, String privateKey,
+                                         int length, PasswordType passwordType) {
         /* First, hash the tag with the private key (in the case that it is
         used) */
         if (privateKey != null) {
-            tag = _hashPassword(privateKey, tag.toCharArray(), 24,
+            tag = hashKey(privateKey, tag.toCharArray(), 24,
                     PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
         }
 
         // Then, hash the result with the master key
-        return _hashPassword(tag, masterKey, length, passwordType);
+        return hashKey(tag, masterKey, length, passwordType);
     }
 
     /**

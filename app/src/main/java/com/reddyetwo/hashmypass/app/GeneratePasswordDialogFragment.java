@@ -221,10 +221,9 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         if (mTagEditText.length() > 0 && mMasterKeyEditText.length() > 0) {
             Profile profile =
                     ProfileSettings.getProfile(getActivity(), mProfileId);
-            String password = PasswordHasher.hashPassword(mTag.getName(),
+            String password = PasswordHasher.hashTagWithKeys(mTag.getName(),
                     SecurePassword.getPassword(mMasterKeyEditText.getText()),
-                    profile.getPrivateKey(), mTag.getPasswordLength(),
-                    mTag.getPasswordType());
+                    profile.getPrivateKey(), mTag.getPasswordLength(), mTag.getPasswordType());
             mPasswordTextView.setText(password);
         } else {
             mPasswordTextView.setText("");

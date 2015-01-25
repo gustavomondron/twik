@@ -128,7 +128,7 @@ public class TutorialIntroFragment extends Fragment {
         String website = WEBSITES[mRandom.nextInt(WEBSITES.length)];
         mWebsiteTextView.setText(website);
         String password = PasswordHasher
-                .hashPassword(website, MASTER_KEY, "private", 8,
+                .hashTagWithKeys(website, MASTER_KEY, "private", 8,
                         PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
         mWebsitePasswordView.setText(password);
     }

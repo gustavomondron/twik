@@ -427,7 +427,7 @@ public class BrowserIntegrationActivity extends Activity
                 mMasterKeyEditText.length() > 0) {
             Profile profile = ProfileSettings.getProfile(this, mProfileId);
             mTag.setName(mTagEditText.getText().toString());
-            String password = PasswordHasher.hashPassword(mTag.getName(),
+            String password = PasswordHasher.hashTagWithKeys(mTag.getName(),
                     SecurePassword.getPassword(mMasterKeyEditText.getText()),
                     profile.getPrivateKey(), mTag.getPasswordLength(), mTag.getPasswordType());
             mPasswordTextView.setText(password);
