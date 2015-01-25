@@ -173,7 +173,7 @@ public class FaviconLoader {
         URL fallbackURL = null;
         try {
             // Generate URL
-            if (touchIconUrlList.size() > 0) {
+            if (!touchIconUrlList.isEmpty()) {
                 faviconURL = new URL(touchIconUrlList.get(touchIconUrlList.size() - 1));
             } else {
                 // Look for favicon
