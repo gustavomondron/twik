@@ -28,6 +28,10 @@ import java.util.Arrays;
 
 public class SecurePassword {
 
+    private SecurePassword() {
+
+    }
+    
     public static char[] getPassword(Editable s) {
         int length = s.length();
         char[] password = new char[length];
