@@ -51,6 +51,9 @@ import java.util.List;
 public class FaviconLoader {
 
     private static final long LOAD_TIMEOUT = 3000;
+    private static final int PROGRESS_STOPPED = 10;
+    private static final int MASK_LOW_NIBBLE = 15;
+
     private List<String> mTouchIconUrlList;
     private String mUrl;
     private OnFaviconLoaded mOnFaviconLoaded;
@@ -107,7 +110,7 @@ public class FaviconLoader {
         byte[] digest = PasswordHasher.calculateDigest(input);
 
         // Unsigned int, module colors length
-        int color = (digest[0] & 15) % colors.length;
+        int color = (digest[0] & MASK_LOW_NIBBLE) % colors.length;
         return colors[color];
     }
 
@@ -132,7 +135,7 @@ public class FaviconLoader {
         final Runnable timeoutRunnable = new Runnable() {
             @Override
             public void run() {
-                if (webView.getProgress() == 10) {
+                if (webView.getProgress() == PROGRESS_STOPPED) {
                     // Stuck at 10%: Connection established but not loading
                     // Thank you, AOSP!
                     webView.reload();
