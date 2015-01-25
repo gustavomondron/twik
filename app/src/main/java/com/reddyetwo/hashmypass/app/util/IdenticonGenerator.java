@@ -33,6 +33,11 @@ import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 public class IdenticonGenerator {
     private static final int IDENTICON_HEIGHT = 5;
     private static final int IDENTICON_WIDTH = 5;
+    private static final int IDENTICON_DIP_SIZE = 32;
+    private static final int IDENTICON_MARGIN = 1;
+    private static final int MASK_UNSIGNED = 255;
+    private static final int ALPHA_OPAQUE = 255;
+    private static final String COLOR_BACKGROUND = "#00f0f0f0";
 
     private IdenticonGenerator() {
 
@@ -45,17 +50,17 @@ public class IdenticonGenerator {
         Bitmap identicon = Bitmap.createBitmap(IDENTICON_WIDTH, IDENTICON_HEIGHT, Config.ARGB_8888);
 
         // get byte values as unsigned ints
-        int r = hash[0] & 255;
-        int g = hash[1] & 255;
-        int b = hash[2] & 255;
+        int r = hash[0] & MASK_UNSIGNED;
+        int g = hash[1] & MASK_UNSIGNED;
+        int b = hash[2] & MASK_UNSIGNED;
 
-        int background = Color.parseColor("#00f0f0f0");
-        int foreground = Color.argb(255, r, g, b);
+        int background = Color.parseColor(COLOR_BACKGROUND);
+        int foreground = Color.argb(ALPHA_OPAQUE, r, g, b);
+        int imageCenter = (int) Math.ceil(IDENTICON_WIDTH / 2.0);
 
         for (int x = 0; x < IDENTICON_WIDTH; x++) {
-
             //make identicon horizontally symmetrical
-            int i = x < 3 ? x : 4 - x;
+            int i = x < imageCenter ? x : IDENTICON_WIDTH - 1 - x;
             int pixelColor;
             for (int y = 0; y < IDENTICON_HEIGHT; y++) {
 
@@ -71,13 +76,14 @@ public class IdenticonGenerator {
 
         // scale image by 2 to add border
         Resources res = context.getResources();
-        int size = (int) TypedValue
-                .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, res.getDisplayMetrics());
+        int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, IDENTICON_DIP_SIZE,
+                res.getDisplayMetrics());
         Bitmap bmpWithBorder = Bitmap.createBitmap(size, size, identicon.getConfig());
         Canvas canvas = new Canvas(bmpWithBorder);
         canvas.drawColor(background);
-        identicon = Bitmap.createScaledBitmap(identicon, size - 2, size - 2, false);
-        canvas.drawBitmap(identicon, 1, 1, null);
+        identicon = Bitmap.createScaledBitmap(identicon, size - IDENTICON_MARGIN * 2,
+                size - IDENTICON_MARGIN * 2, false);
+        canvas.drawBitmap(identicon, IDENTICON_MARGIN, IDENTICON_MARGIN, null);
 
         return bmpWithBorder;
     }
