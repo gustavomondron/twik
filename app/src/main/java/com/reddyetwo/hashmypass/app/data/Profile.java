@@ -22,7 +22,7 @@ package com.reddyetwo.hashmypass.app.data;
 
 public class Profile {
 
-    public final static long NO_ID = -1;
+    public static final long NO_ID = -1;
 
     private long mId = NO_ID;
     private String mName;

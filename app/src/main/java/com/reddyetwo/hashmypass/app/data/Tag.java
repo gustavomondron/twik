@@ -25,7 +25,7 @@ import android.os.Parcelable;
 
 public class Tag implements Parcelable {
 
-    public final static long NO_ID = -1;
+    public static final long NO_ID = -1;
 
     private long mId = NO_ID;
     public static final Parcelable.Creator<Tag> CREATOR = new Parcelable.Creator<Tag>() {

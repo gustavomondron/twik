@@ -32,7 +32,7 @@ public class Preferences {
     public static final String PREFS_KEY_TUTORIAL_PAGE = "tutorialPage";
 
     private Preferences() {
-        
+
     }
 
     public static int getRememberMasterKeyMins(Context context) {
