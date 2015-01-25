@@ -210,7 +210,8 @@ public class TagSettings {
         switch (orderBy) {
             case ORDER_BY_HASH_COUNTER:
                 orderClause = DataOpenHelper.COLUMN_TAGS_HASH_COUNTER + " " +
-                        "DESC, ";
+                        "DESC";
+                break;
             case ORDER_BY_NAME:
             default:
                 orderClause += DataOpenHelper.COLUMN_TAGS_NAME + " COLLATE " +
