@@ -27,12 +27,20 @@ import com.reddyetwo.hashmypass.app.R;
 
 public class TagListViewHolder extends RecyclerView.ViewHolder {
 
-    public final TextView mFaviconTextView;
-    public final TextView mTagNameTextView;
+    private final TextView mFaviconTextView;
+    private final TextView mTagNameTextView;
 
     public TagListViewHolder(View itemView) {
         super(itemView);
         mFaviconTextView = (TextView) itemView.findViewById(R.id.tag_favicon);
         mTagNameTextView = (TextView) itemView.findViewById(R.id.tag_name);
+    }
+
+    public TextView getFaviconTextView() {
+        return mFaviconTextView;
+    }
+
+    public TextView getTagNameTextView() {
+        return mTagNameTextView;
     }
 }

@@ -76,10 +76,10 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListViewHolder> {
     public void onBindViewHolder(TagListViewHolder tagListViewHolder, int i) {
         final Tag tag = mTags.get(i);
         // Set tag favicon
-        FaviconLoader.setAsBackground(mContext, tagListViewHolder.mFaviconTextView, tag);
+        FaviconLoader.setAsBackground(mContext, tagListViewHolder.getFaviconTextView(), tag);
 
         // Set tag name
-        tagListViewHolder.mTagNameTextView.setText(tag.getName());
+        tagListViewHolder.getTagNameTextView().setText(tag.getName());
 
         // Set tag click listener
         tagListViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
