@@ -31,18 +31,18 @@ import android.util.TypedValue;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 
 public class IdenticonGenerator {
-    private static final int height = 5;
-    private static final int width = 5;
+    private static final int IDENTICON_HEIGHT = 5;
+    private static final int IDENTICON_WIDTH = 5;
 
     private IdenticonGenerator() {
-        
+
     }
 
     public static Bitmap generate(Context context, char[] input) {
 
         byte[] hash = PasswordHasher.calculateDigest(input);
 
-        Bitmap identicon = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+        Bitmap identicon = Bitmap.createBitmap(IDENTICON_WIDTH, IDENTICON_HEIGHT, Config.ARGB_8888);
 
         // get byte values as unsigned ints
         int r = hash[0] & 255;
@@ -52,12 +52,12 @@ public class IdenticonGenerator {
         int background = Color.parseColor("#00f0f0f0");
         int foreground = Color.argb(255, r, g, b);
 
-        for (int x = 0; x < width; x++) {
+        for (int x = 0; x < IDENTICON_WIDTH; x++) {
 
             //make identicon horizontally symmetrical
             int i = x < 3 ? x : 4 - x;
             int pixelColor;
-            for (int y = 0; y < height; y++) {
+            for (int y = 0; y < IDENTICON_HEIGHT; y++) {
 
                 if ((hash[i] >> y & 1) == 1) {
                     pixelColor = foreground;
