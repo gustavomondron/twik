@@ -173,8 +173,8 @@ public class TagSettings {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getWritableDatabase();
         boolean deleted = db.delete(DataOpenHelper.TAGS_TABLE_NAME, "_id=" + tag.getId() + " AND " +
-                        DataOpenHelper.COLUMN_TAGS_PROFILE_ID +
-                        "=" + tag.getProfileId(), null) > 0;
+                DataOpenHelper.COLUMN_TAGS_PROFILE_ID +
+                "=" + tag.getProfileId(), null) > 0;
 
         db.close();
         return deleted;
@@ -276,5 +276,18 @@ public class TagSettings {
 
         cursor.close();
         return hasTags;
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    public static int getTagPosition(Context context, long tagId, long profileId, int orderBy,
+                                     int limit) {
+        int position = 0;
+        List<Tag> tags = getProfileTags(context, profileId, orderBy, limit);
+        int size = tags.size();
+        while (position < size && tags.get(position).getId() != tagId) {
+            position++;
+        }
+
+        return position;
     }
 }

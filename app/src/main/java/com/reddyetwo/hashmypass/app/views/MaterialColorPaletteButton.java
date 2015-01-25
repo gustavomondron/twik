@@ -31,7 +31,6 @@ import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.util.AttributeSet;
@@ -41,6 +40,7 @@ import android.view.ViewOutlineProvider;
 import android.widget.ImageButton;
 
 import com.reddyetwo.hashmypass.app.R;
+import com.reddyetwo.hashmypass.app.util.ApiUtils;
 
 public class MaterialColorPaletteButton extends ImageButton {
 
@@ -79,7 +79,7 @@ public class MaterialColorPaletteButton extends ImageButton {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int size = getDimension(R.dimen.fab_size_mini);
-        if (!hasLollipopApi()) {
+        if (!ApiUtils.hasLollipopApi()) {
             size += mShadowSize * 2;
             setMarginsWithoutShadow();
         }
@@ -106,7 +106,7 @@ public class MaterialColorPaletteButton extends ImageButton {
         ShapeDrawable shapeDrawable = new ShapeDrawable(ovalShape);
         shapeDrawable.getPaint().setColor(color);
 
-        if (!hasLollipopApi()) {
+        if (!ApiUtils.hasLollipopApi()) {
             Drawable shadowDrawable = getResources().getDrawable(R.drawable.shadow_mini);
             LayerDrawable layerDrawable =
                     new LayerDrawable(new Drawable[]{shadowDrawable, shapeDrawable});
@@ -143,7 +143,7 @@ public class MaterialColorPaletteButton extends ImageButton {
     @SuppressWarnings("deprecation")
     @SuppressLint("NewApi")
     private void setBackgroundCompat(Drawable drawable) {
-        if (hasLollipopApi()) {
+        if (ApiUtils.hasLollipopApi()) {
             float elevation = getElevation() > 0.0f ? getElevation() :
                     getDimension(R.dimen.fab_elevation_lollipop);
             setElevation(elevation);
@@ -159,7 +159,7 @@ public class MaterialColorPaletteButton extends ImageButton {
             });
             setClipToOutline(true);
             setBackground(rippleDrawable);
-        } else if (hasJellyBeanApi()) {
+        } else if (ApiUtils.hasJellyBeanApi()) {
             setBackground(drawable);
         } else {
             setBackgroundDrawable(drawable);
@@ -175,13 +175,5 @@ public class MaterialColorPaletteButton extends ImageButton {
             mColorRipple = colorRipple;
             updateBackground();
         }
-    }
-
-    private boolean hasLollipopApi() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
-    }
-
-    private boolean hasJellyBeanApi() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
     }
 }

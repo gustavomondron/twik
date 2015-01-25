@@ -34,6 +34,15 @@ public class Profile {
     public Profile() {
     }
 
+    @Override
+    public boolean equals(Object o) {
+        boolean equals = false;
+        if (o instanceof Profile) {
+            equals = ((Profile) o).getId() == mId;
+        }
+        return equals;
+    }
+
     public Profile(long id, String name, String privateKey, int passwordLength,
                    PasswordType passwordType, int colorIndex) {
         mId = id;
