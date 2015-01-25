@@ -25,17 +25,21 @@ import android.view.inputmethod.InputMethodManager;
 
 public class KeyboardManager {
 
+    private KeyboardManager() {
+
+    }
+
     public static void hide(Context context, View view) {
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager) context
-                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm =
+                    (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
     public static void show(Context context) {
-        InputMethodManager imm = (InputMethodManager) context
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm =
+                (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 }
