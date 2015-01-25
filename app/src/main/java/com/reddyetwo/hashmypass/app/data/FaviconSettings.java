@@ -35,18 +35,21 @@ public class FaviconSettings {
 
     private static final String FILE_NAME = "favicon-%d.png";
 
+    private FaviconSettings() {
+
+    }
+
     public static Favicon getFavicon(Context context, String site) {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.query(DataOpenHelper.FAVICONS_TABLE_NAME,
-                new String[]{DataOpenHelper.COLUMN_ID},
-                DataOpenHelper.COLUMN_FAVICONS_SITE + "= ?", new String[]{site},
-                null, null, null);
+        Cursor cursor =
+                db.query(DataOpenHelper.FAVICONS_TABLE_NAME, new String[]{DataOpenHelper.COLUMN_ID},
+                        DataOpenHelper.COLUMN_FAVICONS_SITE + "= ?", new String[]{site}, null, null,
+                        null);
 
         Favicon favicon = null;
         if (cursor.moveToFirst()) {
-            long id = cursor.getLong(
-                    cursor.getColumnIndex(DataOpenHelper.COLUMN_ID));
+            long id = cursor.getLong(cursor.getColumnIndex(DataOpenHelper.COLUMN_ID));
             try {
                 String filename = String.format(FILE_NAME, id);
                 FileInputStream fis = context.openFileInput(filename);
@@ -70,13 +73,10 @@ public class FaviconSettings {
         values.put(DataOpenHelper.COLUMN_FAVICONS_SITE, favicon.getSite());
         try {
             db.beginTransaction();
-            id = db.insertOrThrow(DataOpenHelper.FAVICONS_TABLE_NAME, null,
-                    values);
+            id = db.insertOrThrow(DataOpenHelper.FAVICONS_TABLE_NAME, null, values);
             String filename = String.format(FILE_NAME, id);
-            FileOutputStream fos =
-                    context.openFileOutput(filename, Context.MODE_PRIVATE);
-            boolean stored = favicon.getIcon()
-                    .compress(Bitmap.CompressFormat.PNG, 100, fos);
+            FileOutputStream fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
+            boolean stored = favicon.getIcon().compress(Bitmap.CompressFormat.PNG, 100, fos);
             fos.close();
             if (stored) {
                 db.setTransactionSuccessful();
@@ -107,8 +107,7 @@ public class FaviconSettings {
                     DataOpenHelper.COLUMN_ID + "=" + favicon.getId(), null);
 
             // Delete file from storage
-            deleted = context.deleteFile(
-                    String.format(FILE_NAME, favicon.getId()));
+            deleted = context.deleteFile(String.format(FILE_NAME, favicon.getId()));
             if (deleted) {
                 db.setTransactionSuccessful();
             }
