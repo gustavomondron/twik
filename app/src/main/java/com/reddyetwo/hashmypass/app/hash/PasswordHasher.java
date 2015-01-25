@@ -109,15 +109,12 @@ public class PasswordHasher {
 
     public static String hashTagWithKeys(String tag, char[] masterKey, String privateKey,
                                          int length, PasswordType passwordType) {
-        /* First, hash the tag with the private key (in the case that it is
-        used) */
-        if (privateKey != null) {
-            tag = hashKey(privateKey, tag.toCharArray(), 24,
-                    PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
-        }
+        // First, hash the tag with the private key (in the case that it is used)
+        String tagToHash = privateKey == null ? tag : hashKey(privateKey, tag.toCharArray(), 24,
+                PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
 
         // Then, hash the result with the master key
-        return hashKey(tag, masterKey, length, passwordType);
+        return hashKey(tagToHash, masterKey, length, passwordType);
     }
 
     /**
@@ -134,6 +131,7 @@ public class PasswordHasher {
             messageDigest = MessageDigest.getInstance(DIGEST_MD5);
             result = messageDigest.digest(SecurePassword.toBytes(input));
         } catch (NoSuchAlgorithmException e) {
+            Log.e(HashMyPassApplication.LOG_TAG, "Could not find DIGEST MD5 algorithm: " + e);
             result = null;
         }
 
@@ -150,7 +148,8 @@ public class PasswordHasher {
      */
     private static String convertToDigits(String input, int seed, int length) {
         char[] inputChars = input.toCharArray();
-        int pivot = 0; // Pivot for next char-to-digit conversion
+        // Pivot for next char-to-digit conversion
+        int pivot = 0;
         for (int i = 0; i < length; i++) {
             if (!Character.isDigit(inputChars[i])) {
                 inputChars[i] = (char) ((seed + inputChars[pivot]) % 10 + '0');
@@ -211,7 +210,8 @@ public class PasswordHasher {
             int i2 = (pos0 + reserved + i) % length;
             char c = input.charAt(i2);
             if (c >= cStart && c < cStart + cNum) {
-                return input; // Already present - nothing to do
+                // Already present - nothing to do
+                return input;
             }
         }
 
