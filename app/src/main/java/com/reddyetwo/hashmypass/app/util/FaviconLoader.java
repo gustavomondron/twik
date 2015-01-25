@@ -148,6 +148,7 @@ public class FaviconLoader {
             @Override
             public void onReceivedError(WebView view, int errorCode, String description,
                                         String failingUrl) {
+                // Nothing to do
             }
 
             @Override
