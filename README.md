@@ -27,9 +27,9 @@ build it to generate the apk file, which can be installed on the device.
 Acknowledgments
 ---------------
 
-French translation by Andrés Álvarez and greizgh.
-Italian translation by Claudio Arseni.
-German translation by Michael Wodniok.
+- French translation by Andrés Álvarez and greizgh.
+- Italian translation by Claudio Arseni.
+- German translation by Michael Wodniok.
 
 License
 -------
