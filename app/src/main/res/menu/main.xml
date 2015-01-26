@@ -24,6 +24,20 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       tools:context=".MainActivity">
     <item
+        android:id="@+id/action_sort"
+        android:title="@string/sort_websites"
+        android:icon="@drawable/ic_sort_white_48dp"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/action_sort_by_usage"
+                android:title="@string/sort_by_usage" />
+            <item
+                android:id="@+id/action_sort_by_name"
+                android:title="@string/sort_by_name" />
+        </menu>
+    </item>
+    <item
         android:id="@+id/action_edit_profile"
         android:title="@string/action_edit_profile"
         android:orderInCategory="100"

@@ -122,6 +122,11 @@ public class MainActivity extends ActionBarActivity
      */
     private int[] mColorsRipple;
 
+    /**
+     * Tag order mode
+     */
+    private int mTagOrder;
+
     private RecyclerView mTagRecyclerView;
     private LinearLayout mEmptyListLayout;
     private TagListAdapter mAdapter;
@@ -146,6 +151,9 @@ public class MainActivity extends ActionBarActivity
         mColorsNormal = getResources().getIntArray(R.array.color_palette_normal);
         mColorsPressed = getResources().getIntArray(R.array.color_palette_pressed);
         mColorsRipple = getResources().getIntArray(R.array.color_palette_ripple);
+
+        // Get tag order
+        mTagOrder = Preferences.getTagOrder(this);
 
         // Init UI elements
         initTagList();
@@ -294,8 +302,7 @@ public class MainActivity extends ActionBarActivity
 
     private void populateTagList() {
         final List<Tag> tags = TagSettings
-                .getProfileTags(this, mSelectedProfileId, TagSettings.ORDER_BY_HASH_COUNTER,
-                        TagSettings.LIMIT_UNBOUNDED);
+                .getProfileTags(this, mSelectedProfileId, mTagOrder, TagSettings.LIMIT_UNBOUNDED);
         final int stateBeforeUpdating = getTagListState();
 
         if (stateBeforeUpdating == LIST_NOT_INITIALIZED) {
@@ -325,8 +332,7 @@ public class MainActivity extends ActionBarActivity
      */
     private int getTagPosition(long id) {
         List<Tag> tags = TagSettings
-                .getProfileTags(this, mSelectedProfileId, TagSettings.ORDER_BY_HASH_COUNTER,
-                        TagSettings.LIMIT_UNBOUNDED);
+                .getProfileTags(this, mSelectedProfileId, mTagOrder, TagSettings.LIMIT_UNBOUNDED);
         int position = 0;
         int size = tags.size();
         while (position < size && tags.get(position).getId() != id) {
@@ -463,6 +469,16 @@ public class MainActivity extends ActionBarActivity
         } else if (id == R.id.action_about) {
             AboutDialog.showAbout(this);
             return true;
+        } else if (id == R.id.action_sort_by_usage) {
+            mTagOrder = TagSettings.ORDER_BY_HASH_COUNTER;
+            Preferences.setTagOrder(this, mTagOrder);
+            populateTagList();
+            return true;
+        } else if (id == R.id.action_sort_by_name) {
+            mTagOrder = TagSettings.ORDER_BY_NAME;
+            Preferences.setTagOrder(this, mTagOrder);
+            populateTagList();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -524,8 +540,10 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
+    /**
+     * Update the last used profile preferences
+     */
     private void updateLastProfile() {
-                /* Update last used profile preference */
         SharedPreferences preferences = getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong(Preferences.PREFS_KEY_LAST_PROFILE, mSelectedProfileId);

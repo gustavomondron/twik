@@ -36,6 +36,9 @@
     <string name="skip">Skip tutorial</string>
     <string name="next">Next</string>
     <string name="start">Start</string>
+    <string name="sort_websites">Sort websites</string>
+    <string name="sort_by_usage">Sort websites by usage</string>
+    <string name="sort_by_name">Sort websites by name</string>
 
     <!-- Dialogs -->
     <string name="confirm_delete">Delete \"%s\" profile?</string>

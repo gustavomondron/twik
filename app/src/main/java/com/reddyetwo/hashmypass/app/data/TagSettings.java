@@ -29,9 +29,10 @@ import java.util.List;
 
 public class TagSettings {
 
-    public static final int ORDER_BY_HASH_COUNTER = 2;
+    public static final int ORDER_BY_HASH_COUNTER = 0;
+    public static final int ORDER_BY_NAME = 1;
+
     public static final int LIMIT_UNBOUNDED = -1;
-    private static final int ORDER_BY_NAME = 1;
 
     private TagSettings() {
 

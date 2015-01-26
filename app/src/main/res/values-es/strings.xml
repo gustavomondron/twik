@@ -36,6 +36,10 @@
     <string name="skip">Saltar tutorial</string>
     <string name="next">Siguiente</string>
     <string name="start">Comenzar</string>
+    <string name="sort_websites">Ordenar sitios web</string>
+    <string name="sort_by_usage">Ordenar por uso</string>
+    <string name="sort_by_name">Ordenar por nombre</string>
+
 
     <!-- Dialogs -->
     <string name="confirm_delete">¿Eliminar el perfil \"%s\"?</string>
