@@ -21,6 +21,7 @@
 package com.reddyetwo.hashmypass.app;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
@@ -36,6 +37,7 @@ import com.reddyetwo.hashmypass.app.data.PasswordLength;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
+import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.KeyboardManager;
 import com.reddyetwo.hashmypass.app.util.ProfileFormInflater;
 import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
@@ -69,10 +71,14 @@ public class AddProfileActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        /* Get UI widgets */
+        // Get UI widgets
         mNameEditText = (EditText) findViewById(R.id.profile_name_text);
         mPrivateKeyEditText = (EditText) findViewById(R.id.private_key_text);
 
+        // Set private key typeface
+        Typeface monospacedTypeface =
+                Typeface.createFromAsset(getAssets(), Constants.FONT_MONOSPACE);
+        mPrivateKeyEditText.setTypeface(monospacedTypeface);
 
         // Populating password length spinner is a bit more tricky
         // We have to restore its value from savedInstanceState...
@@ -175,13 +181,11 @@ public class AddProfileActivity extends ActionBarActivity {
             Profile profile = new Profile(Profile.NO_ID, mNameEditText.getText().toString(),
                     mPrivateKeyEditText.getText().toString(),
                     Integer.decode((String) mPasswordLengthSpinner.getSelectedItem()),
-                    PasswordType.values()[mPasswordTypeSpinner.getSelectedItemPosition()],
-                    mColor);
+                    PasswordType.values()[mPasswordTypeSpinner.getSelectedItemPosition()], mColor);
             long profileId = ProfileSettings.insertProfile(AddProfileActivity.this, profile);
             if (profileId == -1) {
                 // Error!
-                Toast.makeText(AddProfileActivity.this, R.string.error, Toast.LENGTH_LONG)
-                        .show();
+                Toast.makeText(AddProfileActivity.this, R.string.error, Toast.LENGTH_LONG).show();
                 setResult(RESULT_CANCELED);
             } else {
                 Intent resultIntent = new Intent();
