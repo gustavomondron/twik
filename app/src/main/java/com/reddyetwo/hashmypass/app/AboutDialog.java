@@ -34,10 +34,14 @@ import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
+import com.reddyetwo.hashmypass.app.util.PackageUtils;
+
 /**
  * About Dialog
  */
 public class AboutDialog extends DialogFragment {
+
+    private static final String FRAGMENT_DIALOG_TAG = "dialog_about";
 
     public AboutDialog() {
     }
@@ -46,13 +50,13 @@ public class AboutDialog extends DialogFragment {
 
         FragmentManager fm = activity.getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        Fragment prev = fm.findFragmentByTag("dialog_about");
+        Fragment prev = fm.findFragmentByTag(FRAGMENT_DIALOG_TAG);
         if (prev != null) {
             ft.remove(prev);
         }
         ft.addToBackStack(null);
 
-        new AboutDialog().show(ft, "dialog_about");
+        new AboutDialog().show(ft, FRAGMENT_DIALOG_TAG);
     }
 
     @Override
@@ -60,17 +64,19 @@ public class AboutDialog extends DialogFragment {
 
         View rootView = View.inflate(getActivity(), R.layout.dialog_about, null);
         TextView nameView = (TextView) rootView.findViewById(R.id.app_name);
-        nameView.setText(Html.fromHtml(getString(R.string.app_name)));
+        nameView.setText(getString(R.string.app_name));
 
+        String bodyText = String.format(getResources().getString(R.string.about_body),
+                PackageUtils.getVersionName(getActivity()));
         TextView aboutBodyView = (TextView) rootView.findViewById(R.id.about_body);
-        aboutBodyView.setText(Html.fromHtml(getString(R.string.about_body)));
+        aboutBodyView.setText(Html.fromHtml(bodyText));
         aboutBodyView.setMovementMethod(new LinkMovementMethod());
 
         return new AlertDialog.Builder(getActivity()).setView(rootView)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                dialog.dismiss();
-                            }
-                        }).create();
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                }).create();
     }
 }
