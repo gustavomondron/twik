@@ -1,5 +1,3 @@
-package com.reddyetwo.hashmypass.app.animation;
-
 /*
  * Copyright 2014 Red Dye No. 2
  *
@@ -18,6 +16,8 @@ package com.reddyetwo.hashmypass.app.animation;
  * You should have received a copy of the GNU General Public License
  * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package com.reddyetwo.hashmypass.app.animation;
 
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
