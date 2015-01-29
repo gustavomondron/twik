@@ -306,7 +306,7 @@ public class MainActivity extends ActionBarActivity
         final int stateBeforeUpdating = getTagListState();
 
         if (stateBeforeUpdating == LIST_NOT_INITIALIZED) {
-            mAdapter = new TagListAdapter(this, mSelectedProfileId, mTagClickedListener, tags);
+            mAdapter = new TagListAdapter(this, mSelectedProfileId, mTagOrder, mTagClickedListener, tags);
             mTagRecyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.setProfileId(mSelectedProfileId);
@@ -472,11 +472,13 @@ public class MainActivity extends ActionBarActivity
         } else if (id == R.id.action_sort_by_usage) {
             mTagOrder = TagSettings.ORDER_BY_HASH_COUNTER;
             Preferences.setTagOrder(this, mTagOrder);
+            mAdapter.setTagOrder(mTagOrder);
             populateTagList();
             return true;
         } else if (id == R.id.action_sort_by_name) {
             mTagOrder = TagSettings.ORDER_BY_NAME;
             Preferences.setTagOrder(this, mTagOrder);
+            mAdapter.setTagOrder(mTagOrder);
             populateTagList();
             return true;
         }

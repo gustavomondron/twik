@@ -39,12 +39,14 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListViewHolder> {
     private List<Tag> mTags;
     private final Context mContext;
     private final OnTagClickedListener mTagClickedListener;
+    private int mTagOrder;
 
-    public TagListAdapter(Context context, long profileId, OnTagClickedListener tagClickedListener,
+    public TagListAdapter(Context context, long profileId, int tagOrder, OnTagClickedListener tagClickedListener,
                           List<Tag> objects) {
         super();
         mContext = context;
         mProfileId = profileId;
+        mTagOrder = tagOrder;
         mTagClickedListener = tagClickedListener;
         mTags = objects;
     }
@@ -58,6 +60,10 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListViewHolder> {
 
     public void setProfileId(long profileId) {
         mProfileId = profileId;
+    }
+
+    public void setTagOrder(int tagOrder) {
+        mTagOrder = tagOrder;
     }
 
     public void setTags(List<Tag> tags) {
@@ -89,7 +95,9 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListViewHolder> {
                 // Increase hash counter. This may affect tag list.
                 tag.setHashCounter(tag.getHashCounter() + 1);
                 TagSettings.updateTag(mContext, tag);
-                update(tag);
+                if (mTagOrder == TagSettings.ORDER_BY_HASH_COUNTER) {
+                    update(tag);
+                }
 
                 // Update last used profile
                 mTagClickedListener.onTagClicked(new Tag(tag));
