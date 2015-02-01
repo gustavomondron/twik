@@ -29,7 +29,7 @@
               android:layout_height="match_parent">
 
     <ScrollView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1">
 
@@ -41,7 +41,7 @@
             <RelativeLayout
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="48dp">
 
                 <ImageView
@@ -69,7 +69,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="48dp">
 
                 <ImageView
@@ -140,7 +140,7 @@
 
             <RelativeLayout
                 android:id="@+id/master_key_layout"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -197,38 +197,11 @@
         </LinearLayout>
     </ScrollView>
 
-
-    <LinearLayout
-        android:gravity="bottom"
-        android:layout_width="match_parent"
+    <Button
+        android:layout_gravity="right"
+        android:id="@+id/hash_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:orientation="vertical"
-        android:showDividers="middle"
-        android:divider="?android:dividerHorizontal">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0dp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/button_size"
-            android:orientation="horizontal"
-            android:divider="?android:dividerHorizontal"
-            android:paddingRight="8dp"
-            style="?android:buttonBarStyle">
-
-            <Button
-                android:gravity="right"
-                android:id="@+id/hash_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                style="?android:buttonBarButtonStyle"
-                android:layout_weight="1"
-                android:text="@android:string/ok"/>
-
-        </LinearLayout>
-    </LinearLayout>
-
+        style="?android:buttonBarButtonStyle"
+        android:text="@android:string/ok"/>
 </LinearLayout>
