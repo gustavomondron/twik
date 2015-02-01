@@ -50,12 +50,18 @@
             android:label="@string/action_add_profile"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="stateHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.reddyetwo.hashmypass.app.MainActivity"/>
         </activity>
         <activity
             android:name=".EditProfileActivity"
             android:label="@string/action_edit_profile"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="stateHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.reddyetwo.hashmypass.app.MainActivity"/>
         </activity>
         <activity
             android:name=".BrowserIntegrationActivity"
@@ -71,6 +77,9 @@
             android:name=".SettingsActivity"
             android:label="@string/action_settings"
             android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.reddyetwo.hashmypass.app.MainActivity"/>
         </activity>
 
         <receiver android:name=".util.MasterKeyAlarmManager" />
@@ -81,6 +90,9 @@
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/tutorialStyle">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.reddyetwo.hashmypass.app.MainActivity"/>
         </activity>
     </application>
 
