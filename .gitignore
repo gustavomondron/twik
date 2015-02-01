@@ -5,6 +5,7 @@
 /.idea/
 *.iml
 app/app.iml
+manifest-merger-release-report.txt
 .DS_Store
 build
 app.apk
