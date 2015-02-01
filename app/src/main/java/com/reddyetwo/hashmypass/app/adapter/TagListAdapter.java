@@ -128,7 +128,7 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListViewHolder> {
     public void update(Tag tag) {
         int oldPosition = 0;
         int newPosition = TagSettings.getTagPosition(mContext, tag.getId(), mProfileId,
-                TagSettings.ORDER_BY_HASH_COUNTER, TagSettings.LIMIT_UNBOUNDED);
+                mTagOrder, TagSettings.LIMIT_UNBOUNDED);
 
         while (oldPosition < mTags.size() && mTags.get(oldPosition).getId() != tag.getId()) {
             oldPosition++;
@@ -142,7 +142,7 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListViewHolder> {
         if (oldPosition != newPosition) {
             // Animate the change of position of this tag.
             // The tag is removed from its current position and added to the new one.
-            mTags.remove(tag);
+            mTags.remove(oldPosition);
             mTags.add(newPosition, tag);
             notifyItemRemoved(oldPosition);
             notifyItemInserted(newPosition);
