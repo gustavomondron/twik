@@ -41,6 +41,14 @@
         <item name="android:textColorSecondary">@android:color/white</item>
     </style>
 
+    <!-- Spinner theme -->
+    <style name="Widget.Hashmypass.Toolbar.Spinner.Base" parent="Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
+        <item name="android:background">?android:selectableItemBackground</item>
+        <item name="android:dropDownSelector">?android:selectableItemBackground</item>
+        <item name="android:divider">@null</item>
+        <item name="android:overlapAnchor">true</item>
+    </style>
+
     <style
         name="tutorialStyle"
         parent="android:style/Theme.Holo.Light.NoActionBar"/>

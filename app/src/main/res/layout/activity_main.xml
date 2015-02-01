@@ -39,7 +39,8 @@
         <Spinner
             android:id="@+id/spinner_nav"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            style="@style/Widget.Hashmypass.Toolbar.Spinner.Base"/>
     </android.support.v7.widget.Toolbar>
 
     <FrameLayout
