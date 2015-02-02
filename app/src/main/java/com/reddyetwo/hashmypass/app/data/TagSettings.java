@@ -116,6 +116,7 @@ public class TagSettings {
         }
 
         cursor.close();
+        db.close();
         return tag;
     }
 
@@ -276,6 +277,7 @@ public class TagSettings {
         boolean hasTags = cursor.getCount() > 0;
 
         cursor.close();
+        db.close();
         return hasTags;
     }
 

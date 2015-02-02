@@ -159,6 +159,7 @@ public class ProfileSettings {
             profileId = cursor.getLong(cursor.getColumnIndex(DataOpenHelper.COLUMN_ID));
         }
         cursor.close();
+        db.close();
 
         return profileId;
     }
