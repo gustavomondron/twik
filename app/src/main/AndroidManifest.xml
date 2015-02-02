@@ -19,18 +19,21 @@
     *
     -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.reddyetwo.hashmypass.app" >
+<manifest
+    package="com.reddyetwo.hashmypass.app"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".HashMyPassApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Hashmypass" >
+        android:supportsRtl="false"
+        android:theme="@style/Theme.Hashmypass"
+        tools:ignore="UnusedAttribute">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -39,44 +42,44 @@
             android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".AddProfileActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:label="@string/action_add_profile" >
+            android:label="@string/action_add_profile"
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.reddyetwo.hashmypass.app.MainActivity"/>
         </activity>
         <activity
             android:name=".EditProfileActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:label="@string/action_edit_profile" >
+            android:label="@string/action_edit_profile"
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.reddyetwo.hashmypass.app.MainActivity"/>
         </activity>
         <activity
             android:name=".BrowserIntegrationActivity"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.Holo.Light.Dialog" >
+            android:theme="@style/Theme.AppCompat.Light.Dialog" >
             <intent-filter android:label="@string/app_name" >
                 <action android:name="android.intent.action.SEND" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/action_settings" >
+            android:label="@string/action_settings"
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.reddyetwo.hashmypass.app.MainActivity"/>
         </activity>
 
         <receiver android:name=".util.MasterKeyAlarmManager" />
@@ -84,11 +87,12 @@
         <activity
             android:name=".TutorialActivity"
             android:noHistory="true"
+            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/tutorialStyle" >
+            android:theme="@style/tutorialStyle">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.reddyetwo.hashmypass.app.MainActivity"/>
         </activity>
     </application>
 

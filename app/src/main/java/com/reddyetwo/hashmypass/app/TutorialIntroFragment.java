@@ -40,7 +40,6 @@ import java.util.Random;
 
 public class TutorialIntroFragment extends Fragment {
 
-    private ViewGroup mRootView;
     private ImageView mIcMasterKeyView;
     private TextView mWebsiteTextView;
     private TextView mWebsitePasswordView;
@@ -48,32 +47,31 @@ public class TutorialIntroFragment extends Fragment {
     private AnimatorSet mAnimatorSet;
 
     private Random mRandom;
-    private String mWebsite;
 
-    private final static String[] WEBSITES =
+    private static final String[] WEBSITES =
             {"amazon", "google", "ebay", "bing", "yahoo", "reddit", "paypal",
                     "spotify", "facebook", "twitter", "flickr", "steam",
                     "feedly", "foursquare", "apple", "xda-developers",
                     "bugzilla", "ssh", "wopr", "skynet"};
-    private final static char[] MASTER_KEY = {'m', 'a', 's', 't', 'e', 'r'};
+    private static final char[] MASTER_KEY = {'m', 'a', 's', 't', 'e', 'r'};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRootView = (ViewGroup) inflater
-                .inflate(R.layout.fragment_tutorial_intro, container, false);
+        ViewGroup rootView =
+                (ViewGroup) inflater.inflate(R.layout.fragment_tutorial_intro, container, false);
         mIcMasterKeyView =
-                (ImageView) mRootView.findViewById(R.id.ic_master_key);
-        mWebsiteTextView = (TextView) mRootView.findViewById(R.id.website_text);
+                (ImageView) rootView.findViewById(R.id.ic_master_key);
+        mWebsiteTextView = (TextView) rootView.findViewById(R.id.website_text);
         mWebsitePasswordView =
-                (TextView) mRootView.findViewById(R.id.website_password);
+                (TextView) rootView.findViewById(R.id.website_password);
         Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
                 Constants.FONT_MONOSPACE);
         mWebsitePasswordView.setTypeface(tf);
 
         mRandom = new Random();
 
-        return mRootView;
+        return rootView;
     }
 
     @Override
@@ -127,10 +125,10 @@ public class TutorialIntroFragment extends Fragment {
     }
 
     private void generateRandomData() {
-        mWebsite = WEBSITES[mRandom.nextInt(WEBSITES.length)];
-        mWebsiteTextView.setText(mWebsite);
+        String website = WEBSITES[mRandom.nextInt(WEBSITES.length)];
+        mWebsiteTextView.setText(website);
         String password = PasswordHasher
-                .hashPassword(mWebsite, MASTER_KEY, "private", 8,
+                .hashTagWithKeys(website, MASTER_KEY, "private", 8,
                         PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
         mWebsitePasswordView.setText(password);
     }

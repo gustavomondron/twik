@@ -32,18 +32,14 @@
     <string name="action_about">Acerca de</string>
     <string name="action_delete">Eliminar</string>
     <string name="discard">Descartar</string>
-    <string name="ok">OK</string>
-    <string name="copy_to_clipboard">Copiar al portapapeles</string>
-    <string name="cancel">Cancelar</string>
-    <string name="add">Añadir</string>
     <string name="save">Guardar</string>
-    <string name="hash">Hash</string>
     <string name="skip">Saltar tutorial</string>
     <string name="next">Siguiente</string>
     <string name="start">Comenzar</string>
-    <string name="ready">¡Estoy listo para empezar!</string>
-    <string name="add_first_profile">Añade tu primer perfil</string>
-    <string name="hash_this_tag">Generar contraseña</string>
+    <string name="sort_websites">Ordenar sitios web</string>
+    <string name="sort_by_usage">Ordenar por uso</string>
+    <string name="sort_by_name">Ordenar por nombre</string>
+
 
     <!-- Dialogs -->
     <string name="confirm_delete">¿Eliminar el perfil \"%s\"?</string>
@@ -97,14 +93,17 @@
     <string name="settings_summary_remember_master_key_never">
         La contraseña maestra no se recordará cuando abandones la aplicación
     </string>
-    <string name="settings_summary_remember_master_key_minutes">
-        La contraseña maestra se recordará durante %d minutos cuando
-        abandones la aplicación
-    </string>
-    <string name="settings_summary_remember_master_key_hours">
-        La contraseña maestra se recordará durante %d horas cuando abandones
-        la aplicación
-    </string>
+    <plurals name="settings_summary_remember_master_key_minutes">
+        <item quantity="one">La contraseña maestra se recordará durante %d minuto cuando
+        abandones la aplicación</item>
+        <item quantity="other">La contraseña maestra se recordará durante %d minutos cuando
+        abandones la aplicación</item>
+    </plurals>
+    <plurals name="settings_summary_remember_master_key_hours">
+        <item quantity="one">La contraseña maestra se recordará durante %d hora cuando abandones la aplicación</item>
+        <item quantity="other">La contraseña maestra se recordará durante %d horas cuando abandones
+        la aplicación</item>
+    </plurals>
     <string name="settings_summary_copy_to_clipboard_enabled">La contraseña
         generada se copia automáticamente al portapapeles</string>
     <string name="settings_summary_copy_to_clipboard_disabled">La contraseña
@@ -119,8 +118,7 @@
 
     <!-- About Dialog -->
     <string name="about_body"><![CDATA[
-        <b>Twik</b><br/>
-        Versión 1.2.6<br/>
+        Versión %s<br/>
         Copyright \u00A9 2014 Red Dye No. 2
         <br/><br/>
         <b>Twik</b> es una aplicación que hace más fácil generar
@@ -135,6 +133,7 @@
 
         <b>Agradecimientos</b><br/>
         Traducción al francés por Andrés Álvarez y greizgh<br/>
+        Traducción al italiano por Claudio Arseni<br/>
         Traducción al alemán por Michael Wodniok (alias murderered)
         <br/><br/>
 
@@ -163,11 +162,9 @@
         <i>por David Hamp-Gonsalves.</i>
         <br/><br/>
 
-        <b><a href="http://jgilfelt.github.io/android-actionbarstylegenerator/">
-        Android Action Bar Style Generator</a></b><br/>
-        <i>por The Android Open Source Project</i> y
-        <i>readyState Software Ltd.</i> <br/>
-        Apache 2.0 license.<br/> <br/>
+        <b><a href="https://github.com/makovkastar/FloatingActionButton/">FloatingActionButton</a></b><br/>
+        <i>por Oleksandr Melnykov.</i><br/>
+        MIT License.<br/><br/>
 
         <b><a href="http://font.ubuntu.com/">Ubuntu Mono</a></b> <br/>
         <i>por Canonical Ltd.</i> <br/>

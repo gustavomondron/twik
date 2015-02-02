@@ -23,9 +23,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class DataOpenHelper extends SQLiteOpenHelper {
+class DataOpenHelper extends SQLiteOpenHelper {
 
-    // TODO Typo in the db name... we should fix it... or maybe it's too late
+    // Typo in the database name
     private static final String DATABASE_NAME = "hassmypass.db";
     private static final int DATABASE_VERSION = 4;
 
@@ -35,8 +35,7 @@ public class DataOpenHelper extends SQLiteOpenHelper {
     public static final String PROFILES_TABLE_NAME = "profiles";
     public static final String COLUMN_PROFILES_NAME = "name";
     public static final String COLUMN_PROFILES_PRIVATE_KEY = "private_key";
-    public static final String COLUMN_PROFILES_PASSWORD_LENGTH =
-            "password_length";
+    public static final String COLUMN_PROFILES_PASSWORD_LENGTH = "password_length";
     public static final String COLUMN_PROFILES_PASSWORD_TYPE = "password_type";
     public static final String COLUMN_PROFILES_COLOR_INDEX = "color_index";
     private static final String PROFILES_TABLE_CREATE =
@@ -58,22 +57,21 @@ public class DataOpenHelper extends SQLiteOpenHelper {
     public static final String COLUMN_TAGS_HASH_COUNTER = "hash_counter";
     public static final String COLUMN_TAGS_PASSWORD_LENGTH = "password_length";
     public static final String COLUMN_TAGS_PASSWORD_TYPE = "password_type";
-    private static final String TAGS_TABLE_CREATE =
-            "CREATE TABLE " + TAGS_TABLE_NAME + " (" +
-                    COLUMN_ID + " INTEGER PRIMARY KEY, " +
-                    COLUMN_TAGS_NAME + " TEXT, " +
-                    COLUMN_TAGS_PROFILE_ID + " INTEGER, " +
-                    COLUMN_TAGS_HASH_COUNTER + " INTEGER NOT NULL DEFAULT 0, " +
-                    COLUMN_TAGS_SITE + " TEXT, " +
-                    COLUMN_TAGS_PASSWORD_LENGTH + " INTEGER, " +
-                    COLUMN_TAGS_PASSWORD_TYPE + " INTEGER, " +
-                    "FOREIGN KEY(" + COLUMN_TAGS_PROFILE_ID + ") REFERENCES " +
-                    PROFILES_TABLE_NAME + "(id)" +
-                    "UNIQUE (" + COLUMN_TAGS_NAME + "," +
-                    "" + COLUMN_TAGS_PROFILE_ID + ")," +
-                    "UNIQUE (" + COLUMN_TAGS_PROFILE_ID + "," +
-                    "" + COLUMN_TAGS_SITE + ")" +
-                    ");";
+    private static final String TAGS_TABLE_CREATE = "CREATE TABLE " + TAGS_TABLE_NAME + " (" +
+            COLUMN_ID + " INTEGER PRIMARY KEY, " +
+            COLUMN_TAGS_NAME + " TEXT, " +
+            COLUMN_TAGS_PROFILE_ID + " INTEGER, " +
+            COLUMN_TAGS_HASH_COUNTER + " INTEGER NOT NULL DEFAULT 0, " +
+            COLUMN_TAGS_SITE + " TEXT, " +
+            COLUMN_TAGS_PASSWORD_LENGTH + " INTEGER, " +
+            COLUMN_TAGS_PASSWORD_TYPE + " INTEGER, " +
+            "FOREIGN KEY(" + COLUMN_TAGS_PROFILE_ID + ") REFERENCES " +
+            PROFILES_TABLE_NAME + "(id)" +
+            "UNIQUE (" + COLUMN_TAGS_NAME + "," +
+            "" + COLUMN_TAGS_PROFILE_ID + ")," +
+            "UNIQUE (" + COLUMN_TAGS_PROFILE_ID + "," +
+            "" + COLUMN_TAGS_SITE + ")" +
+            ");";
     private static final String TAGS_TABLE_ADD_HASH_COUNTER_COLUMN = "" +
             "ALTER TABLE " + TAGS_TABLE_NAME + " ADD COLUMN " +
             COLUMN_TAGS_HASH_COUNTER + " INTEGER NOT NULL DEFAULT 0;";
@@ -85,7 +83,7 @@ public class DataOpenHelper extends SQLiteOpenHelper {
     /* Table "favicons" */
     public static final String FAVICONS_TABLE_NAME = "favicons";
     public static final String COLUMN_FAVICONS_SITE = "site";
-    public static final String FAVICONS_TABLE_CREATE = "CREATE TABLE " +
+    private static final String FAVICONS_TABLE_CREATE = "CREATE TABLE " +
             FAVICONS_TABLE_NAME + " (" + COLUMN_ID + " INTEGER PRIMARY KEY, " +
             COLUMN_FAVICONS_SITE + " TEXT, " +
             "UNIQUE (" + COLUMN_FAVICONS_SITE + "));";
@@ -110,6 +108,8 @@ public class DataOpenHelper extends SQLiteOpenHelper {
                 db.execSQL(TAGS_TABLE_ADD_HASH_COUNTER_COLUMN);
             case 3:
                 db.execSQL(PROFILES_TABLE_ADD_COLOR_INDEX_COLUMN);
+                break;
+            default:
         }
     }
 }

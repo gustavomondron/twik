@@ -26,6 +26,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
+import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
@@ -33,6 +34,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
+import com.reddyetwo.hashmypass.app.HashMyPassApplication;
 import com.reddyetwo.hashmypass.app.R;
 import com.reddyetwo.hashmypass.app.data.Favicon;
 import com.reddyetwo.hashmypass.app.data.FaviconSettings;
@@ -49,10 +51,13 @@ import java.util.List;
 public class FaviconLoader {
 
     private static final long LOAD_TIMEOUT = 3000;
+    private static final int PROGRESS_STOPPED = 10;
+    private static final int MASK_LOW_NIBBLE = 15;
+
     private List<String> mTouchIconUrlList;
     private String mUrl;
     private OnFaviconLoaded mOnFaviconLoaded;
-    private Context mContext;
+    private final Context mContext;
 
     public FaviconLoader(Context context) {
         mContext = context;
@@ -62,8 +67,7 @@ public class FaviconLoader {
         public void onFaviconLoaded(BitmapDrawable icon);
     }
 
-    public static void setAsBackground(Context context, TextView textView,
-                                       Tag tag) {
+    public static void setAsBackground(Context context, TextView textView, Tag tag) {
         if (tag == null || tag.getName().length() == 0) {
             setTextViewBackground(textView, null);
             return;
@@ -71,17 +75,14 @@ public class FaviconLoader {
 
         Drawable faviconDrawable = null;
         if (tag.getSite() != null) {
-            Favicon favicon =
-                    FaviconSettings.getFavicon(context, tag.getSite());
+            Favicon favicon = FaviconSettings.getFavicon(context, tag.getSite());
             if (favicon != null) {
-                faviconDrawable = new BitmapDrawable(context.getResources(),
-                        favicon.getIcon());
+                faviconDrawable = new BitmapDrawable(context.getResources(), favicon.getIcon());
             }
         }
         boolean writeInitial = faviconDrawable == null;
         if (faviconDrawable == null) {
-            faviconDrawable = context.getResources()
-                    .getDrawable(R.drawable.favicon_background);
+            faviconDrawable = context.getResources().getDrawable(R.drawable.favicon_background);
 
             ((GradientDrawable) faviconDrawable)
                     .setColor(getBackgroundColor(context, tag.getName().toCharArray()));
@@ -94,9 +95,9 @@ public class FaviconLoader {
         }
     }
 
-    private static void setTextViewBackground(TextView textView,
-                                              Drawable background) {
+    private static void setTextViewBackground(TextView textView, Drawable background) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            //noinspection deprecation
             textView.setBackgroundDrawable(background);
         } else {
             textView.setBackground(background);
@@ -105,12 +106,11 @@ public class FaviconLoader {
     }
 
     private static int getBackgroundColor(Context context, char[] input) {
-        int[] colors = context.getResources()
-                .getIntArray(R.array.favicon_background_colors);
+        int[] colors = context.getResources().getIntArray(R.array.color_palette_normal);
         byte[] digest = PasswordHasher.calculateDigest(input);
 
         // Unsigned int, module colors length
-        int color = (digest[0] & 15) % colors.length;
+        int color = (digest[0] & MASK_LOW_NIBBLE) % colors.length;
         return colors[color];
     }
 
@@ -118,7 +118,10 @@ public class FaviconLoader {
         mUrl = url;
         mOnFaviconLoaded = onFaviconLoaded;
 
-        CookieSyncManager.createInstance(mContext);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            //noinspection deprecation
+            CookieSyncManager.createInstance(mContext);
+        }
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(false);
 
@@ -132,7 +135,7 @@ public class FaviconLoader {
         final Runnable timeoutRunnable = new Runnable() {
             @Override
             public void run() {
-                if (webView.getProgress() == 10) {
+                if (webView.getProgress() == PROGRESS_STOPPED) {
                     // Stuck at 10%: Connection established but not loading
                     // Thank you, AOSP!
                     webView.reload();
@@ -143,8 +146,9 @@ public class FaviconLoader {
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
-            public void onReceivedError(WebView view, int errorCode,
-                                        String description, String failingUrl) {
+            public void onReceivedError(WebView view, int errorCode, String description,
+                                        String failingUrl) {
+                // Nothing to do
             }
 
             @Override
@@ -169,24 +173,21 @@ public class FaviconLoader {
         URL fallbackURL = null;
         try {
             // Generate URL
-            if (touchIconUrlList.size() > 0) {
-                faviconURL = new URL(touchIconUrlList
-                        .get(touchIconUrlList.size() - 1));
+            if (!touchIconUrlList.isEmpty()) {
+                faviconURL = new URL(touchIconUrlList.get(touchIconUrlList.size() - 1));
             } else {
                 // Look for favicon
                 URL inputUrl = new URL(mUrl);
                 faviconURL = new URL(inputUrl.getProtocol() + "://" +
                         inputUrl.getHost() +
                         "/favicon.ico");
-                fallbackURL =
-                        new URL("http://www.google.com/s2/favicons?domain=" +
-                                mUrl);
+                fallbackURL = new URL("http://www.google.com/s2/favicons?domain=" + mUrl);
             }
 
             // Get bitmap from URL
             new RetrieveImageTask().execute(faviconURL, fallbackURL);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(HashMyPassApplication.LOG_TAG, "Error loading favicon: " + e);
         }
     }
 
@@ -216,7 +217,7 @@ public class FaviconLoader {
                 return null;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(HashMyPassApplication.LOG_TAG, "Error getting favicon URL: " + e);
             return null;
         }
     }
@@ -225,12 +226,11 @@ public class FaviconLoader {
 
         public FaviconChromeClient() {
             super();
-            mTouchIconUrlList = new ArrayList<String>();
+            mTouchIconUrlList = new ArrayList<>();
         }
 
         @Override
-        public void onReceivedTouchIconUrl(WebView view, String url,
-                                           boolean precomposed) {
+        public void onReceivedTouchIconUrl(WebView view, String url, boolean precomposed) {
             /* Awesome Android feature: sometimes we get an url which is just
              the host name... */
             if (url.endsWith(".png")) {
@@ -240,17 +240,9 @@ public class FaviconLoader {
             }
             super.onReceivedTouchIconUrl(view, url, precomposed);
         }
-
-        @Override
-        public void onProgressChanged(WebView view, int newProgress) {
-            // Sometimes, a 100% progress is received before the touch icons...
-            // Thank you, AOSP.
-            super.onProgressChanged(view, newProgress);
-        }
     }
 
-    private class RetrieveImageTask
-            extends AsyncTask<URL, Void, BitmapDrawable> {
+    private class RetrieveImageTask extends AsyncTask<URL, Void, BitmapDrawable> {
 
 
         public RetrieveImageTask() {
@@ -271,10 +263,9 @@ public class FaviconLoader {
 
             try {
                 return (BitmapDrawable) BitmapDrawable
-                        .createFromStream((InputStream) url.getContent(),
-                                "favicon");
+                        .createFromStream((InputStream) url.getContent(), "favicon");
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(HashMyPassApplication.LOG_TAG, "Error downloading favicon: " + e);
                 return null;
             }
         }

@@ -24,7 +24,9 @@
 package com.reddyetwo.hashmypass.app.hash;
 
 import android.util.Base64;
+import android.util.Log;
 
+import com.reddyetwo.hashmypass.app.HashMyPassApplication;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.util.SecurePassword;
 
@@ -47,24 +49,27 @@ public class PasswordHasher {
      */
     private static final String DIGEST_MD5 = "MD5";
 
-    private static String _hashPassword(String tag, char[] key, int length,
-                                        PasswordType type) {
+    private PasswordHasher() {
+
+    }
+
+    private static String hashKey(String tag, char[] key, int length, PasswordType type) {
 
         Mac hmac;
         try {
             hmac = Mac.getInstance(HMAC_SHA1);
         } catch (NoSuchAlgorithmException e) {
+            Log.e(HashMyPassApplication.LOG_TAG, "HMAC error: " + e);
             return null;
         }
 
         /* First, we have to calculate the hashing key as a result of hashing
          the tag and the private key */
-        SecretKeySpec keySpec = new SecretKeySpec(SecurePassword.toBytes(key),
-                HMAC_SHA1);
+        SecretKeySpec keySpec = new SecretKeySpec(SecurePassword.toBytes(key), HMAC_SHA1);
         try {
             hmac.init(keySpec);
         } catch (InvalidKeyException e) {
-            e.printStackTrace();
+            Log.e(HashMyPassApplication.LOG_TAG, "Invalid secret key: " + e);
             return null;
         }
 
@@ -72,8 +77,9 @@ public class PasswordHasher {
                 Base64.NO_PADDING | Base64.NO_WRAP);
 
         int sum = 0;
-        for (int i = 0; i < hash.length(); i++)
+        for (int i = 0; i < hash.length(); i++) {
             sum += hash.charAt(i);
+        }
 
         /* Parse password to match the request type */
         if (type == PasswordType.NUMERIC) {
@@ -101,18 +107,14 @@ public class PasswordHasher {
         return hash.substring(0, length);
     }
 
-    public static String hashPassword(String tag, char[] masterKey,
-                                      String privateKey, int length,
-                                      PasswordType passwordType) {
-        /* First, hash the tag with the private key (in the case that it is
-        used) */
-        if (privateKey != null) {
-            tag = _hashPassword(privateKey, tag.toCharArray(), 24,
-                    PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
-        }
+    public static String hashTagWithKeys(String tag, char[] masterKey, String privateKey,
+                                         int length, PasswordType passwordType) {
+        // First, hash the tag with the private key (in the case that it is used)
+        String tagToHash = privateKey == null ? tag : hashKey(privateKey, tag.toCharArray(), 24,
+                PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
 
         // Then, hash the result with the master key
-        return _hashPassword(tag, masterKey, length, passwordType);
+        return hashKey(tagToHash, masterKey, length, passwordType);
     }
 
     /**
@@ -129,6 +131,7 @@ public class PasswordHasher {
             messageDigest = MessageDigest.getInstance(DIGEST_MD5);
             result = messageDigest.digest(SecurePassword.toBytes(input));
         } catch (NoSuchAlgorithmException e) {
+            Log.e(HashMyPassApplication.LOG_TAG, "Could not find DIGEST MD5 algorithm: " + e);
             result = null;
         }
 
@@ -145,7 +148,8 @@ public class PasswordHasher {
      */
     private static String convertToDigits(String input, int seed, int length) {
         char[] inputChars = input.toCharArray();
-        int pivot = 0; // Pivot for next char-to-digit conversion
+        // Pivot for next char-to-digit conversion
+        int pivot = 0;
         for (int i = 0; i < length; i++) {
             if (!Character.isDigit(inputChars[i])) {
                 inputChars[i] = (char) ((seed + inputChars[pivot]) % 10 + '0');
@@ -166,8 +170,7 @@ public class PasswordHasher {
      *               truncation
      * @return the string with special chars replaced
      */
-    private static String removeSpecialCharacters(String input, int seed,
-                                                  int length) {
+    private static String removeSpecialCharacters(String input, int seed, int length) {
         char[] inputChars = input.toCharArray();
         int pivot = 0;
         for (int i = 0; i < length; i++) {
@@ -196,9 +199,9 @@ public class PasswordHasher {
      * @param cNum     number of valid character codes starting from cStart
      * @return the string with the injected chars
      */
-    private static String injectCharacter(String input, int offset,
-                                          int reserved, int seed, int length,
-                                          char cStart, int cNum) {
+    @SuppressWarnings("SameParameterValue")
+    private static String injectCharacter(String input, int offset, int reserved, int seed,
+                                          int length, char cStart, int cNum) {
         int pos0 = seed % length;
         int pos = (pos0 + offset) % length;
         // Check if a qualified character is already present.
@@ -206,14 +209,15 @@ public class PasswordHasher {
         for (int i = 0; i < length - reserved; i++) {
             int i2 = (pos0 + reserved + i) % length;
             char c = input.charAt(i2);
-            if (c >= cStart && c < cStart + cNum)
-                return input; // Already present - nothing to do
+            if (c >= cStart && c < cStart + cNum) {
+                // Already present - nothing to do
+                return input;
+            }
         }
 
         String head = pos > 0 ? input.substring(0, pos) : "";
         char inject = (char) (((seed + input.charAt(pos)) % cNum) + cStart);
-        String tail =
-                (pos + 1 < input.length()) ? input.substring(pos + 1) : "";
+        String tail = (pos + 1 < input.length()) ? input.substring(pos + 1) : "";
 
         return head + inject + tail;
     }

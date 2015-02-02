@@ -32,6 +32,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -55,7 +56,6 @@ import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
-import com.reddyetwo.hashmypass.app.util.ButtonsEnableTextWatcher;
 import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
 import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.FaviconLoader;
@@ -64,23 +64,23 @@ import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 import com.reddyetwo.hashmypass.app.util.SecurePassword;
 import com.reddyetwo.hashmypass.app.util.TagAutocomplete;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BrowserIntegrationActivity extends Activity
         implements TagSettingsDialogFragment.OnTagSettingsSavedListener,
-        IdenticonGenerationTask.OnIconGeneratedListener {
+                   IdenticonGenerationTask.OnIconGeneratedListener {
 
-    private static final Pattern SITE_PATTERN = Pattern.compile(
-            "^.*?([\\w\\d\\-]+)\\.((co|com|net|org|ac)\\.)?\\w+$");
+    private static final Pattern SITE_PATTERN =
+            Pattern.compile("^.*?([\\w\\d\\-]+)\\.((co|com|net|org|ac)\\.)?\\w+$");
 
     private IdenticonGenerationTask mTask;
     private AutoCompleteTextView mTagEditText;
     private EditText mMasterKeyEditText;
     private Spinner mProfileSpinner;
     private String mSite;
-    private ButtonsEnableTextWatcher mButtonsEnableTextWatcher;
     private Favicon mFavicon;
     private TextView mPasswordTextView;
     private ImageView mIdenticonImageView;
@@ -94,16 +94,98 @@ public class BrowserIntegrationActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         setContentView(R.layout.activity_browser_integration);
 
-        final ImageView faviconImageView =
-                (ImageView) findViewById(R.id.tag_favicon);
-        final ProgressBar faviconProgressBar =
-                (ProgressBar) findViewById(R.id.favicon_progress);
-        faviconProgressBar.setIndeterminate(true);
-
-        Intent intent = getIntent();
         mSite = getSite();
+
+        loadFavicon();
+
+        mPasswordTextView = (TextView) findViewById(R.id.website_password);
+        Typeface tf = Typeface.createFromAsset(getAssets(), Constants.FONT_MONOSPACE);
+        mPasswordTextView.setTypeface(tf);
+        mPasswordTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mPasswordTextView.length() > 0) {
+                    ClipboardHelper.copyToClipboard(BrowserIntegrationActivity.this,
+                            ClipboardHelper.CLIPBOARD_LABEL_PASSWORD,
+                            mPasswordTextView.getText().toString(), R.string.copied_to_clipboard);
+                }
+            }
+        });
+
+        mTagEditText = (AutoCompleteTextView) findViewById(R.id.tag_text);
+        mMasterKeyEditText = (EditText) findViewById(R.id.master_key_text);
+        mIdenticonImageView = (ImageView) findViewById(R.id.identicon);
+
+        // Populate profile spinner
+        mProfileSpinner = (Spinner) findViewById(R.id.profile_spinner);
+        if (!populateProfileSpinner()) {
+            // No profiles, no hash!
+            Toast.makeText(this, R.string.error_no_profiles, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        mProfileSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position,
+                                               long id) {
+                        mProfileId = ((Profile) mProfileSpinner.getSelectedItem()).getId();
+                        updateTag();
+                        TagAutocomplete
+                                .populateTagAutocompleteTextView(BrowserIntegrationActivity.this,
+                                        mProfileId, mTagEditText);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // Nothing to do
+                    }
+                });
+
+        mTagSettingsImageButton = (ImageButton) findViewById(R.id.tag_settings);
+        mTagSettingsImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mTagEditText.getText().length() > 0) {
+                    TagSettingsDialogFragment settingsDialog = new TagSettingsDialogFragment();
+                    settingsDialog.setProfileId(mProfileId);
+                    settingsDialog.setTag(mTag);
+                    settingsDialog.setTagSettingsSavedListener(BrowserIntegrationActivity.this);
+                    settingsDialog.show(getFragmentManager(), "tagSettings");
+                }
+            }
+        });
+        mTagSettingsImageButton.setOnLongClickListener(new HelpToastOnLongPressClickListener());
+
+
+        mOkButton = (Button) findViewById(R.id.hash_button);
+        mOkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeDialog();
+            }
+        });
+
+
+        /* Add text watchers */
+        PasswordTextWatcher watcher = new PasswordTextWatcher();
+        mTagEditText.addTextChangedListener(watcher);
+        mMasterKeyEditText.addTextChangedListener(watcher);
+
+        /* Update the tag according to the site */
+        updateTag();
+        mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey(), 0,
+                HashMyPassApplication.getCachedMasterKey().length);
+    }
+
+    private void loadFavicon() {
+        final ImageView faviconImageView = (ImageView) findViewById(R.id.tag_favicon);
+        final ProgressBar faviconProgressBar = (ProgressBar) findViewById(R.id.favicon_progress);
+        faviconProgressBar.setIndeterminate(true);
+        final Intent intent = getIntent();
 
         // Check if we have a favicon stored for this site
         mFavicon = FaviconSettings.getFavicon(this, mSite);
@@ -124,101 +206,10 @@ public class BrowserIntegrationActivity extends Activity
                             faviconImageView.setImageDrawable(icon);
                             faviconProgressBar.setVisibility(View.GONE);
                             faviconImageView.setVisibility(View.VISIBLE);
-                            mFavicon = new Favicon(Favicon.NO_ID, mSite,
-                                    icon.getBitmap());
+                            mFavicon = new Favicon(Favicon.NO_ID, mSite, icon.getBitmap());
                         }
                     });
         }
-
-        mPasswordTextView = (TextView) findViewById(R.id.website_password);
-        Typeface tf =
-                Typeface.createFromAsset(getAssets(), Constants.FONT_MONOSPACE);
-        mPasswordTextView.setTypeface(tf);
-        mPasswordTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mPasswordTextView.length() > 0) {
-                    ClipboardHelper
-                            .copyToClipboard(BrowserIntegrationActivity.this,
-                                    ClipboardHelper.CLIPBOARD_LABEL_PASSWORD,
-                                    mPasswordTextView.getText().toString(),
-                                    R.string.copied_to_clipboard);
-                }
-            }
-        });
-
-        mTagEditText = (AutoCompleteTextView) findViewById(R.id.tag_text);
-        mMasterKeyEditText = (EditText) findViewById(R.id.master_key_text);
-        mIdenticonImageView = (ImageView) findViewById(R.id.identicon);
-
-        // Populate profile spinner
-        mProfileSpinner = (Spinner) findViewById(R.id.profile_spinner);
-        if (!populateProfileSpinner()) {
-            // No profiles, no hash!
-            Toast.makeText(this, R.string.error_no_profiles, Toast.LENGTH_LONG)
-                    .show();
-            finish();
-            return;
-        }
-
-        mProfileSpinner.setOnItemSelectedListener(
-                new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view,
-                                               int position, long id) {
-                        mProfileId =
-                                ((Profile) mProfileSpinner.getSelectedItem())
-                                        .getId();
-                        updateTag();
-                        TagAutocomplete.populateTagAutocompleteTextView(
-                                BrowserIntegrationActivity.this, mProfileId,
-                                mTagEditText);
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-
-        mTagSettingsImageButton = (ImageButton) findViewById(R.id.tag_settings);
-        mTagSettingsImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mTagEditText.getText().length() > 0) {
-                    TagSettingsDialogFragment settingsDialog =
-                            new TagSettingsDialogFragment();
-                    settingsDialog.setProfileId(mProfileId);
-                    settingsDialog.setTag(mTag);
-                    settingsDialog.setTagSettingsSavedListener(
-                            BrowserIntegrationActivity.this);
-                    settingsDialog.show(getFragmentManager(), "tagSettings");
-                }
-            }
-        });
-        mTagSettingsImageButton.setOnLongClickListener(
-                new HelpToastOnLongPressClickListener());
-
-
-        mOkButton = (Button) findViewById(R.id.hash_button);
-        mOkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                closeDialog();
-            }
-        });
-
-
-        /* Add text watchers */
-        PasswordTextWatcher watcher = new PasswordTextWatcher();
-        mTagEditText.addTextChangedListener(watcher);
-        mMasterKeyEditText.addTextChangedListener(watcher);
-
-        /* Update the tag according to the site */
-        updateTag();
-        mMasterKeyEditText
-                .setText(HashMyPassApplication.getCachedMasterKey(), 0,
-                        HashMyPassApplication.getCachedMasterKey().length);
     }
 
     @Override
@@ -229,18 +220,43 @@ public class BrowserIntegrationActivity extends Activity
         MasterKeyAlarmManager.cancelAlarm(this);
 
         TagAutocomplete.populateTagAutocompleteTextView(this,
-                ((Profile) mProfileSpinner.getSelectedItem()).getId(),
-                mTagEditText);
+                ((Profile) mProfileSpinner.getSelectedItem()).getId(), mTagEditText);
     }
 
     private void closeDialog() {
-        if (mFavicon != null) {
-            if (mFavicon.getId() == Favicon.NO_ID) {
-                // Save the favicon in the storage
-                FaviconSettings.insertFavicon(this, mFavicon);
-            }
+        if (mFavicon != null && mFavicon.getId() == Favicon.NO_ID) {
+            // Save the favicon in the storage
+            FaviconSettings.insertFavicon(this, mFavicon);
         }
 
+        saveTag();
+
+        // Update last used profile preference
+        SharedPreferences preferences = getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong(Preferences.PREFS_KEY_LAST_PROFILE, mProfileId);
+        editor.apply();
+
+        // Cache master key
+        int masterKeyMins = Preferences.getRememberMasterKeyMins(BrowserIntegrationActivity.this);
+        if (masterKeyMins > 0) {
+            HashMyPassApplication
+                    .setCachedMasterKey(SecurePassword.getPassword(mMasterKeyEditText.getText()));
+
+            MasterKeyAlarmManager.setAlarm(this, masterKeyMins);
+        }
+
+        // Copy password to clipboard
+        if (Preferences.getCopyToClipboard(this) && mPasswordTextView.length() > 0) {
+            ClipboardHelper.copyToClipboard(this, ClipboardHelper.CLIPBOARD_LABEL_PASSWORD,
+                    mPasswordTextView.getText().toString(), R.string.copied_to_clipboard);
+        }
+
+        // Close the dialog activity
+        finish();
+    }
+
+    private void saveTag() {
         // Increase hash counter
         mTag.setHashCounter(mTag.getHashCounter() + 1);
 
@@ -251,8 +267,7 @@ public class BrowserIntegrationActivity extends Activity
             /* I understand I should remove the previous tag because it
             is no longer necessary, but we should add its hash counter
             because we are generating the password for the same website */
-            mTag.setHashCounter(
-                    mTag.getHashCounter() + siteTag.getHashCounter());
+            mTag.setHashCounter(mTag.getHashCounter() + siteTag.getHashCounter());
             TagSettings.deleteTag(this, siteTag);
         }
 
@@ -285,35 +300,6 @@ public class BrowserIntegrationActivity extends Activity
             mTag.setId(storedTag.getId());
             TagSettings.updateTag(this, mTag);
         }
-
-        // Update last used profile preference
-        SharedPreferences preferences =
-                getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putLong(Preferences.PREFS_KEY_LAST_PROFILE, mProfileId);
-        editor.apply();
-
-        // Cache master key
-        int masterKeyMins = Preferences
-                .getRememberMasterKeyMins(BrowserIntegrationActivity.this);
-        if (masterKeyMins > 0) {
-            HashMyPassApplication.setCachedMasterKey(
-                    SecurePassword.getPassword(mMasterKeyEditText.getText()));
-
-            MasterKeyAlarmManager.setAlarm(this, masterKeyMins);
-        }
-
-        // Copy password to clipboard
-        if (Preferences.getCopyToClipboard(this) &&
-                mPasswordTextView.length() > 0) {
-            ClipboardHelper.copyToClipboard(this,
-                    ClipboardHelper.CLIPBOARD_LABEL_PASSWORD,
-                    mPasswordTextView.getText().toString(),
-                    R.string.copied_to_clipboard);
-        }
-
-        // Close the dialog activity
-        finish();
     }
 
     private void updateTag() {
@@ -324,8 +310,8 @@ public class BrowserIntegrationActivity extends Activity
                 // There is no previous association, use the site as tag.
                 siteTagName = mSite;
                 Profile profile = ProfileSettings.getProfile(this, mProfileId);
-                mTag = new Tag(Tag.NO_ID, mProfileId, 0, mSite, mSite,
-                        profile.getPasswordLength(), profile.getPasswordType());
+                mTag = new Tag(Tag.NO_ID, mProfileId, 0, mSite, mSite, profile.getPasswordLength(),
+                        profile.getPasswordType());
             } else {
                 siteTagName = mTag.getName();
             }
@@ -347,9 +333,15 @@ public class BrowserIntegrationActivity extends Activity
             Uri uri = Uri.parse(intent.getStringExtra(Intent.EXTRA_TEXT));
             String host = uri.getHost();
 
+            if (host == null) {
+                // Invalid URI
+                finish();
+                return null;
+            }
+
             Matcher siteExtractor = SITE_PATTERN.matcher(host);
             if (!siteExtractor.matches()) {
-                // TODO Show error
+                Log.e(HashMyPassApplication.LOG_TAG, "Site pattern does not match");
                 finish();
             }
 
@@ -364,7 +356,7 @@ public class BrowserIntegrationActivity extends Activity
 
     private boolean populateProfileSpinner() {
         List<Profile> profileList = ProfileSettings.getList(this);
-        boolean availableProfiles = profileList.size() > 0;
+        boolean availableProfiles = !profileList.isEmpty();
 
         // Check that we have added at least one profile
         if (availableProfiles) {
@@ -373,15 +365,17 @@ public class BrowserIntegrationActivity extends Activity
             // Get the last used profile
             SharedPreferences preferences =
                     getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
-            long lastProfileId =
-                    preferences.getLong(Preferences.PREFS_KEY_LAST_PROFILE, -1);
+            long lastProfileId = preferences.getLong(Preferences.PREFS_KEY_LAST_PROFILE, -1);
             if (lastProfileId != -1) {
                 int position = 0;
-                for (Profile f : profileList) {
-                    if (f.getId() == lastProfileId) {
-                        break;
-                    }
+                boolean found = false;
+                Iterator<Profile> profileIterator = profileList.iterator();
+                while (!found && profileIterator.hasNext()) {
+                    found = profileIterator.next().getId() == lastProfileId;
                     position++;
+                }
+                if (found) {
+                    position--;
                 }
                 position = position % profileList.size();
                 mProfileSpinner.setSelection(position);
@@ -393,36 +387,38 @@ public class BrowserIntegrationActivity extends Activity
 
     private class ProfileAdapter extends ArrayAdapter<Profile> {
 
-        private List<Profile> mProfiles;
-        private static final int mResource =
-                android.R.layout.simple_spinner_dropdown_item;
+        private final List<Profile> mProfiles;
+        private static final int RESOURCE = android.R.layout.simple_spinner_dropdown_item;
 
         public ProfileAdapter(Context context, List<Profile> objects) {
-            super(context, mResource, objects);
+            super(context, RESOURCE, objects);
             mProfiles = objects;
         }
 
         @Override
-        public View getDropDownView(int position, View convertView,
-                                    ViewGroup parent) {
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            TextView textView;
             if (convertView == null) {
-                convertView =
-                        getLayoutInflater().inflate(mResource, parent, false);
+                textView = (TextView) getLayoutInflater().inflate(RESOURCE, parent, false);
+            } else {
+                textView = (TextView) convertView;
             }
-            ((TextView) convertView).setText(mProfiles.get(position).getName());
+            textView.setText(mProfiles.get(position).getName());
 
-            return convertView;
+            return textView;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            TextView textView;
             if (convertView == null) {
-                convertView =
-                        getLayoutInflater().inflate(mResource, parent, false);
+                textView = (TextView) getLayoutInflater().inflate(RESOURCE, parent, false);
+            } else {
+                textView = (TextView) convertView;
             }
 
-            ((TextView) convertView).setText(mProfiles.get(position).getName());
-            return convertView;
+            textView.setText(mProfiles.get(position).getName());
+            return textView;
         }
     }
 
@@ -431,10 +427,9 @@ public class BrowserIntegrationActivity extends Activity
                 mMasterKeyEditText.length() > 0) {
             Profile profile = ProfileSettings.getProfile(this, mProfileId);
             mTag.setName(mTagEditText.getText().toString());
-            String password = PasswordHasher.hashPassword(mTag.getName(),
+            String password = PasswordHasher.hashTagWithKeys(mTag.getName(),
                     SecurePassword.getPassword(mMasterKeyEditText.getText()),
-                    profile.getPrivateKey(), mTag.getPasswordLength(),
-                    mTag.getPasswordType());
+                    profile.getPrivateKey(), mTag.getPasswordLength(), mTag.getPasswordType());
             mPasswordTextView.setText(password);
         } else {
             mPasswordTextView.setText("");
@@ -444,15 +439,13 @@ public class BrowserIntegrationActivity extends Activity
     private class PasswordTextWatcher implements TextWatcher {
 
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count,
-                                      int after) {
-
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            // Do nothing because it is not necessary
         }
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before,
-                                  int count) {
-
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            // Do nothing because it is not necessary
         }
 
         @Override
@@ -461,21 +454,17 @@ public class BrowserIntegrationActivity extends Activity
             updatePassword();
 
             // Update OK button enabled state
-            mOkButton.setEnabled(mTagEditText.length() > 0 &&
-                    mMasterKeyEditText.length() > 0);
+            mOkButton.setEnabled(mTagEditText.length() > 0 && mMasterKeyEditText.length() > 0);
 
             // Update identicon
             mIdenticonImageView.setVisibility(View.INVISIBLE);
-            if (mTask != null &&
-                    mTask.getStatus() == AsyncTask.Status.RUNNING) {
+            if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) {
                 mTask.cancel(true);
             }
             if (mMasterKeyEditText.length() > 0) {
-                mTask = new IdenticonGenerationTask(
-                        BrowserIntegrationActivity.this,
+                mTask = new IdenticonGenerationTask(BrowserIntegrationActivity.this,
                         BrowserIntegrationActivity.this);
-                mTask.execute(SecurePassword
-                        .getPassword(mMasterKeyEditText.getText()));
+                mTask.execute(SecurePassword.getPassword(mMasterKeyEditText.getText()));
             }
 
             // Update tag settings button visibility

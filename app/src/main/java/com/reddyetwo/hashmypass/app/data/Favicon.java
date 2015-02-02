@@ -25,9 +25,9 @@ public class Favicon {
 
     public static final long NO_ID = -1;
 
-    private long mId;
-    private String mSite;
-    private Bitmap mIcon;
+    private final long mId;
+    private final String mSite;
+    private final Bitmap mIcon;
 
     public Favicon(long id, String site, Bitmap icon) {
         mId = id;

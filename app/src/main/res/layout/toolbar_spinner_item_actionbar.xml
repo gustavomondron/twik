@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile_name"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:drawablePadding="8dp"
+    android:drawableRight="@drawable/spinner_triangle"
+    android:fontFamily="sans-serif"
+    android:paddingLeft="16dp"
+    android:paddingRight="4dp"
+    android:textColor="#ffffffff"
+    android:textSize="18sp"
+    tools:ignore="UnusedAttribute"/>

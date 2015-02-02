@@ -20,6 +20,11 @@
 package com.reddyetwo.hashmypass.app.data;
 
 public class PasswordLength {
+
+    private PasswordLength() {
+
+    }
+    
     public static final int MIN_LENGTH = 4;
     public static final int MAX_LENGTH = 26;
     public static final int DEFAULT = 8;

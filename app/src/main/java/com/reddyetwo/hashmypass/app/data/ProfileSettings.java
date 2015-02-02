@@ -30,6 +30,10 @@ import java.util.List;
 
 public class ProfileSettings {
 
+    private ProfileSettings() {
+
+    }
+    
     public static Profile getProfile(Context context, long profileId) {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -39,27 +43,26 @@ public class ProfileSettings {
                         DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH,
                         DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE,
                         DataOpenHelper.COLUMN_PROFILES_COLOR_INDEX},
-                DataOpenHelper.COLUMN_ID + "=" + profileId, null, null, null,
-                null);
+                DataOpenHelper.COLUMN_ID + "=" + profileId, null, null, null, null);
 
         Profile profile = null;
         if (cursor.moveToFirst()) {
             // Populate profile
-            String name = cursor.getString(
-                    cursor.getColumnIndex(DataOpenHelper.COLUMN_PROFILES_NAME));
-            String privateKey = cursor.getString(cursor.getColumnIndex(
-                    DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY));
-            int passwordLength = cursor.getInt(cursor.getColumnIndex(
-                    DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH));
+            String name =
+                    cursor.getString(cursor.getColumnIndex(DataOpenHelper.COLUMN_PROFILES_NAME));
+            String privateKey = cursor.getString(
+                    cursor.getColumnIndex(DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY));
+            int passwordLength = cursor.getInt(
+                    cursor.getColumnIndex(DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH));
             PasswordType passwordType = PasswordType.values()[cursor
-                    .getInt(cursor.getColumnIndex(
-                            DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE))];
-            int colorIndex = cursor.getInt(cursor.getColumnIndex(
-                    DataOpenHelper.COLUMN_PROFILES_COLOR_INDEX));
-            profile = new Profile(profileId, name, privateKey, passwordLength,
-                    passwordType, colorIndex);
+                    .getInt(cursor.getColumnIndex(DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE))];
+            int colorIndex = cursor.getInt(
+                    cursor.getColumnIndex(DataOpenHelper.COLUMN_PROFILES_COLOR_INDEX));
+            profile = new Profile(profileId, name, privateKey, passwordLength, passwordType,
+                    colorIndex);
         }
 
+        cursor.close();
         db.close();
 
         return profile;
@@ -68,8 +71,8 @@ public class ProfileSettings {
     /**
      * Inserts a profile in the database
      *
-     * @param context
-     * @param profile
+     * @param context The application context
+     * @param profile The profile
      * @return the ID of the inserted row, or -1 if an error occurred
      */
     public static long insertProfile(Context context, Profile profile) {
@@ -78,17 +81,13 @@ public class ProfileSettings {
 
         ContentValues values = new ContentValues();
         values.put(DataOpenHelper.COLUMN_PROFILES_NAME, profile.getName());
-        values.put(DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY,
-                profile.getPrivateKey());
-        values.put(DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH,
-                profile.getPasswordLength());
+        values.put(DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY, profile.getPrivateKey());
+        values.put(DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH, profile.getPasswordLength());
         values.put(DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE,
                 profile.getPasswordType().ordinal());
-        values.put(DataOpenHelper.COLUMN_PROFILES_COLOR_INDEX,
-                profile.getColorIndex());
+        values.put(DataOpenHelper.COLUMN_PROFILES_COLOR_INDEX, profile.getColorIndex());
 
-        long id = db.insertOrThrow(DataOpenHelper.PROFILES_TABLE_NAME, null,
-                values);
+        long id = db.insertOrThrow(DataOpenHelper.PROFILES_TABLE_NAME, null, values);
 
         db.close();
         return id;
@@ -97,8 +96,8 @@ public class ProfileSettings {
     /**
      * Updates a profile in the database
      *
-     * @param context
-     * @param profile
+     * @param context The application context
+     * @param profile The profile
      * @return true in case of success, false if an error occurred
      */
     public static boolean updateProfile(Context context, Profile profile) {
@@ -107,18 +106,15 @@ public class ProfileSettings {
 
         ContentValues values = new ContentValues();
         values.put(DataOpenHelper.COLUMN_PROFILES_NAME, profile.getName());
-        values.put(DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY,
-                profile.getPrivateKey());
-        values.put(DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH,
-                profile.getPasswordLength());
+        values.put(DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY, profile.getPrivateKey());
+        values.put(DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH, profile.getPasswordLength());
         values.put(DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE,
                 profile.getPasswordType().ordinal());
-        values.put(DataOpenHelper.COLUMN_PROFILES_COLOR_INDEX,
-                profile.getColorIndex());
+        values.put(DataOpenHelper.COLUMN_PROFILES_COLOR_INDEX, profile.getColorIndex());
 
         boolean updated = db.update(DataOpenHelper.PROFILES_TABLE_NAME, values,
-                DataOpenHelper.COLUMN_ID + " = ?",
-                new String[]{Long.toString(profile.getId())}) > 0;
+                DataOpenHelper.COLUMN_ID + " = ?", new String[]{Long.toString(profile.getId())}) >
+                0;
 
         db.close();
         return updated;
@@ -127,8 +123,8 @@ public class ProfileSettings {
     /**
      * Deletes a profile in the database
      *
-     * @param context
-     * @param profileId
+     * @param context   The application context
+     * @param profileId The profile ID
      * @return true in case of success, false if no profile was deleted
      */
     public static boolean deleteProfile(Context context, long profileId) {
@@ -140,8 +136,7 @@ public class ProfileSettings {
             deleted = db.delete(DataOpenHelper.PROFILES_TABLE_NAME,
                     DataOpenHelper.COLUMN_ID + "=" + profileId, null) > 0;
             db.delete(DataOpenHelper.TAGS_TABLE_NAME,
-                    DataOpenHelper.COLUMN_TAGS_PROFILE_ID + "=" + profileId,
-                    null);
+                    DataOpenHelper.COLUMN_TAGS_PROFILE_ID + "=" + profileId, null);
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -154,16 +149,17 @@ public class ProfileSettings {
     public static long getProfileId(Context context, String name) {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.query(DataOpenHelper.PROFILES_TABLE_NAME,
-                new String[]{DataOpenHelper.COLUMN_ID},
-                DataOpenHelper.COLUMN_PROFILES_NAME + " = ?",
-                new String[]{name}, null, null, null);
+        Cursor cursor =
+                db.query(DataOpenHelper.PROFILES_TABLE_NAME, new String[]{DataOpenHelper.COLUMN_ID},
+                        DataOpenHelper.COLUMN_PROFILES_NAME + " = ?", new String[]{name}, null,
+                        null, null);
 
         long profileId = Profile.NO_ID;
         if (cursor.moveToFirst()) {
-            profileId = cursor.getLong(
-                    cursor.getColumnIndex(DataOpenHelper.COLUMN_ID));
+            profileId = cursor.getLong(cursor.getColumnIndex(DataOpenHelper.COLUMN_ID));
         }
+        cursor.close();
+        db.close();
 
         return profileId;
     }
@@ -172,36 +168,34 @@ public class ProfileSettings {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cursor = db.query(DataOpenHelper.PROFILES_TABLE_NAME,
-                new String[]{DataOpenHelper.COLUMN_ID,
-                        DataOpenHelper.COLUMN_PROFILES_NAME,
+                new String[]{DataOpenHelper.COLUMN_ID, DataOpenHelper.COLUMN_PROFILES_NAME,
                         DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY,
                         DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH,
                         DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE,
-                        DataOpenHelper.COLUMN_PROFILES_COLOR_INDEX}, null, null,
-                null, null, DataOpenHelper.COLUMN_PROFILES_NAME + " " +
+                        DataOpenHelper.COLUMN_PROFILES_COLOR_INDEX}, null, null, null, null,
+                DataOpenHelper.COLUMN_PROFILES_NAME + " " +
                         "COLLATE NOCASE");
 
-        List<Profile> list = new ArrayList<Profile>();
+        List<Profile> list = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
-                long id = cursor.getLong(
-                        cursor.getColumnIndex(DataOpenHelper.COLUMN_ID));
-                String name = cursor.getString(cursor.getColumnIndex(
-                        DataOpenHelper.COLUMN_PROFILES_NAME));
-                String privateKey = cursor.getString(cursor.getColumnIndex(
-                        DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY));
-                int passwordLength = cursor.getInt(cursor.getColumnIndex(
-                        DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH));
-                PasswordType passwordType = PasswordType.values()[cursor
-                        .getInt(cursor.getColumnIndex(
-                                DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE))];
-                int colorIndex = cursor.getInt(cursor.getColumnIndex(
-                        DataOpenHelper.COLUMN_PROFILES_COLOR_INDEX));
-                list.add(new Profile(id, name, privateKey, passwordLength,
-                        passwordType, colorIndex));
+                long id = cursor.getLong(cursor.getColumnIndex(DataOpenHelper.COLUMN_ID));
+                String name = cursor.getString(
+                        cursor.getColumnIndex(DataOpenHelper.COLUMN_PROFILES_NAME));
+                String privateKey = cursor.getString(
+                        cursor.getColumnIndex(DataOpenHelper.COLUMN_PROFILES_PRIVATE_KEY));
+                int passwordLength = cursor.getInt(
+                        cursor.getColumnIndex(DataOpenHelper.COLUMN_PROFILES_PASSWORD_LENGTH));
+                PasswordType passwordType = PasswordType.values()[cursor.getInt(cursor
+                        .getColumnIndex(DataOpenHelper.COLUMN_PROFILES_PASSWORD_TYPE))];
+                int colorIndex = cursor.getInt(
+                        cursor.getColumnIndex(DataOpenHelper.COLUMN_PROFILES_COLOR_INDEX));
+                list.add(new Profile(id, name, privateKey, passwordLength, passwordType,
+                        colorIndex));
             } while (cursor.moveToNext());
         }
 
+        cursor.close();
         db.close();
         return list;
     }

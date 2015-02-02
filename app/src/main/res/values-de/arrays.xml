@@ -30,32 +30,9 @@
         <item>vier Stunden</item>
     </string-array>
 
-    <string-array name="RememberMasterKeyEntryValues">
-        <item>0</item>
-        <item>5</item>
-        <item>30</item>
-        <item>60</item>
-        <item>120</item>
-        <item>240</item>
-    </string-array>
-
     <string-array name="password_types_array">
         <item>alphanumerisch mit Sonderzeichen</item>
         <item>alphanumerisch</item>
         <item>numerisch</item>
     </string-array>
-
-    <array name="favicon_background_colors">
-        <item>@color/favicon_background_1</item>
-        <item>@color/favicon_background_2</item>
-        <item>@color/favicon_background_3</item>
-        <item>@color/favicon_background_4</item>
-        <item>@color/favicon_background_5</item>
-        <item>@color/favicon_background_6</item>
-        <item>@color/favicon_background_7</item>
-        <item>@color/favicon_background_8</item>
-        <item>@color/favicon_background_9</item>
-        <item>@color/favicon_background_10</item>
-    </array>
-
 </resources>

@@ -20,24 +20,27 @@
 package com.reddyetwo.hashmypass.app;
 
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new SettingsFragment()).commit();
-    }
+        setContentView(R.layout.activity_preferences_with_toolbar);
 
-    @Override
-    protected boolean isValidFragment(String fragmentName) {
-        return fragmentName.equals(SettingsFragment.class.getName());
+        // Add and setup toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.content_frame, new SettingsFragment()).commit();
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

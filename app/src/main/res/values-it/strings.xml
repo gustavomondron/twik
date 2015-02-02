@@ -32,17 +32,10 @@
     <string name="action_about">Informazioni</string>
     <string name="action_delete">Elimina</string>
     <string name="discard">Scarta</string>
-    <string name="ok">OK</string>
-    <string name="copy_to_clipboard">Copia negli appunti</string>
-    <string name="cancel">Annulla</string>
-    <string name="add">Aggiungi</string>
     <string name="save">Salva</string>
-    <string name="hash">Hash</string>
     <string name="skip">Salta lìintroduzione</string>
     <string name="next">Avanti</string>
     <string name="start">Avvia</string>
-    <string name="ready">Sono pronto per iniziare!</string>
-    <string name="add_first_profile">Aggiungi il primo profilo</string>
 
     <!-- Dialogs -->
     <string name="confirm_delete">Eliminare il profilo \"%s\"?</string>
@@ -99,13 +92,17 @@
     <string name="settings_summary_remember_master_key_never">La chiave
         princiaple non verrà ricordata dopo la chiusura
         dell\'applicazione</string>
-    <string name="settings_summary_remember_master_key_minutes">La chiave
-        principale verrà ricordata per %s minuti dopo la chiusura
-        dell\'applicazione</string>
-    <string name="settings_summary_remember_master_key_hours"> La chiave
-        principale verrà ricordata %d ore dopo la chiusura
-        dell\'applicazione</string>
-    <string name="settings_summary_copy_to_clipboard_enabled">La password con 
+    <plurals name="settings_summary_remember_master_key_minutes">
+        <item quantity="one">La chiave principale verrà ricordata per %d minuto dopo la chiusura
+            dell\'applicazione</item>
+        <item quantity="other">La chiave principale verrà ricordata per %d minuti dopo la chiusura
+            dell\'applicazione</item>
+    </plurals>
+    <plurals name="settings_summary_remember_master_key_hours">
+        <item quantity="one">La chiave principale verrà ricordata %d ora dopo la chiusura</item>
+        <item quantity="other">La chiave principale verrà ricordata %d ore dopo la chiusura</item>
+    </plurals>
+    <string name="settings_summary_copy_to_clipboard_enabled">La password con
         valori hash viene automaticamente copiata negli appunti</string>
     <string name="settings_summary_copy_to_clipboard_disabled">La password con
         valori di hash non viene automaticamente copiata negli appunti</string>
@@ -120,8 +117,7 @@
     <!-- About Dialog -->
     <string name="about_body">
 <![CDATA[
-        <b>Twik</b><br/>
-        Versione 1.2.6<br/>
+        Versione %s<br/>
         Copyright \u00A9 2014 Red Dye No. 2
         <br/><br/>
         <b>Twik</b> è una applicazione che rende semplice generare
@@ -165,11 +161,9 @@
         <i>di David Hamp-Gonsalves.</i>
         <br/><br/>
 
-        <b><a href="http://jgilfelt.github.io/android-actionbarstylegenerator/">
-        Android Action Bar Style Generator</a></b><br/>
-        <i>di The Android Open Source Project</i> y
-        <i>readyState Software Ltd.</i> <br/>
-        Licenza Apache 2.0.<br/> <br/>
+        <b><a href="https://github.com/makovkastar/FloatingActionButton/">FloatingActionButton</a></b><br/>
+        <i>di Oleksandr Melnykov.</i><br/>
+        MIT License.<br/><br/>
 
         <b><a href="http://font.ubuntu.com/">Ubuntu Mono</a></b> <br/>
         <i>di Canonical Ltd.</i> <br/>

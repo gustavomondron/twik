@@ -28,9 +28,9 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -88,7 +88,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(STATE_TAG, mTag);
         outState.putLong(STATE_PROFILE_ID, mProfileId);
@@ -96,14 +96,12 @@ public class GeneratePasswordDialogFragment extends DialogFragment
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),
-                R.style.AlertDialog_Hashmypass);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         // Inflate the layout
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_generate_password, null);
+        View view = View.inflate(getActivity(), R.layout.dialog_generate_password, null);
         builder.setView(view);
-        builder.setNeutralButton(android.R.string.ok,
+        builder.setPositiveButton(android.R.string.ok,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -223,10 +221,9 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         if (mTagEditText.length() > 0 && mMasterKeyEditText.length() > 0) {
             Profile profile =
                     ProfileSettings.getProfile(getActivity(), mProfileId);
-            String password = PasswordHasher.hashPassword(mTag.getName(),
+            String password = PasswordHasher.hashTagWithKeys(mTag.getName(),
                     SecurePassword.getPassword(mMasterKeyEditText.getText()),
-                    profile.getPrivateKey(), mTag.getPasswordLength(),
-                    mTag.getPasswordType());
+                    profile.getPrivateKey(), mTag.getPasswordLength(), mTag.getPasswordType());
             mPasswordTextView.setText(password);
         } else {
             mPasswordTextView.setText("");
@@ -244,13 +241,13 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count,
                                       int after) {
-
+            // Nothing to do
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before,
                                   int count) {
-
+            // Nothing to do
         }
 
         @Override

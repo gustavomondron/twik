@@ -20,28 +20,30 @@
 
 package com.reddyetwo.hashmypass.app;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.HorizontalScrollView;
 import android.widget.Spinner;
 
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
+import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.KeyboardManager;
 import com.reddyetwo.hashmypass.app.util.ProfileFormInflater;
 import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
+import com.reddyetwo.hashmypass.app.views.MaterialColorPalette;
 
-public class EditProfileActivity extends Activity {
+public class EditProfileActivity extends ActionBarActivity {
 
     public static final String EXTRA_PROFILE_ID = "profile_id";
 
@@ -53,7 +55,6 @@ public class EditProfileActivity extends Activity {
     private EditText mPrivateKeyEditText;
     private Spinner mPasswordLengthSpinner;
     private Spinner mPasswordTypeSpinner;
-    private ColorPaletteView mColorPaletteView;
 
     // Activity status
     private long mProfileId;
@@ -75,15 +76,14 @@ public class EditProfileActivity extends Activity {
             return;
         }
 
-        // Setup action bar
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-            getActionBar().setSubtitle(profile.getName());
-        }
+        // Add and setup toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setSubtitle(profile.getName());
 
-        mPasswordTypeSpinner =
-                (Spinner) findViewById(R.id.password_type_spinner);
+        mPasswordTypeSpinner = (Spinner) findViewById(R.id.password_type_spinner);
         Button discardButton = (Button) findViewById(R.id.discard_button);
         Button saveButton = (Button) findViewById(R.id.save_button);
 
@@ -95,10 +95,14 @@ public class EditProfileActivity extends Activity {
         mPrivateKeyEditText = (EditText) findViewById(R.id.private_key_text);
         mPrivateKeyEditText.setText(profile.getPrivateKey());
 
+        // Set private key typeface
+        Typeface monospacedTypeface =
+                Typeface.createFromAsset(getAssets(), Constants.FONT_MONOSPACE);
+        mPrivateKeyEditText.setTypeface(monospacedTypeface);
+
         // Populating password length spinner is a bit more tricky
         // We have to restore its value from savedInstanceState...
-        mPasswordLengthSpinner =
-                (Spinner) findViewById(R.id.password_length_spinner);
+        mPasswordLengthSpinner = (Spinner) findViewById(R.id.password_length_spinner);
         int passwordLength;
         if (savedInstanceState != null) {
             passwordLength = savedInstanceState.getInt(KEY_PASSWORD_LENGTH);
@@ -106,37 +110,30 @@ public class EditProfileActivity extends Activity {
             passwordLength = profile.getPasswordLength();
         }
         ProfileFormInflater
-                .populatePasswordLengthSpinner(this, mPasswordLengthSpinner,
-                        passwordLength);
+                .populatePasswordLengthSpinner(this, mPasswordLengthSpinner, passwordLength);
         // Show number picker dialog when the spinner is touched
         mPasswordLengthSpinner.setOnTouchListener(
-                new MovementTouchListener(this,
-                        new MovementTouchListener.OnPressedListener() {
-                            @Override
-                            public void onPressed() {
-                                showDialog();
-                            }
-                        }));
+                new MovementTouchListener(this, new MovementTouchListener.OnPressedListener() {
+                    @Override
+                    public void onPressed() {
+                        showDialog();
+                    }
+                }));
 
-        mPasswordTypeSpinner =
-                (Spinner) findViewById(R.id.password_type_spinner);
+        mPasswordTypeSpinner = (Spinner) findViewById(R.id.password_type_spinner);
         ProfileFormInflater
-                .populatePasswordTypeSpinner(this, mPasswordTypeSpinner,
-                        profile.getPasswordType());
+                .populatePasswordTypeSpinner(this, mPasswordTypeSpinner, profile.getPasswordType());
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Update profile in the database
-                Profile profile = new Profile(mProfileId,
-                        mNameEditText.getText().toString(),
+                Profile profile = new Profile(mProfileId, mNameEditText.getText().toString(),
                         mPrivateKeyEditText.getText().toString(),
-                        Integer.decode((String) mPasswordLengthSpinner
-                                .getSelectedItem()),
-                        PasswordType.values()[mPasswordTypeSpinner
-                                .getSelectedItemPosition()], mColor);
-                ProfileSettings
-                        .updateProfile(EditProfileActivity.this, profile);
+                        Integer.decode((String) mPasswordLengthSpinner.getSelectedItem()),
+                        PasswordType.values()[mPasswordTypeSpinner.getSelectedItemPosition()],
+                        mColor);
+                ProfileSettings.updateProfile(EditProfileActivity.this, profile);
 
                 // Go to the parent activity
                 NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
@@ -152,45 +149,29 @@ public class EditProfileActivity extends Activity {
 
         // Add form watcher for enabling/disabling Save button
         ProfileFormWatcher profileFormWatcher =
-                new ProfileFormWatcher(getApplicationContext(), mProfileId,
-                        mNameEditText, mPrivateKeyEditText, saveButton);
+                new ProfileFormWatcher(getApplicationContext(), mProfileId, mNameEditText,
+                        mPrivateKeyEditText, saveButton);
         mNameEditText.addTextChangedListener(profileFormWatcher);
         mPrivateKeyEditText.addTextChangedListener(profileFormWatcher);
 
         mColor = profile.getColorIndex();
-        mColorPaletteView = (ColorPaletteView) findViewById(R.id.profile_color);
-        mColorPaletteView.setSelectedColorIndex(profile.getColorIndex());
-        mColorPaletteView.setOnColorSelectedListener(
-                new ColorPaletteView.OnColorSelectedListener() {
-                    @Override
-                    public void onColorSelected(ColorPaletteView source,
-                                                int color) {
-                        mColor = color;
-                    }
-                });
-
-        final HorizontalScrollView colorPaletteScrollview =
-                (HorizontalScrollView) findViewById(
-                        R.id.profile_color_scrollview);
-        /*
-        We can't scroll until the scroll has been inflated and its measures
-        have been calculated
-         */
-        colorPaletteScrollview.post(new Runnable() {
+        MaterialColorPalette colorPalette =
+                (MaterialColorPalette) findViewById(R.id.profile_color_palette);
+        colorPalette.setSelectedPosition(mColor);
+        colorPalette.setOnColorSelectedListener(new MaterialColorPalette.OnColorSelectedListener() {
             @Override
-            public void run() {
-                colorPaletteScrollview
-                        .scrollTo(mColorPaletteView.getSelectedColorScrollX(),
-                                0);
+            public void onColorSelected(int color) {
+                mColor = color;
             }
         });
+        colorPalette.scrollToPosition(mColor);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(KEY_PASSWORD_LENGTH, Integer.parseInt(
-                (String) mPasswordLengthSpinner.getSelectedItem()));
+        outState.putInt(KEY_PASSWORD_LENGTH,
+                Integer.parseInt((String) mPasswordLengthSpinner.getSelectedItem()));
     }
 
     @Override
@@ -225,8 +206,7 @@ public class EditProfileActivity extends Activity {
                         public void onClick(DialogInterface dialog, int which) {
                             ProfileSettings.deleteProfile(EditProfileActivity
                                     .this, mProfileId);
-                            NavUtils.navigateUpFromSameTask(
-                                    EditProfileActivity.this);
+                            NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
                         }
                     });
             builder.setNegativeButton(android.R.string.cancel, null);
@@ -239,19 +219,16 @@ public class EditProfileActivity extends Activity {
 
     /* Shows a number picker dialog for choosing the password length */
     private void showDialog() {
-        PasswordLengthDialogFragment dialogFragment =
-                new PasswordLengthDialogFragment();
-        dialogFragment.setPasswordLength(Integer.parseInt(
-                (String) mPasswordLengthSpinner.getSelectedItem()));
-        dialogFragment.setOnSelectedListener(
-                new PasswordLengthDialogFragment.OnSelectedListener() {
-                    @Override
-                    public void onPasswordLengthSelected(int length) {
-                        ProfileFormInflater.populatePasswordLengthSpinner(
-                                EditProfileActivity.this,
-                                mPasswordLengthSpinner, length);
-                    }
-                });
+        PasswordLengthDialogFragment dialogFragment = new PasswordLengthDialogFragment();
+        dialogFragment.setPasswordLength(
+                Integer.parseInt((String) mPasswordLengthSpinner.getSelectedItem()));
+        dialogFragment.setOnSelectedListener(new PasswordLengthDialogFragment.OnSelectedListener() {
+            @Override
+            public void onPasswordLengthSelected(int length) {
+                ProfileFormInflater.populatePasswordLengthSpinner(EditProfileActivity.this,
+                        mPasswordLengthSpinner, length);
+            }
+        });
 
         dialogFragment.show(getFragmentManager(), "passwordLength");
     }

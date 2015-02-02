@@ -32,11 +32,11 @@ import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 
 public class ProfileFormWatcher implements TextWatcher {
 
-    private Context mContext;
-    private long mProfileId;
-    private EditText mNameEditText;
-    private EditText mPrivateKeyEditText;
-    private Button mSaveButton;
+    private final Context mContext;
+    private final long mProfileId;
+    private final EditText mNameEditText;
+    private final EditText mPrivateKeyEditText;
+    private final Button mSaveButton;
 
     public ProfileFormWatcher(Context context, long profileId,
                               EditText nameEditText,
@@ -65,7 +65,7 @@ public class ProfileFormWatcher implements TextWatcher {
         updateSaveButtonEnabled();
     }
 
-    public void updateSaveButtonEnabled() {
+    void updateSaveButtonEnabled() {
         boolean nameSet =
                 mNameEditText.getText().toString().trim().length() > 0;
         boolean privateKeySet =
@@ -73,7 +73,7 @@ public class ProfileFormWatcher implements TextWatcher {
 
         if (!nameSet || !privateKeySet) {
             mSaveButton.setEnabled(false);
-        } else if (nameSet) {
+        } else {
             long storedProfileId = ProfileSettings
                     .getProfileId(mContext, mNameEditText.getText().toString());
             boolean repeated = storedProfileId != Profile.NO_ID &&

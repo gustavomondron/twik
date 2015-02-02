@@ -42,11 +42,10 @@ public class MeasureViewPager extends ViewPager {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        mOnMeasureListener.onMeasure(MeasureSpec.getSize(widthMeasureSpec),
-                MeasureSpec.getSize(heightMeasureSpec));
+        mOnMeasureListener.onMeasure(MeasureSpec.getSize(widthMeasureSpec));
     }
 
     public interface OnMeasureListener {
-        public void onMeasure(int width, int height);
+        public void onMeasure(int width);
     }
 }

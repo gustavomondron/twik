@@ -22,7 +22,7 @@ package com.reddyetwo.hashmypass.app.data;
 
 public class Profile {
 
-    public final static long NO_ID = -1;
+    public static final long NO_ID = -1;
 
     private long mId = NO_ID;
     private String mName;
@@ -34,6 +34,7 @@ public class Profile {
     public Profile() {
     }
 
+
     public Profile(long id, String name, String privateKey, int passwordLength,
                    PasswordType passwordType, int colorIndex) {
         mId = id;
@@ -44,12 +45,22 @@ public class Profile {
         mColorIndex = colorIndex;
     }
 
-    public long getId() {
-        return mId;
+    @Override
+    public boolean equals(Object o) {
+        boolean equals = false;
+        if (o instanceof Profile) {
+            equals = ((Profile) o).getId() == mId;
+        }
+        return equals;
     }
 
-    public void setId(long id) {
-        mId = id;
+    @Override
+    public int hashCode() {
+        return (int) mId;
+    }
+
+    public long getId() {
+        return mId;
     }
 
     public String getName() {
@@ -64,29 +75,15 @@ public class Profile {
         return mPrivateKey;
     }
 
-    public void setPrivateKey(String privateKey) {
-        mPrivateKey = privateKey;
-    }
-
     public int getPasswordLength() {
         return mPasswordLength;
-    }
-
-    public void setPasswordLength(int passwordLength) {
-        mPasswordLength = passwordLength;
     }
 
     public PasswordType getPasswordType() {
         return mPasswordType;
     }
 
-    public void setPasswordType(PasswordType passwordType) {
-        mPasswordType = passwordType;
-    }
-
-    public int getColorIndex() { return mColorIndex; }
-
-    public void setColorIndex(int colorIndex) {
-        mColorIndex = colorIndex;
+    public int getColorIndex() {
+        return mColorIndex;
     }
 }

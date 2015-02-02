@@ -32,7 +32,6 @@ import com.reddyetwo.hashmypass.app.util.RandomPrivateKeyGenerator;
 
 public class TutorialSetupFragment extends Fragment {
 
-    private ViewGroup mRootView;
     private EditText mPrivateKeyText;
     private PrivateKeyManager mPrivateKeyManager;
 
@@ -47,19 +46,21 @@ public class TutorialSetupFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mRootView = (ViewGroup) inflater
-                .inflate(R.layout.fragment_tutorial_setup, container, false);
+        ViewGroup rootView =
+                (ViewGroup) inflater.inflate(R.layout.fragment_tutorial_setup, container, false);
         mPrivateKeyText =
-                (EditText) mRootView.findViewById(R.id.private_key_text);
+                (EditText) rootView.findViewById(R.id.private_key_text);
         mPrivateKeyText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
                                           int after) {
+                // Nothing to do
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before,
                                       int count) {
+                // Nothing to do
             }
 
             @Override
@@ -69,6 +70,6 @@ public class TutorialSetupFragment extends Fragment {
             }
         });
         mPrivateKeyText.setText(RandomPrivateKeyGenerator.generate());
-        return mRootView;
+        return rootView;
     }
 }

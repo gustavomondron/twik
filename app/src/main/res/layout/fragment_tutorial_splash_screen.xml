@@ -20,44 +20,48 @@
     -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/tutorial_content_layout"
-        android:orientation="vertical"
-        android:background="@drawable/tutorial_background"
-        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:paddingTop="@dimen/tutorial_splash_vertical_margin"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/tutorial_background"
+        android:orientation="vertical"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:layout_height="0dp">
+        android:paddingTop="@dimen/tutorial_splash_vertical_margin">
 
         <ImageView
             android:id="@+id/tutorial_content_image"
-            android:src="@drawable/app_logo"
-            android:layout_gravity="center"
             android:layout_width="@dimen/tutorial_splash_image_size"
-            android:layout_height="@dimen/tutorial_splash_image_size"/>
+            android:layout_height="@dimen/tutorial_splash_image_size"
+            android:layout_gravity="center"
+            android:contentDescription="@string/logo"
+            android:src="@drawable/app_logo"/>
 
         <TextView
-            android:gravity="center"
-            android:textSize="@dimen/tutorial_splash_title_size"
-            android:textColor="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tutorial_splash_title_height"
             android:fontFamily="sans-serif-light"
+            android:gravity="center"
             android:text="@string/app_name"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/tutorial_splash_title_height"/>
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/tutorial_splash_title_size"
+            tools:ignore="UnusedAttribute"/>
 
         <TextView
-            android:gravity="center"
-            android:textSize="@dimen/tutorial_splash_subtitle_size"
-            android:textColor="@android:color/white"
-            android:fontFamily="sans-serif-light"
-            android:text="@string/tutorial_splash_subtitle"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/tutorial_splash_title_height"/>
+            android:layout_height="@dimen/tutorial_splash_title_height"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:text="@string/tutorial_splash_subtitle"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/tutorial_splash_subtitle_size"
+            tools:ignore="UnusedAttribute"/>
     </LinearLayout>
 </LinearLayout>

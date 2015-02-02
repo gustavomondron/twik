@@ -129,9 +129,9 @@ public class TutorialActivity extends FragmentActivity {
             ViewPager.OnPageChangeListener {
 
         private double mIndicatorBaseWidth;
-        private View mProgressPrevView;
-        private View mProgressCurrentView;
-        private View mProgressNextView;
+        private final View mProgressPrevView;
+        private final View mProgressCurrentView;
+        private final View mProgressNextView;
 
         public TutorialPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -180,7 +180,7 @@ public class TutorialActivity extends FragmentActivity {
         }
 
         @Override
-        public void onMeasure(int width, int height) {
+        public void onMeasure(int width) {
             mIndicatorBaseWidth = (double) width / (getCount());
             updateIndicators(mPager.getCurrentItem());
         }
@@ -188,7 +188,7 @@ public class TutorialActivity extends FragmentActivity {
         @Override
         public void onPageScrolled(int position, float positionOffset,
                                    int positionOffsetPixels) {
-
+            // Nothing to do
         }
 
         @Override
@@ -207,7 +207,7 @@ public class TutorialActivity extends FragmentActivity {
 
         @Override
         public void onPageScrollStateChanged(int state) {
-
+            // Nothing to do
         }
     }
 
@@ -216,6 +216,6 @@ public class TutorialActivity extends FragmentActivity {
                 getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt(Preferences.PREFS_KEY_TUTORIAL_PAGE, page);
-        editor.commit();
+        editor.apply();
     }
 }

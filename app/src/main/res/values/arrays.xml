@@ -29,7 +29,7 @@
         <item>4 hours</item>
     </string-array>
 
-    <string-array name="RememberMasterKeyEntryValues">
+    <string-array name="RememberMasterKeyEntryValues" translatable="false">
         <item>0</item>
         <item>5</item>
         <item>30</item>
@@ -44,17 +44,76 @@
         <item>Numeric</item>
     </string-array>
 
-    <array name="favicon_background_colors">
-        <item>@color/favicon_background_1</item>
-        <item>@color/favicon_background_2</item>
-        <item>@color/favicon_background_3</item>
-        <item>@color/favicon_background_4</item>
-        <item>@color/favicon_background_5</item>
-        <item>@color/favicon_background_6</item>
-        <item>@color/favicon_background_7</item>
-        <item>@color/favicon_background_8</item>
-        <item>@color/favicon_background_9</item>
-        <item>@color/favicon_background_10</item>
+    <array name="color_palette_normal">
+        <item>@color/color_palette_1</item>
+        <item>@color/color_palette_2</item>
+        <item>@color/color_palette_3</item>
+        <item>@color/color_palette_4</item>
+        <item>@color/color_palette_5</item>
+        <item>@color/color_palette_6</item>
+        <item>@color/color_palette_7</item>
+        <item>@color/color_palette_8</item>
+        <item>@color/color_palette_9</item>
+        <item>@color/color_palette_10</item>
+        <item>@color/color_palette_11</item>
+        <item>@color/color_palette_12</item>
+        <item>@color/color_palette_13</item>
+        <item>@color/color_palette_14</item>
+        <item>@color/color_palette_15</item>
+        <item>@color/color_palette_16</item>
+        <item>@color/color_palette_17</item>
+        <item>@color/color_palette_18</item>
+        <item>@color/color_palette_19</item>
+        <item>@color/color_palette_20</item>
+        <item>@color/color_palette_21</item>
+    </array>
+
+    <array name="color_palette_pressed">
+        <item>@color/color_palette_pressed_1</item>
+        <item>@color/color_palette_pressed_2</item>
+        <item>@color/color_palette_pressed_3</item>
+        <item>@color/color_palette_pressed_4</item>
+        <item>@color/color_palette_pressed_5</item>
+        <item>@color/color_palette_pressed_6</item>
+        <item>@color/color_palette_pressed_7</item>
+        <item>@color/color_palette_pressed_8</item>
+        <item>@color/color_palette_pressed_9</item>
+        <item>@color/color_palette_pressed_10</item>
+        <item>@color/color_palette_pressed_11</item>
+        <item>@color/color_palette_pressed_12</item>
+        <item>@color/color_palette_pressed_13</item>
+        <item>@color/color_palette_pressed_14</item>
+        <item>@color/color_palette_pressed_15</item>
+        <item>@color/color_palette_pressed_16</item>
+        <item>@color/color_palette_pressed_17</item>
+        <item>@color/color_palette_pressed_18</item>
+        <item>@color/color_palette_pressed_19</item>
+        <item>@color/color_palette_pressed_20</item>
+        <item>@color/color_palette_pressed_21</item>
+    </array>
+
+    <array name="color_palette_ripple">
+        <item>@color/color_palette_ripple_1</item>
+        <item>@color/color_palette_ripple_2</item>
+        <item>@color/color_palette_ripple_3</item>
+        <item>@color/color_palette_ripple_4</item>
+        <item>@color/color_palette_ripple_5</item>
+        <item>@color/color_palette_ripple_6</item>
+        <item>@color/color_palette_ripple_7</item>
+        <item>@color/color_palette_ripple_8</item>
+        <item>@color/color_palette_ripple_9</item>
+        <item>@color/color_palette_ripple_10</item>
+        <item>@color/color_palette_ripple_11</item>
+        <item>@color/color_palette_ripple_12</item>
+        <item>@color/color_palette_ripple_13</item>
+        <item>@color/color_palette_ripple_14</item>
+        <item>@color/color_palette_ripple_15</item>
+        <item>@color/color_palette_ripple_16</item>
+        <item>@color/color_palette_ripple_17</item>
+        <item>@color/color_palette_ripple_18</item>
+        <item>@color/color_palette_ripple_19</item>
+        <item>@color/color_palette_ripple_20</item>
+        <item>@color/color_palette_ripple_21</item>
     </array>
 
 </resources>
