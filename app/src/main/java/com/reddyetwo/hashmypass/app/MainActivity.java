@@ -523,7 +523,7 @@ public class MainActivity extends ActionBarActivity
             addProfile.setName(getString(R.string.action_add_profile));
             profiles.add(addProfile);
             ProfileSpinnerAdapter spinnerAdapter =
-                    new ProfileSpinnerAdapter(getSupportActionBar().getThemedContext(), profiles);
+                    new ProfileSpinnerAdapter(getSupportActionBar().getThemedContext(), profiles, R.layout.toolbar_spinner_item_dropdown, R.layout.toolbar_spinner_item_actionbar);
 
             Spinner spinner = (Spinner) findViewById(R.id.spinner_nav);
             spinner.setAdapter(spinnerAdapter);

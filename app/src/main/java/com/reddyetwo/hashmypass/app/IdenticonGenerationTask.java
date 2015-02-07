@@ -45,7 +45,7 @@ class IdenticonGenerationTask extends AsyncTask<char[], Void, Void> {
 
     @Override
     protected Void doInBackground(char[]... params) {
-        if (params.length > 0) {
+        if (params.length > 0 && params[0].length > 0) {
             mBitmap = IdenticonGenerator.generate(mContext, params[0]);
         }
         return null;

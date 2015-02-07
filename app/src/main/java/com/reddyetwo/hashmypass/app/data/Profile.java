@@ -34,6 +34,9 @@ public class Profile {
     public Profile() {
     }
 
+    public Profile(long id) {
+        mId = id;
+    }
 
     public Profile(long id, String name, String privateKey, int passwordLength,
                    PasswordType passwordType, int colorIndex) {
