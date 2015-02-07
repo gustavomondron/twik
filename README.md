@@ -21,8 +21,8 @@ Twik features include:
 Building
 --------
 
-The source code includes an Android Studio project. Just open the project and 
-build it to generate the apk file, which can be installed on the device.
+The source code includes an Android Studio project.
+Android Studio 1.1+ is required to run the included unit tests.
 
 Acknowledgments
 ---------------
