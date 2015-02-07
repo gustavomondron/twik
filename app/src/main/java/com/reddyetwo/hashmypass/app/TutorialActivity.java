@@ -19,7 +19,6 @@
 
 package com.reddyetwo.hashmypass.app;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -93,11 +92,7 @@ public class TutorialActivity extends FragmentActivity {
         });
 
         // Restore the current page
-        SharedPreferences preferences =
-                getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
-        int position =
-                preferences.getInt(Preferences.PREFS_KEY_TUTORIAL_PAGE, 0);
-        mPager.setCurrentItem(position);
+        mPager.setCurrentItem(Preferences.getTutorialPage(this));
 
         mPrivateKeyManager = new TutorialSetupFragment.PrivateKeyManager() {
             @Override
@@ -121,7 +116,7 @@ public class TutorialActivity extends FragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        saveTutorialPage(mPager.getCurrentItem());
+        Preferences.setTutorialPage(this, mPager.getCurrentItem());
     }
 
     private class TutorialPagerAdapter extends FragmentStatePagerAdapter
@@ -209,13 +204,5 @@ public class TutorialActivity extends FragmentActivity {
         public void onPageScrollStateChanged(int state) {
             // Nothing to do
         }
-    }
-
-    private void saveTutorialPage(int page) {
-        SharedPreferences preferences =
-                getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(Preferences.PREFS_KEY_TUTORIAL_PAGE, page);
-        editor.apply();
     }
 }

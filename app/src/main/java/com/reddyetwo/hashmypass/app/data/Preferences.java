@@ -21,58 +21,111 @@
 package com.reddyetwo.hashmypass.app.data;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import com.reddyetwo.hashmypass.app.R;
 
 public class Preferences {
 
+    // Shared preferences name
     public static final String PREFS_NAME = "MyPreferences";
-    public static final String PREFS_KEY_LAST_PROFILE = "LastProfile";
-    public static final String PREFS_KEY_TUTORIAL_PAGE = "tutorialPage";
-    public static final String PREFS_KEY_TAG_ORDER = "tagOrder";
+
+    // Preferences keys
+    private static final String PREFS_KEY_LAST_PROFILE = "LastProfile";
+    private static final String PREFS_KEY_TUTORIAL_PAGE = "tutorialPage";
+    private static final String PREFS_KEY_TAG_ORDER = "tagOrder";
 
     private Preferences() {
-
     }
 
+    /**
+     * Get the time the master key is remembered for
+     *
+     * @param context the context
+     * @return the time
+     */
     public static int getRememberMasterKeyMins(Context context) {
-        SharedPreferences preferences =
-                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        return Integer.decode(preferences
+        return Integer.decode(context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                 .getString(context.getString(R.string.settings_key_remember_master_key),
                         context.getString(R.string.settings_default_remember_master_key)));
     }
 
+    /**
+     * Get the preference which enables/disables copying generated passwords to clipboard
+     *
+     * @param context the context
+     * @return the preference value
+     */
     public static boolean getCopyToClipboard(Context context) {
-        SharedPreferences preferences =
-                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        return preferences.getBoolean(context.getString(R.string.settings_key_copy_to_clipboard),
-                context.getResources().getBoolean(R.bool.settings_default_copy_to_clipboard));
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .getBoolean(context.getString(R.string.settings_key_copy_to_clipboard),
+                        context.getResources()
+                                .getBoolean(R.bool.settings_default_copy_to_clipboard));
+    }
+
+    /**
+     * Get the last shown tutorial page
+     *
+     * @param context the context
+     * @return the page number
+     */
+    public static int getTutorialPage(Context context) {
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .getInt(PREFS_KEY_TUTORIAL_PAGE, 0);
+    }
+
+    /**
+     * Set the last shown tutorial page
+     *
+     * @param context the context
+     * @param tutorialPage the tutorial page
+     */
+    public static void setTutorialPage(Context context, int tutorialPage) {
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
+                .putInt(PREFS_KEY_TUTORIAL_PAGE, tutorialPage).apply();
     }
 
     /**
      * Get the tag order preference
+     *
      * @param context the context
      * @return the tag order
      */
     public static int getTagOrder(Context context) {
-        SharedPreferences preferences =
-                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        return preferences.getInt(PREFS_KEY_TAG_ORDER,
-                context.getResources().getInteger(R.integer.settings_default_tag_order));
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .getInt(PREFS_KEY_TAG_ORDER,
+                        context.getResources().getInteger(R.integer.settings_default_tag_order));
     }
 
     /**
      * Set the tag order preference
-     * @param context the context
+     *
+     * @param context  the context
      * @param tagOrder the tag order
      */
     public static void setTagOrder(Context context, int tagOrder) {
-        SharedPreferences preferences =
-                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(PREFS_KEY_TAG_ORDER, tagOrder);
-        editor.apply();
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
+                .putInt(PREFS_KEY_TAG_ORDER, tagOrder).apply();
+    }
+
+    /**
+     * Get the last used profile ID
+     *
+     * @param context the context
+     * @return the last used profile ID or -1 if not defined
+     */
+    public static long getLastProfile(Context context) {
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+                .getLong(PREFS_KEY_LAST_PROFILE, -1);
+    }
+
+    /**
+     * Set the last used profile ID
+     *
+     * @param context the context
+     * @param profileId the profile ID
+     */
+    public static void setLastProfile(Context context, long profileId) {
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
+                .putLong(PREFS_KEY_LAST_PROFILE, profileId).apply();
     }
 }

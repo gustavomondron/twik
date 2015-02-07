@@ -23,7 +23,6 @@ package com.reddyetwo.hashmypass.app;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
@@ -232,10 +231,7 @@ public class BrowserIntegrationActivity extends Activity
         saveTag();
 
         // Update last used profile preference
-        SharedPreferences preferences = getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putLong(Preferences.PREFS_KEY_LAST_PROFILE, mProfileId);
-        editor.apply();
+        Preferences.setLastProfile(this, mProfileId);
 
         // Cache master key
         int masterKeyMins = Preferences.getRememberMasterKeyMins(BrowserIntegrationActivity.this);
@@ -363,9 +359,7 @@ public class BrowserIntegrationActivity extends Activity
             mProfileSpinner.setAdapter(new ProfileAdapter(this, profileList));
 
             // Get the last used profile
-            SharedPreferences preferences =
-                    getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
-            long lastProfileId = preferences.getLong(Preferences.PREFS_KEY_LAST_PROFILE, -1);
+            long lastProfileId = Preferences.getLastProfile(this);
             if (lastProfileId != -1) {
                 int position = 0;
                 boolean found = false;

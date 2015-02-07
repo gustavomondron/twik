@@ -24,7 +24,6 @@ import android.animation.AnimatorSet;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -145,7 +144,7 @@ public class MainActivity extends ActionBarActivity
         addToolbar();
 
         // Select the last profile used for hashing a password
-        mSelectedProfileId = getLastProfile();
+        mSelectedProfileId = Preferences.getLastProfile(this);
 
         // Get palette colors
         mColorsNormal = getResources().getIntArray(R.array.color_palette_normal);
@@ -542,23 +541,6 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    /**
-     * Update the last used profile preferences
-     */
-    private void updateLastProfile() {
-        SharedPreferences preferences = getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putLong(Preferences.PREFS_KEY_LAST_PROFILE, mSelectedProfileId);
-        editor.apply();
-    }
-
-    private long getLastProfile() {
-        // Select the last profile used for hashing a password
-        SharedPreferences preferences = getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
-        return preferences.getLong(Preferences.PREFS_KEY_LAST_PROFILE, -1);
-    }
-
-
     private void cacheMasterKey() {
         int masterKeyMins = Preferences.getRememberMasterKeyMins(this);
         if (masterKeyMins > 0) {
@@ -579,7 +561,7 @@ public class MainActivity extends ActionBarActivity
             }
 
             // Update last used profile
-            updateLastProfile();
+            Preferences.setLastProfile(this, mSelectedProfileId);
         } else if (tag != null && tag.getName().length() > 0) {
             /* Save the tag and update the list because the name of a tag can
              alter its position in the list
@@ -627,7 +609,7 @@ public class MainActivity extends ActionBarActivity
 
         @Override
         public void onTagClicked(final Tag tag) {
-            updateLastProfile();
+            Preferences.setLastProfile(MainActivity.this, mSelectedProfileId);
             showGeneratePasswordDialog(tag);
         }
 
