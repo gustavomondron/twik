@@ -39,7 +39,10 @@ public class HashMyPassApplication extends Application {
         return mTutorialDismissed;
     }
 
-    public static char[] getCachedMasterKey() {
+    public static char[] getCachedMasterKey(Context context) {
+        if (Preferences.getRememberMasterKeyMins(context) == 0) {
+            mCachedMasterKey = new char[] {};
+        }
         return mCachedMasterKey;
     }
 
@@ -54,6 +57,7 @@ public class HashMyPassApplication extends Application {
 
     /**
      * Save master key to cache if enabled by user
+     *
      * @param masterKey the master key
      */
     public static void cacheMasterKey(Context context, char[] masterKey) {

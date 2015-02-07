@@ -163,8 +163,8 @@ public class BrowserIntegrationActivity extends Activity
         updateTag();
 
         // Restore remembered master key
-        mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey(), 0,
-                HashMyPassApplication.getCachedMasterKey().length);
+        mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey(this), 0,
+                HashMyPassApplication.getCachedMasterKey(this).length);
     }
 
     private void initializeView() {
@@ -508,7 +508,7 @@ public class BrowserIntegrationActivity extends Activity
 
     @Override
     public void onIconGenerated(Bitmap bitmap) {
-        if (bitmap != null ) {
+        if (bitmap != null) {
             mIdenticonImageView.setImageBitmap(bitmap);
             mIdenticonImageView.setVisibility(View.VISIBLE);
         } else {

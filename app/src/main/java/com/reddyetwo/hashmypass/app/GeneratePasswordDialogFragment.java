@@ -47,19 +47,18 @@ import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
 import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.FaviconLoader;
-import com.reddyetwo.hashmypass.app.util.IdenticonGenerator;
 import com.reddyetwo.hashmypass.app.util.KeyboardManager;
 import com.reddyetwo.hashmypass.app.util.SecurePassword;
 
 public class GeneratePasswordDialogFragment extends DialogFragment
-        implements TagSettingsDialogFragment.OnTagSettingsSavedListener, IdenticonGenerationTask.OnIconGeneratedListener {
+        implements TagSettingsDialogFragment.OnTagSettingsSavedListener,
+                   IdenticonGenerationTask.OnIconGeneratedListener {
 
     private static final String STATE_PROFILE_ID = "profileId";
     private static final String STATE_TAG = "tag";
 
     private long mProfileId;
     private Tag mTag;
-    private boolean mCacheMasterKey;
     private IdenticonGenerationTask mTask;
     private GeneratePasswordDialogListener mListener;
 
@@ -131,6 +130,10 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         mTagEditText = (EditText) view.findViewById(R.id.tag_text);
 
         mMasterKeyEditText = (EditText) view.findViewById(R.id.master_key_text);
+        // Restore cached master key
+        mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey(getActivity()), 0,
+                HashMyPassApplication.getCachedMasterKey(getActivity()).length);
+
 
         // Restore tag if the device configuration has changed
         if (savedInstanceState != null) {
@@ -194,15 +197,8 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         }
 
         // Restore cached master key
-        mCacheMasterKey = Preferences.getRememberMasterKeyMins(getActivity()) > 0;
-        if (mCacheMasterKey) {
-            mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey(), 0,
-                    HashMyPassApplication.getCachedMasterKey().length);
-
-        } else {
-            mMasterKeyEditText.setText("");
-        }
-
+        mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey(getActivity()), 0,
+                HashMyPassApplication.getCachedMasterKey(getActivity()).length);
 
         // Manage keyboard status
         if (mMasterKeyEditText.length() == 0 || mTagEditText.length() == 0) {
@@ -300,7 +296,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
 
     @Override
     public void onIconGenerated(Bitmap bitmap) {
-        if (bitmap != null ) {
+        if (bitmap != null) {
             mIdenticonImageView.setImageBitmap(bitmap);
             mIdenticonImageView.setVisibility(View.VISIBLE);
         } else {
