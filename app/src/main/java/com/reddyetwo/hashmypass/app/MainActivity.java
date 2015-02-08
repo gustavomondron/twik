@@ -52,6 +52,9 @@ import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
+import com.reddyetwo.hashmypass.app.dialog.AboutDialog;
+import com.reddyetwo.hashmypass.app.dialog.GeneratePasswordDialogFragment;
+import com.reddyetwo.hashmypass.app.tutorial.TutorialActivity;
 import com.reddyetwo.hashmypass.app.util.ApiUtils;
 import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 
@@ -163,7 +166,7 @@ public class MainActivity extends ActionBarActivity
         /**
          * Finish activity when tutorial is dismissed by user.
          * It is called onResume because {@link com.reddyetwo.hashmypass.app.MainActivity}
-         * is responsible for launching {@link com.reddyetwo.hashmypass.app.TutorialActivity} and,
+         * is responsible for launching {@link com.reddyetwo.hashmypass.app.tutorial.TutorialActivity} and,
          * when the latter is dismissed, {@link com.reddyetwo.hashmypass.app.MainActivity} is
          * usually resumed, not created.
          */

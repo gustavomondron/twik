@@ -76,7 +76,7 @@
                 android:layout_marginBottom="16dp"
                 android:textColor="@color/text_gray"/>
 
-            <com.reddyetwo.hashmypass.app.views.MaterialColorPalette
+            <com.reddyetwo.hashmypass.app.view.MaterialColorPalette
                 android:id="@+id/profile_color_palette"
                 app:color_palette_normal="@array/color_palette_normal"
                 app:color_palette_pressed="@array/color_palette_pressed"

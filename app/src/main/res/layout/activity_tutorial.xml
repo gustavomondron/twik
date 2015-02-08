@@ -23,7 +23,7 @@
               style="@style/tutorialLayoutStyle"
               android:orientation="vertical">
 
-    <com.reddyetwo.hashmypass.app.MeasureViewPager
+    <com.reddyetwo.hashmypass.app.tutorial.MeasureViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/pager"
         android:layout_weight="1"

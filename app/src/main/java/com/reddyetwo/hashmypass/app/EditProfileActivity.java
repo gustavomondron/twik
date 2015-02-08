@@ -37,11 +37,12 @@ import android.widget.Spinner;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
+import com.reddyetwo.hashmypass.app.dialog.PasswordLengthDialogFragment;
 import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.KeyboardManager;
 import com.reddyetwo.hashmypass.app.util.ProfileFormInflater;
 import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
-import com.reddyetwo.hashmypass.app.views.MaterialColorPalette;
+import com.reddyetwo.hashmypass.app.view.MaterialColorPalette;
 
 public class EditProfileActivity extends ActionBarActivity {
 

@@ -17,7 +17,7 @@
  * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.reddyetwo.hashmypass.app;
+package com.reddyetwo.hashmypass.app.tutorial;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,6 +29,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.reddyetwo.hashmypass.app.HashMyPassApplication;
+import com.reddyetwo.hashmypass.app.R;
 import com.reddyetwo.hashmypass.app.data.PasswordLength;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Preferences;

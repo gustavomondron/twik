@@ -18,7 +18,7 @@
  */
 
 
-package com.reddyetwo.hashmypass.app;
+package com.reddyetwo.hashmypass.app.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -34,6 +34,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
+import com.reddyetwo.hashmypass.app.R;
 import com.reddyetwo.hashmypass.app.util.PackageUtils;
 
 /**

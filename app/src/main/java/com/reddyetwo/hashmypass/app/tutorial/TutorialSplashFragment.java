@@ -17,13 +17,15 @@
  * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.reddyetwo.hashmypass.app;
+package com.reddyetwo.hashmypass.app.tutorial;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.reddyetwo.hashmypass.app.R;
 
 public class TutorialSplashFragment extends Fragment {
 

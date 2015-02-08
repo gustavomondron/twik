@@ -85,7 +85,7 @@
         <receiver android:name=".util.MasterKeyAlarmManager" />
 
         <activity
-            android:name=".TutorialActivity"
+            android:name=".tutorial.TutorialActivity"
             android:noHistory="true"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"

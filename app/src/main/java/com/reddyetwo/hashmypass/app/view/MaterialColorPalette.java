@@ -1,4 +1,4 @@
-package com.reddyetwo.hashmypass.app.views;
+package com.reddyetwo.hashmypass.app.view;
 
 /*
  * Copyright 2015 Red Dye No. 2

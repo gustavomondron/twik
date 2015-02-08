@@ -26,7 +26,7 @@ import android.os.AsyncTask;
 
 import com.reddyetwo.hashmypass.app.util.IdenticonGenerator;
 
-class IdenticonGenerationTask extends AsyncTask<char[], Void, Void> {
+public class IdenticonGenerationTask extends AsyncTask<char[], Void, Void> {
 
     private final Context mContext;
 

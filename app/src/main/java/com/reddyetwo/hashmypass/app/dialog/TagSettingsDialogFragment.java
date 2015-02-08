@@ -17,7 +17,7 @@
  * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.reddyetwo.hashmypass.app;
+package com.reddyetwo.hashmypass.app.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -29,6 +29,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Spinner;
 
+import com.reddyetwo.hashmypass.app.R;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;

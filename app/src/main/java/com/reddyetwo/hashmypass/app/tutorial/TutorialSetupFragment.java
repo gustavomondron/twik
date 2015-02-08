@@ -17,7 +17,7 @@
  * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.reddyetwo.hashmypass.app;
+package com.reddyetwo.hashmypass.app.tutorial;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.reddyetwo.hashmypass.app.R;
 import com.reddyetwo.hashmypass.app.util.RandomPrivateKeyGenerator;
 
 public class TutorialSetupFragment extends Fragment {

@@ -18,7 +18,7 @@
  */
 
 
-package com.reddyetwo.hashmypass.app;
+package com.reddyetwo.hashmypass.app.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -38,6 +38,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.reddyetwo.hashmypass.app.HashMyPassApplication;
+import com.reddyetwo.hashmypass.app.IdenticonGenerationTask;
+import com.reddyetwo.hashmypass.app.R;
 import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;

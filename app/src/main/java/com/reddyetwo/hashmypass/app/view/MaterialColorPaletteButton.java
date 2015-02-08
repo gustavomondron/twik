@@ -19,7 +19,7 @@
  */
 
 
-package com.reddyetwo.hashmypass.app.views;
+package com.reddyetwo.hashmypass.app.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

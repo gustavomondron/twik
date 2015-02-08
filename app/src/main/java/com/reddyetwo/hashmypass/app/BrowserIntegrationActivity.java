@@ -51,6 +51,7 @@ import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
+import com.reddyetwo.hashmypass.app.dialog.TagSettingsDialogFragment;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
 import com.reddyetwo.hashmypass.app.util.Constants;

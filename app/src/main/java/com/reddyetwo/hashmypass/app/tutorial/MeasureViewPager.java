@@ -17,7 +17,7 @@
  * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.reddyetwo.hashmypass.app;
+package com.reddyetwo.hashmypass.app.tutorial;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
