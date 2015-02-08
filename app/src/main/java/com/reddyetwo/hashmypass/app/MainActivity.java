@@ -62,7 +62,8 @@ public class MainActivity extends ActionBarActivity
         implements GeneratePasswordDialogFragment.GeneratePasswordDialogListener {
 
     @IntDef({LIST_EMPTY, LIST_CONTAINS_ITEMS, LIST_NOT_INITIALIZED})
-    private @interface ListStatus {}
+    private @interface ListStatus {
+    }
 
     private static final int LIST_EMPTY = 1;
     private static final int LIST_CONTAINS_ITEMS = 2;
@@ -73,8 +74,6 @@ public class MainActivity extends ActionBarActivity
     private static final int REQUEST_CREATE_DEFAULT_PROFILE = 2;
     private static final String FRAGMENT_GENERATE_PASSWORD = "generatePassword";
     private static final long LIST_ANIMATION_DURATION = 150;
-
-
 
     // State keys
     private static final String STATE_SELECTED_PROFILE_ID = "profile_id";
@@ -153,36 +152,79 @@ public class MainActivity extends ActionBarActivity
         // Use primary dark color for the status bar
         ApiUtils.colorizeSystemBar(getWindow());
 
-        findViews();
-        addToolbar();
+        initializeView();
+        initializeSettings(savedInstanceState);
+    }
 
-        // Select the last profile used for hashing a password
-        mSelectedProfileId = Preferences.getLastProfile(this);
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-        // Get palette colors
+        /**
+         * Finish activity when tutorial is dismissed by user.
+         * It is called onResume because {@link com.reddyetwo.hashmypass.app.MainActivity}
+         * is responsible for launching {@link com.reddyetwo.hashmypass.app.TutorialActivity} and,
+         * when the latter is dismissed, {@link com.reddyetwo.hashmypass.app.MainActivity} is
+         * usually resumed, not created.
+         */
+        if (HashMyPassApplication.getTutorialDismissed()) {
+            HashMyPassApplication.setTutorialDismissed(false);
+            finish();
+            return;
+        }
+
+        if (ProfileSettings.getList(this).isEmpty()) {
+            // Show tutorial when profile list is empty
+            showTutorial();
+        } else {
+            // Cancel the master key alarm to clear cache
+            MasterKeyAlarmManager.cancelAlarm(this);
+
+            populateView();
+        }
+    }
+
+    private void initializeSettings(Bundle savedInstanceState) {
+        if (savedInstanceState != null && savedInstanceState.getBoolean(STATE_ORIENTATION_HAS_CHANGED)) {
+            mSelectedProfileId = savedInstanceState.getLong(STATE_SELECTED_PROFILE_ID);
+        } else {
+            mSelectedProfileId = Preferences.getLastProfile(this);
+        }
+        mTagOrder = Preferences.getTagOrder(this);
+
         mColorsNormal = getResources().getIntArray(R.array.color_palette_normal);
         mColorsPressed = getResources().getIntArray(R.array.color_palette_pressed);
         mColorsRipple = getResources().getIntArray(R.array.color_palette_ripple);
+    }
 
-        // Get tag order
-        mTagOrder = Preferences.getTagOrder(this);
+    private void initializeView() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mEmptyListLayout = (LinearLayout) findViewById(R.id.list_empty);
 
-        // Init UI elements
-        initTagList();
-        initFab();
+        mTagRecyclerView = (RecyclerView) findViewById(R.id.tag_list);
+        mTagRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mTagRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        restoreSelectedProfile(savedInstanceState);
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.attachToRecyclerView(mTagRecyclerView);
+
+        // Add toolbar
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // Add listeners
+        addFabClickedListener();
         addOrientationChangedListener();
-        addPasswordDialogListener(savedInstanceState);
+        addPasswordDialogListener();
         addTagClickedListener();
     }
 
-    /**
-     * Detect orientation changes. In the case of an orientation change, the last used profile
-     * is not selected, but the currently selected profile.
-     */
+    private void populateView() {
+        populateToolBarSpinner();
+        populateTagList();
+        updateFabColor();
+    }
+
     private void addOrientationChangedListener() {
         mOrientationHasChanged = false;
         mOrientationEventListener =
@@ -196,19 +238,12 @@ public class MainActivity extends ActionBarActivity
         mOrientationEventListener.enable();
     }
 
-    /**
-     * If the password generation dialog was shown, we have to restore the listener.
-     *
-     * @param savedInstanceState The saved instance state
-     */
-    private void addPasswordDialogListener(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            GeneratePasswordDialogFragment fragment =
-                    (GeneratePasswordDialogFragment) getFragmentManager()
-                            .findFragmentByTag(FRAGMENT_GENERATE_PASSWORD);
-            if (fragment != null) {
-                fragment.setDialogOkListener(this);
-            }
+    private void addPasswordDialogListener() {
+        GeneratePasswordDialogFragment fragment =
+                (GeneratePasswordDialogFragment) getFragmentManager()
+                        .findFragmentByTag(FRAGMENT_GENERATE_PASSWORD);
+        if (fragment != null) {
+            fragment.setDialogOkListener(this);
         }
     }
 
@@ -216,15 +251,7 @@ public class MainActivity extends ActionBarActivity
         mTagClickedListener = new TagClickListener();
     }
 
-    private void restoreSelectedProfile(Bundle savedInstanceState) {
-        if (savedInstanceState != null &&
-                savedInstanceState.getBoolean(STATE_ORIENTATION_HAS_CHANGED)) {
-            mSelectedProfileId = savedInstanceState.getLong(STATE_SELECTED_PROFILE_ID);
-        }
-    }
-
-    private void initFab() {
-        mFab.attachToRecyclerView(mTagRecyclerView);
+    private void addFabClickedListener() {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -236,80 +263,9 @@ public class MainActivity extends ActionBarActivity
         });
     }
 
-    private void findViews() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mTagRecyclerView = (RecyclerView) findViewById(R.id.tag_list);
-        mEmptyListLayout = (LinearLayout) findViewById(R.id.list_empty);
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
-    }
-
-    private void initTagList() {
-        mTagRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mTagRecyclerView.setItemAnimator(new DefaultItemAnimator());
-    }
-
-    private void addToolbar() {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-    }
-
-    /**
-     * Check if tutorial should be shown
-     *
-     * @return true if tutorial should be shown, false otherwise
-     */
-    private boolean shouldShowTutorial() {
-        return ProfileSettings.getList(this).isEmpty();
-    }
-
     private void showTutorial() {
         Intent intent = new Intent(this, TutorialActivity.class);
         startActivity(intent);
-    }
-
-    /**
-     * Update FAB color to match the currently selected profile
-     */
-    private void updateFabColor() {
-        if (mSelectedProfileId != Profile.NO_ID) {
-            Profile profile = ProfileSettings.getProfile(this, mSelectedProfileId);
-            /* Warning: the profile could have been removed. In that case,
-            we'll select the first profile in the list */
-            if (profile == null) {
-                profile = ProfileSettings.getList(this).get(0);
-                mSelectedProfileId = profile.getId();
-            }
-            int colorIndex = profile.getColorIndex();
-            setFabColor(mColorsNormal[colorIndex], mColorsPressed[colorIndex],
-                    mColorsRipple[colorIndex]);
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // If we have just dismissed the application, close the application
-        // because the user wants to exit
-        if (HashMyPassApplication.getTutorialDismissed()) {
-            HashMyPassApplication.setTutorialDismissed(false);
-            finish();
-            return;
-        }
-
-        if (shouldShowTutorial()) {
-            showTutorial();
-        } else {
-            populateToolBarSpinner();
-
-            // Cancel the master key alarm to clear cache
-            MasterKeyAlarmManager.cancelAlarm(this);
-
-            // Update tag list (may have been changed using the web browser)
-            populateTagList();
-
-            updateFabColor();
-        }
     }
 
     private void populateTagList() {
@@ -318,7 +274,8 @@ public class MainActivity extends ActionBarActivity
         final @ListStatus int stateBeforeUpdating = getTagListStatus();
 
         if (stateBeforeUpdating == LIST_NOT_INITIALIZED) {
-            mAdapter = new TagListAdapter(this, mSelectedProfileId, mTagOrder, mTagClickedListener, tags);
+            mAdapter = new TagListAdapter(this, mSelectedProfileId, mTagOrder, mTagClickedListener,
+                    tags);
             mTagRecyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.setProfileId(mSelectedProfileId);
@@ -334,6 +291,24 @@ public class MainActivity extends ActionBarActivity
 
         // Update tag list visibility
         updateTagListView(stateBeforeUpdating, tags);
+    }
+
+    /**
+     * Update FAB color to match the currently selected profile
+     */
+    private void updateFabColor() {
+        if (mSelectedProfileId != Profile.NO_ID) {
+            Profile profile = ProfileSettings.getProfile(this, mSelectedProfileId);
+            /* Warning: the profile could have been removed. In that case,
+            select the first profile in the list */
+            if (profile == null) {
+                profile = ProfileSettings.getList(this).get(0);
+                mSelectedProfileId = profile.getId();
+            }
+            int colorIndex = profile.getColorIndex();
+            setFabColor(mColorsNormal[colorIndex], mColorsPressed[colorIndex],
+                    mColorsRipple[colorIndex]);
+        }
     }
 
     /**
@@ -359,7 +334,8 @@ public class MainActivity extends ActionBarActivity
      * When the user selects a different profile, a different tag list is generated and the adapter
      * must be updated.
      */
-    private void updateTagListView(final @ListStatus int stateBeforeUpdating, final List<Tag> newTags) {
+    private void updateTagListView(final @ListStatus int stateBeforeUpdating,
+                                   final List<Tag> newTags) {
         if (!newTags.isEmpty()) {
             switch (stateBeforeUpdating) {
                 case LIST_NOT_INITIALIZED:
@@ -434,7 +410,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onStop() {
         super.onStop();
-        cacheMasterKey();
+        setMasterKeyCacheAlarm();
     }
 
     @Override
@@ -537,7 +513,9 @@ public class MainActivity extends ActionBarActivity
             addProfile.setName(getString(R.string.action_add_profile));
             profiles.add(addProfile);
             ProfileSpinnerAdapter spinnerAdapter =
-                    new ProfileSpinnerAdapter(getSupportActionBar().getThemedContext(), profiles, R.layout.toolbar_spinner_item_dropdown, R.layout.toolbar_spinner_item_actionbar);
+                    new ProfileSpinnerAdapter(getSupportActionBar().getThemedContext(), profiles,
+                            R.layout.toolbar_spinner_item_dropdown,
+                            R.layout.toolbar_spinner_item_actionbar);
 
             Spinner spinner = (Spinner) findViewById(R.id.spinner_nav);
             spinner.setAdapter(spinnerAdapter);
@@ -555,7 +533,7 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    private void cacheMasterKey() {
+    private void setMasterKeyCacheAlarm() {
         int masterKeyMins = Preferences.getRememberMasterKeyMins(this);
         if (masterKeyMins > 0) {
             MasterKeyAlarmManager.setAlarm(this, masterKeyMins);
@@ -617,7 +595,6 @@ public class MainActivity extends ActionBarActivity
         dialog.setDialogOkListener(this);
         dialog.show(getFragmentManager(), FRAGMENT_GENERATE_PASSWORD);
     }
-
 
     private class TagClickListener implements TagListAdapter.OnTagClickedListener {
 
