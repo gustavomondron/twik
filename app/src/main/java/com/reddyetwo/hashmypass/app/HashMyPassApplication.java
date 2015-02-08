@@ -21,6 +21,9 @@
 package com.reddyetwo.hashmypass.app;
 
 import android.app.Application;
+import android.content.Context;
+
+import com.reddyetwo.hashmypass.app.data.Preferences;
 
 public class HashMyPassApplication extends Application {
 
@@ -36,12 +39,11 @@ public class HashMyPassApplication extends Application {
         return mTutorialDismissed;
     }
 
-    public static char[] getCachedMasterKey() {
+    public static char[] getCachedMasterKey(Context context) {
+        if (Preferences.getRememberMasterKeyMins(context) == 0) {
+            mCachedMasterKey = new char[] {};
+        }
         return mCachedMasterKey;
-    }
-
-    public static void setCachedMasterKey(char[] masterKey) {
-        mCachedMasterKey = masterKey;
     }
 
     public static void wipeCachedMasterKey() {
@@ -51,5 +53,16 @@ public class HashMyPassApplication extends Application {
             mCachedMasterKey[i] = ' ';
         }
         mCachedMasterKey = new char[]{};
+    }
+
+    /**
+     * Save master key to cache if enabled by user
+     *
+     * @param masterKey the master key
+     */
+    public static void cacheMasterKey(Context context, char[] masterKey) {
+        if (Preferences.getRememberMasterKeyMins(context) > 0) {
+            mCachedMasterKey = masterKey;
+        }
     }
 }

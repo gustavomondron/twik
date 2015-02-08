@@ -22,38 +22,66 @@ package com.reddyetwo.hashmypass.app.adapter;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Typeface;
+import android.support.annotation.LayoutRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-import com.reddyetwo.hashmypass.app.R;
 import com.reddyetwo.hashmypass.app.data.Profile;
 
 import java.util.List;
 
 public class ProfileSpinnerAdapter implements SpinnerAdapter {
 
-    private static final String TAG_TOOLBAR_SPINNER_ITEM_DROPDOWN = "SpinnerDropdown";
-    private static final String TAG_TOOLBAR_SPINNER_ITEM_ACTIONBAR = "SpinnerNotDropdown";
+    private static final String TAG_VIEW_DROPDOWN = "SpinnerDropdown";
+    private static final String TAG_VIEW_NOT_DROPDOWN = "SpinnerNotDropdown";
 
+    /**
+     * Themed context
+     */
     private final Context mThemedContext;
+
+    /**
+     * List of profiles
+     */
     private final List<Profile> mProfiles;
+
+    /**
+     * Dropdown item view
+     */
+    @LayoutRes
+    private int mViewItemDropdown = android.R.layout.simple_spinner_dropdown_item;
+
+    /**
+     * Not-dropdown item view
+     */
+    @LayoutRes
+    private int mViewItemNotDropdown = android.R.layout.simple_spinner_item;
 
     public ProfileSpinnerAdapter(Context themedContext, List<Profile> profiles) {
         mThemedContext = themedContext;
         mProfiles = profiles;
+
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    public ProfileSpinnerAdapter(Context themedContext, List<Profile> profiles,
+                                 @LayoutRes int itemDropdown, @LayoutRes int itemNotDropdown) {
+        this(themedContext, profiles);
+        mViewItemDropdown = itemDropdown;
+        mViewItemNotDropdown = itemNotDropdown;
     }
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         TextView profileNameTextView;
         if (convertView == null || convertView.getTag() == null ||
-                !convertView.getTag().equals(TAG_TOOLBAR_SPINNER_ITEM_DROPDOWN)) {
+                !convertView.getTag().equals(TAG_VIEW_DROPDOWN)) {
             profileNameTextView = (TextView) LayoutInflater.from(mThemedContext)
-                    .inflate(R.layout.toolbar_spinner_item_dropdown, parent, false);
-            profileNameTextView.setTag(TAG_TOOLBAR_SPINNER_ITEM_DROPDOWN);
+                    .inflate(mViewItemDropdown, parent, false);
+            profileNameTextView.setTag(TAG_VIEW_DROPDOWN);
         } else {
             profileNameTextView = (TextView) convertView;
         }
@@ -105,10 +133,10 @@ public class ProfileSpinnerAdapter implements SpinnerAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         TextView profileNameTextView;
         if (convertView == null || convertView.getTag() == null ||
-                !convertView.getTag().equals(TAG_TOOLBAR_SPINNER_ITEM_ACTIONBAR)) {
+                !convertView.getTag().equals(TAG_VIEW_NOT_DROPDOWN)) {
             profileNameTextView = (TextView) LayoutInflater.from(mThemedContext)
-                    .inflate(R.layout.toolbar_spinner_item_actionbar, parent, false);
-            profileNameTextView.setTag(TAG_TOOLBAR_SPINNER_ITEM_ACTIONBAR);
+                    .inflate(mViewItemNotDropdown, parent, false);
+            profileNameTextView.setTag(TAG_VIEW_NOT_DROPDOWN);
         } else {
             profileNameTextView = (TextView) convertView;
         }
