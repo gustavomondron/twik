@@ -34,12 +34,12 @@ public class ClipboardHelperTest {
     @Mock
     private Toast toast;
 
-    private String label = "LABEL";
+    private final String label = "LABEL";
 
-    private String text = "TEXT";
+    private final String text = "TEXT";
 
     @StringRes
-    private int toastMessageId = 1;
+    private final int toastMessageId = 1;
 
     @Before
     public void setUp() throws Exception {
