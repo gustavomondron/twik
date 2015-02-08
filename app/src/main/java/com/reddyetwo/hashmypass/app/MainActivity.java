@@ -26,6 +26,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.annotation.IntDef;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -60,26 +61,19 @@ import java.util.List;
 public class MainActivity extends ActionBarActivity
         implements GeneratePasswordDialogFragment.GeneratePasswordDialogListener {
 
+    @IntDef({LIST_EMPTY, LIST_CONTAINS_ITEMS, LIST_NOT_INITIALIZED})
+    private @interface ListStatus {}
+
+    private static final int LIST_EMPTY = 1;
+    private static final int LIST_CONTAINS_ITEMS = 2;
+    private static final int LIST_NOT_INITIALIZED = 3;
+
     // Constants
     private static final int REQUEST_ADD_PROFILE = 1;
     private static final int REQUEST_CREATE_DEFAULT_PROFILE = 2;
     private static final String FRAGMENT_GENERATE_PASSWORD = "generatePassword";
     private static final long LIST_ANIMATION_DURATION = 150;
 
-    /**
-     * Tag list state: List is empty
-     */
-    private static final int LIST_EMPTY = 1;
-
-    /**
-     * Tag list state: List contains items
-     */
-    private static final int LIST_CONTAINS_ITEMS = 2;
-
-    /**
-     * Tag list state: Undefined (no adapter available)
-     */
-    private static final int LIST_NOT_INITIALIZED = 3;
 
 
     // State keys
@@ -126,10 +120,29 @@ public class MainActivity extends ActionBarActivity
      */
     private int mTagOrder;
 
+    /**
+     * Tag list UI component
+     */
     private RecyclerView mTagRecyclerView;
+
+    /**
+     * Empty list view UI component
+     */
     private LinearLayout mEmptyListLayout;
+
+    /**
+     * Tag list adapter
+     */
     private TagListAdapter mAdapter;
+
+    /**
+     * Add tag button component
+     */
     private FloatingActionButton mFab;
+
+    /**
+     * Toolbar component
+     */
     private Toolbar mToolbar;
 
     @Override
@@ -302,7 +315,7 @@ public class MainActivity extends ActionBarActivity
     private void populateTagList() {
         final List<Tag> tags = TagSettings
                 .getProfileTags(this, mSelectedProfileId, mTagOrder, TagSettings.LIMIT_UNBOUNDED);
-        final int stateBeforeUpdating = getTagListState();
+        final @ListStatus int stateBeforeUpdating = getTagListStatus();
 
         if (stateBeforeUpdating == LIST_NOT_INITIALIZED) {
             mAdapter = new TagListAdapter(this, mSelectedProfileId, mTagOrder, mTagClickedListener, tags);
@@ -346,7 +359,7 @@ public class MainActivity extends ActionBarActivity
      * When the user selects a different profile, a different tag list is generated and the adapter
      * must be updated.
      */
-    private void updateTagListView(final int stateBeforeUpdating, final List<Tag> newTags) {
+    private void updateTagListView(final @ListStatus int stateBeforeUpdating, final List<Tag> newTags) {
         if (!newTags.isEmpty()) {
             switch (stateBeforeUpdating) {
                 case LIST_NOT_INITIALIZED:
@@ -405,16 +418,17 @@ public class MainActivity extends ActionBarActivity
                 .addListener(new TagListProfileChangedAnimatorListener(visibleAnimator, tags));
     }
 
-    private int getTagListState() {
-        int state;
+    @ListStatus
+    private int getTagListStatus() {
+        @ListStatus int status;
         if (mAdapter == null) {
-            state = LIST_NOT_INITIALIZED;
+            status = LIST_NOT_INITIALIZED;
         } else if (mAdapter.getItemCount() == 0) {
-            state = LIST_EMPTY;
+            status = LIST_EMPTY;
         } else {
-            state = LIST_CONTAINS_ITEMS;
+            status = LIST_CONTAINS_ITEMS;
         }
-        return state;
+        return status;
     }
 
     @Override
