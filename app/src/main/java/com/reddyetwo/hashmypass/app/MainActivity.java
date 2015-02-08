@@ -542,15 +542,13 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onDialogDismiss(Tag tag) {
+        boolean listWasEmpty = mAdapter.getItemCount() == 0;
         if (tag != null && tag.getId() == Tag.NO_ID &&
                 tag.getName().length() > 0) {
             // It is a new tag
             tag.setId(TagSettings.insertTag(this, tag));
             int position = getTagPosition(tag.getId());
             mAdapter.add(tag, position);
-            if (mAdapter.getItemCount() == 1) {
-                updateTagListView(LIST_EMPTY, mAdapter.getTags());
-            }
 
             // Update last used profile
             Preferences.setLastProfile(this, mSelectedProfileId);
@@ -560,6 +558,10 @@ public class MainActivity extends ActionBarActivity
               */
             TagSettings.updateTag(this, tag);
             mAdapter.update(tag);
+        }
+
+        if (listWasEmpty && mAdapter.getItemCount() == 1) {
+            updateTagListView(LIST_EMPTY, mAdapter.getTags());
         }
     }
 
