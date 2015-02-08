@@ -29,9 +29,6 @@ android {
         testCompile 'org.powermock:powermock-module-junit4:1.6.1'
         testCompile 'org.powermock:powermock-api-mockito:1.6.1'
     }
-    testOptions {
-        android.testOptions.unitTests.returnDefaultValues=true
-    }
 }
 
 dependencies {
