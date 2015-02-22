@@ -1,5 +1,3 @@
-package com.reddyetwo.hashmypass.app.view;
-
 /*
  * Copyright 2015 Red Dye No. 2
  *
@@ -18,6 +16,8 @@ package com.reddyetwo.hashmypass.app.view;
  * You should have received a copy of the GNU General Public License
  * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package com.reddyetwo.hashmypass.app.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;

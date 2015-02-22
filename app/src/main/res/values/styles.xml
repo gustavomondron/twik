@@ -34,6 +34,8 @@
         <item name="colorAccent">@color/hashmypass_main</item>
     </style>
 
+    <style name="Theme.Hashmypass.Tutorial" parent="Theme.Hashmypass"/>
+
     <!-- Theme for toolbar -->
     <style name="Theme.Hashmypass.Toolbar"
            parent="Theme.Hashmypass">
@@ -46,14 +48,5 @@
         <item name="android:background">?android:selectableItemBackground</item>
         <item name="android:dropDownSelector">?android:selectableItemBackground</item>
         <item name="android:divider">@null</item>
-    </style>
-
-    <style
-        name="tutorialStyle"
-        parent="android:style/Theme.Holo.Light.NoActionBar"/>
-
-    <style name="tutorialLayoutStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
     </style>
 </resources>

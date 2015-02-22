@@ -33,8 +33,8 @@
     <string name="action_delete">Delete</string>
     <string name="discard">Discard</string>
     <string name="save">Save</string>
-    <string name="skip">Skip tutorial</string>
-    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="next" translatable="false">></string>
     <string name="start">Start</string>
     <string name="sort_websites">Sort websites</string>
     <string name="sort_by_usage">Sort websites by usage</string>

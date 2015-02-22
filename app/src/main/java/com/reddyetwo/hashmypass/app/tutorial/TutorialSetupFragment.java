@@ -34,14 +34,14 @@ import com.reddyetwo.hashmypass.app.util.RandomPrivateKeyGenerator;
 public class TutorialSetupFragment extends Fragment {
 
     private EditText mPrivateKeyText;
-    private PrivateKeyManager mPrivateKeyManager;
+    private PrivateKeyChangedListener mPrivateKeyChangedListener;
 
-    public interface PrivateKeyManager {
-        public void setPrivateKey(String privateKey);
+    public interface PrivateKeyChangedListener {
+        public void onPrivateKeyChanged(String privateKey);
     }
 
-    public void setPrivateKeyManager(PrivateKeyManager privateKeyManager) {
-        mPrivateKeyManager = privateKeyManager;
+    public void setPrivateKeyChangedListener(PrivateKeyChangedListener listener) {
+        mPrivateKeyChangedListener = listener;
     }
 
     @Override
@@ -49,25 +49,24 @@ public class TutorialSetupFragment extends Fragment {
                              Bundle savedInstanceState) {
         ViewGroup rootView =
                 (ViewGroup) inflater.inflate(R.layout.fragment_tutorial_setup, container, false);
-        mPrivateKeyText =
-                (EditText) rootView.findViewById(R.id.private_key_text);
+        mPrivateKeyText = (EditText) rootView.findViewById(R.id.private_key_text);
         mPrivateKeyText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-                // Nothing to do
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Do nothing
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before,
-                                      int count) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // Nothing to do
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                mPrivateKeyManager
-                        .setPrivateKey(mPrivateKeyText.getText().toString());
+                if (mPrivateKeyChangedListener != null) {
+                    mPrivateKeyChangedListener
+                            .onPrivateKeyChanged(mPrivateKeyText.getText().toString());
+                }
             }
         });
         mPrivateKeyText.setText(RandomPrivateKeyGenerator.generate());

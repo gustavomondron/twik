@@ -116,4 +116,10 @@
         <item>@color/color_palette_ripple_21</item>
     </array>
 
+    <array name="color_tutorial">
+        <item>@color/color_tutorial_1</item>
+        <item>@color/color_tutorial_2</item>
+        <item>@color/color_tutorial_3</item>
+    </array>
+
 </resources>

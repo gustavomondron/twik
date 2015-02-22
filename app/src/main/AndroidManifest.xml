@@ -87,9 +87,8 @@
         <activity
             android:name=".tutorial.TutorialActivity"
             android:noHistory="true"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/tutorialStyle">
+            android:theme="@style/Theme.Hashmypass.Tutorial"
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.reddyetwo.hashmypass.app.MainActivity"/>

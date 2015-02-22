@@ -20,14 +20,15 @@
 package com.reddyetwo.hashmypass.app.tutorial;
 
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.reddyetwo.hashmypass.app.HashMyPassApplication;
 import com.reddyetwo.hashmypass.app.R;
@@ -36,73 +37,55 @@ import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
+import com.reddyetwo.hashmypass.app.util.ApiUtils;
+import com.reddyetwo.hashmypass.app.view.ViewPagerIndicator;
 
-public class TutorialActivity extends FragmentActivity {
+public class TutorialActivity extends FragmentActivity
+        implements TutorialSetupFragment.PrivateKeyChangedListener {
 
+    /**
+     * Color for created profile
+     */
+    private static final int DEFAULT_PROFILE_COLOR = 0;
+
+    /**
+     * Button for skipping page
+     */
     private Button mSkipButton;
+
+    /**
+     * Button for going to the next page
+     */
     private Button mNextButton;
-    private Button mStartButton;
-    private MeasureViewPager mPager;
-    private TutorialSetupFragment.PrivateKeyManager mPrivateKeyManager;
+
+    /**
+     * Pager
+     */
+    private ViewPager mPager;
+
+    /**
+     * Private key selected by the user
+     */
     private String mPrivateKey;
+
+    /**
+     * Background color for each page
+     */
+    @ColorRes
+    private int[] mBackgroundColors;
+
+    /**
+     * Panel containing a tutorial page
+     */
+    private LinearLayout mTutorialPanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tutorial);
-        setFinishOnTouchOutside(false);
 
-        TutorialPagerAdapter pagerAdapter =
-                new TutorialPagerAdapter(getSupportFragmentManager());
-
-        mPager = (MeasureViewPager) findViewById(R.id.pager);
-        mPager.setmOnMeasureListener(pagerAdapter);
-        mPager.setOnPageChangeListener(pagerAdapter);
-        mPager.setAdapter(pagerAdapter);
-
-        mSkipButton = (Button) findViewById(R.id.skip_button);
-        mNextButton = (Button) findViewById(R.id.next_button);
-        mStartButton = (Button) findViewById(R.id.start_button);
-
-        mNextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPager.setCurrentItem(mPager.getCurrentItem() + 1);
-            }
-        });
-
-        mSkipButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Go to last page
-                mPager.setCurrentItem(2);
-            }
-        });
-
-        mStartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Save profile and show main activity
-                Profile profile = new Profile(-1,
-                        getString(R.string.profile_default_name), mPrivateKey,
-                        PasswordLength.DEFAULT,
-                        PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS, 4);
-                ProfileSettings.insertProfile(TutorialActivity.this, profile);
-                HashMyPassApplication.setTutorialDismissed(false);
-                finish();
-            }
-        });
-
-        // Restore the current page
-        mPager.setCurrentItem(Preferences.getTutorialPage(this));
-
-        mPrivateKeyManager = new TutorialSetupFragment.PrivateKeyManager() {
-            @Override
-            public void setPrivateKey(String privateKeyManager) {
-                mPrivateKey = privateKeyManager;
-                mStartButton.setEnabled(mPrivateKey.length() > 0);
-            }
-        };
+        initializeView();
+        initializeSettings();
     }
 
     @Override
@@ -121,50 +104,93 @@ public class TutorialActivity extends FragmentActivity {
         Preferences.setTutorialPage(this, mPager.getCurrentItem());
     }
 
-    private class TutorialPagerAdapter extends FragmentStatePagerAdapter
-            implements MeasureViewPager.OnMeasureListener,
-            ViewPager.OnPageChangeListener {
+    private void initializeView() {
+        ApiUtils.drawBehindStatusBar(getWindow());
 
-        private double mIndicatorBaseWidth;
-        private final View mProgressPrevView;
-        private final View mProgressCurrentView;
-        private final View mProgressNextView;
+        mTutorialPanel = (LinearLayout) findViewById(R.id.tutorial_panel);
+
+        mPager = (ViewPager) findViewById(R.id.pager);
+        mPager.setAdapter(new TutorialPagerAdapter(getSupportFragmentManager()));
+
+        ViewPagerIndicator viewPagerIndicator =
+                (ViewPagerIndicator) findViewById(R.id.pager_indicator);
+        viewPagerIndicator.setViewPager(mPager);
+        viewPagerIndicator.setOnPageChangeListener(new TutorialOnPageChangeListener());
+
+        mSkipButton = (Button) findViewById(R.id.skip_button);
+        mNextButton = (Button) findViewById(R.id.next_button);
+
+        // Add listener
+        addNextButtonClickedListener();
+        addSkipButtonClickedListener();
+    }
+
+    private void initializeSettings() {
+        mBackgroundColors = getResources().getIntArray(R.array.color_tutorial);
+
+        // Restore the current page
+        int initialPosition = Preferences.getTutorialPage(this);
+        mPager.setCurrentItem(initialPosition);
+        mTutorialPanel.setBackgroundColor(mBackgroundColors[initialPosition]);
+    }
+
+    private void addNextButtonClickedListener() {
+        mNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mPager.getCurrentItem() == TutorialPagerAdapter.NUMBER_OF_PAGES - 1) {
+                    // Finish tutorial and start Twik
+                    Profile profile =
+                            new Profile(Profile.NO_ID, getString(R.string.profile_default_name), mPrivateKey,
+                                    PasswordLength.DEFAULT,
+                                    PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS,
+                                    DEFAULT_PROFILE_COLOR);
+                    ProfileSettings.insertProfile(TutorialActivity.this, profile);
+                    HashMyPassApplication.setTutorialDismissed(false);
+                    finish();
+                } else {
+                    // Go to next page
+                    mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+                }
+            }
+        });
+    }
+
+    private void addSkipButtonClickedListener() {
+        mSkipButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Go to last page
+                mPager.setCurrentItem(TutorialPagerAdapter.NUMBER_OF_PAGES - 1);
+            }
+        });
+    }
+
+    @Override
+    public void onPrivateKeyChanged(String privateKey) {
+        mPrivateKey = privateKey;
+    }
+
+    private class TutorialPagerAdapter extends FragmentStatePagerAdapter {
+
+        public static final int NUMBER_OF_PAGES = 3;
+        private static final int PAGE_SPLASH = 0;
+        private static final int PAGE_INTRO = 1;
+        private static final int PAGE_SETUP = 2;
 
         public TutorialPagerAdapter(FragmentManager fm) {
             super(fm);
-            mProgressPrevView = findViewById(R.id.pager_progress_prev);
-            mProgressCurrentView = findViewById(R.id.pager_progress_current);
-            mProgressNextView = findViewById(R.id.pager_progress_next);
-        }
-
-        private void updateIndicators(int position) {
-            ViewGroup.LayoutParams currentViewParams =
-                    mProgressCurrentView.getLayoutParams();
-            currentViewParams.width = (int) Math.ceil(mIndicatorBaseWidth);
-            mProgressCurrentView.setLayoutParams(currentViewParams);
-
-            ViewGroup.LayoutParams prevViewParams =
-                    mProgressPrevView.getLayoutParams();
-            prevViewParams.width =
-                    (int) Math.ceil(mIndicatorBaseWidth * position);
-            mProgressPrevView.setLayoutParams(prevViewParams);
-
-            ViewGroup.LayoutParams nextViewParams =
-                    mProgressNextView.getLayoutParams();
-            nextViewParams.width = (int) Math
-                    .ceil(mIndicatorBaseWidth * (getCount() - 1 - position));
-            mProgressNextView.setLayoutParams(nextViewParams);
         }
 
         @Override
         public Fragment getItem(int position) {
-            if (position == 0) {
+            if (position == PAGE_SPLASH) {
                 return new TutorialSplashFragment();
-            } else if (position == 1) {
+            } else if (position == PAGE_INTRO) {
                 return new TutorialIntroFragment();
-            } else if (position == 2) {
+            } else if (position == PAGE_SETUP) {
                 TutorialSetupFragment fragment = new TutorialSetupFragment();
-                fragment.setPrivateKeyManager(mPrivateKeyManager);
+                fragment.setPrivateKeyChangedListener(TutorialActivity.this);
                 return fragment;
             } else {
                 return null;
@@ -173,38 +199,32 @@ public class TutorialActivity extends FragmentActivity {
 
         @Override
         public int getCount() {
-            return 3;
+            return NUMBER_OF_PAGES;
         }
+    }
 
+    private class TutorialOnPageChangeListener implements ViewPager.OnPageChangeListener {
         @Override
-        public void onMeasure(int width) {
-            mIndicatorBaseWidth = (double) width / (getCount());
-            updateIndicators(mPager.getCurrentItem());
-        }
-
-        @Override
-        public void onPageScrolled(int position, float positionOffset,
-                                   int positionOffsetPixels) {
-            // Nothing to do
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            // Do nothing
         }
 
         @Override
         public void onPageSelected(int position) {
-            updateIndicators(position);
-            if (position == getCount() - 1) {
-                mSkipButton.setVisibility(View.GONE);
-                mNextButton.setVisibility(View.GONE);
-                mStartButton.setVisibility(View.VISIBLE);
+            if (position == mPager.getAdapter().getCount() - 1) {
+                mSkipButton.setVisibility(View.INVISIBLE);
+                mNextButton.setText(R.string.start);
             } else {
                 mSkipButton.setVisibility(View.VISIBLE);
-                mNextButton.setVisibility(View.VISIBLE);
-                mStartButton.setVisibility(View.GONE);
+                mNextButton.setText(R.string.next);
             }
+
+            mTutorialPanel.setBackgroundColor(mBackgroundColors[position]);
         }
 
         @Override
         public void onPageScrollStateChanged(int state) {
-            // Nothing to do
+            // Do nothing
         }
     }
 }

@@ -133,5 +133,4 @@ public class TutorialIntroFragment extends Fragment {
                         PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
         mWebsitePasswordView.setText(password);
     }
-
 }
