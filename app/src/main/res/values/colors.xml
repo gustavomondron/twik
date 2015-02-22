@@ -98,6 +98,6 @@
 
     <!-- Color palette for tutorial -->
     <color name="color_tutorial_1">#43A047</color>
-    <color name="color_tutorial_2">#00B8D4</color>
-    <color name="color_tutorial_3">#FF9800</color>
+    <color name="color_tutorial_2">#ff008196</color>
+    <color name="color_tutorial_3">#ffc06d00</color>
 </resources>
