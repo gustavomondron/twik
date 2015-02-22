@@ -87,6 +87,8 @@
         <activity
             android:name=".tutorial.TutorialActivity"
             android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"
             android:theme="@style/Theme.Hashmypass.Tutorial"
             android:parentActivityName=".MainActivity">
             <meta-data
