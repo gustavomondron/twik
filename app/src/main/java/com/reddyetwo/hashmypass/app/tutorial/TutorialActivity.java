@@ -19,6 +19,8 @@
 
 package com.reddyetwo.hashmypass.app.tutorial;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.v4.app.Fragment;
@@ -26,6 +28,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Layout;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -141,8 +145,8 @@ public class TutorialActivity extends FragmentActivity
                 if (mPager.getCurrentItem() == TutorialPagerAdapter.NUMBER_OF_PAGES - 1) {
                     // Finish tutorial and start Twik
                     Profile profile =
-                            new Profile(Profile.NO_ID, getString(R.string.profile_default_name), mPrivateKey,
-                                    PasswordLength.DEFAULT,
+                            new Profile(Profile.NO_ID, getString(R.string.profile_default_name),
+                                    mPrivateKey, PasswordLength.DEFAULT,
                                     PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS,
                                     DEFAULT_PROFILE_COLOR);
                     ProfileSettings.insertProfile(TutorialActivity.this, profile);
@@ -206,7 +210,11 @@ public class TutorialActivity extends FragmentActivity
     private class TutorialOnPageChangeListener implements ViewPager.OnPageChangeListener {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            // Do nothing
+            if ((position + 1) < TutorialPagerAdapter.NUMBER_OF_PAGES) {
+                mTutorialPanel.setBackgroundColor((int) new ArgbEvaluator()
+                        .evaluate(positionOffset, mBackgroundColors[position],
+                                mBackgroundColors[position + 1]));
+            }
         }
 
         @Override
