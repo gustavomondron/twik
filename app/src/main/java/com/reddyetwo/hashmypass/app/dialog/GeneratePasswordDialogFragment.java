@@ -133,9 +133,6 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         mTagEditText = (EditText) view.findViewById(R.id.tag_text);
 
         mMasterKeyEditText = (EditText) view.findViewById(R.id.master_key_text);
-        // Restore cached master key
-        mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey(getActivity()), 0,
-                HashMyPassApplication.getCachedMasterKey(getActivity()).length);
 
 
         // Restore tag if the device configuration has changed
@@ -191,17 +188,17 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
+
+        // Restore cached master key
+        mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey(getActivity()), 0,
+                HashMyPassApplication.getCachedMasterKey(getActivity()).length);
 
         // Disable OK button when adding a new tag
         if (mTag.getId() == Tag.NO_ID) {
             ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_NEUTRAL).setEnabled(false);
         }
-
-        // Restore cached master key
-        mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey(getActivity()), 0,
-                HashMyPassApplication.getCachedMasterKey(getActivity()).length);
 
         // Manage keyboard status
         if (mMasterKeyEditText.length() == 0 || mTagEditText.length() == 0) {
