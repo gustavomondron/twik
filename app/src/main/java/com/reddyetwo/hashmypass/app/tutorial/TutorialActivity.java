@@ -33,14 +33,17 @@ import android.widget.LinearLayout;
 
 import com.reddyetwo.hashmypass.app.HashMyPassApplication;
 import com.reddyetwo.hashmypass.app.R;
-import com.reddyetwo.hashmypass.app.data.PasswordLength;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.util.ApiUtils;
+import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.view.ViewPagerIndicator;
 
+/**
+ * Activity which shows a tutorial of the application
+ */
 public class TutorialActivity extends FragmentActivity
         implements TutorialSetupFragment.PrivateKeyChangedListener {
 
@@ -143,7 +146,7 @@ public class TutorialActivity extends FragmentActivity
                     // Finish tutorial and start Twik
                     Profile profile =
                             new Profile(Profile.NO_ID, getString(R.string.profile_default_name),
-                                    mPrivateKey, PasswordLength.DEFAULT_LENGTH,
+                                    mPrivateKey, Constants.DEFAULT_PASSWORD_LENGTH,
                                     PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS,
                                     DEFAULT_PROFILE_COLOR);
                     ProfileSettings.insertProfile(TutorialActivity.this, profile);
@@ -179,6 +182,11 @@ public class TutorialActivity extends FragmentActivity
         private static final int PAGE_INTRO = 1;
         private static final int PAGE_SETUP = 2;
 
+        /**
+         * Constructor
+         *
+         * @param fm the {@link android.support.v4.app.FragmentManager} instance
+         */
         public TutorialPagerAdapter(FragmentManager fm) {
             super(fm);
         }

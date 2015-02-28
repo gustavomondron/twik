@@ -22,8 +22,12 @@ package com.reddyetwo.hashmypass.app.util;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.support.annotation.StringRes;
 import android.widget.Toast;
 
+/**
+ * Helper class to copy strings to the clipboard
+ */
 @SuppressWarnings("SameParameterValue")
 public class ClipboardHelper {
 
@@ -33,8 +37,16 @@ public class ClipboardHelper {
 
     }
 
+    /**
+     * Copy a string to the clipboard
+     *
+     * @param context        the {@link android.content.Context} instance
+     * @param label          the label
+     * @param string         the {@link java.lang.String} to copy
+     * @param toastMessageId the {@link android.support.annotation.StringRes} of the message shown in the toast confirmation, or 0 if toast should not be shown
+     */
     public static void copyToClipboard(Context context, String label, String string,
-                                       int toastMessageId) {
+                                       @StringRes int toastMessageId) {
         ClipboardManager clipboard =
                 (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText(label, string);

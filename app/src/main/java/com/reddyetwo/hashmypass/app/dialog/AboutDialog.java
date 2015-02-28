@@ -44,9 +44,17 @@ public class AboutDialog extends DialogFragment {
 
     private static final String FRAGMENT_DIALOG_TAG = "dialog_about";
 
+    /**
+     * Constructor
+     */
     public AboutDialog() {
     }
 
+    /**
+     * Show the dialog
+     *
+     * @param activity the {@link android.app.Activity} instance
+     */
     public static void showAbout(Activity activity) {
 
         FragmentManager fm = activity.getFragmentManager();

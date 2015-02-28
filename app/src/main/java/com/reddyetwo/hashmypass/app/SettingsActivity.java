@@ -25,7 +25,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-
+/**
+ * {@link android.support.v7.app.ActionBarActivity} which shows the
+ * {@link com.reddyetwo.hashmypass.app.SettingsFragment} used to configure the application preferences
+ */
 public class SettingsActivity extends ActionBarActivity {
 
     @Override
@@ -39,10 +42,11 @@ public class SettingsActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        getFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, new SettingsFragment()).commit();
+        getFragmentManager().beginTransaction().replace(R.id.content_frame, new SettingsFragment())
+                .commit();
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long

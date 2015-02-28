@@ -36,6 +36,12 @@ class MovementTouchListener implements View.OnTouchListener {
     private float mX;
     private float mY;
 
+    /**
+     * Constructor
+     *
+     * @param context           the {@link android.content.Context} instance
+     * @param onPressedListener the screen pressed events listener
+     */
     public MovementTouchListener(Context context, OnPressedListener onPressedListener) {
         mOnPressedListener = onPressedListener;
         mMovementThresholdPx = TypedValue
@@ -68,12 +74,18 @@ class MovementTouchListener implements View.OnTouchListener {
         return true;
     }
 
-    public interface OnPressedListener {
-        public void onPressed();
+    private boolean movementThresholdReached(float x, float y) {
+        return Math.abs(x - mX) > mMovementThresholdPx || Math.abs(y - mY) > mMovementThresholdPx;
     }
 
-    private boolean movementThresholdReached(float x, float y) {
-        return Math.abs(x - mX) > mMovementThresholdPx ||
-                Math.abs(y - mY) > mMovementThresholdPx;
+    /**
+     * Interface which can be implemented to listen to screen pressed events
+     */
+    public interface OnPressedListener {
+
+        /**
+         * Method called when the screen is pressed
+         */
+        public void onPressed();
     }
 }

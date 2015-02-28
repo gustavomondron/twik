@@ -25,27 +25,50 @@ import android.content.Context;
 
 import com.reddyetwo.hashmypass.app.data.Preferences;
 
+/**
+ * Class extending {@link android.app.Application} which contains data which can be accessed
+ * from any application Activity
+ */
 public class HashMyPassApplication extends Application {
 
+    public static final String LOG_TAG = "TWIK";
     private static char[] mCachedMasterKey = new char[]{};
     private static boolean mTutorialDismissed = false;
-    public static final String LOG_TAG = "TWIK";
 
-    public static void setTutorialDismissed(boolean tutorialDismissed) {
-        mTutorialDismissed = tutorialDismissed;
-    }
-
+    /**
+     * Get the tutorial dismissed flag.
+     *
+     * @return true if the tutorial has been dismissed, false otherwise.
+     */
     public static boolean getTutorialDismissed() {
         return mTutorialDismissed;
     }
 
+    /**
+     * Set the tutorial dismissed flag. Once the tutorial has been dismissed, it is never shown again.
+     *
+     * @param tutorialDismissed the flag value
+     */
+    public static void setTutorialDismissed(boolean tutorialDismissed) {
+        mTutorialDismissed = tutorialDismissed;
+    }
+
+    /**
+     * Get the cached master key
+     *
+     * @param context the {@link android.content.Context} instance
+     * @return the cached master key
+     */
     public static char[] getCachedMasterKey(Context context) {
         if (Preferences.getRememberMasterKeyMins(context) == 0) {
-            mCachedMasterKey = new char[] {};
+            mCachedMasterKey = new char[]{};
         }
         return mCachedMasterKey;
     }
 
+    /**
+     * Wipe the cached master key
+     */
     public static void wipeCachedMasterKey() {
         /* Rewrite the char array so we don't wait for garbage collection
          to destroy it */

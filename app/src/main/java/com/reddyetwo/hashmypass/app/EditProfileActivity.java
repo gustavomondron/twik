@@ -44,6 +44,9 @@ import com.reddyetwo.hashmypass.app.util.ProfileFormInflater;
 import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
 import com.reddyetwo.hashmypass.app.view.MaterialColorPalette;
 
+/**
+ * Activity which allows editing an existing profile
+ */
 public class EditProfileActivity extends ActionBarActivity {
 
     public static final String EXTRA_PROFILE_ID = "profile_id";

@@ -27,8 +27,14 @@ import android.view.ViewGroup;
 
 import com.reddyetwo.hashmypass.app.R;
 
+/**
+ * Fragment containing the tutorial splash screen
+ */
 public class TutorialSplashFragment extends Fragment {
 
+    /**
+     * Constructor
+     */
     public TutorialSplashFragment() {
         super();
     }

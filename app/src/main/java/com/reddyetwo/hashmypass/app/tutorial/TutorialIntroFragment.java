@@ -39,40 +39,35 @@ import com.reddyetwo.hashmypass.app.util.Constants;
 
 import java.util.Random;
 
+/**
+ * Fragment containing the tutorial introduction screen
+ */
 public class TutorialIntroFragment extends Fragment {
 
     /**
      * Length of generated passwords
      */
     private static final int PASSWORD_LENGTH = 14;
-
+    private static final String[] WEBSITES =
+            {"amazon", "google", "ebay", "bing", "yahoo", "reddit", "paypal", "spotify", "facebook",
+                    "twitter", "flickr", "steam", "feedly", "foursquare", "apple", "xda-developers",
+                    "bugzilla", "ssh", "wopr", "skynet"};
+    private static final char[] MASTER_KEY = {'m', 'a', 's', 't', 'e', 'r'};
     private ImageView mIcMasterKeyView;
     private TextView mWebsiteTextView;
     private TextView mWebsitePasswordView;
-
     private AnimatorSet mAnimatorSet;
-
     private Random mRandom;
-
-    private static final String[] WEBSITES =
-            {"amazon", "google", "ebay", "bing", "yahoo", "reddit", "paypal",
-                    "spotify", "facebook", "twitter", "flickr", "steam",
-                    "feedly", "foursquare", "apple", "xda-developers",
-                    "bugzilla", "ssh", "wopr", "skynet"};
-    private static final char[] MASTER_KEY = {'m', 'a', 's', 't', 'e', 'r'};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup rootView =
                 (ViewGroup) inflater.inflate(R.layout.fragment_tutorial_intro, container, false);
-        mIcMasterKeyView =
-                (ImageView) rootView.findViewById(R.id.ic_master_key);
+        mIcMasterKeyView = (ImageView) rootView.findViewById(R.id.ic_master_key);
         mWebsiteTextView = (TextView) rootView.findViewById(R.id.website_text);
-        mWebsitePasswordView =
-                (TextView) rootView.findViewById(R.id.website_password);
-        Typeface tf = Typeface.createFromAsset(getActivity().getAssets(),
-                Constants.FONT_MONOSPACE);
+        mWebsitePasswordView = (TextView) rootView.findViewById(R.id.website_password);
+        Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), Constants.FONT_MONOSPACE);
         mWebsitePasswordView.setTypeface(tf);
 
         mRandom = new Random();
@@ -106,8 +101,7 @@ public class TutorialIntroFragment extends Fragment {
 
         // Prepare set with all animators, set up repeating and random data
         mAnimatorSet = new AnimatorSet();
-        mAnimatorSet.playTogether(websiteAnimator, masterKeyAnimator,
-                passwordAnimator);
+        mAnimatorSet.playTogether(websiteAnimator, masterKeyAnimator, passwordAnimator);
         mAnimatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {

@@ -23,10 +23,12 @@ package com.reddyetwo.hashmypass.app.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * POJO class for tags
+ */
 public class Tag implements Parcelable {
 
     public static final long NO_ID = -1;
-
     private long mId = NO_ID;
     public static final Parcelable.Creator<Tag> CREATOR = new Parcelable.Creator<Tag>() {
         public Tag createFromParcel(Parcel in) {
@@ -44,11 +46,27 @@ public class Tag implements Parcelable {
     private int mPasswordLength;
     private PasswordType mPasswordType;
 
+    /**
+     * Constructor
+     *
+     * @param tag tag to copy
+     */
     public Tag(Tag tag) {
         this(tag.getId(), tag.getProfileId(), tag.getHashCounter(), tag.getSite(), tag.getName(),
                 tag.getPasswordLength(), tag.getPasswordType());
     }
 
+    /**
+     * Constructor
+     *
+     * @param id             tag ID
+     * @param profileId      profile ID
+     * @param hashCounter    number of times the tag has been used
+     * @param site           site identifier
+     * @param name           tag name
+     * @param passwordLength password length
+     * @param passwordType   password type
+     */
     public Tag(long id, long profileId, int hashCounter, String site, String name,
                int passwordLength, PasswordType passwordType) {
         mId = id;
@@ -60,6 +78,11 @@ public class Tag implements Parcelable {
         mPasswordType = passwordType;
     }
 
+    /**
+     * Constructor
+     *
+     * @param in Parcelable object to get data from
+     */
     private Tag(Parcel in) {
         mId = in.readLong();
         mProfileId = in.readLong();
@@ -70,54 +93,119 @@ public class Tag implements Parcelable {
         mPasswordType = PasswordType.values()[in.readInt()];
     }
 
+    /**
+     * Get the tag ID
+     *
+     * @return
+     */
     public long getId() {
         return mId;
     }
 
+    /**
+     * Set the tag ID
+     *
+     * @param id
+     */
     public void setId(long id) {
         mId = id;
     }
 
+    /**
+     * Get the profile ID
+     *
+     * @return
+     */
     public long getProfileId() {
         return mProfileId;
     }
 
+    /**
+     * Get the number of times the tag has been used
+     *
+     * @return
+     */
     public int getHashCounter() {
         return mHashCounter;
     }
 
+    /**
+     * Set the number of times the tag has been used
+     *
+     * @param hashCounter the number of times
+     */
     public void setHashCounter(int hashCounter) {
         mHashCounter = hashCounter;
     }
 
+    /**
+     * Get the site associated with this tag
+     *
+     * @return
+     */
     public String getSite() {
         return mSite;
     }
 
+    /**
+     * Set the site associated with this tag
+     *
+     * @param site the site identifier
+     */
     public void setSite(String site) {
         mSite = site;
     }
 
+    /**
+     * Get the tag name
+     *
+     * @return
+     */
     public String getName() {
         return mName;
     }
 
+    /**
+     * Set the tag name
+     *
+     * @param name
+     */
     public void setName(String name) {
         mName = name;
     }
 
+    /**
+     * Get the password length
+     *
+     * @return
+     */
     public int getPasswordLength() {
         return mPasswordLength;
     }
 
+    /**
+     * Set the password length
+     *
+     * @param passwordLength the password length
+     */
     public void setPasswordLength(int passwordLength) {
         mPasswordLength = passwordLength;
     }
 
+    /**
+     * Get the password type
+     *
+     * @return
+     */
     public PasswordType getPasswordType() {
         return mPasswordType;
     }
 
+    /**
+     * Set the password type
+     *
+     * @param passwordType
+     */
     public void setPasswordType(PasswordType passwordType) {
         mPasswordType = passwordType;
     }

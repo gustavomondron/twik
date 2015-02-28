@@ -48,25 +48,35 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Loader which gets the favicon of a website and shows it in a {@link android.widget.TextView}
+ */
 public class FaviconLoader {
 
     private static final long LOAD_TIMEOUT = 3000;
     private static final int PROGRESS_STOPPED = 10;
     private static final int MASK_LOW_NIBBLE = 15;
-
+    private final Context mContext;
     private List<String> mTouchIconUrlList;
     private String mUrl;
     private OnFaviconLoaded mOnFaviconLoaded;
-    private final Context mContext;
 
+    /**
+     * Constructor
+     *
+     * @param context the context
+     */
     public FaviconLoader(Context context) {
         mContext = context;
     }
 
-    public interface OnFaviconLoaded {
-        public void onFaviconLoaded(BitmapDrawable icon);
-    }
-
+    /**
+     * Set a {@link com.reddyetwo.hashmypass.app.data.Tag} favicon as the background of a {@link android.widget.TextView}
+     *
+     * @param context  the {@link android.content.Context} instance
+     * @param textView the text view
+     * @param tag      the tag
+     */
     public static void setAsBackground(Context context, TextView textView, Tag tag) {
         if (tag == null || tag.getName().length() == 0) {
             setTextViewBackground(textView, null);
@@ -114,6 +124,12 @@ public class FaviconLoader {
         return colors[color];
     }
 
+    /**
+     * Get the favicon of a website
+     *
+     * @param url             the site URL
+     * @param onFaviconLoaded the {@link com.reddyetwo.hashmypass.app.util.FaviconLoader.OnFaviconLoaded} listener
+     */
     public void load(String url, OnFaviconLoaded onFaviconLoaded) {
         mUrl = url;
         mOnFaviconLoaded = onFaviconLoaded;
@@ -222,8 +238,24 @@ public class FaviconLoader {
         }
     }
 
+    /**
+     * Interface which can be implemented to listen to favicon loaded events
+     */
+    public interface OnFaviconLoaded {
+
+        /**
+         * Method called when the favicon has been loaded
+         *
+         * @param icon the favicon {@link android.graphics.drawable.BitmapDrawable}
+         */
+        public void onFaviconLoaded(BitmapDrawable icon);
+    }
+
     private class FaviconChromeClient extends WebChromeClient {
 
+        /**
+         * Constructor
+         */
         public FaviconChromeClient() {
             super();
             mTouchIconUrlList = new ArrayList<>();
@@ -244,7 +276,9 @@ public class FaviconLoader {
 
     private class RetrieveImageTask extends AsyncTask<URL, Void, BitmapDrawable> {
 
-
+        /**
+         * Constructor
+         */
         public RetrieveImageTask() {
             super();
         }

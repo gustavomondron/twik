@@ -37,6 +37,9 @@ import java.security.NoSuchAlgorithmException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ * Generator of hashed passwords
+ */
 public class PasswordHasher {
 
     /**
@@ -121,6 +124,16 @@ public class PasswordHasher {
         return hash.substring(0, length);
     }
 
+    /**
+     * Generate a hashed password using a tag, a master key and a private key
+     *
+     * @param tag          the tag name
+     * @param masterKey    the master key
+     * @param privateKey   the private key
+     * @param length       the password length
+     * @param passwordType the password type
+     * @return the hashed password
+     */
     public static String hashTagWithKeys(String tag, char[] masterKey, String privateKey,
                                          int length, PasswordType passwordType) {
         // First, hash the tag with the private key (in the case that it is used)
@@ -133,7 +146,7 @@ public class PasswordHasher {
     }
 
     /**
-     * Calculates the digest of an input string
+     * Calculate the digest of an input string
      *
      * @param input the input string
      * @return the digest of the input string

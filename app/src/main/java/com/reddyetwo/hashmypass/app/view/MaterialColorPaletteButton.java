@@ -42,6 +42,9 @@ import android.widget.ImageButton;
 import com.reddyetwo.hashmypass.app.R;
 import com.reddyetwo.hashmypass.app.util.ApiUtils;
 
+/**
+ * A color button in a {@link com.reddyetwo.hashmypass.app.view.MaterialColorPalette}
+ */
 public class MaterialColorPaletteButton extends ImageButton {
 
     private static final int SHADOW_FACTOR = 2;
@@ -52,15 +55,33 @@ public class MaterialColorPaletteButton extends ImageButton {
     private int mShadowSize;
     private boolean mMarginsSet;
 
+    /**
+     * Constructor
+     *
+     * @param context the {@link android.content.Context} instance
+     */
     public MaterialColorPaletteButton(Context context) {
         this(context, null);
     }
 
+    /**
+     * Constructor
+     *
+     * @param context the {@link android.content.Context} instance
+     * @param attrs   the view attributes
+     */
     public MaterialColorPaletteButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
+    /**
+     * Constructor
+     *
+     * @param context  the {@link android.content.Context} instance
+     * @param attrs    the view attributes
+     * @param defStyle the view style definition
+     */
     public MaterialColorPaletteButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
@@ -168,6 +189,13 @@ public class MaterialColorPaletteButton extends ImageButton {
         }
     }
 
+    /**
+     * Set the palettes of colors
+     *
+     * @param colorNormal  the normal state color palette
+     * @param colorPressed the pressed state color palette
+     * @param colorRipple  the ripple state color palette
+     */
     public void setColor(@ColorRes int colorNormal, @ColorRes int colorPressed,
                          @ColorRes int colorRipple) {
         if (mColorNormal != colorNormal || mColorPressed != colorPressed ||

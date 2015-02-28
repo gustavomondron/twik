@@ -60,88 +60,71 @@ import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 
 import java.util.List;
 
-
+/**
+ * Main application activity, which shows the list of tags
+ */
 public class MainActivity extends ActionBarActivity
         implements GeneratePasswordDialogFragment.GeneratePasswordDialogListener {
-
-    @IntDef({LIST_EMPTY, LIST_CONTAINS_ITEMS, LIST_NOT_INITIALIZED})
-    private @interface ListStatus {
-    }
 
     private static final int LIST_EMPTY = 1;
     private static final int LIST_CONTAINS_ITEMS = 2;
     private static final int LIST_NOT_INITIALIZED = 3;
-
     // Constants
     private static final int REQUEST_ADD_PROFILE = 1;
     private static final int REQUEST_CREATE_DEFAULT_PROFILE = 2;
     private static final String FRAGMENT_GENERATE_PASSWORD = "generatePassword";
     private static final long LIST_ANIMATION_DURATION = 150;
-
     // State keys
     private static final String STATE_SELECTED_PROFILE_ID = "profile_id";
     private static final String STATE_ORIENTATION_HAS_CHANGED = "orientation_has_changed";
-
     /**
      * Selected profile ID
      */
     private long mSelectedProfileId = -1;
-
     /**
      * Listener for clicks on tag list items
      */
     private TagListAdapter.OnTagClickedListener mTagClickedListener;
-
     /**
      * Screen orientation changes listener
      */
     private OrientationEventListener mOrientationEventListener;
-
     /**
      * Screen orientation changed flag
      */
     private boolean mOrientationHasChanged;
-
     /**
      * Color palette - normal state
      */
     private int[] mColorsNormal;
-
     /**
      * Color palette - pressed state
      */
     private int[] mColorsPressed;
-
     /**
      * Color palette - ripple state
      */
     private int[] mColorsRipple;
-
     /**
      * Tag order mode
      */
     private int mTagOrder;
-
     /**
      * Tag list UI component
      */
     private RecyclerView mTagRecyclerView;
-
     /**
      * Empty list view UI component
      */
     private LinearLayout mEmptyListLayout;
-
     /**
      * Tag list adapter
      */
     private TagListAdapter mAdapter;
-
     /**
      * Add tag button component
      */
     private FloatingActionButton mFab;
-
     /**
      * Toolbar component
      */
@@ -595,6 +578,10 @@ public class MainActivity extends ActionBarActivity
         dialog.show(getFragmentManager(), FRAGMENT_GENERATE_PASSWORD);
     }
 
+    @IntDef({LIST_EMPTY, LIST_CONTAINS_ITEMS, LIST_NOT_INITIALIZED})
+    private @interface ListStatus {
+    }
+
     private class TagClickListener implements TagListAdapter.OnTagClickedListener {
 
         @Override
@@ -645,6 +632,12 @@ public class MainActivity extends ActionBarActivity
         private final AnimatorSet mVisibleAnimator;
         private final List<Tag> mTags;
 
+        /**
+         * Constructor
+         *
+         * @param visibleAnimator the visibility {@link android.animation.AnimatorSet} instance
+         * @param tags            the {@link java.util.List} of tags
+         */
         public TagListProfileChangedAnimatorListener(AnimatorSet visibleAnimator, List<Tag> tags) {
             mVisibleAnimator = visibleAnimator;
             mTags = tags;

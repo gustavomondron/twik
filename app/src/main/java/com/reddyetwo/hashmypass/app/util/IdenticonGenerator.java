@@ -30,6 +30,9 @@ import android.util.TypedValue;
 
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 
+/**
+ * Identicons generator
+ */
 public class IdenticonGenerator {
     private static final int IDENTICON_HEIGHT = 5;
     private static final int IDENTICON_WIDTH = 5;
@@ -48,6 +51,13 @@ public class IdenticonGenerator {
 
     }
 
+    /**
+     * Generator the identicon of an input string
+     *
+     * @param context the {@link android.content.Context}
+     * @param input   the input
+     * @return the identicon {@link android.graphics.Bitmap}
+     */
     public static Bitmap generate(Context context, char[] input) {
 
         byte[] hash = PasswordHasher.calculateDigest(input);

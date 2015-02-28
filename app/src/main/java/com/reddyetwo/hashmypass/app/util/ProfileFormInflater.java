@@ -27,12 +27,22 @@ import android.widget.Spinner;
 import com.reddyetwo.hashmypass.app.R;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 
+/**
+ * Inflater for 'Add profile' or 'Edit profile' forms spinners
+ */
 public class ProfileFormInflater {
 
     private ProfileFormInflater() {
 
     }
-    
+
+    /**
+     * Populate a password length spinner
+     *
+     * @param context        the {@link android.content.Context} instance
+     * @param spinner        the {@link android.widget.Spinner} instance
+     * @param passwordLength the password length
+     */
     public static void populatePasswordLengthSpinner(Context context, Spinner spinner,
                                                      int passwordLength) {
         ArrayAdapter<String> passwordLengthAdapter =
@@ -43,6 +53,13 @@ public class ProfileFormInflater {
         spinner.setAdapter(passwordLengthAdapter);
     }
 
+    /**
+     * Populate a password type spinner
+     *
+     * @param context      the {@link android.content.Context} instance
+     * @param spinner      the {@link android.widget.Spinner} instance
+     * @param passwordType the password type
+     */
     public static void populatePasswordTypeSpinner(Context context, Spinner spinner,
                                                    PasswordType passwordType) {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter

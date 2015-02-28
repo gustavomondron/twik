@@ -25,12 +25,21 @@ import android.util.Log;
 
 import com.reddyetwo.hashmypass.app.HashMyPassApplication;
 
+/**
+ * Helper for package-related tasks
+ */
 public class PackageUtils {
 
     private PackageUtils() {
 
     }
 
+    /**
+     * Get the application version name
+     *
+     * @param context the {@link android.content.Context} instance
+     * @return the version name
+     */
     public static String getVersionName(Context context) {
         String versionName = "";
         try {

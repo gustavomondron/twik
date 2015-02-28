@@ -25,12 +25,21 @@ import android.content.Context;
 
 import com.reddyetwo.hashmypass.app.R;
 
+/**
+ * Generator of view animations
+ */
 public class Animations {
 
     private Animations() {
-
     }
 
+    /**
+     * Get an animator from visible to invisible state
+     *
+     * @param context the {@link android.content.Context} instance
+     * @param object  the target object
+     * @return the {@link android.animation.AnimatorSet} instance
+     */
     public static AnimatorSet getToInvisibleAnimatorSet(Context context, Object object) {
         AnimatorSet animatorSet =
                 (AnimatorSet) AnimatorInflater.loadAnimator(context, R.animator.invisible);
@@ -38,6 +47,14 @@ public class Animations {
         return animatorSet;
     }
 
+    /**
+     * Get an animator from visible to invisible state
+     *
+     * @param context  the {@link android.content.Context} instance
+     * @param object   the the target object
+     * @param duration the animation duration
+     * @return the {@link android.animation.AnimatorSet} instance
+     */
     @SuppressWarnings("SameParameterValue")
     public static AnimatorSet getToInvisibleAnimatorSet(Context context, Object object,
                                                         long duration) {
@@ -46,6 +63,13 @@ public class Animations {
         return animatorSet;
     }
 
+    /**
+     * Get an animator from invisible to visible state
+     *
+     * @param context the {@link android.content.Context} instance
+     * @param object  the target object
+     * @return the {@link android.animation.AnimatorSet} instance
+     */
     public static AnimatorSet getToVisibleAnimatorSet(Context context, Object object) {
         AnimatorSet animatorSet =
                 (AnimatorSet) AnimatorInflater.loadAnimator(context, R.animator.visible);
@@ -53,6 +77,14 @@ public class Animations {
         return animatorSet;
     }
 
+    /**
+     * Get an animator from invisible to visible state
+     *
+     * @param context  the {@link android.content.Context} instance
+     * @param object   the target object
+     * @param duration the animation duration
+     * @return the {@link android.animation.AnimatorSet} instance
+     */
     @SuppressWarnings("SameParameterValue")
     public static AnimatorSet getToVisibleAnimatorSet(Context context, Object object,
                                                       long duration) {

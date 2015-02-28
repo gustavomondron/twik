@@ -31,15 +31,19 @@ import android.widget.EditText;
 import com.reddyetwo.hashmypass.app.R;
 import com.reddyetwo.hashmypass.app.util.RandomPrivateKeyGenerator;
 
+/**
+ * Fragment containing the tutorial private key setup screen
+ */
 public class TutorialSetupFragment extends Fragment {
 
     private EditText mPrivateKeyText;
     private PrivateKeyChangedListener mPrivateKeyChangedListener;
 
-    public interface PrivateKeyChangedListener {
-        public void onPrivateKeyChanged(String privateKey);
-    }
-
+    /**
+     * Set the listener for private key changed events.
+     *
+     * @param listener the {@link com.reddyetwo.hashmypass.app.tutorial.TutorialSetupFragment.PrivateKeyChangedListener} instance
+     */
     public void setPrivateKeyChangedListener(PrivateKeyChangedListener listener) {
         mPrivateKeyChangedListener = listener;
     }
@@ -71,5 +75,18 @@ public class TutorialSetupFragment extends Fragment {
         });
         mPrivateKeyText.setText(RandomPrivateKeyGenerator.generate());
         return rootView;
+    }
+
+    /**
+     * Interface which can be implemented to listen to private key changed events.
+     */
+    public interface PrivateKeyChangedListener {
+
+        /**
+         * Method called when the private key has changed
+         *
+         * @param privateKey the private key
+         */
+        public void onPrivateKeyChanged(String privateKey);
     }
 }

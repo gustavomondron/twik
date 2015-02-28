@@ -26,7 +26,9 @@ import android.preference.PreferenceFragment;
 
 import com.reddyetwo.hashmypass.app.data.Preferences;
 
-
+/**
+ * Fragment for configuring the application preferencesM
+ */
 public class SettingsFragment extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 

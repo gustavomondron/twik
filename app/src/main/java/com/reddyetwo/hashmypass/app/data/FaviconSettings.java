@@ -33,6 +33,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+/**
+ * Class to get/add/delete/update {@link com.reddyetwo.hashmypass.app.data.Favicon} from storage
+ */
 public class FaviconSettings {
 
     private static final String FILE_NAME = "favicon-%d.png";
@@ -42,6 +45,13 @@ public class FaviconSettings {
 
     }
 
+    /**
+     * Get the favicon of a site
+     *
+     * @param context the {@link android.content.Context} instance
+     * @param site    the site
+     * @return the {@link com.reddyetwo.hashmypass.app.data.Favicon} instance
+     */
     public static Favicon getFavicon(Context context, String site) {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -69,6 +79,13 @@ public class FaviconSettings {
         return favicon;
     }
 
+    /**
+     * Insert a favicon in the storage
+     *
+     * @param context the {@link android.content.Context} instance
+     * @param favicon the {@link com.reddyetwo.hashmypass.app.data.Favicon} instance
+     * @return the ID of the inserted favicon, or -1 if an error occurred
+     */
     public static long insertFavicon(Context context, Favicon favicon) {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -98,6 +115,13 @@ public class FaviconSettings {
         return id;
     }
 
+    /**
+     * Delete a favicon
+     *
+     * @param context the {@link android.content.Context} instance
+     * @param favicon the {@link com.reddyetwo.hashmypass.app.data.Favicon} instance
+     * @return true in case of success, false if an error occurred
+     */
     public static boolean deleteFavicon(Context context, Favicon favicon) {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getWritableDatabase();

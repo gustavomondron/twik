@@ -29,6 +29,9 @@ import android.view.View;
 
 import com.reddyetwo.hashmypass.app.R;
 
+/**
+ * Indicator of current page in a {@link android.support.v4.view.ViewPager}
+ */
 public class ViewPagerIndicator extends View {
 
     private static final float DEFAULT_ALPHA = 0.5f;
@@ -38,12 +41,81 @@ public class ViewPagerIndicator extends View {
 
     private final float mRadius;
     private final float mSpacing;
-    private int mPosition;
     private final int mAlpha;
     private final int mCurrentPositionAlpha;
-    private int mNumberOfItems;
     private final Paint mPaint = new Paint();
+    private int mPosition;
+    private int mNumberOfItems;
     private ViewPager.OnPageChangeListener mPageChangeListener;
+
+    /**
+     * Constructor
+     *
+     * @param context the {@link android.content.Context} instance
+     * @param attrs   the view attributes
+     */
+    public ViewPagerIndicator(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        TypedArray array = context.getTheme()
+                .obtainStyledAttributes(attrs, R.styleable.ViewPagerIndicator, 0, 0);
+        mRadius = array.getDimensionPixelSize(R.styleable.ViewPagerIndicator_radius, 0);
+        mSpacing = array.getDimensionPixelSize(R.styleable.ViewPagerIndicator_spacing, 0);
+        mAlpha = (int) (array.getFloat(R.styleable.ViewPagerIndicator_alpha, DEFAULT_ALPHA) *
+                ALPHA_MAX);
+        mCurrentPositionAlpha = (int) (array
+                .getFloat(R.styleable.ViewPagerIndicator_current_position_alpha,
+                        DEFAULT_CURRENT_POSITION_ALPHA) * ALPHA_MAX);
+
+        // Initialize paint
+        mPaint.setAntiAlias(true);
+        mPaint.setColor(getResources().getColor(android.R.color.white));
+
+    }
+
+    /**
+     * Set the view pager
+     *
+     * @param viewPager the {@link android.support.v4.view.ViewPager} instance
+     */
+    public void setViewPager(ViewPager viewPager) {
+        mNumberOfItems = viewPager.getAdapter().getCount();
+        viewPager.setOnPageChangeListener(new IndicatorSimpleOnPageChangeListener());
+    }
+
+    /**
+     * Set the {@link android.support.v4.view.ViewPager.OnPageChangeListener} listener
+     *
+     * @param pageChangeListener the {@link android.support.v4.view.ViewPager.OnPageChangeListener} instance
+     */
+    public void setOnPageChangeListener(ViewPager.OnPageChangeListener pageChangeListener) {
+        mPageChangeListener = pageChangeListener;
+    }
+
+    private void setPosition(int position) {
+        mPosition = position;
+        invalidate();
+        requestLayout();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int measuredWidth = (int) (mSpacing * (mNumberOfItems - 1) +
+                mRadius * RADIUS_TO_DIAMETER_RATIO * mNumberOfItems);
+        int measuredHeight = (int) (mRadius * RADIUS_TO_DIAMETER_RATIO);
+        setMeasuredDimension(measuredWidth, measuredHeight);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        float y = mRadius;
+        for (int i = 0; i < mNumberOfItems; i++) {
+            float x = i * mSpacing + (1 + RADIUS_TO_DIAMETER_RATIO * i) * mRadius;
+            int alpha = i == mPosition ? mCurrentPositionAlpha : mAlpha;
+            mPaint.setAlpha(alpha);
+            canvas.drawCircle(x, y, mRadius, mPaint);
+        }
+    }
 
     private class IndicatorSimpleOnPageChangeListener extends ViewPager.SimpleOnPageChangeListener {
 
@@ -67,59 +139,6 @@ public class ViewPagerIndicator extends View {
             if (mPageChangeListener != null) {
                 mPageChangeListener.onPageScrollStateChanged(state);
             }
-        }
-    }
-
-    public ViewPagerIndicator(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        TypedArray array = context.getTheme()
-                .obtainStyledAttributes(attrs, R.styleable.ViewPagerIndicator, 0, 0);
-        mRadius = array.getDimensionPixelSize(R.styleable.ViewPagerIndicator_radius, 0);
-        mSpacing = array.getDimensionPixelSize(R.styleable.ViewPagerIndicator_spacing, 0);
-        mAlpha = (int) (array.getFloat(R.styleable.ViewPagerIndicator_alpha, DEFAULT_ALPHA) *
-                ALPHA_MAX);
-        mCurrentPositionAlpha = (int) (array
-                .getFloat(R.styleable.ViewPagerIndicator_current_position_alpha,
-                        DEFAULT_CURRENT_POSITION_ALPHA) * ALPHA_MAX);
-
-        // Initialize paint
-        mPaint.setAntiAlias(true);
-        mPaint.setColor(getResources().getColor(android.R.color.white));
-
-    }
-
-    public void setViewPager(ViewPager viewPager) {
-        mNumberOfItems = viewPager.getAdapter().getCount();
-        viewPager.setOnPageChangeListener(new IndicatorSimpleOnPageChangeListener());
-    }
-
-    public void setOnPageChangeListener(ViewPager.OnPageChangeListener pageChangeListener) {
-        mPageChangeListener = pageChangeListener;
-    }
-
-    void setPosition(int position) {
-        mPosition = position;
-        invalidate();
-        requestLayout();
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int measuredWidth = (int) (mSpacing * (mNumberOfItems - 1) +
-                mRadius * RADIUS_TO_DIAMETER_RATIO * mNumberOfItems);
-        int measuredHeight = (int) (mRadius * RADIUS_TO_DIAMETER_RATIO);
-        setMeasuredDimension(measuredWidth, measuredHeight);
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        float y = mRadius;
-        for (int i = 0; i < mNumberOfItems; i++) {
-            float x = i * mSpacing + (1 + RADIUS_TO_DIAMETER_RATIO * i) * mRadius;
-            int alpha = i == mPosition ? mCurrentPositionAlpha : mAlpha;
-            mPaint.setAlpha(alpha);
-            canvas.drawCircle(x, y, mRadius, mPaint);
         }
     }
 }

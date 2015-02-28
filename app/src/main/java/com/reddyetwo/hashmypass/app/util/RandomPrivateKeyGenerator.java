@@ -22,6 +22,9 @@ package com.reddyetwo.hashmypass.app.util;
 
 import java.security.SecureRandom;
 
+/**
+ * Generator of random private keys
+ */
 public class RandomPrivateKeyGenerator {
 
     private static final int[] SUBGROUPS_LENGTH = {8, 4, 4, 4, 12};
@@ -31,7 +34,12 @@ public class RandomPrivateKeyGenerator {
     private RandomPrivateKeyGenerator() {
 
     }
-    
+
+    /**
+     * Generate a random private key
+     *
+     * @return the random private key
+     */
     public static String generate() {
         SecureRandom sr = new SecureRandom();
         String key = "";

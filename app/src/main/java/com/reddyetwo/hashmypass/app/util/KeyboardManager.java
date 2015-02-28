@@ -23,12 +23,21 @@ import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+/**
+ * Manager to show and hide keyboard
+ */
 public class KeyboardManager {
 
     private KeyboardManager() {
 
     }
 
+    /**
+     * Hide the keyboard
+     *
+     * @param context the {@link android.content.Context} instance
+     * @param view    the root {@link android.view.View}
+     */
     public static void hide(Context context, View view) {
         if (view != null) {
             InputMethodManager imm =
@@ -37,6 +46,11 @@ public class KeyboardManager {
         }
     }
 
+    /**
+     * Show the keyboard
+     *
+     * @param context the the {@link android.content.Context} instance
+     */
     public static void show(Context context) {
         InputMethodManager imm =
                 (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);

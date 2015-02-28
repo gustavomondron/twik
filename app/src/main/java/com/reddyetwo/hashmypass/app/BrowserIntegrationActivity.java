@@ -66,6 +66,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Acitivity which enables the generation of passwords when a website is shared from the web browser
+ */
 public class BrowserIntegrationActivity extends Activity
         implements TagSettingsDialogFragment.OnTagSettingsSavedListener,
                    IdenticonGenerationTask.OnIconGeneratedListener {
@@ -467,6 +470,17 @@ public class BrowserIntegrationActivity extends Activity
         }
     }
 
+    @Override
+    public void onIconGenerated(Bitmap bitmap) {
+        if (bitmap != null) {
+            mIdenticonImageView.setImageBitmap(bitmap);
+            mIdenticonImageView.setVisibility(View.VISIBLE);
+        } else {
+            mIdenticonImageView.setVisibility(View.INVISIBLE);
+        }
+        mTask = null;
+    }
+
     private class PasswordTextWatcher implements TextWatcher {
 
         @Override
@@ -507,17 +521,6 @@ public class BrowserIntegrationActivity extends Activity
             mTask.execute(SecurePassword.getPassword(mMasterKeyEditText.getText()));
         }
 
-    }
-
-    @Override
-    public void onIconGenerated(Bitmap bitmap) {
-        if (bitmap != null) {
-            mIdenticonImageView.setImageBitmap(bitmap);
-            mIdenticonImageView.setVisibility(View.VISIBLE);
-        } else {
-            mIdenticonImageView.setVisibility(View.INVISIBLE);
-        }
-        mTask = null;
     }
 
 }

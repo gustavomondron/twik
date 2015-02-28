@@ -53,6 +53,9 @@ import com.reddyetwo.hashmypass.app.util.FaviconLoader;
 import com.reddyetwo.hashmypass.app.util.KeyboardManager;
 import com.reddyetwo.hashmypass.app.util.SecurePassword;
 
+/**
+ * Dialog fragment which is used to generate and configure the password of a tag
+ */
 public class GeneratePasswordDialogFragment extends DialogFragment
         implements TagSettingsDialogFragment.OnTagSettingsSavedListener,
                    IdenticonGenerationTask.OnIconGeneratedListener {
@@ -72,92 +75,6 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     private TextView mPasswordTextView;
     private ImageButton mTagSettingsImageButton;
     private ImageView mIdenticonImageView;
-
-    public interface GeneratePasswordDialogListener {
-        void onDialogDismiss(Tag tag);
-    }
-
-    private class DialogButtonClickedListener implements DialogInterface.OnClickListener {
-
-        @Override
-        public void onClick(android.content.DialogInterface dialog, int which) {
-
-            // Copy password to clipboard
-            if (Preferences.getCopyToClipboard(getActivity()) && mPasswordTextView.length() > 0) {
-                ClipboardHelper
-                        .copyToClipboard(getActivity(), ClipboardHelper.CLIPBOARD_LABEL_PASSWORD,
-                                mPasswordTextView.getText().toString(),
-                                R.string.copied_to_clipboard);
-            }
-
-            // Hide keyboard
-            KeyboardManager.hide(getActivity(), mTagEditText);
-
-            // Call listener
-            mListener.onDialogDismiss(mTag);
-        }
-    }
-
-    private class PasswordTextWatcher implements TextWatcher {
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            // Nothing to do
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            // Nothing to do
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            // Warning: this code is called before the dialog show() method
-            // is called, and getDialog() can return a null value
-            AlertDialog dialog = (AlertDialog) getDialog();
-
-            // Check whether the tag already exists
-            String tagName = mTagEditText.getText().toString();
-            if (dialog != null) {
-                Button okButton = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
-                if (tagName.length() == 0) {
-                    okButton.setEnabled(false);
-                } else {
-                    Tag storedTag = TagSettings.getTag(getActivity(), mProfileId, tagName);
-                    if (storedTag.getId() != Tag.NO_ID && storedTag.getId() != mTag.getId()) {
-                        // Show error: the tag already exists
-                        mTagEditText.setError(getString(R.string.error_tag_exists));
-                        okButton.setEnabled(false);
-                    } else {
-                        mTagEditText.setError(null);
-                        okButton.setEnabled(true);
-                    }
-                }
-            }
-
-            // Cache master key
-            HashMyPassApplication.cacheMasterKey(getActivity(),
-                    SecurePassword.getPassword(mMasterKeyEditText.getText()));
-
-            // Show favicon
-            mTag.setName(mTagEditText.getText().toString());
-            if (mTag.getSite() == null) {
-                FaviconLoader.setAsBackground(getActivity(), mFaviconTextView, mTag);
-            }
-
-            generateIdenticon();
-            updatePassword();
-
-            // Update tag settings button visibility
-            if (mTagEditText.getText().length() > 0) {
-                mTagSettingsImageButton.setVisibility(View.VISIBLE);
-                mTagSettingsImageButton.setEnabled(true);
-            } else {
-                mTagSettingsImageButton.setVisibility(View.INVISIBLE);
-                mTagSettingsImageButton.setEnabled(false);
-            }
-        }
-    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -220,14 +137,30 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         mTask = null;
     }
 
+    /**
+     * Set the profile ID
+     *
+     * @param profileId the profile ID
+     */
     public void setProfileId(long profileId) {
         mProfileId = profileId;
     }
 
+    /**
+     * Set the tag
+     *
+     * @param tag the tag
+     */
     public void setTag(Tag tag) {
         mTag = tag;
     }
 
+    /**
+     * Set the {@link com.reddyetwo.hashmypass.app.dialog.GeneratePasswordDialogFragment.GeneratePasswordDialogListener},
+     * which is notified when the OK button has been clicked
+     *
+     * @param listener the dialog listener
+     */
     public void setDialogOkListener(GeneratePasswordDialogListener listener) {
         mListener = listener;
     }
@@ -338,6 +271,101 @@ public class GeneratePasswordDialogFragment extends DialogFragment
             mPasswordTextView.setText(password);
         } else {
             mPasswordTextView.setText("");
+        }
+    }
+
+    /**
+     * Interface which can be implemented to listen to dialog dismissed events.
+     */
+    public interface GeneratePasswordDialogListener {
+
+        /**
+         * Method called when the dialog has been dismissed
+         *
+         * @param tag the {@link Tag} instance
+         */
+        public void onDialogDismiss(Tag tag);
+    }
+
+    private class DialogButtonClickedListener implements DialogInterface.OnClickListener {
+
+        @Override
+        public void onClick(android.content.DialogInterface dialog, int which) {
+
+            // Copy password to clipboard
+            if (Preferences.getCopyToClipboard(getActivity()) && mPasswordTextView.length() > 0) {
+                ClipboardHelper
+                        .copyToClipboard(getActivity(), ClipboardHelper.CLIPBOARD_LABEL_PASSWORD,
+                                mPasswordTextView.getText().toString(),
+                                R.string.copied_to_clipboard);
+            }
+
+            // Hide keyboard
+            KeyboardManager.hide(getActivity(), mTagEditText);
+
+            // Call listener
+            mListener.onDialogDismiss(mTag);
+        }
+    }
+
+    private class PasswordTextWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            // Nothing to do
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            // Nothing to do
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            // Warning: this code is called before the dialog show() method
+            // is called, and getDialog() can return a null value
+            AlertDialog dialog = (AlertDialog) getDialog();
+
+            // Check whether the tag already exists
+            String tagName = mTagEditText.getText().toString();
+            if (dialog != null) {
+                Button okButton = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
+                if (tagName.length() == 0) {
+                    okButton.setEnabled(false);
+                } else {
+                    Tag storedTag = TagSettings.getTag(getActivity(), mProfileId, tagName);
+                    if (storedTag.getId() != Tag.NO_ID && storedTag.getId() != mTag.getId()) {
+                        // Show error: the tag already exists
+                        mTagEditText.setError(getString(R.string.error_tag_exists));
+                        okButton.setEnabled(false);
+                    } else {
+                        mTagEditText.setError(null);
+                        okButton.setEnabled(true);
+                    }
+                }
+            }
+
+            // Cache master key
+            HashMyPassApplication.cacheMasterKey(getActivity(),
+                    SecurePassword.getPassword(mMasterKeyEditText.getText()));
+
+            // Show favicon
+            mTag.setName(mTagEditText.getText().toString());
+            if (mTag.getSite() == null) {
+                FaviconLoader.setAsBackground(getActivity(), mFaviconTextView, mTag);
+            }
+
+            generateIdenticon();
+            updatePassword();
+
+            // Update tag settings button visibility
+            if (mTagEditText.getText().length() > 0) {
+                mTagSettingsImageButton.setVisibility(View.VISIBLE);
+                mTagSettingsImageButton.setEnabled(true);
+            } else {
+                mTagSettingsImageButton.setVisibility(View.INVISIBLE);
+                mTagSettingsImageButton.setEnabled(false);
+            }
         }
     }
 }
