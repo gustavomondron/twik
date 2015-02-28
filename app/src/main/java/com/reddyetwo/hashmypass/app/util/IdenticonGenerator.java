@@ -41,6 +41,8 @@ public class IdenticonGenerator {
     private static final int BYTE_RED = 0;
     private static final int BYTE_GREEN = 1;
     private static final int BYTE_BLUE = 2;
+    private static final int HALF_RATIO = 2;
+    private static final int NUMBER_OF_SIDES_WIDTH_MARGIN = 2;
 
     private IdenticonGenerator() {
 
@@ -59,7 +61,7 @@ public class IdenticonGenerator {
 
         int background = Color.parseColor(COLOR_BACKGROUND);
         int foreground = Color.argb(ALPHA_OPAQUE, r, g, b);
-        int imageCenter = (int) Math.ceil(IDENTICON_WIDTH / 2.0);
+        int imageCenter = (int) Math.ceil(IDENTICON_WIDTH / HALF_RATIO);
 
         for (int x = 0; x < IDENTICON_WIDTH; x++) {
             //make identicon horizontally symmetrical
@@ -84,8 +86,9 @@ public class IdenticonGenerator {
         Bitmap bmpWithBorder = Bitmap.createBitmap(size, size, identicon.getConfig());
         Canvas canvas = new Canvas(bmpWithBorder);
         canvas.drawColor(background);
-        identicon = Bitmap.createScaledBitmap(identicon, size - IDENTICON_MARGIN * 2,
-                size - IDENTICON_MARGIN * 2, false);
+        identicon = Bitmap.createScaledBitmap(identicon,
+                size - IDENTICON_MARGIN * NUMBER_OF_SIDES_WIDTH_MARGIN,
+                size - IDENTICON_MARGIN * NUMBER_OF_SIDES_WIDTH_MARGIN, false);
         canvas.drawBitmap(identicon, IDENTICON_MARGIN, IDENTICON_MARGIN, null);
 
         return bmpWithBorder;

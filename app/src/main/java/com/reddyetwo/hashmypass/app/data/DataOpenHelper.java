@@ -27,7 +27,10 @@ class DataOpenHelper extends SQLiteOpenHelper {
 
     // Typo in the database name
     private static final String DATABASE_NAME = "hassmypass.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION_CURRENT = 4;
+    private static final int DATABASE_VERSION_1 = 1;
+    private static final int DATABASE_VERSION_2 = 2;
+    private static final int DATABASE_VERSION_3 = 3;
 
     public static final String COLUMN_ID = "_id";
 
@@ -89,7 +92,7 @@ class DataOpenHelper extends SQLiteOpenHelper {
             "UNIQUE (" + COLUMN_FAVICONS_SITE + "));";
 
     public DataOpenHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION_CURRENT);
     }
 
     @Override
@@ -102,11 +105,11 @@ class DataOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch (oldVersion) {
-            case 1:
+            case DATABASE_VERSION_1:
                 db.execSQL(FAVICONS_TABLE_CREATE);
-            case 2:
+            case DATABASE_VERSION_2:
                 db.execSQL(TAGS_TABLE_ADD_HASH_COUNTER_COLUMN);
-            case 3:
+            case DATABASE_VERSION_3:
                 db.execSQL(PROFILES_TABLE_ADD_COLOR_INDEX_COLUMN);
                 break;
             default:

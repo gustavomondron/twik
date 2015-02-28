@@ -44,6 +44,8 @@ import com.reddyetwo.hashmypass.app.util.ApiUtils;
 
 public class MaterialColorPaletteButton extends ImageButton {
 
+    private static final int SHADOW_FACTOR = 2;
+
     private int mColorNormal;
     private int mColorPressed;
     private int mColorRipple;
@@ -80,7 +82,7 @@ public class MaterialColorPaletteButton extends ImageButton {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int size = getDimension(R.dimen.fab_size_mini);
         if (!ApiUtils.hasLollipopApi()) {
-            size += mShadowSize * 2;
+            size += mShadowSize * SHADOW_FACTOR;
             setMarginsWithoutShadow();
         }
         setMeasuredDimension(size, size);

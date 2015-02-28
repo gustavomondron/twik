@@ -49,6 +49,16 @@ public class PasswordHasher {
      */
     private static final String DIGEST_MD5 = "MD5";
 
+    private static final int INJECT_RESERVED = 4;
+    private static final int INJECT_NUMBER_OF_NUMERIC_CHARS = 10;
+    private static final int INJECT_NUMBER_OF_SPECIAL_CHARS = 15;
+    private static final int INJECT_NUMBER_OF_ALPHA_CHARS = 26;
+    private static final int INJECT_OFFSET_NUMERIC = 0;
+    private static final int INJECT_OFFSET_SPECIAL = 1;
+    private static final int INJECT_OFFSET_ALPHA_UPPERCASE = 2;
+    private static final int INJECT_OFFSET_ALPHA_LOWERCASE = 3;
+    private static final int INTERMEDIATE_HASH_SIZE = 24;
+
     private PasswordHasher() {
 
     }
@@ -88,14 +98,18 @@ public class PasswordHasher {
             /* We force digits, punctuation characters and mixed case in
             order to provide compatibility with the Chrome extension */
             // Force digits
-            hash = injectCharacter(hash, 0, 4, sum, length, '0', 10);
+            hash = injectCharacter(hash, INJECT_OFFSET_NUMERIC, INJECT_RESERVED, sum, length, '0',
+                    INJECT_NUMBER_OF_NUMERIC_CHARS);
             if (type == PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS) {
                 // Force special chars
-                hash = injectCharacter(hash, 1, 4, sum, length, '!', 15);
+                hash = injectCharacter(hash, INJECT_OFFSET_SPECIAL, INJECT_RESERVED, sum, length,
+                        '!', INJECT_NUMBER_OF_SPECIAL_CHARS);
             }
             // Force mixed case
-            hash = injectCharacter(hash, 2, 4, sum, length, 'A', 26);
-            hash = injectCharacter(hash, 3, 4, sum, length, 'a', 26);
+            hash = injectCharacter(hash, INJECT_OFFSET_ALPHA_UPPERCASE, INJECT_RESERVED, sum,
+                    length, 'A', INJECT_NUMBER_OF_ALPHA_CHARS);
+            hash = injectCharacter(hash, INJECT_OFFSET_ALPHA_LOWERCASE, INJECT_RESERVED, sum,
+                    length, 'a', INJECT_NUMBER_OF_ALPHA_CHARS);
 
             // Remove special chars if needed
             if (type == PasswordType.ALPHANUMERIC) {
@@ -110,8 +124,9 @@ public class PasswordHasher {
     public static String hashTagWithKeys(String tag, char[] masterKey, String privateKey,
                                          int length, PasswordType passwordType) {
         // First, hash the tag with the private key (in the case that it is used)
-        String tagToHash = privateKey == null ? tag : hashKey(privateKey, tag.toCharArray(), 24,
-                PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
+        String tagToHash = privateKey == null ? tag :
+                hashKey(privateKey, tag.toCharArray(), INTERMEDIATE_HASH_SIZE,
+                        PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
 
         // Then, hash the result with the master key
         return hashKey(tagToHash, masterKey, length, passwordType);
@@ -152,7 +167,8 @@ public class PasswordHasher {
         int pivot = 0;
         for (int i = 0; i < length; i++) {
             if (!Character.isDigit(inputChars[i])) {
-                inputChars[i] = (char) ((seed + inputChars[pivot]) % 10 + '0');
+                inputChars[i] =
+                        (char) ((seed + inputChars[pivot]) % INJECT_NUMBER_OF_NUMERIC_CHARS + '0');
                 pivot = i + 1;
             }
         }
@@ -175,7 +191,7 @@ public class PasswordHasher {
         int pivot = 0;
         for (int i = 0; i < length; i++) {
             if (!Character.isLetterOrDigit(inputChars[i])) {
-                inputChars[i] = (char) ((seed + pivot) % 26 + 'A');
+                inputChars[i] = (char) ((seed + pivot) % INJECT_NUMBER_OF_ALPHA_CHARS + 'A');
                 pivot = i + 1;
             }
         }

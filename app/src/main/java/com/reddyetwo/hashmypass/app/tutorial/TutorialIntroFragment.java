@@ -41,6 +41,11 @@ import java.util.Random;
 
 public class TutorialIntroFragment extends Fragment {
 
+    /**
+     * Length of generated passwords
+     */
+    private static final int PASSWORD_LENGTH = 14;
+
     private ImageView mIcMasterKeyView;
     private TextView mWebsiteTextView;
     private TextView mWebsitePasswordView;
@@ -129,7 +134,7 @@ public class TutorialIntroFragment extends Fragment {
         String website = WEBSITES[mRandom.nextInt(WEBSITES.length)];
         mWebsiteTextView.setText(website);
         String password = PasswordHasher
-                .hashTagWithKeys(website, MASTER_KEY, "private", 8,
+                .hashTagWithKeys(website, MASTER_KEY, "private", PASSWORD_LENGTH,
                         PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
         mWebsitePasswordView.setText(password);
     }

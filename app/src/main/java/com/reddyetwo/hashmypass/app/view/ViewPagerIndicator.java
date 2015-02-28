@@ -34,6 +34,7 @@ public class ViewPagerIndicator extends View {
     private static final float DEFAULT_ALPHA = 0.5f;
     private static final float DEFAULT_CURRENT_POSITION_ALPHA = 0.8f;
     private static final int ALPHA_MAX = 255;
+    private static final int RADIUS_TO_DIAMETER_RATIO = 2;
 
     private final float mRadius;
     private final float mSpacing;
@@ -55,11 +56,9 @@ public class ViewPagerIndicator extends View {
         }
 
         @Override
-        public void onPageScrolled(int position, float positionOffset,
-                                   int positionOffsetPixels) {
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             if (mPageChangeListener != null) {
-                mPageChangeListener
-                        .onPageScrolled(position, positionOffset, positionOffsetPixels);
+                mPageChangeListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
             }
         }
 
@@ -107,8 +106,9 @@ public class ViewPagerIndicator extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int measuredWidth = (int) (mSpacing * (mNumberOfItems - 1) + mRadius * 2 * mNumberOfItems);
-        int measuredHeight = (int) (mRadius * 2);
+        int measuredWidth = (int) (mSpacing * (mNumberOfItems - 1) +
+                mRadius * RADIUS_TO_DIAMETER_RATIO * mNumberOfItems);
+        int measuredHeight = (int) (mRadius * RADIUS_TO_DIAMETER_RATIO);
         setMeasuredDimension(measuredWidth, measuredHeight);
     }
 
@@ -116,7 +116,7 @@ public class ViewPagerIndicator extends View {
     protected void onDraw(Canvas canvas) {
         float y = mRadius;
         for (int i = 0; i < mNumberOfItems; i++) {
-            float x = i * mSpacing + (1 + 2 * i) * mRadius;
+            float x = i * mSpacing + (1 + RADIUS_TO_DIAMETER_RATIO * i) * mRadius;
             int alpha = i == mPosition ? mCurrentPositionAlpha : mAlpha;
             mPaint.setAlpha(alpha);
             canvas.drawCircle(x, y, mRadius, mPaint);
