@@ -44,6 +44,33 @@ public class ViewPagerIndicator extends View {
     private final Paint mPaint = new Paint();
     private ViewPager.OnPageChangeListener mPageChangeListener;
 
+    private class IndicatorSimpleOnPageChangeListener extends ViewPager.SimpleOnPageChangeListener {
+
+        @Override
+        public void onPageSelected(int position) {
+            setPosition(position);
+            if (mPageChangeListener != null) {
+                mPageChangeListener.onPageSelected(position);
+            }
+        }
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset,
+                                   int positionOffsetPixels) {
+            if (mPageChangeListener != null) {
+                mPageChangeListener
+                        .onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            if (mPageChangeListener != null) {
+                mPageChangeListener.onPageScrollStateChanged(state);
+            }
+        }
+    }
+
     public ViewPagerIndicator(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray array = context.getTheme()
@@ -64,31 +91,7 @@ public class ViewPagerIndicator extends View {
 
     public void setViewPager(ViewPager viewPager) {
         mNumberOfItems = viewPager.getAdapter().getCount();
-        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                setPosition(position);
-                if (mPageChangeListener != null) {
-                    mPageChangeListener.onPageSelected(position);
-                }
-            }
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset,
-                                       int positionOffsetPixels) {
-                if (mPageChangeListener != null) {
-                    mPageChangeListener
-                            .onPageScrolled(position, positionOffset, positionOffsetPixels);
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                if (mPageChangeListener != null) {
-                    mPageChangeListener.onPageScrollStateChanged(state);
-                }
-            }
-        });
+        viewPager.setOnPageChangeListener(new IndicatorSimpleOnPageChangeListener());
     }
 
     public void setOnPageChangeListener(ViewPager.OnPageChangeListener pageChangeListener) {
