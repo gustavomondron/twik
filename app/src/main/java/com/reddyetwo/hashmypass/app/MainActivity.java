@@ -188,7 +188,8 @@ public class MainActivity extends ActionBarActivity
     }
 
     private void initializeSettings(Bundle savedInstanceState) {
-        if (savedInstanceState != null && savedInstanceState.getBoolean(STATE_ORIENTATION_HAS_CHANGED)) {
+        if (savedInstanceState != null &&
+                savedInstanceState.getBoolean(STATE_ORIENTATION_HAS_CHANGED)) {
             mSelectedProfileId = savedInstanceState.getLong(STATE_SELECTED_PROFILE_ID);
         } else {
             mSelectedProfileId = Preferences.getLastProfile(this);
@@ -442,40 +443,33 @@ public class MainActivity extends ActionBarActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
+        // automatically handle clicks on the Home/Up button, as long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
+            startActivity(new Intent(this, SettingsActivity.class));
         } else if (id == R.id.action_edit_profile) {
-            Intent intent = new Intent(this, EditProfileActivity.class);
-            intent.putExtra(EditProfileActivity.EXTRA_PROFILE_ID, mSelectedProfileId);
-            startActivity(intent);
-            return true;
+            startActivity(new Intent(this, EditProfileActivity.class)
+                    .putExtra(EditProfileActivity.EXTRA_PROFILE_ID, mSelectedProfileId));
         } else if (id == R.id.action_help) {
-            Intent intent = new Intent(this, TutorialActivity.class);
-            startActivity(intent);
-            return true;
+            startActivity(new Intent(this, TutorialActivity.class));
         } else if (id == R.id.action_about) {
             AboutDialog.showAbout(this);
-            return true;
         } else if (id == R.id.action_sort_by_usage) {
             mTagOrder = TagSettings.ORDER_BY_HASH_COUNTER;
             Preferences.setTagOrder(this, mTagOrder);
             mAdapter.setTagOrder(mTagOrder);
             populateTagList();
-            return true;
         } else if (id == R.id.action_sort_by_name) {
             mTagOrder = TagSettings.ORDER_BY_NAME;
             Preferences.setTagOrder(this, mTagOrder);
             mAdapter.setTagOrder(mTagOrder);
             populateTagList();
-            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
