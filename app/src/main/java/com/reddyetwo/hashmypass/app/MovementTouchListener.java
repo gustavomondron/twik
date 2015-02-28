@@ -57,8 +57,7 @@ class MovementTouchListener implements View.OnTouchListener {
                     mOnPressedListener.onPressed();
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    if (Math.abs(event.getX() - mX) > mMovementThresholdPx ||
-                            Math.abs(event.getY() - mY) > mMovementThresholdPx) {
+                    if (movementThresholdReached(event.getX(), event.getY())) {
                         mState = STATE_RELEASED;
                     }
                     break;
@@ -71,5 +70,10 @@ class MovementTouchListener implements View.OnTouchListener {
 
     public interface OnPressedListener {
         public void onPressed();
+    }
+
+    private boolean movementThresholdReached(float x, float y) {
+        return Math.abs(x - mX) > mMovementThresholdPx ||
+                Math.abs(y - mY) > mMovementThresholdPx;
     }
 }
