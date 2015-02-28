@@ -88,7 +88,7 @@ public class AddProfileActivity extends ActionBarActivity {
         if (savedInstanceState != null) {
             passwordLength = savedInstanceState.getInt(KEY_PASSWORD_LENGTH);
         } else {
-            passwordLength = PasswordLength.DEFAULT;
+            passwordLength = PasswordLength.DEFAULT_LENGTH;
         }
         ProfileFormInflater
                 .populatePasswordLengthSpinner(this, mPasswordLengthSpinner, passwordLength);

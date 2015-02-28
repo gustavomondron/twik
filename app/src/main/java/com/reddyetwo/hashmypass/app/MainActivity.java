@@ -275,7 +275,7 @@ public class MainActivity extends ActionBarActivity
     private void populateTagList() {
         final List<Tag> tags = TagSettings
                 .getProfileTags(this, mSelectedProfileId, mTagOrder, TagSettings.LIMIT_UNBOUNDED);
-        final @ListStatus int stateBeforeUpdating = getTagListStatus();
+        @ListStatus final int stateBeforeUpdating = getTagListStatus();
 
         if (stateBeforeUpdating == LIST_NOT_INITIALIZED) {
             mAdapter = new TagListAdapter(this, mSelectedProfileId, mTagOrder, mTagClickedListener,
@@ -338,7 +338,7 @@ public class MainActivity extends ActionBarActivity
      * When the user selects a different profile, a different tag list is generated and the adapter
      * must be updated.
      */
-    private void updateTagListView(final @ListStatus int stateBeforeUpdating,
+    private void updateTagListView(@ListStatus final int stateBeforeUpdating,
                                    final List<Tag> newTags) {
         if (!newTags.isEmpty()) {
             switch (stateBeforeUpdating) {

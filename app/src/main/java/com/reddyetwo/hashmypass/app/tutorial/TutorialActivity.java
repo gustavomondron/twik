@@ -143,7 +143,7 @@ public class TutorialActivity extends FragmentActivity
                     // Finish tutorial and start Twik
                     Profile profile =
                             new Profile(Profile.NO_ID, getString(R.string.profile_default_name),
-                                    mPrivateKey, PasswordLength.DEFAULT,
+                                    mPrivateKey, PasswordLength.DEFAULT_LENGTH,
                                     PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS,
                                     DEFAULT_PROFILE_COLOR);
                     ProfileSettings.insertProfile(TutorialActivity.this, profile);
