@@ -38,6 +38,7 @@ public class ViewPagerIndicator extends View {
     private static final float DEFAULT_CURRENT_POSITION_ALPHA = 0.8f;
     private static final int ALPHA_MAX = 255;
     private static final int RADIUS_TO_DIAMETER_RATIO = 2;
+    private static final int HALF_RATIO = 2;
 
     private final float mRadius;
     private final float mSpacing;
@@ -46,6 +47,8 @@ public class ViewPagerIndicator extends View {
     private final Paint mPaint = new Paint();
     private int mPosition;
     private int mNumberOfItems;
+    private int mWidthOffset = 0;
+    private int mHeightOffset = 0;
     private ViewPager.OnPageChangeListener mPageChangeListener;
 
     /**
@@ -99,18 +102,54 @@ public class ViewPagerIndicator extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int measuredWidth = (int) (mSpacing * (mNumberOfItems - 1) +
+        int desiredWidth = (int) (mSpacing * (mNumberOfItems - 1) +
                 mRadius * RADIUS_TO_DIAMETER_RATIO * mNumberOfItems);
-        int measuredHeight = (int) (mRadius * RADIUS_TO_DIAMETER_RATIO);
+        int desiredHeight = (int) (mRadius * RADIUS_TO_DIAMETER_RATIO);
+
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
+        int measuredWidth;
+        int measuredHeight;
+
+        // Measure width
+        if (widthMode == MeasureSpec.EXACTLY) {
+            // layout_width has been specified. Make the view this size.
+            measuredWidth = widthSize;
+            // Calculate offset to draw the indicator centered in the view
+            if (measuredWidth > desiredWidth) {
+                mWidthOffset = (measuredWidth - desiredWidth) / HALF_RATIO;
+            }
+        } else if (widthMode == MeasureSpec.AT_MOST) {
+            // layout_width is set to match_parent or wrap_content.
+            measuredWidth = Math.min(desiredWidth, widthSize);
+        } else {
+            // layout_width is not specified
+            measuredWidth = desiredWidth;
+        }
+
+        // Measure height
+        if (heightMode == MeasureSpec.EXACTLY) {
+            measuredHeight = heightSize;
+            if (measuredHeight > desiredHeight) {
+                mHeightOffset = (measuredHeight - desiredHeight) / HALF_RATIO;
+            }
+        } else if (heightMode == MeasureSpec.AT_MOST) {
+            measuredHeight = Math.min(desiredHeight, heightSize);
+        } else {
+            measuredHeight = desiredHeight;
+        }
+
         setMeasuredDimension(measuredWidth, measuredHeight);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        float y = mRadius;
+        float y = mHeightOffset + mRadius;
         for (int i = 0; i < mNumberOfItems; i++) {
-            float x = i * mSpacing + (1 + RADIUS_TO_DIAMETER_RATIO * i) * mRadius;
+            float x = mWidthOffset + i * mSpacing + (1 + RADIUS_TO_DIAMETER_RATIO * i) * mRadius;
             int alpha = i == mPosition ? mCurrentPositionAlpha : mAlpha;
             mPaint.setAlpha(alpha);
             canvas.drawCircle(x, y, mRadius, mPaint);

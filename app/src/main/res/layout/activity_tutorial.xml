@@ -50,45 +50,40 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"/>
 
-            <RelativeLayout
-                android:gravity="center|center_vertical"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
                 <Button
                     android:id="@+id/skip_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="112dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
+                    android:layout_gravity="left|center_vertical"
                     style="?android:buttonBarButtonStyle"
                     android:textColor="@android:color/white"
                     android:text="@string/skip"
                     tools:ignore="RtlHardcoded"/>
 
-                <LinearLayout
-                    android:gravity="center|center_vertical"
+                <com.reddyetwo.hashmypass.app.view.ViewPagerIndicator
+                    android:id="@+id/pager_indicator"
+                    app:radius="4dp"
+                    app:spacing="8dp"
                     android:layout_gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <com.reddyetwo.hashmypass.app.view.ViewPagerIndicator
-                        android:id="@+id/pager_indicator"
-                        app:radius="4dp"
-                        app:spacing="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"/>
 
                 <Button
                     android:id="@+id/next_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="112dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_gravity="right|center_vertical"
                     style="?android:buttonBarButtonStyle"
                     android:textColor="@android:color/white"
                     android:text="@string/next"
                     tools:ignore="RtlHardcoded"/>
-
-                </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
     <View
