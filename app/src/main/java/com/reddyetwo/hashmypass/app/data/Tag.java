@@ -96,7 +96,7 @@ public class Tag implements Parcelable {
     /**
      * Get the tag ID
      *
-     * @return
+     * @return the tag ID
      */
     public long getId() {
         return mId;
@@ -105,7 +105,7 @@ public class Tag implements Parcelable {
     /**
      * Set the tag ID
      *
-     * @param id
+     * @param id the tag ID
      */
     public void setId(long id) {
         mId = id;
@@ -114,7 +114,7 @@ public class Tag implements Parcelable {
     /**
      * Get the profile ID
      *
-     * @return
+     * @return the profile ID
      */
     public long getProfileId() {
         return mProfileId;
@@ -123,7 +123,7 @@ public class Tag implements Parcelable {
     /**
      * Get the number of times the tag has been used
      *
-     * @return
+     * @return the usage counter
      */
     public int getHashCounter() {
         return mHashCounter;
@@ -141,7 +141,7 @@ public class Tag implements Parcelable {
     /**
      * Get the site associated with this tag
      *
-     * @return
+     * @return the site
      */
     public String getSite() {
         return mSite;
@@ -159,7 +159,7 @@ public class Tag implements Parcelable {
     /**
      * Get the tag name
      *
-     * @return
+     * @return the tag name
      */
     public String getName() {
         return mName;
@@ -168,7 +168,7 @@ public class Tag implements Parcelable {
     /**
      * Set the tag name
      *
-     * @param name
+     * @param name the tag name
      */
     public void setName(String name) {
         mName = name;
@@ -177,7 +177,7 @@ public class Tag implements Parcelable {
     /**
      * Get the password length
      *
-     * @return
+     * @return the password length
      */
     public int getPasswordLength() {
         return mPasswordLength;
@@ -195,7 +195,7 @@ public class Tag implements Parcelable {
     /**
      * Get the password type
      *
-     * @return
+     * @return the password type
      */
     public PasswordType getPasswordType() {
         return mPasswordType;
@@ -204,7 +204,7 @@ public class Tag implements Parcelable {
     /**
      * Set the password type
      *
-     * @param passwordType
+     * @param passwordType the password type
      */
     public void setPasswordType(PasswordType passwordType) {
         mPasswordType = passwordType;

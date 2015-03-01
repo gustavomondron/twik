@@ -86,7 +86,7 @@ public class Profile {
     /**
      * Get the profile ID
      *
-     * @return
+     * @return the profile ID
      */
     public long getId() {
         return mId;
@@ -95,7 +95,7 @@ public class Profile {
     /**
      * Get the profile name
      *
-     * @return
+     * @return the profile name
      */
     public String getName() {
         return mName;
@@ -113,7 +113,7 @@ public class Profile {
     /**
      * Get the private key
      *
-     * @return
+     * @return the private key
      */
     public String getPrivateKey() {
         return mPrivateKey;
@@ -122,7 +122,7 @@ public class Profile {
     /**
      * Get the password length
      *
-     * @return
+     * @return the password length
      */
     public int getPasswordLength() {
         return mPasswordLength;
@@ -131,7 +131,7 @@ public class Profile {
     /**
      * Get the password type
      *
-     * @return
+     * @return the password type
      */
     public PasswordType getPasswordType() {
         return mPasswordType;
@@ -140,7 +140,7 @@ public class Profile {
     /**
      * Get the color index
      *
-     * @return
+     * @return the color index
      */
     public int getColorIndex() {
         return mColorIndex;

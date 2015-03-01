@@ -182,7 +182,7 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListViewHolder> {
     /**
      * Get the list of tags
      *
-     * @return
+     * @return the @{@link java.util.List} of tags
      */
     public List<Tag> getTags() {
         return mTags;
