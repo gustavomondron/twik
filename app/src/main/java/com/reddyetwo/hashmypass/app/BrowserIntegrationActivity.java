@@ -314,9 +314,9 @@ public class BrowserIntegrationActivity extends Activity
     }
 
     private void stop() {
-        if (mFavicon != null && mFavicon.getId() == Favicon.NO_ID) {
-            // Save the favicon in the storage
-            FaviconSettings.insertFavicon(this, mFavicon);
+        if (mFavicon != null && mFavicon.getId() == Favicon.NO_ID &&
+                FaviconSettings.insertFavicon(this, mFavicon) < 0) {
+            Log.e(HashMyPassApplication.LOG_TAG, "Error storing favicon");
         }
 
         saveTag();
@@ -362,9 +362,12 @@ public class BrowserIntegrationActivity extends Activity
         if (storedTag.getId() == Tag.NO_ID) {
             // Not overwriting
             if (mTag.getId() == Tag.NO_ID) {
-                TagSettings.insertTag(this, mTag);
+                mTag.setId(TagSettings.insertTag(this, mTag));
             } else {
-                TagSettings.updateTag(this, mTag);
+                if (!TagSettings.updateTag(this, mTag)) {
+                    Log.e(HashMyPassApplication.LOG_TAG,
+                            "Error updating tag from browser activity");
+                }
             }
         } else {
             /* Overwrite the current tag with the new site and the updated
@@ -374,13 +377,19 @@ public class BrowserIntegrationActivity extends Activity
                 // Unlink the current tag from this site
                 Tag oldTag = TagSettings.getTag(this, mTag.getId());
                 oldTag.setSite(null);
-                TagSettings.updateTag(this, oldTag);
+                if (!TagSettings.updateTag(this, oldTag)) {
+                    Log.e(HashMyPassApplication.LOG_TAG,
+                            "Error updating existing tag from browser activity");
+                }
             }
 
             // Update the tag
             mTag.setHashCounter(storedTag.getHashCounter() + 1);
             mTag.setId(storedTag.getId());
-            TagSettings.updateTag(this, mTag);
+            if (!TagSettings.updateTag(this, mTag)) {
+                Log.e(HashMyPassApplication.LOG_TAG,
+                        "Error updating stored tag from browser activity");
+            }
         }
     }
 

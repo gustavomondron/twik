@@ -32,6 +32,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.OrientationEventListener;
@@ -546,27 +547,27 @@ public class MainActivity extends ActionBarActivity
     }
 
     private void deleteTag(Tag tag) {
-        if (TagSettings.deleteTag(this, tag)) {
-
-            // Update tags list
-            mAdapter.remove(tag);
-
-            if (mAdapter.getItemCount() == 0) {
-                updateTagListView(LIST_CONTAINS_ITEMS, mAdapter.getTags());
-            }
-
-            // Check if we should delete favicon
-            String site = tag.getSite();
-            if (site != null) {
-                Favicon favicon = FaviconSettings.getFavicon(this, site);
-                if (favicon != null && !TagSettings.siteHasTags(this, site)) {
-                    FaviconSettings.deleteFavicon(this, favicon);
-                }
-
-            }
-        } else {
-            // Error!
+        if (!TagSettings.deleteTag(this, tag)) {
             Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();
+            Log.e(HashMyPassApplication.LOG_TAG, "Error deleting tag from database");
+            return;
+        }
+
+        // Update tags list
+        mAdapter.remove(tag);
+
+        if (mAdapter.getItemCount() == 0) {
+            updateTagListView(LIST_CONTAINS_ITEMS, mAdapter.getTags());
+        }
+
+        // Check if we should delete favicon
+        String site = tag.getSite();
+        if (site != null) {
+            Favicon favicon = FaviconSettings.getFavicon(this, site);
+            boolean shouldDeleteFavicon = favicon != null && !TagSettings.siteHasTags(this, site);
+            if (shouldDeleteFavicon && !FaviconSettings.deleteFavicon(this, favicon)) {
+                Log.e(HashMyPassApplication.LOG_TAG, "Error deleting favicon");
+            }
         }
     }
 
