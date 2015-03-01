@@ -116,15 +116,14 @@ class DataOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        switch (oldVersion) {
-            case DATABASE_VERSION_1:
-                db.execSQL(FAVICONS_TABLE_CREATE);
-            case DATABASE_VERSION_2:
-                db.execSQL(TAGS_TABLE_ADD_HASH_COUNTER_COLUMN);
-            case DATABASE_VERSION_3:
-                db.execSQL(PROFILES_TABLE_ADD_COLOR_INDEX_COLUMN);
-                break;
-            default:
+        if (oldVersion <= DATABASE_VERSION_1) {
+            db.execSQL(FAVICONS_TABLE_CREATE);
+        }
+        if (oldVersion <= DATABASE_VERSION_2) {
+            db.execSQL(TAGS_TABLE_ADD_HASH_COUNTER_COLUMN);
+        }
+        if (oldVersion <= DATABASE_VERSION_3) {
+            db.execSQL(PROFILES_TABLE_ADD_COLOR_INDEX_COLUMN);
         }
     }
 }
