@@ -32,17 +32,29 @@ import com.reddyetwo.hashmypass.app.util.FaviconLoader;
 
 import java.util.List;
 
+/**
+ * Adapter for the tag list shown in {@link com.reddyetwo.hashmypass.app.MainActivity}
+ */
 public class TagListAdapter extends RecyclerView.Adapter<TagListViewHolder> {
 
     private static final int ITEM_RESOURCE = R.layout.tag_list_item;
-    private long mProfileId;
-    private List<Tag> mTags;
     private final Context mContext;
     private final OnTagClickedListener mTagClickedListener;
+    private long mProfileId;
+    private List<Tag> mTags;
     private int mTagOrder;
 
-    public TagListAdapter(Context context, long profileId, int tagOrder, OnTagClickedListener tagClickedListener,
-                          List<Tag> objects) {
+    /**
+     * Constructor
+     *
+     * @param context            the application context
+     * @param profileId          the profile ID
+     * @param tagOrder           the tag order
+     * @param tagClickedListener listener for tag clicked event
+     * @param objects            list of tags
+     */
+    public TagListAdapter(Context context, long profileId, int tagOrder,
+                          OnTagClickedListener tagClickedListener, List<Tag> objects) {
         super();
         mContext = context;
         mProfileId = profileId;
@@ -51,24 +63,22 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListViewHolder> {
         mTags = objects;
     }
 
-    public interface OnTagClickedListener {
-        public void onTagClicked(final Tag tag);
-
-        public void onTagLongClicked(final Tag tag);
-
-    }
-
+    /**
+     * Set the selected profile ID
+     *
+     * @param profileId the profile ID
+     */
     public void setProfileId(long profileId) {
         mProfileId = profileId;
     }
 
+    /**
+     * Set the selected tag order
+     *
+     * @param tagOrder the tag order
+     */
     public void setTagOrder(int tagOrder) {
         mTagOrder = tagOrder;
-    }
-
-    public void setTags(List<Tag> tags) {
-        mTags = tags;
-        notifyDataSetChanged();
     }
 
     @Override
@@ -114,21 +124,37 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListViewHolder> {
         });
     }
 
+    /**
+     * Add a tag to the list
+     *
+     * @param tag      the tag
+     * @param position the position in the list
+     */
     public void add(Tag tag, int position) {
         mTags.add(position, tag);
         notifyItemInserted(position);
     }
 
+    /**
+     * Remove a tag from the list
+     *
+     * @param tag the tag to remove
+     */
     public void remove(Tag tag) {
         int position = mTags.indexOf(tag);
         mTags.remove(position);
         notifyItemRemoved(position);
     }
 
+    /**
+     * Updates the list adding or modifying a tag, updating its position according the the sort criterion.
+     *
+     * @param tag the tag to add or modify
+     */
     public void update(Tag tag) {
         int oldPosition = 0;
-        int newPosition = TagSettings.getTagPosition(mContext, tag.getId(), mProfileId,
-                mTagOrder, TagSettings.LIMIT_UNBOUNDED);
+        int newPosition = TagSettings.getTagPosition(mContext, tag.getId(), mProfileId, mTagOrder,
+                TagSettings.LIMIT_UNBOUNDED);
 
         while (oldPosition < mTags.size() && mTags.get(oldPosition).getId() != tag.getId()) {
             oldPosition++;
@@ -153,12 +179,47 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListViewHolder> {
         }
     }
 
+    /**
+     * Get the list of tags
+     *
+     * @return the @{@link java.util.List} of tags
+     */
     public List<Tag> getTags() {
         return mTags;
+    }
+
+    /**
+     * Set the list of tags
+     *
+     * @param tags the list of tags
+     */
+    public void setTags(List<Tag> tags) {
+        mTags = tags;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
         return mTags.size();
+    }
+
+    /**
+     * Interface which can be implemented to handler tag clicked events
+     */
+    public interface OnTagClickedListener {
+
+        /**
+         * Method called when a tag is clicked
+         *
+         * @param tag the {@link com.reddyetwo.hashmypass.app.data.Tag} instance
+         */
+        public void onTagClicked(final Tag tag);
+
+        /**
+         * Method called when a tag is long-clicked
+         *
+         * @param tag the the {@link com.reddyetwo.hashmypass.app.data.Tag} instance
+         */
+        public void onTagLongClicked(final Tag tag);
     }
 }

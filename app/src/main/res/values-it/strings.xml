@@ -33,8 +33,7 @@
     <string name="action_delete">Elimina</string>
     <string name="discard">Scarta</string>
     <string name="save">Salva</string>
-    <string name="skip">Salta lìintroduzione</string>
-    <string name="next">Avanti</string>
+    <string name="skip">Salta</string>
     <string name="start">Avvia</string>
 
     <!-- Dialogs -->

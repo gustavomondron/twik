@@ -19,9 +19,15 @@
 
 package com.reddyetwo.hashmypass.app.util;
 
+/**
+ * Application-wide constants store
+ */
 public class Constants {
 
     public static final String FONT_MONOSPACE = "UbuntuMono-Regular.ttf";
+    public static final int MIN_PASSWORD_LENGTH = 4;
+    public static final int MAX_PASSWORD_LENGTH = 26;
+    public static final int DEFAULT_PASSWORD_LENGTH = 8;
 
     private Constants() {
 

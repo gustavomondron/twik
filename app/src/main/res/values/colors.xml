@@ -21,11 +21,8 @@
 
 <resources>
     <color name="text_gray">#ff666666</color>
-    <color name="pager_progress_current">@color/hashmypass_light</color>
-    <color name="pager_progress_rest">#e5e5e5</color>
     <color name="hashmypass_main">#43A047</color>
     <color name="hashmypass_dark">#2E7D32</color>
-    <color name="hashmypass_light">#A5D6A7</color>
 
     <color name="edittext_background_focused">#2196f3</color>
 
@@ -97,4 +94,9 @@
     <color name="color_palette_ripple_19">#FFE0B2</color>
     <color name="color_palette_ripple_20">#D7CCC8</color>
     <color name="color_palette_ripple_21">#CFD8DC</color>
+
+    <!-- Color palette for tutorial -->
+    <color name="color_tutorial_1">#43A047</color>
+    <color name="color_tutorial_2">#ff008196</color>
+    <color name="color_tutorial_3">#ffc06d00</color>
 </resources>

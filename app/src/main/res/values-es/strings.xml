@@ -33,8 +33,7 @@
     <string name="action_delete">Eliminar</string>
     <string name="discard">Descartar</string>
     <string name="save">Guardar</string>
-    <string name="skip">Saltar tutorial</string>
-    <string name="next">Siguiente</string>
+    <string name="skip">Omitir</string>
     <string name="start">Comenzar</string>
     <string name="sort_websites">Ordenar sitios web</string>
     <string name="sort_by_usage">Ordenar por uso</string>

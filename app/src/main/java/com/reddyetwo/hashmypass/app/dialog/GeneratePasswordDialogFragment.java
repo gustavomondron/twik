@@ -18,7 +18,7 @@
  */
 
 
-package com.reddyetwo.hashmypass.app;
+package com.reddyetwo.hashmypass.app.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -38,6 +38,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.reddyetwo.hashmypass.app.HashMyPassApplication;
+import com.reddyetwo.hashmypass.app.IdenticonGenerationTask;
+import com.reddyetwo.hashmypass.app.R;
 import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
@@ -50,12 +53,16 @@ import com.reddyetwo.hashmypass.app.util.FaviconLoader;
 import com.reddyetwo.hashmypass.app.util.KeyboardManager;
 import com.reddyetwo.hashmypass.app.util.SecurePassword;
 
+/**
+ * Dialog fragment which is used to generate and configure the password of a tag
+ */
 public class GeneratePasswordDialogFragment extends DialogFragment
         implements TagSettingsDialogFragment.OnTagSettingsSavedListener,
                    IdenticonGenerationTask.OnIconGeneratedListener {
 
     private static final String STATE_PROFILE_ID = "profileId";
     private static final String STATE_TAG = "tag";
+    private static final String DIALOG_TAG_SETTINGS = "tagSettings";
 
     private long mProfileId;
     private Tag mTag;
@@ -69,20 +76,24 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     private ImageButton mTagSettingsImageButton;
     private ImageView mIdenticonImageView;
 
-    public interface GeneratePasswordDialogListener {
-        void onDialogDismiss(Tag tag);
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // Inflate the layout
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        initializeView(builder,
+                View.inflate(getActivity(), R.layout.dialog_generate_password, null));
+
+        initializeSettings(savedInstanceState);
+
+        return builder.create();
     }
 
-    public void setProfileId(long profileId) {
-        mProfileId = profileId;
-    }
-
-    public void setTag(Tag tag) {
-        mTag = tag;
-    }
-
-    public void setDialogOkListener(GeneratePasswordDialogListener listener) {
-        mListener = listener;
+    @Override
+    public void onResume() {
+        super.onResume();
+        populateView();
+        updateViewState();
     }
 
     @Override
@@ -98,47 +109,107 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+    public void onTagSettingsSaved(Tag tag) {
+        mTag = tag;
+        updatePassword();
+    }
 
-        // Inflate the layout
-        View view = View.inflate(getActivity(), R.layout.dialog_generate_password, null);
+    /**
+     * Generate key identicon
+     */
+    private void generateIdenticon() {
+        if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) {
+            mTask.cancel(true);
+        }
+
+        mTask = new IdenticonGenerationTask(getActivity(), this);
+        mTask.execute(SecurePassword.getPassword(mMasterKeyEditText.getText()));
+    }
+
+    @Override
+    public void onIconGenerated(Bitmap bitmap) {
+        if (bitmap != null) {
+            mIdenticonImageView.setImageBitmap(bitmap);
+            mIdenticonImageView.setVisibility(View.VISIBLE);
+        } else {
+            mIdenticonImageView.setVisibility(View.INVISIBLE);
+        }
+        mTask = null;
+    }
+
+    /**
+     * Set the profile ID
+     *
+     * @param profileId the profile ID
+     */
+    public void setProfileId(long profileId) {
+        mProfileId = profileId;
+    }
+
+    /**
+     * Set the tag
+     *
+     * @param tag the tag
+     */
+    public void setTag(Tag tag) {
+        mTag = tag;
+    }
+
+    /**
+     * Set the {@link com.reddyetwo.hashmypass.app.dialog.GeneratePasswordDialogFragment.GeneratePasswordDialogListener},
+     * which is notified when the OK button has been clicked
+     *
+     * @param listener the dialog listener
+     */
+    public void setDialogOkListener(GeneratePasswordDialogListener listener) {
+        mListener = listener;
+    }
+
+    private void initializeSettings(Bundle savedInstanceState) {
+        // Restore tag if the device configuration has changed
+        if (savedInstanceState != null) {
+            mProfileId = savedInstanceState.getLong(STATE_PROFILE_ID);
+            mTag = savedInstanceState.getParcelable(STATE_TAG);
+        }
+    }
+
+    private void initializeView(AlertDialog.Builder builder, View view) {
         builder.setView(view);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                // Copy password to clipboard
-                if (Preferences.getCopyToClipboard(getActivity()) &&
-                        mPasswordTextView.length() > 0) {
-                    ClipboardHelper.copyToClipboard(getActivity(),
-                            ClipboardHelper.CLIPBOARD_LABEL_PASSWORD,
-                            mPasswordTextView.getText().toString(), R.string.copied_to_clipboard);
-                }
-
-                // Hide keyboard
-                KeyboardManager.hide(getActivity(), mTagEditText);
-
-                // Call listener
-                mListener.onDialogDismiss(mTag);
-            }
-        });
 
         mFaviconTextView = (TextView) view.findViewById(R.id.tag_favicon);
         FaviconLoader.setAsBackground(getActivity(), mFaviconTextView, mTag);
 
         mTagEditText = (EditText) view.findViewById(R.id.tag_text);
-
         mMasterKeyEditText = (EditText) view.findViewById(R.id.master_key_text);
+
+        mPasswordTextView = (TextView) view.findViewById(R.id.website_password);
+        Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), Constants.FONT_MONOSPACE);
+        mPasswordTextView.setTypeface(tf);
+
+        mTagSettingsImageButton = (ImageButton) view.findViewById(R.id.tag_settings);
+        mIdenticonImageView = (ImageView) view.findViewById(R.id.identicon);
+
+        addDialogButtonClickedListener(builder);
+        addPasswordClickedListener();
+        addTagSettingsClickedListener();
+    }
+
+    private void populateView() {
+        // Populate fields
+        mTagEditText.setText(mTag.getName());
+
+        addTextChangedListeners();
+
         // Restore cached master key
         mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey(getActivity()), 0,
                 HashMyPassApplication.getCachedMasterKey(getActivity()).length);
 
+    }
 
-        // Restore tag if the device configuration has changed
-        if (savedInstanceState != null) {
-            mProfileId = savedInstanceState.getLong(STATE_PROFILE_ID);
-            mTag = savedInstanceState.getParcelable(STATE_TAG);
+    private void updateViewState() {
+        // Disable OK button when adding a new tag
+        if (mTag.getId() == Tag.NO_ID) {
+            ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_NEUTRAL).setEnabled(false);
         }
 
         // Manage focus
@@ -149,9 +220,17 @@ public class GeneratePasswordDialogFragment extends DialogFragment
             mTagEditText.requestFocus();
         }
 
-        mPasswordTextView = (TextView) view.findViewById(R.id.website_password);
-        Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), Constants.FONT_MONOSPACE);
-        mPasswordTextView.setTypeface(tf);
+        // Manage keyboard status
+        if (mMasterKeyEditText.length() == 0 || mTagEditText.length() == 0) {
+            KeyboardManager.show(getActivity());
+        }
+    }
+
+    private void addDialogButtonClickedListener(AlertDialog.Builder builder) {
+        builder.setPositiveButton(android.R.string.ok, new DialogButtonClickedListener());
+    }
+
+    private void addPasswordClickedListener() {
         mPasswordTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,8 +241,9 @@ public class GeneratePasswordDialogFragment extends DialogFragment
                 }
             }
         });
+    }
 
-        mTagSettingsImageButton = (ImageButton) view.findViewById(R.id.tag_settings);
+    private void addTagSettingsClickedListener() {
         mTagSettingsImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -171,39 +251,15 @@ public class GeneratePasswordDialogFragment extends DialogFragment
                 settingsDialog.setProfileId(mProfileId);
                 settingsDialog.setTag(mTag);
                 settingsDialog.setTagSettingsSavedListener(GeneratePasswordDialogFragment.this);
-                settingsDialog.show(getFragmentManager(), "tagSettings");
+                settingsDialog.show(getFragmentManager(), DIALOG_TAG_SETTINGS);
             }
         });
+    }
 
-        mIdenticonImageView = (ImageView) view.findViewById(R.id.identicon);
-
+    private void addTextChangedListeners() {
         PasswordTextWatcher watcher = new PasswordTextWatcher();
         mTagEditText.addTextChangedListener(watcher);
         mMasterKeyEditText.addTextChangedListener(watcher);
-
-        // Populate fields
-        mTagEditText.setText(mTag.getName());
-
-        return builder.create();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // Disable OK button when adding a new tag
-        if (mTag.getId() == Tag.NO_ID) {
-            ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_NEUTRAL).setEnabled(false);
-        }
-
-        // Restore cached master key
-        mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey(getActivity()), 0,
-                HashMyPassApplication.getCachedMasterKey(getActivity()).length);
-
-        // Manage keyboard status
-        if (mMasterKeyEditText.length() == 0 || mTagEditText.length() == 0) {
-            KeyboardManager.show(getActivity());
-        }
     }
 
     private void updatePassword() {
@@ -218,10 +274,38 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         }
     }
 
-    @Override
-    public void onTagSettingsSaved(Tag tag) {
-        mTag = tag;
-        updatePassword();
+    /**
+     * Interface which can be implemented to listen to dialog dismissed events.
+     */
+    public interface GeneratePasswordDialogListener {
+
+        /**
+         * Method called when the dialog has been dismissed
+         *
+         * @param tag the {@link Tag} instance
+         */
+        public void onDialogDismiss(Tag tag);
+    }
+
+    private class DialogButtonClickedListener implements DialogInterface.OnClickListener {
+
+        @Override
+        public void onClick(android.content.DialogInterface dialog, int which) {
+
+            // Copy password to clipboard
+            if (Preferences.getCopyToClipboard(getActivity()) && mPasswordTextView.length() > 0) {
+                ClipboardHelper
+                        .copyToClipboard(getActivity(), ClipboardHelper.CLIPBOARD_LABEL_PASSWORD,
+                                mPasswordTextView.getText().toString(),
+                                R.string.copied_to_clipboard);
+            }
+
+            // Hide keyboard
+            KeyboardManager.hide(getActivity(), mTagEditText);
+
+            // Call listener
+            mListener.onDialogDismiss(mTag);
+        }
     }
 
     private class PasswordTextWatcher implements TextWatcher {
@@ -283,25 +367,5 @@ public class GeneratePasswordDialogFragment extends DialogFragment
                 mTagSettingsImageButton.setEnabled(false);
             }
         }
-    }
-
-    private void generateIdenticon() {
-        if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) {
-            mTask.cancel(true);
-        }
-
-        mTask = new IdenticonGenerationTask(getActivity(), this);
-        mTask.execute(SecurePassword.getPassword(mMasterKeyEditText.getText()));
-    }
-
-    @Override
-    public void onIconGenerated(Bitmap bitmap) {
-        if (bitmap != null) {
-            mIdenticonImageView.setImageBitmap(bitmap);
-            mIdenticonImageView.setVisibility(View.VISIBLE);
-        } else {
-            mIdenticonImageView.setVisibility(View.INVISIBLE);
-        }
-        mTask = null;
     }
 }

@@ -25,21 +25,39 @@ import android.widget.TextView;
 
 import com.reddyetwo.hashmypass.app.R;
 
+/**
+ * A {@link android.support.v7.widget.RecyclerView.ViewHolder} for an item in a tag list
+ */
 public class TagListViewHolder extends RecyclerView.ViewHolder {
 
     private final TextView mFaviconTextView;
     private final TextView mTagNameTextView;
 
+    /**
+     * Constructor
+     *
+     * @param itemView the tag view
+     */
     public TagListViewHolder(View itemView) {
         super(itemView);
         mFaviconTextView = (TextView) itemView.findViewById(R.id.tag_favicon);
         mTagNameTextView = (TextView) itemView.findViewById(R.id.tag_name);
     }
 
+    /**
+     * Get the {@link android.widget.TextView} showing the {@link com.reddyetwo.hashmypass.app.data.Favicon}
+     *
+     * @return the {@link android.widget.TextView} instance
+     */
     public TextView getFaviconTextView() {
         return mFaviconTextView;
     }
 
+    /**
+     * Get the {@link android.widget.TextView} showing the {@link com.reddyetwo.hashmypass.app.data.Tag} name
+     *
+     * @return the {@link android.widget.TextView} instance
+     */
     public TextView getTagNameTextView() {
         return mTagNameTextView;
     }

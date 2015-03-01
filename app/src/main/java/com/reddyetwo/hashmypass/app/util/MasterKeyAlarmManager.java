@@ -30,17 +30,20 @@ import android.os.SystemClock;
 
 import com.reddyetwo.hashmypass.app.HashMyPassApplication;
 
+/**
+ * Manager for master key cache expired alarms
+ */
 public class MasterKeyAlarmManager extends BroadcastReceiver {
 
     private static final int REQUEST_REMOVE_MASTER_KEY = 1;
     private static final int MILLIS_IN_A_MINUTE = 60000;
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        /* Remove cached master key */
-        HashMyPassApplication.wipeCachedMasterKey();
-    }
-
+    /**
+     * Set the alarm
+     *
+     * @param context the {@link android.content.Context} instance
+     * @param minutes the minutes before the alarm is triggered
+     */
     public static void setAlarm(Context context, int minutes) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent intent = PendingIntent.getBroadcast(context, REQUEST_REMOVE_MASTER_KEY,
@@ -54,10 +57,21 @@ public class MasterKeyAlarmManager extends BroadcastReceiver {
         }
     }
 
+    /**
+     * Cancel the alarm
+     *
+     * @param context the {@link android.content.Context} instance
+     */
     public static void cancelAlarm(Context context) {
         PendingIntent intent = PendingIntent.getBroadcast(context, REQUEST_REMOVE_MASTER_KEY,
                 new Intent(context, MasterKeyAlarmManager.class), 0);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(intent);
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        /* Remove cached master key */
+        HashMyPassApplication.wipeCachedMasterKey();
     }
 }

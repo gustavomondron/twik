@@ -20,6 +20,9 @@
 
 package com.reddyetwo.hashmypass.app.data;
 
+/**
+ * Password type enum
+ */
 public enum PasswordType {
     ALPHANUMERIC_AND_SPECIAL_CHARS,
     ALPHANUMERIC,

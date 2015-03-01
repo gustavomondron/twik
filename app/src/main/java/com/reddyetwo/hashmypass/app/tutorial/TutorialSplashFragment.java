@@ -17,15 +17,31 @@
  * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.reddyetwo.hashmypass.app.data;
+package com.reddyetwo.hashmypass.app.tutorial;
 
-public class PasswordLength {
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-    private PasswordLength() {
+import com.reddyetwo.hashmypass.app.R;
 
+/**
+ * Fragment containing the tutorial splash screen
+ */
+public class TutorialSplashFragment extends Fragment {
+
+    /**
+     * Constructor
+     */
+    public TutorialSplashFragment() {
+        super();
     }
-    
-    public static final int MIN_LENGTH = 4;
-    public static final int MAX_LENGTH = 26;
-    public static final int DEFAULT = 8;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_tutorial_splash_screen, container, false);
+    }
 }

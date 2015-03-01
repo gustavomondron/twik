@@ -17,7 +17,7 @@
  * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.reddyetwo.hashmypass.app;
+package com.reddyetwo.hashmypass.app.tutorial;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -28,19 +28,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.reddyetwo.hashmypass.app.R;
 import com.reddyetwo.hashmypass.app.util.RandomPrivateKeyGenerator;
 
+/**
+ * Fragment containing the tutorial private key setup screen
+ */
 public class TutorialSetupFragment extends Fragment {
 
     private EditText mPrivateKeyText;
-    private PrivateKeyManager mPrivateKeyManager;
+    private PrivateKeyChangedListener mPrivateKeyChangedListener;
 
-    public interface PrivateKeyManager {
-        public void setPrivateKey(String privateKey);
-    }
-
-    public void setPrivateKeyManager(PrivateKeyManager privateKeyManager) {
-        mPrivateKeyManager = privateKeyManager;
+    /**
+     * Set the listener for private key changed events.
+     *
+     * @param listener the {@link com.reddyetwo.hashmypass.app.tutorial.TutorialSetupFragment.PrivateKeyChangedListener} instance
+     */
+    public void setPrivateKeyChangedListener(PrivateKeyChangedListener listener) {
+        mPrivateKeyChangedListener = listener;
     }
 
     @Override
@@ -48,28 +53,40 @@ public class TutorialSetupFragment extends Fragment {
                              Bundle savedInstanceState) {
         ViewGroup rootView =
                 (ViewGroup) inflater.inflate(R.layout.fragment_tutorial_setup, container, false);
-        mPrivateKeyText =
-                (EditText) rootView.findViewById(R.id.private_key_text);
+        mPrivateKeyText = (EditText) rootView.findViewById(R.id.private_key_text);
         mPrivateKeyText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-                // Nothing to do
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Do nothing
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before,
-                                      int count) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // Nothing to do
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                mPrivateKeyManager
-                        .setPrivateKey(mPrivateKeyText.getText().toString());
+                if (mPrivateKeyChangedListener != null) {
+                    mPrivateKeyChangedListener
+                            .onPrivateKeyChanged(mPrivateKeyText.getText().toString());
+                }
             }
         });
         mPrivateKeyText.setText(RandomPrivateKeyGenerator.generate());
         return rootView;
+    }
+
+    /**
+     * Interface which can be implemented to listen to private key changed events.
+     */
+    public interface PrivateKeyChangedListener {
+
+        /**
+         * Method called when the private key has changed
+         *
+         * @param privateKey the private key
+         */
+        public void onPrivateKeyChanged(String privateKey);
     }
 }

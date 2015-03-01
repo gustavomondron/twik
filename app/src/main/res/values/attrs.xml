@@ -26,4 +26,11 @@
         <attr name="color_palette_ripple" format="reference"/>
         <attr name="button_size" format="integer"/>
     </declare-styleable>
+
+    <declare-styleable name="ViewPagerIndicator">
+        <attr name="radius" format="dimension"/>
+        <attr name="spacing" format="dimension"/>
+        <attr name="alpha" format="float"/>
+        <attr name="current_position_alpha" format="float"/>
+    </declare-styleable>
 </resources>

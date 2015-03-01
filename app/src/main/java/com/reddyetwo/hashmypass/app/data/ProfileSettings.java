@@ -28,12 +28,23 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class to get/add/delete/update {@link com.reddyetwo.hashmypass.app.data.Profile} from storage
+ */
+
 public class ProfileSettings {
 
     private ProfileSettings() {
 
     }
-    
+
+    /**
+     * Get a profile from the database
+     *
+     * @param context   the {@link android.content.Context} instance
+     * @param profileId the profile ID
+     * @return the {@link com.reddyetwo.hashmypass.app.data.Profile} instance
+     */
     public static Profile getProfile(Context context, long profileId) {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -69,10 +80,10 @@ public class ProfileSettings {
     }
 
     /**
-     * Inserts a profile in the database
+     * Insert a profile in the database
      *
-     * @param context The application context
-     * @param profile The profile
+     * @param context the {@link android.content.Context} instance
+     * @param profile the profile
      * @return the ID of the inserted row, or -1 if an error occurred
      */
     public static long insertProfile(Context context, Profile profile) {
@@ -94,10 +105,10 @@ public class ProfileSettings {
     }
 
     /**
-     * Updates a profile in the database
+     * Update a profile in the database
      *
-     * @param context The application context
-     * @param profile The profile
+     * @param context the {@link android.content.Context} instance
+     * @param profile the profile
      * @return true in case of success, false if an error occurred
      */
     public static boolean updateProfile(Context context, Profile profile) {
@@ -121,10 +132,10 @@ public class ProfileSettings {
     }
 
     /**
-     * Deletes a profile in the database
+     * Delete a profile in the database
      *
-     * @param context   The application context
-     * @param profileId The profile ID
+     * @param context   the {@link android.content.Context} instance
+     * @param profileId the profile ID
      * @return true in case of success, false if no profile was deleted
      */
     public static boolean deleteProfile(Context context, long profileId) {
@@ -146,6 +157,13 @@ public class ProfileSettings {
         return deleted;
     }
 
+    /**
+     * Get the ID of a profile
+     *
+     * @param context the {@link android.content.Context} instance
+     * @param name    the profile name
+     * @return the profile ID
+     */
     public static long getProfileId(Context context, String name) {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -164,6 +182,12 @@ public class ProfileSettings {
         return profileId;
     }
 
+    /**
+     * Get the list of profiles stored in the database
+     *
+     * @param context the {@link android.content.Context} instance
+     * @return the {@link java.util.List} of {@link com.reddyetwo.hashmypass.app.data.Profile}
+     */
     public static List<Profile> getList(Context context) {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getReadableDatabase();

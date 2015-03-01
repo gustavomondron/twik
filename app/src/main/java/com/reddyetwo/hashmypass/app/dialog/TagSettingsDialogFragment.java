@@ -17,7 +17,7 @@
  * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.reddyetwo.hashmypass.app;
+package com.reddyetwo.hashmypass.app.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -29,6 +29,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Spinner;
 
+import com.reddyetwo.hashmypass.app.R;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
@@ -54,10 +55,6 @@ public class TagSettingsDialogFragment extends DialogFragment {
     private Spinner mPasswordLengthSpinner;
     private Spinner mPasswordTypeSpinner;
 
-    public interface OnTagSettingsSavedListener {
-        public void onTagSettingsSaved(Tag tag);
-    }
-
     /**
      * Sets the tag whose settings are to be edited with this dialog. Note that
      * this "tag" is not the same as {@link #getTag()}, which belongs to the
@@ -67,13 +64,19 @@ public class TagSettingsDialogFragment extends DialogFragment {
         mTag = tag;
     }
 
+    /**
+     * Set the listener for tag settings saved events
+     *
+     * @param listener the {@link com.reddyetwo.hashmypass.app.dialog.TagSettingsDialogFragment.OnTagSettingsSavedListener} instance
+     */
     public void setTagSettingsSavedListener(OnTagSettingsSavedListener listener) {
         mListener = listener;
     }
 
     /**
-     * Sets the profile id associate with the settings that are to be edited
-     * with this dialog.
+     * Set the profile ID associated with the settings that are to be edited with this dialog.
+     *
+     * @param mProfileId the profile ID
      */
     public void setProfileId(long mProfileId) {
         this.mProfileId = mProfileId;
@@ -130,17 +133,16 @@ public class TagSettingsDialogFragment extends DialogFragment {
         builder.setView(view)
                 // Add action buttons
                 .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                saveTagSettings();
-                                TagSettingsDialogFragment.this.getDialog().cancel();
-                            }
-                        })
-                .setNegativeButton(R.string.discard, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                TagSettingsDialogFragment.this.getDialog().cancel();
-                            }
-                        });
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        saveTagSettings();
+                        TagSettingsDialogFragment.this.getDialog().cancel();
+                    }
+                }).setNegativeButton(R.string.discard, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                TagSettingsDialogFragment.this.getDialog().cancel();
+            }
+        });
 
         return builder.create();
     }
@@ -155,18 +157,21 @@ public class TagSettingsDialogFragment extends DialogFragment {
         outState.putInt(KEY_PASSWORD_TYPE, mPasswordTypeSpinner.getSelectedItemPosition());
     }
 
-    /* Shows a number picker dialog for choosing the password length */
+    /**
+     * Shows a number picker dialog for choosing the password length
+     */
     private void showPasswordLengthDialog() {
         PasswordLengthDialogFragment dialogFragment = new PasswordLengthDialogFragment();
         dialogFragment.setPasswordLength(
                 Integer.parseInt((String) mPasswordLengthSpinner.getSelectedItem()));
         dialogFragment.setOnSelectedListener(new PasswordLengthDialogFragment.OnSelectedListener() {
-                    @Override
-                    public void onPasswordLengthSelected(int length) {
-                        ProfileFormInflater.populatePasswordLengthSpinner(getActivity(),
-                                mPasswordLengthSpinner, length);
-                    }
-                });
+            @Override
+            public void onPasswordLengthSelected(int length) {
+                ProfileFormInflater
+                        .populatePasswordLengthSpinner(getActivity(), mPasswordLengthSpinner,
+                                length);
+            }
+        });
 
         dialogFragment.show(getFragmentManager(), "passwordLength");
     }
@@ -188,6 +193,19 @@ public class TagSettingsDialogFragment extends DialogFragment {
         if (mListener != null) {
             mListener.onTagSettingsSaved(mTag);
         }
+    }
+
+    /**
+     * Interface which can be implemented to listen to tag settings saved events
+     */
+    public interface OnTagSettingsSavedListener {
+
+        /**
+         * Method called when the tag settings have been saved
+         *
+         * @param tag the {@link com.reddyetwo.hashmypass.app.data.Tag} instance
+         */
+        public void onTagSettingsSaved(Tag tag);
     }
 
 }

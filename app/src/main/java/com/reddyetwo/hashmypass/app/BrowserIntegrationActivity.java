@@ -30,6 +30,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -51,6 +52,7 @@ import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
+import com.reddyetwo.hashmypass.app.dialog.TagSettingsDialogFragment;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
 import com.reddyetwo.hashmypass.app.util.Constants;
@@ -64,6 +66,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Acitivity which enables the generation of passwords when a website is shared from the web browser
+ */
 public class BrowserIntegrationActivity extends Activity
         implements TagSettingsDialogFragment.OnTagSettingsSavedListener,
                    IdenticonGenerationTask.OnIconGeneratedListener {
@@ -153,6 +158,7 @@ public class BrowserIntegrationActivity extends Activity
         try {
             mSite = getSite(getHost());
         } catch (IllegalArgumentException e) {
+            Log.w(HashMyPassApplication.LOG_TAG, e);
             finish();
         }
 
@@ -308,9 +314,9 @@ public class BrowserIntegrationActivity extends Activity
     }
 
     private void stop() {
-        if (mFavicon != null && mFavicon.getId() == Favicon.NO_ID) {
-            // Save the favicon in the storage
-            FaviconSettings.insertFavicon(this, mFavicon);
+        if (mFavicon != null && mFavicon.getId() == Favicon.NO_ID &&
+                FaviconSettings.insertFavicon(this, mFavicon) < 0) {
+            Log.e(HashMyPassApplication.LOG_TAG, "Error storing favicon");
         }
 
         saveTag();
@@ -356,9 +362,12 @@ public class BrowserIntegrationActivity extends Activity
         if (storedTag.getId() == Tag.NO_ID) {
             // Not overwriting
             if (mTag.getId() == Tag.NO_ID) {
-                TagSettings.insertTag(this, mTag);
+                mTag.setId(TagSettings.insertTag(this, mTag));
             } else {
-                TagSettings.updateTag(this, mTag);
+                if (!TagSettings.updateTag(this, mTag)) {
+                    Log.e(HashMyPassApplication.LOG_TAG,
+                            "Error updating tag from browser activity");
+                }
             }
         } else {
             /* Overwrite the current tag with the new site and the updated
@@ -368,13 +377,19 @@ public class BrowserIntegrationActivity extends Activity
                 // Unlink the current tag from this site
                 Tag oldTag = TagSettings.getTag(this, mTag.getId());
                 oldTag.setSite(null);
-                TagSettings.updateTag(this, oldTag);
+                if (!TagSettings.updateTag(this, oldTag)) {
+                    Log.e(HashMyPassApplication.LOG_TAG,
+                            "Error updating existing tag from browser activity");
+                }
             }
 
             // Update the tag
             mTag.setHashCounter(storedTag.getHashCounter() + 1);
             mTag.setId(storedTag.getId());
-            TagSettings.updateTag(this, mTag);
+            if (!TagSettings.updateTag(this, mTag)) {
+                Log.e(HashMyPassApplication.LOG_TAG,
+                        "Error updating stored tag from browser activity");
+            }
         }
     }
 
@@ -464,6 +479,17 @@ public class BrowserIntegrationActivity extends Activity
         }
     }
 
+    @Override
+    public void onIconGenerated(Bitmap bitmap) {
+        if (bitmap != null) {
+            mIdenticonImageView.setImageBitmap(bitmap);
+            mIdenticonImageView.setVisibility(View.VISIBLE);
+        } else {
+            mIdenticonImageView.setVisibility(View.INVISIBLE);
+        }
+        mTask = null;
+    }
+
     private class PasswordTextWatcher implements TextWatcher {
 
         @Override
@@ -504,17 +530,6 @@ public class BrowserIntegrationActivity extends Activity
             mTask.execute(SecurePassword.getPassword(mMasterKeyEditText.getText()));
         }
 
-    }
-
-    @Override
-    public void onIconGenerated(Bitmap bitmap) {
-        if (bitmap != null) {
-            mIdenticonImageView.setImageBitmap(bitmap);
-            mIdenticonImageView.setVisibility(View.VISIBLE);
-        } else {
-            mIdenticonImageView.setVisibility(View.INVISIBLE);
-        }
-        mTask = null;
     }
 
 }

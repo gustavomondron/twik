@@ -36,7 +36,6 @@
     <dimen name="tutorial_content_padding_vertical">48dp</dimen>
     <dimen name="tutorial_content_text_margin_top">32dp</dimen>
     <dimen name="tutorial_content_text_padding_inter">16dp</dimen>
-    <dimen name="viewpager_indicator_height">2dp</dimen>
     <dimen name="button_size">48dp</dimen>
     <dimen name="favicon_size">24dp</dimen>
     <dimen name="list_empty_top_vertical_margin">32dp</dimen>

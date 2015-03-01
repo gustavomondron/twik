@@ -33,6 +33,9 @@ import com.reddyetwo.hashmypass.app.data.Profile;
 
 import java.util.List;
 
+/**
+ * Adapter for spinners containing the list of {@link com.reddyetwo.hashmypass.app.data.Profile}
+ */
 public class ProfileSpinnerAdapter implements SpinnerAdapter {
 
     private static final String TAG_VIEW_DROPDOWN = "SpinnerDropdown";
@@ -60,12 +63,26 @@ public class ProfileSpinnerAdapter implements SpinnerAdapter {
     @LayoutRes
     private int mViewItemNotDropdown = android.R.layout.simple_spinner_item;
 
+    /**
+     * Constructor
+     *
+     * @param themedContext the themed {@link android.content.Context} instance
+     * @param profiles      the {@link java.util.List} of profiles
+     */
     public ProfileSpinnerAdapter(Context themedContext, List<Profile> profiles) {
         mThemedContext = themedContext;
         mProfiles = profiles;
 
     }
 
+    /**
+     * Constructor
+     *
+     * @param themedContext   the themed {@link android.content.Context} instance
+     * @param profiles        the {@link java.util.List} of profiles
+     * @param itemDropdown    the item drop-down {@link android.support.annotation.LayoutRes}
+     * @param itemNotDropdown the item not drop-down {@link android.support.annotation.LayoutRes}
+     */
     @SuppressWarnings("SameParameterValue")
     public ProfileSpinnerAdapter(Context themedContext, List<Profile> profiles,
                                  @LayoutRes int itemDropdown, @LayoutRes int itemNotDropdown) {

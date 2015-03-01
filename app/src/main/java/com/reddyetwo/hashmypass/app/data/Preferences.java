@@ -24,6 +24,9 @@ import android.content.Context;
 
 import com.reddyetwo.hashmypass.app.R;
 
+/**
+ * Helper for getting/settings preferences
+ */
 public class Preferences {
 
     // Shared preferences name
@@ -76,7 +79,7 @@ public class Preferences {
     /**
      * Set the last shown tutorial page
      *
-     * @param context the context
+     * @param context      the context
      * @param tutorialPage the tutorial page
      */
     public static void setTutorialPage(Context context, int tutorialPage) {
@@ -121,7 +124,7 @@ public class Preferences {
     /**
      * Set the last used profile ID
      *
-     * @param context the context
+     * @param context   the context
      * @param profileId the profile ID
      */
     public static void setLastProfile(Context context, long profileId) {

@@ -30,6 +30,9 @@ import com.reddyetwo.hashmypass.app.R;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 
+/**
+ * Watcher for "Add profile" and "Edit profile" forms that enables and disables the "Save" button
+ */
 public class ProfileFormWatcher implements TextWatcher {
 
     private final Context mContext;
@@ -38,8 +41,16 @@ public class ProfileFormWatcher implements TextWatcher {
     private final EditText mPrivateKeyEditText;
     private final Button mSaveButton;
 
-    public ProfileFormWatcher(Context context, long profileId,
-                              EditText nameEditText,
+    /**
+     * Constructor
+     *
+     * @param context            the {@link android.content.Context} instance
+     * @param profileId          the profile ID
+     * @param nameEditText       the profile name {@link android.widget.EditText} instance
+     * @param privateKeyEditText the private key {@link android.widget.EditText} instance
+     * @param saveButton         the save {@link android.widget.Button} instance
+     */
+    public ProfileFormWatcher(Context context, long profileId, EditText nameEditText,
                               EditText privateKeyEditText, Button saveButton) {
         mContext = context;
         mProfileId = profileId;
@@ -49,14 +60,12 @@ public class ProfileFormWatcher implements TextWatcher {
     }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count,
-                                  int after) {
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         // Do nothing
     }
 
     @Override
-    public void onTextChanged(CharSequence s, int start, int before,
-                              int count) {
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
         // Do nothing
     }
 
@@ -65,23 +74,19 @@ public class ProfileFormWatcher implements TextWatcher {
         updateSaveButtonEnabled();
     }
 
-    void updateSaveButtonEnabled() {
-        boolean nameSet =
-                mNameEditText.getText().toString().trim().length() > 0;
-        boolean privateKeySet =
-                mPrivateKeyEditText.getText().toString().length() > 0;
+    private void updateSaveButtonEnabled() {
+        boolean nameSet = mNameEditText.getText().toString().trim().length() > 0;
+        boolean privateKeySet = mPrivateKeyEditText.getText().toString().length() > 0;
 
         if (!nameSet || !privateKeySet) {
             mSaveButton.setEnabled(false);
         } else {
-            long storedProfileId = ProfileSettings
-                    .getProfileId(mContext, mNameEditText.getText().toString());
-            boolean repeated = storedProfileId != Profile.NO_ID &&
-                    storedProfileId != mProfileId;
+            long storedProfileId =
+                    ProfileSettings.getProfileId(mContext, mNameEditText.getText().toString());
+            boolean repeated = storedProfileId != Profile.NO_ID && storedProfileId != mProfileId;
             mSaveButton.setEnabled(!repeated);
             if (repeated) {
-                mNameEditText.setError(
-                        mContext.getString(R.string.error_profile_exists));
+                mNameEditText.setError(mContext.getString(R.string.error_profile_exists));
             } else {
                 mNameEditText.setError(null);
             }

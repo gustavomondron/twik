@@ -19,83 +19,78 @@
     *
     -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              style="@style/tutorialLayoutStyle"
-              android:orientation="vertical">
-
-    <com.reddyetwo.hashmypass.app.MeasureViewPager
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/pager"
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"/>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/viewpager_indicator_height"
-        android:orientation="horizontal">
-
-        <View
-            android:id="@+id/pager_progress_prev"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@color/pager_progress_rest"/>
-
-        <View
-            android:id="@+id/pager_progress_current"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@color/pager_progress_current"/>
-
-        <View
-            android:id="@+id/pager_progress_next"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="@color/pager_progress_rest"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/button_size"
+        android:id="@+id/tutorial_panel"
+        android:layout_alignParentTop="true"
         android:orientation="vertical"
-        android:showDividers="none"
-        android:divider="?android:dividerHorizontal">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <View
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="0dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:divider="?android:dividerVertical"
-            style="?android:buttonBarStyle">
+            android:layout_height="@dimen/button_size"
+            android:layout_weight="0"
+            android:orientation="vertical"
+            android:showDividers="middle"
+            android:divider="?android:dividerHorizontal">
 
-            <Button
-                android:id="@+id/skip_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                style="?android:buttonBarButtonStyle"
-                android:text="@string/skip"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"/>
 
-            <Button
-                android:id="@+id/next_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                style="?android:buttonBarButtonStyle"
-                android:layout_weight="1"
-                android:text="@string/next"/>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <Button
-                android:id="@+id/start_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                style="?android:buttonBarButtonStyle"
-                android:layout_weight="1"
-                android:visibility="gone"
-                android:text="@string/start"/>
+                <Button
+                    android:id="@+id/skip_button"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    style="?android:buttonBarButtonStyle"
+                    android:textColor="@android:color/white"
+                    android:text="@string/skip"
+                    tools:ignore="RtlHardcoded"/>
+
+                <com.reddyetwo.hashmypass.app.view.ViewPagerIndicator
+                    android:id="@+id/pager_indicator"
+                    app:radius="4dp"
+                    app:spacing="8dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"/>
+
+                <Button
+                    android:id="@+id/next_button"
+                    android:layout_width="112dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    style="?android:buttonBarButtonStyle"
+                    android:textColor="@android:color/white"
+                    android:text="@string/next"
+                    tools:ignore="RtlHardcoded"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+    <View
+        android:background="@android:color/black"
+        android:alpha="0.5"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_alignParentTop="true"/>
+
+</RelativeLayout>

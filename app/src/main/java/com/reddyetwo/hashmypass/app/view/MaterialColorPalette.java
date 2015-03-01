@@ -1,5 +1,3 @@
-package com.reddyetwo.hashmypass.app.views;
-
 /*
  * Copyright 2015 Red Dye No. 2
  *
@@ -19,6 +17,8 @@ package com.reddyetwo.hashmypass.app.views;
  * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package com.reddyetwo.hashmypass.app.view;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,6 +30,9 @@ import android.view.ViewGroup;
 
 import com.reddyetwo.hashmypass.app.R;
 
+/**
+ * View which allows choosing a color from a color palette
+ */
 public class MaterialColorPalette extends RecyclerView {
 
     private int[] mNormalColorList = new int[]{};
@@ -38,6 +41,12 @@ public class MaterialColorPalette extends RecyclerView {
     private int mSelectedPosition = 0;
     private OnColorSelectedListener mColorSelectedListener;
 
+    /**
+     * Constructor
+     *
+     * @param context the context
+     * @param attrs   the view attributes
+     */
     public MaterialColorPalette(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -73,26 +82,58 @@ public class MaterialColorPalette extends RecyclerView {
 
     }
 
+    /**
+     * Set the selected color in the palette
+     *
+     * @param position the color position
+     */
     public void setSelectedPosition(int position) {
         mSelectedPosition = position;
         ((ColorPaletteAdapter) getAdapter()).updateButtons(position);
     }
 
+    /**
+     * Set the color selected listener
+     *
+     * @param listener the listener
+     */
     public void setOnColorSelectedListener(OnColorSelectedListener listener) {
         mColorSelectedListener = listener;
     }
 
+    /**
+     * Interface which can be implemented to listen to color selected events
+     */
+    public interface OnColorSelectedListener {
+
+        /**
+         * Method called when a color is selected
+         *
+         * @param index the color index
+         */
+        void onColorSelected(int index);
+    }
 
     private class ColorPaletteViewHolder extends RecyclerView.ViewHolder {
 
         private final MaterialColorPaletteButton mButton;
 
+        /**
+         * Constructor
+         *
+         * @param itemView a color button {@link android.view.View} instance
+         */
         public ColorPaletteViewHolder(View itemView) {
             super(itemView);
             mButton = (MaterialColorPaletteButton) itemView
                     .findViewById(R.id.material_color_palette_button);
         }
 
+        /**
+         * Get the color {@link com.reddyetwo.hashmypass.app.view.MaterialColorPaletteButton}
+         *
+         * @return the color button
+         */
         public MaterialColorPaletteButton getButton() {
             return mButton;
         }
@@ -131,6 +172,11 @@ public class MaterialColorPalette extends RecyclerView {
             return mNormalColorList.length;
         }
 
+        /**
+         * Update button views, highlighting the selected color
+         *
+         * @param selectedPosition the selected color position
+         */
         public void updateButtons(int selectedPosition) {
             for (int i = 0; i < selectedPosition; i++) {
                 notifyItemChanged(i);
@@ -139,10 +185,6 @@ public class MaterialColorPalette extends RecyclerView {
                 notifyItemChanged(i);
             }
         }
-    }
-
-    public interface OnColorSelectedListener {
-        void onColorSelected(int index);
     }
 
 

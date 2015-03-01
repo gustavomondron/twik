@@ -85,11 +85,12 @@
         <receiver android:name=".util.MasterKeyAlarmManager" />
 
         <activity
-            android:name=".TutorialActivity"
+            android:name=".tutorial.TutorialActivity"
             android:noHistory="true"
-            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/tutorialStyle">
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/Theme.Hashmypass.Tutorial"
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.reddyetwo.hashmypass.app.MainActivity"/>

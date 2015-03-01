@@ -21,6 +21,7 @@ package com.reddyetwo.hashmypass.app.util;
 
 import android.annotation.TargetApi;
 import android.os.Build;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -34,6 +35,7 @@ public class ApiUtils {
 
     /**
      * Check if API is equal or higher than LOLLIPOP
+     *
      * @return true if API is equal or higher than LOLLIPOP, false otherwise
      */
     public static boolean hasLollipopApi() {
@@ -42,6 +44,7 @@ public class ApiUtils {
 
     /**
      * Check if API is equal or higher than JELLY BEAN
+     *
      * @return true if API is equal or higher than JELLY BEAN, false otherwise
      */
     public static boolean hasJellyBeanApi() {
@@ -51,12 +54,27 @@ public class ApiUtils {
 
     /**
      * Draws system bar using primary dark color
+     *
      * @param window The activity window
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void colorizeSystemBar(Window window) {
         if (hasLollipopApi()) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        }
+    }
+
+
+    /**
+     * Enable drawing behind status bar
+     *
+     * @param window The activity window
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public static void drawBehindStatusBar(Window window) {
+        if (hasJellyBeanApi()) {
+            window.getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
     }
 }

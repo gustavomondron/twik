@@ -33,17 +33,20 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.reddyetwo.hashmypass.app.data.PasswordLength;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
+import com.reddyetwo.hashmypass.app.dialog.PasswordLengthDialogFragment;
 import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.KeyboardManager;
 import com.reddyetwo.hashmypass.app.util.ProfileFormInflater;
 import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
 import com.reddyetwo.hashmypass.app.util.RandomPrivateKeyGenerator;
-import com.reddyetwo.hashmypass.app.views.MaterialColorPalette;
+import com.reddyetwo.hashmypass.app.view.MaterialColorPalette;
 
+/**
+ * Activity which allows adding a new profile
+ */
 public class AddProfileActivity extends ActionBarActivity {
 
     // Result codes
@@ -87,7 +90,7 @@ public class AddProfileActivity extends ActionBarActivity {
         if (savedInstanceState != null) {
             passwordLength = savedInstanceState.getInt(KEY_PASSWORD_LENGTH);
         } else {
-            passwordLength = PasswordLength.DEFAULT;
+            passwordLength = Constants.DEFAULT_PASSWORD_LENGTH;
         }
         ProfileFormInflater
                 .populatePasswordLengthSpinner(this, mPasswordLengthSpinner, passwordLength);

@@ -27,6 +27,9 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class to get/add/delete/update {@link com.reddyetwo.hashmypass.app.data.Tag} from storage
+ */
 public class TagSettings {
 
     public static final int ORDER_BY_HASH_COUNTER = 0;
@@ -39,7 +42,7 @@ public class TagSettings {
     }
 
     /**
-     * Gets tag settings from database
+     * Get tag settings from database
      *
      * @param context   The application context
      * @param profileID The profile ID
@@ -85,7 +88,7 @@ public class TagSettings {
     }
 
     /**
-     * Gets tag settings from database
+     * Get tag settings from database
      *
      * @param context The application context
      * @param tagId   the tag ID
@@ -121,7 +124,7 @@ public class TagSettings {
     }
 
     /**
-     * Inserts a tag in the database
+     * Insert a tag in the database
      *
      * @param context The application context
      * @param tag     The tag
@@ -146,7 +149,7 @@ public class TagSettings {
     }
 
     /**
-     * Updates a tag in the database
+     * Update a tag in the database
      *
      * @param context The application context
      * @param tag     The tag
@@ -171,6 +174,13 @@ public class TagSettings {
         return updated;
     }
 
+    /**
+     * Delete a tag in the database
+     *
+     * @param context the {@link android.content.Context} instance
+     * @param tag     the tag
+     * @return true if success, false in case of error
+     */
     public static boolean deleteTag(Context context, Tag tag) {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -183,7 +193,7 @@ public class TagSettings {
     }
 
     /**
-     * Returns an ordered list of tags of a profile
+     * Return an ordered list of tags of a profile
      *
      * @param context   The application context
      * @param profileId The profile ID
@@ -246,6 +256,14 @@ public class TagSettings {
         return tagList;
     }
 
+    /**
+     * Get the tag for a site
+     *
+     * @param context   the the {@link android.content.Context} instance
+     * @param profileId the profile ID
+     * @param site      the site identifier
+     * @return the tag
+     */
     public static Tag getSiteTag(Context context, long profileId, String site) {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -267,6 +285,13 @@ public class TagSettings {
         return tag;
     }
 
+    /**
+     * Return true if a site has tags
+     *
+     * @param context the {@link android.content.Context} instance
+     * @param site    the site identifier
+     * @return true if a site has tags
+     */
     public static boolean siteHasTags(Context context, String site) {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -281,6 +306,16 @@ public class TagSettings {
         return hasTags;
     }
 
+    /**
+     * Return the position of a tag according to a sort criterion
+     *
+     * @param context   the {@link android.content.Context} instance
+     * @param tagId     the tag ID
+     * @param profileId the profile ID
+     * @param orderBy   the order criterion
+     * @param limit     the The maximum number of results
+     * @return the position of the tag
+     */
     @SuppressWarnings("SameParameterValue")
     public static int getTagPosition(Context context, long tagId, long profileId, int orderBy,
                                      int limit) {

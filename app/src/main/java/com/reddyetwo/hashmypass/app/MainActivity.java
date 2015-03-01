@@ -32,6 +32,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.OrientationEventListener;
@@ -52,93 +53,79 @@ import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
+import com.reddyetwo.hashmypass.app.dialog.AboutDialog;
+import com.reddyetwo.hashmypass.app.dialog.GeneratePasswordDialogFragment;
+import com.reddyetwo.hashmypass.app.tutorial.TutorialActivity;
 import com.reddyetwo.hashmypass.app.util.ApiUtils;
 import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 
 import java.util.List;
 
-
+/**
+ * Main application activity, which shows the list of tags
+ */
 public class MainActivity extends ActionBarActivity
         implements GeneratePasswordDialogFragment.GeneratePasswordDialogListener {
-
-    @IntDef({LIST_EMPTY, LIST_CONTAINS_ITEMS, LIST_NOT_INITIALIZED})
-    private @interface ListStatus {
-    }
 
     private static final int LIST_EMPTY = 1;
     private static final int LIST_CONTAINS_ITEMS = 2;
     private static final int LIST_NOT_INITIALIZED = 3;
-
     // Constants
     private static final int REQUEST_ADD_PROFILE = 1;
     private static final int REQUEST_CREATE_DEFAULT_PROFILE = 2;
     private static final String FRAGMENT_GENERATE_PASSWORD = "generatePassword";
     private static final long LIST_ANIMATION_DURATION = 150;
-
     // State keys
     private static final String STATE_SELECTED_PROFILE_ID = "profile_id";
     private static final String STATE_ORIENTATION_HAS_CHANGED = "orientation_has_changed";
-
     /**
      * Selected profile ID
      */
     private long mSelectedProfileId = -1;
-
     /**
      * Listener for clicks on tag list items
      */
     private TagListAdapter.OnTagClickedListener mTagClickedListener;
-
     /**
      * Screen orientation changes listener
      */
     private OrientationEventListener mOrientationEventListener;
-
     /**
      * Screen orientation changed flag
      */
     private boolean mOrientationHasChanged;
-
     /**
      * Color palette - normal state
      */
     private int[] mColorsNormal;
-
     /**
      * Color palette - pressed state
      */
     private int[] mColorsPressed;
-
     /**
      * Color palette - ripple state
      */
     private int[] mColorsRipple;
-
     /**
      * Tag order mode
      */
     private int mTagOrder;
-
     /**
      * Tag list UI component
      */
     private RecyclerView mTagRecyclerView;
-
     /**
      * Empty list view UI component
      */
     private LinearLayout mEmptyListLayout;
-
     /**
      * Tag list adapter
      */
     private TagListAdapter mAdapter;
-
     /**
      * Add tag button component
      */
     private FloatingActionButton mFab;
-
     /**
      * Toolbar component
      */
@@ -163,7 +150,7 @@ public class MainActivity extends ActionBarActivity
         /**
          * Finish activity when tutorial is dismissed by user.
          * It is called onResume because {@link com.reddyetwo.hashmypass.app.MainActivity}
-         * is responsible for launching {@link com.reddyetwo.hashmypass.app.TutorialActivity} and,
+         * is responsible for launching {@link com.reddyetwo.hashmypass.app.tutorial.TutorialActivity} and,
          * when the latter is dismissed, {@link com.reddyetwo.hashmypass.app.MainActivity} is
          * usually resumed, not created.
          */
@@ -185,7 +172,8 @@ public class MainActivity extends ActionBarActivity
     }
 
     private void initializeSettings(Bundle savedInstanceState) {
-        if (savedInstanceState != null && savedInstanceState.getBoolean(STATE_ORIENTATION_HAS_CHANGED)) {
+        if (savedInstanceState != null &&
+                savedInstanceState.getBoolean(STATE_ORIENTATION_HAS_CHANGED)) {
             mSelectedProfileId = savedInstanceState.getLong(STATE_SELECTED_PROFILE_ID);
         } else {
             mSelectedProfileId = Preferences.getLastProfile(this);
@@ -271,7 +259,7 @@ public class MainActivity extends ActionBarActivity
     private void populateTagList() {
         final List<Tag> tags = TagSettings
                 .getProfileTags(this, mSelectedProfileId, mTagOrder, TagSettings.LIMIT_UNBOUNDED);
-        final @ListStatus int stateBeforeUpdating = getTagListStatus();
+        @ListStatus final int stateBeforeUpdating = getTagListStatus();
 
         if (stateBeforeUpdating == LIST_NOT_INITIALIZED) {
             mAdapter = new TagListAdapter(this, mSelectedProfileId, mTagOrder, mTagClickedListener,
@@ -334,7 +322,7 @@ public class MainActivity extends ActionBarActivity
      * When the user selects a different profile, a different tag list is generated and the adapter
      * must be updated.
      */
-    private void updateTagListView(final @ListStatus int stateBeforeUpdating,
+    private void updateTagListView(@ListStatus final int stateBeforeUpdating,
                                    final List<Tag> newTags) {
         if (!newTags.isEmpty()) {
             switch (stateBeforeUpdating) {
@@ -439,40 +427,33 @@ public class MainActivity extends ActionBarActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
+        // automatically handle clicks on the Home/Up button, as long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
+            startActivity(new Intent(this, SettingsActivity.class));
         } else if (id == R.id.action_edit_profile) {
-            Intent intent = new Intent(this, EditProfileActivity.class);
-            intent.putExtra(EditProfileActivity.EXTRA_PROFILE_ID, mSelectedProfileId);
-            startActivity(intent);
-            return true;
+            startActivity(new Intent(this, EditProfileActivity.class)
+                    .putExtra(EditProfileActivity.EXTRA_PROFILE_ID, mSelectedProfileId));
         } else if (id == R.id.action_help) {
-            Intent intent = new Intent(this, TutorialActivity.class);
-            startActivity(intent);
-            return true;
+            startActivity(new Intent(this, TutorialActivity.class));
         } else if (id == R.id.action_about) {
             AboutDialog.showAbout(this);
-            return true;
         } else if (id == R.id.action_sort_by_usage) {
             mTagOrder = TagSettings.ORDER_BY_HASH_COUNTER;
             Preferences.setTagOrder(this, mTagOrder);
             mAdapter.setTagOrder(mTagOrder);
             populateTagList();
-            return true;
         } else if (id == R.id.action_sort_by_name) {
             mTagOrder = TagSettings.ORDER_BY_NAME;
             Preferences.setTagOrder(this, mTagOrder);
             mAdapter.setTagOrder(mTagOrder);
             populateTagList();
-            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
@@ -566,27 +547,27 @@ public class MainActivity extends ActionBarActivity
     }
 
     private void deleteTag(Tag tag) {
-        if (TagSettings.deleteTag(this, tag)) {
-
-            // Update tags list
-            mAdapter.remove(tag);
-
-            if (mAdapter.getItemCount() == 0) {
-                updateTagListView(LIST_CONTAINS_ITEMS, mAdapter.getTags());
-            }
-
-            // Check if we should delete favicon
-            String site = tag.getSite();
-            if (site != null) {
-                Favicon favicon = FaviconSettings.getFavicon(this, site);
-                if (favicon != null && !TagSettings.siteHasTags(this, site)) {
-                    FaviconSettings.deleteFavicon(this, favicon);
-                }
-
-            }
-        } else {
-            // Error!
+        if (!TagSettings.deleteTag(this, tag)) {
             Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();
+            Log.e(HashMyPassApplication.LOG_TAG, "Error deleting tag from database");
+            return;
+        }
+
+        // Update tags list
+        mAdapter.remove(tag);
+
+        if (mAdapter.getItemCount() == 0) {
+            updateTagListView(LIST_CONTAINS_ITEMS, mAdapter.getTags());
+        }
+
+        // Check if we should delete favicon
+        String site = tag.getSite();
+        if (site != null) {
+            Favicon favicon = FaviconSettings.getFavicon(this, site);
+            boolean shouldDeleteFavicon = favicon != null && !TagSettings.siteHasTags(this, site);
+            if (shouldDeleteFavicon && !FaviconSettings.deleteFavicon(this, favicon)) {
+                Log.e(HashMyPassApplication.LOG_TAG, "Error deleting favicon");
+            }
         }
     }
 
@@ -596,6 +577,10 @@ public class MainActivity extends ActionBarActivity
         dialog.setTag(tag);
         dialog.setDialogOkListener(this);
         dialog.show(getFragmentManager(), FRAGMENT_GENERATE_PASSWORD);
+    }
+
+    @IntDef({LIST_EMPTY, LIST_CONTAINS_ITEMS, LIST_NOT_INITIALIZED})
+    private @interface ListStatus {
     }
 
     private class TagClickListener implements TagListAdapter.OnTagClickedListener {
@@ -648,6 +633,12 @@ public class MainActivity extends ActionBarActivity
         private final AnimatorSet mVisibleAnimator;
         private final List<Tag> mTags;
 
+        /**
+         * Constructor
+         *
+         * @param visibleAnimator the visibility {@link android.animation.AnimatorSet} instance
+         * @param tags            the {@link java.util.List} of tags
+         */
         public TagListProfileChangedAnimatorListener(AnimatorSet visibleAnimator, List<Tag> tags) {
             mVisibleAnimator = visibleAnimator;
             mTags = tags;

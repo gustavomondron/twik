@@ -21,6 +21,9 @@ package com.reddyetwo.hashmypass.app.data;
 
 import android.graphics.Bitmap;
 
+/**
+ * POJO class for favicons
+ */
 public class Favicon {
 
     public static final long NO_ID = -1;
@@ -29,20 +32,42 @@ public class Favicon {
     private final String mSite;
     private final Bitmap mIcon;
 
+    /**
+     * Constructor
+     *
+     * @param id   the ID
+     * @param site the site
+     * @param icon the icon
+     */
     public Favicon(long id, String site, Bitmap icon) {
         mId = id;
         mSite = site;
         mIcon = icon;
     }
 
+    /**
+     * Get the favicon ID
+     *
+     * @return the favicon ID
+     */
     public long getId() {
         return mId;
     }
 
+    /**
+     * Get the favicon site
+     *
+     * @return the favicon site
+     */
     public String getSite() {
         return mSite;
     }
 
+    /**
+     * Get the icon {@link android.graphics.Bitmap}
+     *
+     * @return the icon
+     */
     public Bitmap getIcon() {
         return mIcon;
     }

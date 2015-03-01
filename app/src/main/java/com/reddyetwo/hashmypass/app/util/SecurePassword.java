@@ -26,12 +26,21 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
+/**
+ * A class which can be used to manage and store passwords in a secure way, preventing the usage of immutable objectsA
+ */
 public class SecurePassword {
 
     private SecurePassword() {
 
     }
 
+    /**
+     * Get the password stored in an {@link android.text.Editable} object
+     *
+     * @param s the {@link android.text.Editable} instance
+     * @return the password
+     */
     public static char[] getPassword(Editable s) {
         int length = s.length();
         char[] password = new char[length];
@@ -41,12 +50,18 @@ public class SecurePassword {
         return password;
     }
 
+    /**
+     * Convert a password stored as a char array to a byte array
+     *
+     * @param chars the password as a char array
+     * @return the password as a byte array
+     */
     public static byte[] toBytes(char[] chars) {
         CharBuffer charBuffer = CharBuffer.wrap(chars);
         ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
         byte[] bytes =
                 Arrays.copyOfRange(byteBuffer.array(), byteBuffer.position(), byteBuffer.limit());
-        
+
         // Clear sensitive data
         Arrays.fill(charBuffer.array(), '\u0000');
         Arrays.fill(byteBuffer.array(), (byte) 0);

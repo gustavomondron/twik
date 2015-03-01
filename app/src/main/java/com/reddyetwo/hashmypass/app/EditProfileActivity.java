@@ -27,22 +27,28 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
+import com.reddyetwo.hashmypass.app.dialog.PasswordLengthDialogFragment;
 import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.KeyboardManager;
 import com.reddyetwo.hashmypass.app.util.ProfileFormInflater;
 import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
-import com.reddyetwo.hashmypass.app.views.MaterialColorPalette;
+import com.reddyetwo.hashmypass.app.view.MaterialColorPalette;
 
+/**
+ * Activity which allows editing an existing profile
+ */
 public class EditProfileActivity extends ActionBarActivity {
 
     public static final String EXTRA_PROFILE_ID = "profile_id";
@@ -133,7 +139,11 @@ public class EditProfileActivity extends ActionBarActivity {
                         Integer.decode((String) mPasswordLengthSpinner.getSelectedItem()),
                         PasswordType.values()[mPasswordTypeSpinner.getSelectedItemPosition()],
                         mColor);
-                ProfileSettings.updateProfile(EditProfileActivity.this, profile);
+                if (!ProfileSettings.updateProfile(EditProfileActivity.this, profile)) {
+                    Log.e(HashMyPassApplication.LOG_TAG, "Error updating profile");
+                    Toast.makeText(EditProfileActivity.this, R.string.error, Toast.LENGTH_LONG)
+                            .show();
+                }
 
                 // Go to the parent activity
                 NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
@@ -204,8 +214,10 @@ public class EditProfileActivity extends ActionBarActivity {
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ProfileSettings.deleteProfile(EditProfileActivity
-                                    .this, mProfileId);
+                            if (!ProfileSettings.deleteProfile(EditProfileActivity
+                                    .this, mProfileId)) {
+                                Log.e(HashMyPassApplication.LOG_TAG, "Error deleting profile");
+                            }
                             NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
                         }
                     });
