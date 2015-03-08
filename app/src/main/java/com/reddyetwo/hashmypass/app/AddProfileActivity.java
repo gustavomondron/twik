@@ -49,18 +49,59 @@ import com.reddyetwo.hashmypass.app.view.MaterialColorPalette;
  */
 public class AddProfileActivity extends ActionBarActivity {
 
-    // Result codes
+    /**
+     * Activity result key
+     */
     public static final String RESULT_KEY_PROFILE_ID = "profile_id";
 
-    // State bundle keys
+    /**
+     * Key for saving/getting password length to/from saved instance state bundle
+     */
     private static final String KEY_PASSWORD_LENGTH = "password_length";
 
-    // UI Widgets
+    /**
+     * Profile name {@link android.widget.EditText}
+     */
     private EditText mNameEditText;
+
+    /**
+     * Private key {@link android.widget.EditText}
+     */
     private EditText mPrivateKeyEditText;
+
+    /**
+     * Password type {@link android.widget.Spinner}
+     */
     private Spinner mPasswordTypeSpinner;
+
+    /**
+     * Password length {@link android.widget.Spinner}
+     */
     private Spinner mPasswordLengthSpinner;
 
+    /**
+     * {@link android.widget.Button} for adding profile
+     */
+    private Button mAddButton;
+
+    /**
+     * {@link android.widget.Button} for discarding changes
+     */
+    private Button mDiscardButton;
+
+    /**
+     * {@link com.reddyetwo.hashmypass.app.view.MaterialColorPalette} to pick a profile color
+     */
+    private MaterialColorPalette mColorPalette;
+
+    /**
+     * Password length selected when the activity is shown
+     */
+    private int mInitialPasswordLength;
+
+    /**
+     * Selected color index in the {@link com.reddyetwo.hashmypass.app.view.MaterialColorPalette} instance
+     */
     private int mColor = 0;
 
     @Override
@@ -74,69 +115,9 @@ public class AddProfileActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Get UI widgets
-        mNameEditText = (EditText) findViewById(R.id.profile_name_text);
-        mPrivateKeyEditText = (EditText) findViewById(R.id.private_key_text);
-
-        // Set private key typeface
-        Typeface monospacedTypeface =
-                Typeface.createFromAsset(getAssets(), Constants.FONT_MONOSPACE);
-        mPrivateKeyEditText.setTypeface(monospacedTypeface);
-
-        // Populating password length spinner is a bit more tricky
-        // We have to restore its value from savedInstanceState...
-        mPasswordLengthSpinner = (Spinner) findViewById(R.id.password_length_spinner);
-        int passwordLength;
-        if (savedInstanceState != null) {
-            passwordLength = savedInstanceState.getInt(KEY_PASSWORD_LENGTH);
-        } else {
-            passwordLength = Constants.DEFAULT_PASSWORD_LENGTH;
-        }
-        ProfileFormInflater
-                .populatePasswordLengthSpinner(this, mPasswordLengthSpinner, passwordLength);
-        // Show number picker dialog when the spinner is touched
-        mPasswordLengthSpinner.setOnTouchListener(
-                new MovementTouchListener(this, new MovementTouchListener.OnPressedListener() {
-                    @Override
-                    public void onPressed() {
-                        showDialog();
-                    }
-                }));
-
-        mPasswordTypeSpinner = (Spinner) findViewById(R.id.password_type_spinner);
-        ProfileFormInflater.populatePasswordTypeSpinner(this, mPasswordTypeSpinner,
-                PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
-
-        Button addButton = (Button) findViewById(R.id.add_button);
-        addButton.setOnClickListener(new AddProfileButtonOnClickListener());
-
-        Button discardButton = (Button) findViewById(R.id.discard_button);
-        discardButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setResult(RESULT_CANCELED);
-
-                // Navigate to previous activity
-                NavUtils.navigateUpFromSameTask(AddProfileActivity.this);
-            }
-        });
-
-        // Add form watcher for enabling/disabling Add button
-        ProfileFormWatcher profileFormWatcher =
-                new ProfileFormWatcher(getApplicationContext(), Profile.NO_ID, mNameEditText,
-                        mPrivateKeyEditText, addButton);
-        mNameEditText.addTextChangedListener(profileFormWatcher);
-        mPrivateKeyEditText.addTextChangedListener(profileFormWatcher);
-        mPrivateKeyEditText.setText(RandomPrivateKeyGenerator.generate());
-
-        MaterialColorPalette colorPalette =
-                (MaterialColorPalette) findViewById(R.id.profile_color_palette);
-        colorPalette.setOnColorSelectedListener(new MaterialColorPalette.OnColorSelectedListener() {
-            @Override
-            public void onColorSelected(int color) {
-                mColor = color;
-            }
-        });
+        initializeView();
+        initializeSettings(savedInstanceState);
+        populateView();
     }
 
     @Override
@@ -162,8 +143,94 @@ public class AddProfileActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /* Shows a number picker dialog for choosing the password length */
-    private void showDialog() {
+    private void initializeView() {
+        mNameEditText = (EditText) findViewById(R.id.profile_name_text);
+
+        // Use a monospaced typeface for private key which allows distinguishing 0 from O.
+        mPrivateKeyEditText = (EditText) findViewById(R.id.private_key_text);
+        Typeface monospacedTypeface =
+                Typeface.createFromAsset(getAssets(), Constants.FONT_MONOSPACE);
+        mPrivateKeyEditText.setTypeface(monospacedTypeface);
+
+        mPasswordLengthSpinner = (Spinner) findViewById(R.id.password_length_spinner);
+        mPasswordTypeSpinner = (Spinner) findViewById(R.id.password_type_spinner);
+        mAddButton = (Button) findViewById(R.id.add_button);
+        mDiscardButton = (Button) findViewById(R.id.discard_button);
+        mColorPalette = (MaterialColorPalette) findViewById(R.id.profile_color_palette);
+
+        addPasswordLengthTouchListener();
+        addAddButtonClickListener();
+        addDiscardButtonClickListener();
+        addColorPaletteSelectedListener();
+        addFormChangedListener();
+    }
+
+    private void initializeSettings(Bundle savedInstanceState) {
+        mInitialPasswordLength =
+                savedInstanceState != null ? savedInstanceState.getInt(KEY_PASSWORD_LENGTH) :
+                        Constants.DEFAULT_PASSWORD_LENGTH;
+
+    }
+
+    private void populateView() {
+        ProfileFormInflater.populatePasswordLengthSpinner(this, mPasswordLengthSpinner,
+                mInitialPasswordLength);
+
+        ProfileFormInflater.populatePasswordTypeSpinner(this, mPasswordTypeSpinner,
+                PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
+
+        mPrivateKeyEditText.setText(RandomPrivateKeyGenerator.generate());
+    }
+
+    private void addPasswordLengthTouchListener() {
+        mPasswordLengthSpinner.setOnTouchListener(
+                new MovementTouchListener(this, new MovementTouchListener.OnPressedListener() {
+                    @Override
+                    public void onPressed() {
+                        showPasswordLengthDialog();
+                    }
+                }));
+    }
+
+    private void addAddButtonClickListener() {
+        mAddButton.setOnClickListener(new AddProfileButtonOnClickListener());
+    }
+
+    private void addDiscardButtonClickListener() {
+        mDiscardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(RESULT_CANCELED);
+
+                // Navigate to previous activity
+                NavUtils.navigateUpFromSameTask(AddProfileActivity.this);
+            }
+        });
+
+    }
+
+    private void addColorPaletteSelectedListener() {
+        mColorPalette
+                .setOnColorSelectedListener(new MaterialColorPalette.OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(int color) {
+                        mColor = color;
+                    }
+                });
+    }
+
+    private void addFormChangedListener() {
+        ProfileFormWatcher profileFormWatcher =
+                new ProfileFormWatcher(getApplicationContext(), Profile.NO_ID, mNameEditText,
+                        mPrivateKeyEditText, mAddButton);
+        mNameEditText.addTextChangedListener(profileFormWatcher);
+        mPrivateKeyEditText.addTextChangedListener(profileFormWatcher);
+    }
+
+    /**
+     * Shows a number picker dialog for choosing the password length
+     */
+    private void showPasswordLengthDialog() {
         PasswordLengthDialogFragment dialogFragment = new PasswordLengthDialogFragment();
         dialogFragment.setPasswordLength(
                 Integer.parseInt((String) mPasswordLengthSpinner.getSelectedItem()));
