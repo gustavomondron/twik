@@ -17,11 +17,11 @@
  * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.reddyetwo.hashmypass.app;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -47,7 +47,7 @@ import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
 import com.reddyetwo.hashmypass.app.view.MaterialColorPalette;
 
 /**
- * Activity which allows editing an existing profile
+ * Activity which allows editing or adding a profile
  */
 public class EditProfileActivity extends ActionBarActivity {
 
@@ -55,6 +55,11 @@ public class EditProfileActivity extends ActionBarActivity {
      * Key for Profile ID extra received in the startActivity {@link android.content.Intent}
      */
     public static final String EXTRA_PROFILE_ID = "profile_id";
+
+    /**
+     * Activity result key which contains the ID of the added profile
+     */
+    public static final String RESULT_KEY_PROFILE_ID = "profile_id";
 
     /**
      * Key for saving/getting password length to/from saved instance state bundle
@@ -158,9 +163,12 @@ public class EditProfileActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.edit_profile, menu);
-        return true;
+        if (mProfileId != Profile.NO_ID) {
+            getMenuInflater().inflate(R.menu.edit_profile, menu);
+            return true;
+        } else {
+            return super.onCreateOptionsMenu(menu);
+        }
     }
 
     @Override
@@ -202,14 +210,19 @@ public class EditProfileActivity extends ActionBarActivity {
      * @return true if data has been successfully loaded, false otherwise
      */
     private boolean loadProfileData() {
-        mProfileId = getIntent().getLongExtra(EXTRA_PROFILE_ID, -1);
+        mProfileId = getIntent().getLongExtra(EXTRA_PROFILE_ID, Profile.NO_ID);
 
-        // Load profile from database
-        mProfile = ProfileSettings.getProfile(this, mProfileId);
-        if (mProfile == null) {
-            // Profile not found
-            NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
-            return false;
+        if (mProfileId != Profile.NO_ID) {
+            // Load profile from database
+            mProfile = ProfileSettings.getProfile(this, mProfileId);
+            if (mProfile == null) {
+                // Profile not found
+                NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
+                return false;
+            }
+        } else {
+            mProfile = new Profile();
+            setTitle(R.string.action_add_profile);
         }
 
         mColor = mProfile.getColorIndex();
@@ -263,21 +276,17 @@ public class EditProfileActivity extends ActionBarActivity {
                     public void onPressed() {
                         showPasswordLengthDialog();
                     }
-                }
-
-                ));
+                }));
     }
 
     private void addColorPaletteSelectedListener() {
         mColorPalette
                 .setOnColorSelectedListener(new MaterialColorPalette.OnColorSelectedListener() {
-                                                @Override
-                                                public void onColorSelected(int color) {
-                                                    mColor = color;
-                                                }
-                                            }
-
-                );
+                    @Override
+                    public void onColorSelected(int color) {
+                        mColor = color;
+                    }
+                });
     }
 
     private void addFormChangedListener() {
@@ -294,14 +303,12 @@ public class EditProfileActivity extends ActionBarActivity {
 
     private void addDiscardButtonClickListener() {
         mDiscardButton.setOnClickListener(new View.OnClickListener() {
-                                              @Override
-                                              public void onClick(View v) {
-                                                  NavUtils.navigateUpFromSameTask(
-                                                          EditProfileActivity.this);
-                                              }
-                                          }
-
-        );
+            @Override
+            public void onClick(View v) {
+                setResult(RESULT_CANCELED);
+                NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
+            }
+        });
     }
 
     /**
@@ -330,7 +337,16 @@ public class EditProfileActivity extends ActionBarActivity {
                     mPrivateKeyEditText.getText().toString(),
                     Integer.decode((String) mPasswordLengthSpinner.getSelectedItem()),
                     PasswordType.values()[mPasswordTypeSpinner.getSelectedItemPosition()], mColor);
-            if (!ProfileSettings.updateProfile(EditProfileActivity.this, profile)) {
+            if (mProfileId == Profile.NO_ID) {
+                long profileId = ProfileSettings.insertProfile(EditProfileActivity.this, profile);
+                if (profileId == -1) {
+                    setResult(RESULT_CANCELED);
+                } else {
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra(RESULT_KEY_PROFILE_ID, profileId);
+                    setResult(RESULT_OK, resultIntent);
+                }
+            } else if (!ProfileSettings.updateProfile(EditProfileActivity.this, profile)) {
                 Log.e(HashMyPassApplication.LOG_TAG, "Error updating profile");
                 Toast.makeText(EditProfileActivity.this, R.string.error, Toast.LENGTH_LONG).show();
             }

@@ -461,7 +461,7 @@ public class MainActivity extends ActionBarActivity
         switch (requestCode) {
             case REQUEST_ADD_PROFILE:
                 if (resultCode == RESULT_OK) {
-                    addProfile(data.getLongExtra(AddProfileActivity.RESULT_KEY_PROFILE_ID, 0));
+                    addProfile(data.getLongExtra(EditProfileActivity.RESULT_KEY_PROFILE_ID, 0));
                 }
                 break;
             case REQUEST_CREATE_DEFAULT_PROFILE:
@@ -509,7 +509,9 @@ public class MainActivity extends ActionBarActivity
 
 
             /* It may happen that the last profiled used for hashing no longer exists */
-            position = position % profiles.size();
+            if (position == -1) {
+                position = 0;
+            }
             spinner.setSelection(position);
         }
     }
@@ -612,7 +614,8 @@ public class MainActivity extends ActionBarActivity
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             if (id == Profile.NO_ID) {
-                Intent intent = new Intent(MainActivity.this, AddProfileActivity.class);
+                Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
+                intent.putExtra(EditProfileActivity.EXTRA_PROFILE_ID, id);
                 startActivityForResult(intent, REQUEST_ADD_PROFILE);
             } else if (id != mSelectedProfileId) {
                 mSelectedProfileId = id;
