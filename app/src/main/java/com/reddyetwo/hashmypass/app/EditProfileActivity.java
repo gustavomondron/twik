@@ -17,11 +17,11 @@
  * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package com.reddyetwo.hashmypass.app;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -47,38 +47,92 @@ import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
 import com.reddyetwo.hashmypass.app.view.MaterialColorPalette;
 
 /**
- * Activity which allows editing an existing profile
+ * Activity which allows editing or adding a profile
  */
 public class EditProfileActivity extends ActionBarActivity {
 
+    /**
+     * Key for Profile ID extra received in the startActivity {@link android.content.Intent}
+     */
     public static final String EXTRA_PROFILE_ID = "profile_id";
 
-    // State bundle keys
+    /**
+     * Activity result key which contains the ID of the added profile
+     */
+    public static final String RESULT_KEY_PROFILE_ID = "profile_id";
+
+    /**
+     * Key for saving/getting password length to/from saved instance state bundle
+     */
     private static final String KEY_PASSWORD_LENGTH = "password_length";
 
-    // UI Widgets
+    /**
+     * Profile name {@link android.widget.EditText}
+     */
     private EditText mNameEditText;
+
+    /**
+     * Private key {@link android.widget.EditText}
+     */
     private EditText mPrivateKeyEditText;
+
+    /**
+     * Password length {@link android.widget.Spinner}
+     */
     private Spinner mPasswordLengthSpinner;
+
+    /**
+     * Password type {@link android.widget.Spinner}
+     */
     private Spinner mPasswordTypeSpinner;
 
-    // Activity status
+    /**
+     * {@link android.widget.Button} for saving the profile changes
+     */
+    private Button mSaveButton;
+
+    /**
+     * {@link android.widget.Button} for discarding changes
+     */
+    private Button mDiscardButton;
+
+    /**
+     * {@link com.reddyetwo.hashmypass.app.view.MaterialColorPalette} to pick a profile color
+     */
+    private MaterialColorPalette mColorPalette;
+
+    /**
+     * Profile ID
+     */
     private long mProfileId;
+
+    /**
+     * Name of the profile (before being modified in the form)
+     */
     private String mOriginalName;
+
+    /**
+     * Password length selected when the activity is shown
+     */
+    private int mInitialPasswordLength;
+
+    /**
+     * Selected color index in the {@link com.reddyetwo.hashmypass.app.view.MaterialColorPalette} instance
+     */
     private int mColor;
+
+    /**
+     * The {@link com.reddyetwo.hashmypass.app.data.Profile} instance to operate on
+     */
+    private Profile mProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_edit_profile);
-        mProfileId = getIntent().getLongExtra(EXTRA_PROFILE_ID, -1);
 
-        // Load profile from database
-        Profile profile = ProfileSettings.getProfile(this, mProfileId);
-        if (profile == null) {
-            // Profile not found
-            NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
+        if (!loadProfileData()) {
             return;
         }
 
@@ -87,94 +141,11 @@ public class EditProfileActivity extends ActionBarActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setSubtitle(profile.getName());
+        getSupportActionBar().setSubtitle(mProfile.getName());
 
-        mPasswordTypeSpinner = (Spinner) findViewById(R.id.password_type_spinner);
-        Button discardButton = (Button) findViewById(R.id.discard_button);
-        Button saveButton = (Button) findViewById(R.id.save_button);
-
-        // Populate UI widgets
-        mOriginalName = profile.getName();
-        mNameEditText = (EditText) findViewById(R.id.profile_name_text);
-        mNameEditText.setText(mOriginalName);
-
-        mPrivateKeyEditText = (EditText) findViewById(R.id.private_key_text);
-        mPrivateKeyEditText.setText(profile.getPrivateKey());
-
-        // Set private key typeface
-        Typeface monospacedTypeface =
-                Typeface.createFromAsset(getAssets(), Constants.FONT_MONOSPACE);
-        mPrivateKeyEditText.setTypeface(monospacedTypeface);
-
-        // Populating password length spinner is a bit more tricky
-        // We have to restore its value from savedInstanceState...
-        mPasswordLengthSpinner = (Spinner) findViewById(R.id.password_length_spinner);
-        int passwordLength;
-        if (savedInstanceState != null) {
-            passwordLength = savedInstanceState.getInt(KEY_PASSWORD_LENGTH);
-        } else {
-            passwordLength = profile.getPasswordLength();
-        }
-        ProfileFormInflater
-                .populatePasswordLengthSpinner(this, mPasswordLengthSpinner, passwordLength);
-        // Show number picker dialog when the spinner is touched
-        mPasswordLengthSpinner.setOnTouchListener(
-                new MovementTouchListener(this, new MovementTouchListener.OnPressedListener() {
-                    @Override
-                    public void onPressed() {
-                        showDialog();
-                    }
-                }));
-
-        mPasswordTypeSpinner = (Spinner) findViewById(R.id.password_type_spinner);
-        ProfileFormInflater
-                .populatePasswordTypeSpinner(this, mPasswordTypeSpinner, profile.getPasswordType());
-
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Update profile in the database
-                Profile profile = new Profile(mProfileId, mNameEditText.getText().toString(),
-                        mPrivateKeyEditText.getText().toString(),
-                        Integer.decode((String) mPasswordLengthSpinner.getSelectedItem()),
-                        PasswordType.values()[mPasswordTypeSpinner.getSelectedItemPosition()],
-                        mColor);
-                if (!ProfileSettings.updateProfile(EditProfileActivity.this, profile)) {
-                    Log.e(HashMyPassApplication.LOG_TAG, "Error updating profile");
-                    Toast.makeText(EditProfileActivity.this, R.string.error, Toast.LENGTH_LONG)
-                            .show();
-                }
-
-                // Go to the parent activity
-                NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
-            }
-        });
-
-        discardButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
-            }
-        });
-
-        // Add form watcher for enabling/disabling Save button
-        ProfileFormWatcher profileFormWatcher =
-                new ProfileFormWatcher(getApplicationContext(), mProfileId, mNameEditText,
-                        mPrivateKeyEditText, saveButton);
-        mNameEditText.addTextChangedListener(profileFormWatcher);
-        mPrivateKeyEditText.addTextChangedListener(profileFormWatcher);
-
-        mColor = profile.getColorIndex();
-        MaterialColorPalette colorPalette =
-                (MaterialColorPalette) findViewById(R.id.profile_color_palette);
-        colorPalette.setSelectedPosition(mColor);
-        colorPalette.setOnColorSelectedListener(new MaterialColorPalette.OnColorSelectedListener() {
-            @Override
-            public void onColorSelected(int color) {
-                mColor = color;
-            }
-        });
-        colorPalette.scrollToPosition(mColor);
+        initializeView();
+        initializeSettings(savedInstanceState);
+        populateView();
     }
 
     @Override
@@ -192,9 +163,12 @@ public class EditProfileActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.edit_profile, menu);
-        return true;
+        if (mProfileId != Profile.NO_ID) {
+            getMenuInflater().inflate(R.menu.edit_profile, menu);
+            return true;
+        } else {
+            return super.onCreateOptionsMenu(menu);
+        }
     }
 
     @Override
@@ -214,11 +188,12 @@ public class EditProfileActivity extends ActionBarActivity {
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            if (!ProfileSettings.deleteProfile(EditProfileActivity
+                            if (ProfileSettings.deleteProfile(EditProfileActivity
                                     .this, mProfileId)) {
+                                NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
+                            } else {
                                 Log.e(HashMyPassApplication.LOG_TAG, "Error deleting profile");
                             }
-                            NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
                         }
                     });
             builder.setNegativeButton(android.R.string.cancel, null);
@@ -229,8 +204,117 @@ public class EditProfileActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /* Shows a number picker dialog for choosing the password length */
-    private void showDialog() {
+    /**
+     * Load the profile data.
+     *
+     * @return true if data has been successfully loaded, false otherwise
+     */
+    private boolean loadProfileData() {
+        mProfileId = getIntent().getLongExtra(EXTRA_PROFILE_ID, Profile.NO_ID);
+
+        if (mProfileId != Profile.NO_ID) {
+            // Load profile from database
+            mProfile = ProfileSettings.getProfile(this, mProfileId);
+            if (mProfile == null) {
+                // Profile not found
+                NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
+                return false;
+            }
+        } else {
+            mProfile = new Profile();
+            setTitle(R.string.action_add_profile);
+        }
+
+        mColor = mProfile.getColorIndex();
+        mOriginalName = mProfile.getName();
+        return true;
+    }
+
+    private void initializeView() {
+        mPasswordTypeSpinner = (Spinner) findViewById(R.id.password_type_spinner);
+        mPasswordLengthSpinner = (Spinner) findViewById(R.id.password_length_spinner);
+        mDiscardButton = (Button) findViewById(R.id.discard_button);
+        mSaveButton = (Button) findViewById(R.id.save_button);
+        mNameEditText = (EditText) findViewById(R.id.profile_name_text);
+        mColorPalette = (MaterialColorPalette) findViewById(R.id.profile_color_palette);
+
+
+        mPrivateKeyEditText = (EditText) findViewById(R.id.private_key_text);
+        // Use a monospaced typeface for private key which allows distinguishing 0 from O.
+        Typeface monospacedTypeface =
+                Typeface.createFromAsset(getAssets(), Constants.FONT_MONOSPACE);
+        mPrivateKeyEditText.setTypeface(monospacedTypeface);
+
+        addPasswordLengthTouchListener();
+        addColorPaletteSelectedListener();
+        addSaveButtonClickListener();
+        addDiscardButtonClickListener();
+        addFormChangedListener();
+    }
+
+    private void initializeSettings(Bundle savedInstanceState) {
+        mInitialPasswordLength =
+                savedInstanceState != null ? savedInstanceState.getInt(KEY_PASSWORD_LENGTH) :
+                        mProfile.getPasswordLength();
+    }
+
+    private void populateView() {
+        mNameEditText.setText(mOriginalName);
+        mPrivateKeyEditText.setText(mProfile.getPrivateKey());
+        ProfileFormInflater.populatePasswordLengthSpinner(this, mPasswordLengthSpinner,
+                mInitialPasswordLength);
+        ProfileFormInflater.populatePasswordTypeSpinner(this, mPasswordTypeSpinner,
+                mProfile.getPasswordType());
+        mColorPalette.setSelectedPosition(mColor);
+        mColorPalette.scrollToPosition(mColor);
+    }
+
+    private void addPasswordLengthTouchListener() {
+        mPasswordLengthSpinner.setOnTouchListener(
+                new MovementTouchListener(this, new MovementTouchListener.OnPressedListener() {
+                    @Override
+                    public void onPressed() {
+                        showPasswordLengthDialog();
+                    }
+                }));
+    }
+
+    private void addColorPaletteSelectedListener() {
+        mColorPalette
+                .setOnColorSelectedListener(new MaterialColorPalette.OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(int color) {
+                        mColor = color;
+                    }
+                });
+    }
+
+    private void addFormChangedListener() {
+        ProfileFormWatcher profileFormWatcher =
+                new ProfileFormWatcher(getApplicationContext(), mProfileId, mNameEditText,
+                        mPrivateKeyEditText, mSaveButton);
+        mNameEditText.addTextChangedListener(profileFormWatcher);
+        mPrivateKeyEditText.addTextChangedListener(profileFormWatcher);
+    }
+
+    private void addSaveButtonClickListener() {
+        mSaveButton.setOnClickListener(new SaveButtonClickListener());
+    }
+
+    private void addDiscardButtonClickListener() {
+        mDiscardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(RESULT_CANCELED);
+                NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
+            }
+        });
+    }
+
+    /**
+     * Shows a number picker dialog for choosing the password length
+     */
+    private void showPasswordLengthDialog() {
         PasswordLengthDialogFragment dialogFragment = new PasswordLengthDialogFragment();
         dialogFragment.setPasswordLength(
                 Integer.parseInt((String) mPasswordLengthSpinner.getSelectedItem()));
@@ -243,5 +327,32 @@ public class EditProfileActivity extends ActionBarActivity {
         });
 
         dialogFragment.show(getFragmentManager(), "passwordLength");
+    }
+
+    private class SaveButtonClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            // Update profile in the database
+            Profile profile = new Profile(mProfileId, mNameEditText.getText().toString(),
+                    mPrivateKeyEditText.getText().toString(),
+                    Integer.decode((String) mPasswordLengthSpinner.getSelectedItem()),
+                    PasswordType.values()[mPasswordTypeSpinner.getSelectedItemPosition()], mColor);
+            if (mProfileId == Profile.NO_ID) {
+                long profileId = ProfileSettings.insertProfile(EditProfileActivity.this, profile);
+                if (profileId == -1) {
+                    setResult(RESULT_CANCELED);
+                } else {
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra(RESULT_KEY_PROFILE_ID, profileId);
+                    setResult(RESULT_OK, resultIntent);
+                }
+            } else if (!ProfileSettings.updateProfile(EditProfileActivity.this, profile)) {
+                Log.e(HashMyPassApplication.LOG_TAG, "Error updating profile");
+                Toast.makeText(EditProfileActivity.this, R.string.error, Toast.LENGTH_LONG).show();
+            }
+
+            // Go to the parent activity
+            NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
+        }
     }
 }

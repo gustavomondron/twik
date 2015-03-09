@@ -20,6 +20,9 @@
 
 package com.reddyetwo.hashmypass.app.data;
 
+import com.reddyetwo.hashmypass.app.util.Constants;
+import com.reddyetwo.hashmypass.app.util.RandomPrivateKeyGenerator;
+
 /**
  * POJO class for profiles
  */
@@ -28,11 +31,11 @@ public class Profile {
     public static final long NO_ID = -1;
 
     private long mId = NO_ID;
-    private String mName;
-    private String mPrivateKey;
-    private int mPasswordLength;
-    private int mColorIndex;
-    private PasswordType mPasswordType;
+    private String mName = "";
+    private String mPrivateKey = RandomPrivateKeyGenerator.generate();
+    private int mPasswordLength = Constants.DEFAULT_PASSWORD_LENGTH;
+    private int mColorIndex = 0;
+    private PasswordType mPasswordType = PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS;
 
     /**
      * Constructor
