@@ -24,9 +24,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Html;
@@ -42,6 +40,9 @@ import com.reddyetwo.hashmypass.app.util.PackageUtils;
  */
 public class AboutDialog extends DialogFragment {
 
+    /**
+     * Tag to identify the {@link android.app.DialogFragment}
+     */
     private static final String FRAGMENT_DIALOG_TAG = "dialog_about";
 
     /**
@@ -56,16 +57,11 @@ public class AboutDialog extends DialogFragment {
      * @param activity the {@link android.app.Activity} instance
      */
     public static void showAbout(Activity activity) {
-
+        // Ensure that the dialog is not shown several times simultaneously
         FragmentManager fm = activity.getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        Fragment prev = fm.findFragmentByTag(FRAGMENT_DIALOG_TAG);
-        if (prev != null) {
-            ft.remove(prev);
+        if (fm.findFragmentByTag(FRAGMENT_DIALOG_TAG) == null) {
+            new AboutDialog().show(fm, FRAGMENT_DIALOG_TAG);
         }
-        ft.addToBackStack(null);
-
-        new AboutDialog().show(ft, FRAGMENT_DIALOG_TAG);
     }
 
     @Override
