@@ -26,10 +26,24 @@ import android.graphics.Bitmap;
  */
 public class Favicon {
 
+    /**
+     * Constant used to identify favicons which are not stored
+     */
     public static final long NO_ID = -1;
 
+    /**
+     * ID of the favicon
+     */
     private final long mId;
+
+    /**
+     * Name of the site related to the favicon
+     */
     private final String mSite;
+
+    /**
+     * Icon bitmap
+     */
     private final Bitmap mIcon;
 
     /**

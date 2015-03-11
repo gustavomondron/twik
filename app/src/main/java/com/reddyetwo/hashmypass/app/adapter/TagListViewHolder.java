@@ -30,7 +30,14 @@ import com.reddyetwo.hashmypass.app.R;
  */
 public class TagListViewHolder extends RecyclerView.ViewHolder {
 
+    /**
+     * Text view which shows the favicon
+     */
     private final TextView mFaviconTextView;
+
+    /**
+     * Text view which shows the tag name
+     */
     private final TextView mTagNameTextView;
 
     /**
