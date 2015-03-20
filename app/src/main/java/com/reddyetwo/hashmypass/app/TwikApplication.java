@@ -21,26 +21,42 @@
 package com.reddyetwo.hashmypass.app;
 
 import android.app.Application;
-import android.content.Context;
 
 import com.reddyetwo.hashmypass.app.data.Preferences;
+
+import java.util.Arrays;
 
 /**
  * Class extending {@link android.app.Application} which contains data which can be accessed
  * from any application Activity
  */
-public class HashMyPassApplication extends Application {
+public class TwikApplication extends Application {
 
     public static final String LOG_TAG = "TWIK";
-    private static char[] mCachedMasterKey = new char[]{};
-    private static boolean mTutorialDismissed = false;
+    private char[] mCachedMasterKey;
+    private boolean mTutorialDismissed = false;
+    private static TwikApplication mInstance;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mInstance = this;
+    }
+
+    /**
+     * Return the Singleton instance of the {@link android.app.Application}
+     * @return the Singleton instance of the {@link android.app.Application}
+     */
+    public static TwikApplication getInstance() {
+        return mInstance;
+    }
 
     /**
      * Get the tutorial dismissed flag.
      *
      * @return true if the tutorial has been dismissed, false otherwise.
      */
-    public static boolean getTutorialDismissed() {
+    public boolean getTutorialDismissed() {
         return mTutorialDismissed;
     }
 
@@ -49,18 +65,17 @@ public class HashMyPassApplication extends Application {
      *
      * @param tutorialDismissed the flag value
      */
-    public static void setTutorialDismissed(boolean tutorialDismissed) {
+    public void setTutorialDismissed(boolean tutorialDismissed) {
         mTutorialDismissed = tutorialDismissed;
     }
 
     /**
      * Get the cached master key
      *
-     * @param context the {@link android.content.Context} instance
      * @return the cached master key
      */
-    public static char[] getCachedMasterKey(Context context) {
-        if (Preferences.getRememberMasterKeyMins(context) == 0) {
+    public char[] getCachedMasterKey() {
+        if (mCachedMasterKey == null || Preferences.getRememberMasterKeyMins(this) == 0) {
             mCachedMasterKey = new char[]{};
         }
         return mCachedMasterKey;
@@ -69,13 +84,11 @@ public class HashMyPassApplication extends Application {
     /**
      * Wipe the cached master key
      */
-    public static void wipeCachedMasterKey() {
+    public void wipeCachedMasterKey() {
         /* Rewrite the char array so we don't wait for garbage collection
          to destroy it */
-        for (int i = 0; i < mCachedMasterKey.length; i++) {
-            mCachedMasterKey[i] = ' ';
-        }
-        mCachedMasterKey = new char[]{};
+        Arrays.fill(mCachedMasterKey, ' ');
+        mCachedMasterKey = null;
     }
 
     /**
@@ -83,9 +96,9 @@ public class HashMyPassApplication extends Application {
      *
      * @param masterKey the master key
      */
-    public static void cacheMasterKey(Context context, char[] masterKey) {
-        if (Preferences.getRememberMasterKeyMins(context) > 0) {
-            mCachedMasterKey = masterKey;
+    public void cacheMasterKey(char[] masterKey) {
+        if (Preferences.getRememberMasterKeyMins(this) > 0) {
+            mCachedMasterKey = Arrays.copyOf(masterKey, masterKey.length);
         }
     }
 }

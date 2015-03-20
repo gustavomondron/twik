@@ -20,6 +20,7 @@
 package com.reddyetwo.hashmypass.app.adapter;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,11 +38,35 @@ import java.util.List;
  */
 public class TagListAdapter extends RecyclerView.Adapter<TagListViewHolder> {
 
+    /**
+     * Layout of each item in the list of tags
+     */
+    @LayoutRes
     private static final int ITEM_RESOURCE = R.layout.tag_list_item;
+
+    /**
+     * Application context
+     */
     private final Context mContext;
+
+    /**
+     * Listener that reacts to tag click events
+     */
     private final OnTagClickedListener mTagClickedListener;
+
+    /**
+     * ID of the selected profile
+     */
     private long mProfileId;
+
+    /**
+     * List of tags
+     */
     private List<Tag> mTags;
+
+    /**
+     * Order of the tags (e.g., by name, by usage)
+     */
     private int mTagOrder;
 
     /**
@@ -83,6 +108,7 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListViewHolder> {
 
     @Override
     public TagListViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        // Create a view that can represent a tag in the list
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(ITEM_RESOURCE, viewGroup, false);
         return new TagListViewHolder(v);
@@ -91,6 +117,7 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListViewHolder> {
     @Override
     public void onBindViewHolder(TagListViewHolder tagListViewHolder, int i) {
         final Tag tag = mTags.get(i);
+
         // Set tag favicon
         FaviconLoader.setAsBackground(mContext, tagListViewHolder.getFaviconTextView(), tag);
 
@@ -102,19 +129,20 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListViewHolder> {
 
             @Override
             public void onClick(View v) {
-                // Increase hash counter. This may affect tag list.
+                // Increase hash counter. Note that this may affect the order of the tags in the
+                // case that they are ordered by usage.
                 tag.setHashCounter(tag.getHashCounter() + 1);
                 TagSettings.updateTag(mContext, tag);
                 if (mTagOrder == TagSettings.ORDER_BY_HASH_COUNTER) {
                     update(tag);
                 }
 
-                // Update last used profile
+                // Notify to the tag click listener
                 mTagClickedListener.onTagClicked(new Tag(tag));
             }
         });
 
-        // Set tag long click listener
+        // Add listener for tag long click event, which notifies to the tag click listener.
         tagListViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -152,6 +180,8 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListViewHolder> {
      * @param tag the tag to add or modify
      */
     public void update(Tag tag) {
+        // It is necessary to compare the previous position in the list of the tag with the new
+        // position, updating the list if it has changed.
         int oldPosition = 0;
         int newPosition = TagSettings.getTagPosition(mContext, tag.getId(), mProfileId, mTagOrder,
                 TagSettings.LIMIT_UNBOUNDED);
@@ -173,7 +203,7 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListViewHolder> {
             notifyItemRemoved(oldPosition);
             notifyItemInserted(newPosition);
         } else {
-            // Update the tag because the favicon and the name may have changed.
+            // Update the tag because its name (and therefore its favicon) may have changed.
             mTags.set(oldPosition, tag);
             notifyItemChanged(oldPosition);
         }

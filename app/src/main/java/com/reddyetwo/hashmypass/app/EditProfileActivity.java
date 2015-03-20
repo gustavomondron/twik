@@ -192,7 +192,7 @@ public class EditProfileActivity extends ActionBarActivity {
                                     .this, mProfileId)) {
                                 NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
                             } else {
-                                Log.e(HashMyPassApplication.LOG_TAG, "Error deleting profile");
+                                Log.e(TwikApplication.LOG_TAG, "Error deleting profile");
                             }
                         }
                     });
@@ -347,7 +347,7 @@ public class EditProfileActivity extends ActionBarActivity {
                     setResult(RESULT_OK, resultIntent);
                 }
             } else if (!ProfileSettings.updateProfile(EditProfileActivity.this, profile)) {
-                Log.e(HashMyPassApplication.LOG_TAG, "Error updating profile");
+                Log.e(TwikApplication.LOG_TAG, "Error updating profile");
                 Toast.makeText(EditProfileActivity.this, R.string.error, Toast.LENGTH_LONG).show();
             }
 

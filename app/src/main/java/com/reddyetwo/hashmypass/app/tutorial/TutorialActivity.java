@@ -31,7 +31,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.reddyetwo.hashmypass.app.HashMyPassApplication;
+import com.reddyetwo.hashmypass.app.TwikApplication;
 import com.reddyetwo.hashmypass.app.R;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Preferences;
@@ -95,7 +95,8 @@ public class TutorialActivity extends FragmentActivity
     @Override
     public void onBackPressed() {
         if (mPager.getCurrentItem() == 0) {
-            HashMyPassApplication.setTutorialDismissed(true);
+            TwikApplication application = TwikApplication.getInstance();
+            application.setTutorialDismissed(true);
             super.onBackPressed();
         } else {
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
@@ -150,7 +151,7 @@ public class TutorialActivity extends FragmentActivity
                                     PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS,
                                     DEFAULT_PROFILE_COLOR);
                     ProfileSettings.insertProfile(TutorialActivity.this, profile);
-                    HashMyPassApplication.setTutorialDismissed(false);
+                    TwikApplication.getInstance().setTutorialDismissed(false);
                     finish();
                 } else {
                     // Go to next page

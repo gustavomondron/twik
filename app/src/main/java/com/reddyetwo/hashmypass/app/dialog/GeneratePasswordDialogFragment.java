@@ -38,7 +38,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.reddyetwo.hashmypass.app.HashMyPassApplication;
+import com.reddyetwo.hashmypass.app.TwikApplication;
 import com.reddyetwo.hashmypass.app.IdenticonGenerationTask;
 import com.reddyetwo.hashmypass.app.R;
 import com.reddyetwo.hashmypass.app.data.Preferences;
@@ -68,6 +68,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     private Tag mTag;
     private IdenticonGenerationTask mTask;
     private GeneratePasswordDialogListener mListener;
+    private PasswordTextWatcher mPasswordTextWatcher;
 
     private TextView mFaviconTextView;
     private EditText mTagEditText;
@@ -94,6 +95,12 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         super.onResume();
         populateView();
         updateViewState();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        removeTextChangedListeners();
     }
 
     @Override
@@ -198,12 +205,13 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         // Populate fields
         mTagEditText.setText(mTag.getName());
 
+        // Add text changed listeners for tag name and master key
         addTextChangedListeners();
 
-        // Restore cached master key
-        mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey(getActivity()), 0,
-                HashMyPassApplication.getCachedMasterKey(getActivity()).length);
-
+        // Clear master key EditText and restore cached master key
+        TwikApplication application = TwikApplication.getInstance();
+        mMasterKeyEditText.setText(application.getCachedMasterKey(), 0,
+                application.getCachedMasterKey().length);
     }
 
     private void updateViewState() {
@@ -257,9 +265,14 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     }
 
     private void addTextChangedListeners() {
-        PasswordTextWatcher watcher = new PasswordTextWatcher();
-        mTagEditText.addTextChangedListener(watcher);
-        mMasterKeyEditText.addTextChangedListener(watcher);
+        mPasswordTextWatcher = new PasswordTextWatcher();
+        mTagEditText.addTextChangedListener(mPasswordTextWatcher);
+        mMasterKeyEditText.addTextChangedListener(mPasswordTextWatcher);
+    }
+
+    private void removeTextChangedListeners() {
+        mTagEditText.removeTextChangedListener(mPasswordTextWatcher);
+        mMasterKeyEditText.removeTextChangedListener(mPasswordTextWatcher);
     }
 
     private void updatePassword() {
@@ -346,8 +359,8 @@ public class GeneratePasswordDialogFragment extends DialogFragment
             }
 
             // Cache master key
-            HashMyPassApplication.cacheMasterKey(getActivity(),
-                    SecurePassword.getPassword(mMasterKeyEditText.getText()));
+            TwikApplication.getInstance()
+                    .cacheMasterKey(SecurePassword.getPassword(mMasterKeyEditText.getText()));
 
             // Show favicon
             mTag.setName(mTagEditText.getText().toString());

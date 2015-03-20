@@ -158,7 +158,7 @@ public class BrowserIntegrationActivity extends Activity
         try {
             mSite = getSite(getHost());
         } catch (IllegalArgumentException e) {
-            Log.w(HashMyPassApplication.LOG_TAG, e);
+            Log.w(TwikApplication.LOG_TAG, e);
             finish();
         }
 
@@ -169,8 +169,9 @@ public class BrowserIntegrationActivity extends Activity
         updateTag();
 
         // Restore remembered master key
-        mMasterKeyEditText.setText(HashMyPassApplication.getCachedMasterKey(this), 0,
-                HashMyPassApplication.getCachedMasterKey(this).length);
+        TwikApplication application = TwikApplication.getInstance();
+        mMasterKeyEditText.setText(application.getCachedMasterKey(), 0,
+                application.getCachedMasterKey().length);
     }
 
     private void initializeView() {
@@ -316,7 +317,7 @@ public class BrowserIntegrationActivity extends Activity
     private void stop() {
         if (mFavicon != null && mFavicon.getId() == Favicon.NO_ID &&
                 FaviconSettings.insertFavicon(this, mFavicon) < 0) {
-            Log.e(HashMyPassApplication.LOG_TAG, "Error storing favicon");
+            Log.e(TwikApplication.LOG_TAG, "Error storing favicon");
         }
 
         saveTag();
@@ -325,8 +326,8 @@ public class BrowserIntegrationActivity extends Activity
         Preferences.setLastProfile(this, mProfileId);
 
         // Cache master key
-        HashMyPassApplication
-                .cacheMasterKey(this, SecurePassword.getPassword(mMasterKeyEditText.getText()));
+        TwikApplication.getInstance()
+                .cacheMasterKey(SecurePassword.getPassword(mMasterKeyEditText.getText()));
 
         // Copy password to clipboard
         if (Preferences.getCopyToClipboard(this) && mPasswordTextView.length() > 0) {
@@ -365,7 +366,7 @@ public class BrowserIntegrationActivity extends Activity
                 mTag.setId(TagSettings.insertTag(this, mTag));
             } else {
                 if (!TagSettings.updateTag(this, mTag)) {
-                    Log.e(HashMyPassApplication.LOG_TAG,
+                    Log.e(TwikApplication.LOG_TAG,
                             "Error updating tag from browser activity");
                 }
             }
@@ -378,7 +379,7 @@ public class BrowserIntegrationActivity extends Activity
                 Tag oldTag = TagSettings.getTag(this, mTag.getId());
                 oldTag.setSite(null);
                 if (!TagSettings.updateTag(this, oldTag)) {
-                    Log.e(HashMyPassApplication.LOG_TAG,
+                    Log.e(TwikApplication.LOG_TAG,
                             "Error updating existing tag from browser activity");
                 }
             }
@@ -387,7 +388,7 @@ public class BrowserIntegrationActivity extends Activity
             mTag.setHashCounter(storedTag.getHashCounter() + 1);
             mTag.setId(storedTag.getId());
             if (!TagSettings.updateTag(this, mTag)) {
-                Log.e(HashMyPassApplication.LOG_TAG,
+                Log.e(TwikApplication.LOG_TAG,
                         "Error updating stored tag from browser activity");
             }
         }

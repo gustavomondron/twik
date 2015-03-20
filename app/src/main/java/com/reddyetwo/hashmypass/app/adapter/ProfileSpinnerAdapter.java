@@ -38,7 +38,14 @@ import java.util.List;
  */
 public class ProfileSpinnerAdapter implements SpinnerAdapter {
 
+    /**
+     * Tag to identify the dropdown view
+     */
     private static final String TAG_VIEW_DROPDOWN = "SpinnerDropdown";
+
+    /**
+     * Tag to identify the not-dropdown view, which shows the selected item
+     */
     private static final String TAG_VIEW_NOT_DROPDOWN = "SpinnerNotDropdown";
 
     /**
@@ -96,20 +103,26 @@ public class ProfileSpinnerAdapter implements SpinnerAdapter {
         TextView profileNameTextView;
         if (convertView == null || convertView.getTag() == null ||
                 !convertView.getTag().equals(TAG_VIEW_DROPDOWN)) {
+            // Dropdown view does not exist, so we should create a new one
             profileNameTextView = (TextView) LayoutInflater.from(mThemedContext)
                     .inflate(mViewItemDropdown, parent, false);
             profileNameTextView.setTag(TAG_VIEW_DROPDOWN);
         } else {
+            // Dropdown view already exists, so we can reuse the old one
             profileNameTextView = (TextView) convertView;
         }
 
+        // Show the profile name in the TextView
         profileNameTextView.setText(mProfiles.get(position).getName());
 
+        // The last item in the adapter is a profile without a valid ID, which is used
+        // to show an option for adding a new profile
         if (mProfiles.get(position).getId() == Profile.NO_ID) {
-            // Set to italic if this is the last option in the dropdown
+            // Set to italic if this is the last option in the dropdown (Add profile)
             profileNameTextView.setTypeface(null, Typeface.ITALIC);
         } else {
-            // Explicitly set to normal, in case convertView was in italics
+            // Explicitly set to normal, in case convertView is reused and its typeface was set
+            // to italics.
             profileNameTextView.setTypeface(null, Typeface.NORMAL);
         }
 
@@ -118,12 +131,12 @@ public class ProfileSpinnerAdapter implements SpinnerAdapter {
 
     @Override
     public void registerDataSetObserver(DataSetObserver observer) {
-        // Nothing to do
+        // Do nothing
     }
 
     @Override
     public void unregisterDataSetObserver(DataSetObserver observer) {
-        // Nothing to do
+        // Do nothing
     }
 
     @Override
@@ -151,14 +164,17 @@ public class ProfileSpinnerAdapter implements SpinnerAdapter {
         TextView profileNameTextView;
         if (convertView == null || convertView.getTag() == null ||
                 !convertView.getTag().equals(TAG_VIEW_NOT_DROPDOWN)) {
+            // Not-dropdown view does not exist, so we should create a new one
             profileNameTextView = (TextView) LayoutInflater.from(mThemedContext)
                     .inflate(mViewItemNotDropdown, parent, false);
             profileNameTextView.setTag(TAG_VIEW_NOT_DROPDOWN);
         } else {
+            // Not-dropdown view already exists, so we can reuse the old one
             profileNameTextView = (TextView) convertView;
         }
-
+        // Show the profile name in the TextView
         profileNameTextView.setText(mProfiles.get(position).getName());
+
         return profileNameTextView;
     }
 
