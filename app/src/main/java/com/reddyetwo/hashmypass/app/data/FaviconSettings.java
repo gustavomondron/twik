@@ -27,7 +27,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import com.reddyetwo.hashmypass.app.HashMyPassApplication;
+import com.reddyetwo.hashmypass.app.TwikApplication;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -70,7 +70,7 @@ public class FaviconSettings {
                 favicon = new Favicon(id, site, icon);
             } catch (FileNotFoundException e) {
                 // Favicon not found in storage
-                Log.d(HashMyPassApplication.LOG_TAG, "Favicon file not found: " + e);
+                Log.d(TwikApplication.LOG_TAG, "Favicon file not found: " + e);
             }
         }
 
@@ -106,7 +106,7 @@ public class FaviconSettings {
                 id = -1;
             }
         } catch (Exception e) {
-            Log.d(HashMyPassApplication.LOG_TAG, "Error saving favicon: " + e);
+            Log.d(TwikApplication.LOG_TAG, "Error saving favicon: " + e);
         } finally {
             db.endTransaction();
             db.close();

@@ -23,7 +23,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
-import com.reddyetwo.hashmypass.app.HashMyPassApplication;
+import com.reddyetwo.hashmypass.app.TwikApplication;
 
 /**
  * Helper for package-related tasks
@@ -46,7 +46,7 @@ public class PackageUtils {
             versionName = context.getPackageManager()
                     .getPackageInfo(context.getPackageName(), 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e(HashMyPassApplication.LOG_TAG, "Package not found: " + e);
+            Log.e(TwikApplication.LOG_TAG, "Package not found: " + e);
         }
         return versionName;
     }

@@ -154,8 +154,9 @@ public class MainActivity extends ActionBarActivity
          * when the latter is dismissed, {@link com.reddyetwo.hashmypass.app.MainActivity} is
          * usually resumed, not created.
          */
-        if (HashMyPassApplication.getTutorialDismissed()) {
-            HashMyPassApplication.setTutorialDismissed(false);
+        TwikApplication application = TwikApplication.getInstance();
+        if (application.getTutorialDismissed()) {
+            application.setTutorialDismissed(false);
             finish();
             return;
         }
@@ -166,7 +167,6 @@ public class MainActivity extends ActionBarActivity
         } else {
             // Cancel the master key alarm to clear cache
             MasterKeyAlarmManager.cancelAlarm(this);
-
             populateView();
         }
     }
@@ -551,7 +551,7 @@ public class MainActivity extends ActionBarActivity
     private void deleteTag(Tag tag) {
         if (!TagSettings.deleteTag(this, tag)) {
             Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();
-            Log.e(HashMyPassApplication.LOG_TAG, "Error deleting tag from database");
+            Log.e(TwikApplication.LOG_TAG, "Error deleting tag from database");
             return;
         }
 
@@ -568,7 +568,7 @@ public class MainActivity extends ActionBarActivity
             Favicon favicon = FaviconSettings.getFavicon(this, site);
             boolean shouldDeleteFavicon = favicon != null && !TagSettings.siteHasTags(this, site);
             if (shouldDeleteFavicon && !FaviconSettings.deleteFavicon(this, favicon)) {
-                Log.e(HashMyPassApplication.LOG_TAG, "Error deleting favicon");
+                Log.e(TwikApplication.LOG_TAG, "Error deleting favicon");
             }
         }
     }

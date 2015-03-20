@@ -28,7 +28,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.SystemClock;
 
-import com.reddyetwo.hashmypass.app.HashMyPassApplication;
+import com.reddyetwo.hashmypass.app.TwikApplication;
 
 /**
  * Manager for master key cache expired alarms
@@ -71,7 +71,7 @@ public class MasterKeyAlarmManager extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        /* Remove cached master key */
-        HashMyPassApplication.wipeCachedMasterKey();
+        // Remove cached master key
+        TwikApplication.getInstance().wipeCachedMasterKey();
     }
 }

@@ -26,7 +26,7 @@ package com.reddyetwo.hashmypass.app.hash;
 import android.util.Base64;
 import android.util.Log;
 
-import com.reddyetwo.hashmypass.app.HashMyPassApplication;
+import com.reddyetwo.hashmypass.app.TwikApplication;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.util.SecurePassword;
 
@@ -72,7 +72,7 @@ public class PasswordHasher {
         try {
             hmac = Mac.getInstance(HMAC_SHA1);
         } catch (NoSuchAlgorithmException e) {
-            Log.e(HashMyPassApplication.LOG_TAG, "HMAC error: " + e);
+            Log.e(TwikApplication.LOG_TAG, "HMAC error: " + e);
             return null;
         }
 
@@ -82,7 +82,7 @@ public class PasswordHasher {
         try {
             hmac.init(keySpec);
         } catch (InvalidKeyException e) {
-            Log.e(HashMyPassApplication.LOG_TAG, "Invalid secret key: " + e);
+            Log.e(TwikApplication.LOG_TAG, "Invalid secret key: " + e);
             return null;
         }
 
@@ -159,7 +159,7 @@ public class PasswordHasher {
             messageDigest = MessageDigest.getInstance(DIGEST_MD5);
             result = messageDigest.digest(SecurePassword.toBytes(input));
         } catch (NoSuchAlgorithmException e) {
-            Log.e(HashMyPassApplication.LOG_TAG, "Could not find DIGEST MD5 algorithm: " + e);
+            Log.e(TwikApplication.LOG_TAG, "Could not find DIGEST MD5 algorithm: " + e);
             result = null;
         }
 
