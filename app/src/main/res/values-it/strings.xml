@@ -32,17 +32,9 @@
     <string name="action_about">Informazioni</string>
     <string name="action_delete">Elimina</string>
     <string name="discard">Scarta</string>
-    <string name="ok">OK</string>
-    <string name="copy_to_clipboard">Copia negli appunti</string>
-    <string name="cancel">Annulla</string>
-    <string name="add">Aggiungi</string>
     <string name="save">Salva</string>
-    <string name="hash">Hash</string>
-    <string name="skip">Salta lìintroduzione</string>
-    <string name="next">Avanti</string>
+    <string name="skip">Salta</string>
     <string name="start">Avvia</string>
-    <string name="ready">Sono pronto per iniziare!</string>
-    <string name="add_first_profile">Aggiungi il primo profilo</string>
 
     <!-- Dialogs -->
     <string name="confirm_delete">Eliminare il profilo \"%s\"?</string>
@@ -61,16 +53,16 @@
     <string name="color">Colore</string>
 
     <!-- Tutorial -->
-    <string name="tutorial_splash_subtitle">Una password diversa per ogi sito.
+    <string name="tutorial_splash_subtitle">Una password diversa per ogni sito.
      \nNessuna password archiviata.</string>
     <string name="tutorial_intro_header">Password sicure</string>
     <string name="tutorial_intro_content">Per generare una password per un sito
-        web è necessario inserire la password princiapel, conosciuta solo da te.
+        web è necessario inserire la password principale, conosciuta solo da te.
         Twik genererà quindi una password univoca per il sito.</string>
     <string name="tutorial_setup_header">Quasi fatto</string>
     <string name="tutorial_setup_content_1">Sono necessarie un paio
         di cose prima di iniziare:</string>
-    <string name="tutorial_setup_content_2"><ul><li>Una chiave principale. Da non 
+    <string name="tutorial_setup_content_2"><ul><li>Una chiave principale da non 
         digitare ora!
         Semplicemente sceglierne una e ricordarla.</li></ul></string>
     <string name="tutorial_setup_content_3"><ul><li>Una chiave privata. Questa 
@@ -84,9 +76,9 @@
 
     <!-- Notices -->
     <string name="lets_start"><b>Iniziamo!</b></string>
-    <string name="no_tags">Genenrare nuove password premendo il pulsante in
+    <string name="no_tags">Generare nuove password premendo il pulsante in
         basso o condividendo il sito web con <i>Twik</i> dal browser.</string>
-    <string name="copied_to_clipboard">La password del sito web copiata negli
+    <string name="copied_to_clipboard">Password per il sito web copiata negli
         appunti</string>
 
     <!-- Settings titles -->
@@ -97,19 +89,26 @@
 
     <!-- Settings summaries -->
     <string name="settings_summary_remember_master_key_never">La chiave
-        princiaple non verrà ricordata dopo la chiusura dell'applicazione</string>
-    <string name="settings_summary_remember_master_key_minutes">La chiave
-        principale verrà ricordata per %s minuti dopo la chiusura dell'applicazione</string>
-    <string name="settings_summary_remember_master_key_hours"> La chiave
-        principale verrà ricordata %d ore dopo la chiusura dell'applicazione</string>
-    <string name="settings_summary_copy_to_clipboard_enabled">La password con 
+        princiaple non verrà ricordata dopo la chiusura
+        dell\'applicazione</string>
+    <plurals name="settings_summary_remember_master_key_minutes">
+        <item quantity="one">La chiave principale verrà ricordata per %d minuto dopo la chiusura
+            dell\'applicazione</item>
+        <item quantity="other">La chiave principale verrà ricordata per %d minuti dopo la chiusura
+            dell\'applicazione</item>
+    </plurals>
+    <plurals name="settings_summary_remember_master_key_hours">
+        <item quantity="one">La chiave principale verrà ricordata per %d ora dopo la chiusura dell'applicazione</item>
+        <item quantity="other">La chiave principale verrà ricordata per %d ore dopo la chiusura dell'applicazione</item>
+    </plurals>
+    <string name="settings_summary_copy_to_clipboard_enabled">La password con
         valori hash viene automaticamente copiata negli appunti</string>
     <string name="settings_summary_copy_to_clipboard_disabled">La password con
-        valori di hash non viene automaticamente copiata negli appunti</string>
+        valori hash non viene automaticamente copiata negli appunti</string>
 
     <!-- Errors -->
     <string name="error">È accaduto qualcosa!</string>
-    <string name="error_no_profiles">Oops! È necessario creare prima un
+    <string name="error_no_profiles">È necessario creare prima un
         profilo.</string>
     <string name="error_tag_exists">Questo sito web è già presente.</string>
     <string name="error_profile_exists">Questo nome esite già</string>
@@ -117,14 +116,13 @@
     <!-- About Dialog -->
     <string name="about_body">
 <![CDATA[
-        <b>Twik</b><br/>
-        Versione 1.2.6<br/>
+        Versione %s<br/>
         Copyright \u00A9 2014 Red Dye No. 2
         <br/><br/>
         <b>Twik</b> è una applicazione che rende semplice generare
         password sicure e diverse per ogni sito web.
         <br/><br/>
-        Twik si basa sul meccanismo di generazione password di "Password
+        Twik si basa sul meccanismo per generare password di "Password
         Hasher" sviluppato da Steve Cooper e "Password Hasher Plus" di Eric Woodruff.
         <br/><br/>
         Twik è inoltre disponibile come
@@ -162,11 +160,9 @@
         <i>di David Hamp-Gonsalves.</i>
         <br/><br/>
 
-        <b><a href="http://jgilfelt.github.io/android-actionbarstylegenerator/">
-        Android Action Bar Style Generator</a></b><br/>
-        <i>di The Android Open Source Project</i> y
-        <i>readyState Software Ltd.</i> <br/>
-        Licenza Apache 2.0.<br/> <br/>
+        <b><a href="https://github.com/makovkastar/FloatingActionButton/">FloatingActionButton</a></b><br/>
+        <i>di Oleksandr Melnykov.</i><br/>
+        MIT License.<br/><br/>
 
         <b><a href="http://font.ubuntu.com/">Ubuntu Mono</a></b> <br/>
         <i>di Canonical Ltd.</i> <br/>
