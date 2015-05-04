@@ -32,18 +32,9 @@
     <string name="action_about">À propos</string>
     <string name="action_delete">Supprimer</string>
     <string name="discard">Annuler</string>
-    <string name="ok">OK</string>
-    <string name="copy_to_clipboard">Copier dans le presse-papier</string>
-    <string name="cancel">Annuler</string>
-    <string name="add">Ajouter</string>
     <string name="save">Enregistrer</string>
-    <string name="hash">Hasher</string>
-    <string name="skip">Passer le tutoriel</string>
-    <string name="next">Suivant</string>
+    <string name="skip">Passer</string>
     <string name="start">Commencer</string>
-    <string name="ready">Je suis prêt à commencer!</string>
-    <string name="add_first_profile">Ajoutez votre premier profil</string>
-    <string name="hash_this_tag">Générer mot de passe</string>
 
     <!-- Dialogs -->
     <string name="confirm_delete">Supprimer le profil \"%s\"?</string>
@@ -97,14 +88,18 @@
     <string name="settings_summary_remember_master_key_never">
         La clé principale sera oubliée quand vous quitterez l\'application
     </string>
-    <string name="settings_summary_remember_master_key_minutes">
-        La clé principale ne sera pas oubliée pendant %d minutes après
-        avoir quitté l\'application
-    </string>
-    <string name="settings_summary_remember_master_key_hours">
-        La clé principale ne sera pas oubliée pendant %d heures après
-        avoir quitté l\'application
-    </string>
+    <plurals name="settings_summary_remember_master_key_minutes">
+        <item quantity="one">La clé principale ne sera pas oubliée pendant %d minute après
+        avoir quitté l\'application</item>
+        <item quantity="other">La clé principale ne sera pas oubliée pendant %d minutes après
+        avoir quitté l\'application</item>
+    </plurals>
+    <plurals name="settings_summary_remember_master_key_hours">
+        <item quantity="one">La clé principale ne sera pas oubliée pendant %d heure après
+        avoir quitté l\'application</item>
+        <item quantity="other">La clé principale ne sera pas oubliée pendant %d heures après
+        avoir quitté l\'application</item>
+    </plurals>
     <string name="settings_summary_copy_to_clipboard_enabled">Le mot de passe
         généré sera copié automatiquement dans le presse-papier</string>
     <string name="settings_summary_copy_to_clipboard_disabled">Le mot de passe
@@ -119,8 +114,7 @@
 
     <!-- About Dialog -->
     <string name="about_body"><![CDATA[
-        <b>Twik</b><br/>
-        Version 1.2.6<br/>
+        Version %s<br/>
         Copyright \u00A9 2014 Red Dye No. 2
         <br/><br/>
         <b>Twik</b> est une application qui rend plus facile la génération de
@@ -135,6 +129,7 @@
 
         <b>Acknowledgements</b><br/>
         French translation by Andrés Álvarez and greizgh<br/>
+        Italian translation by Claudio Arseni<br/>
         German translation by Michael Wodniok (alias murderered)
         <br/><br/>
 
@@ -163,11 +158,9 @@
         <i>por David Hamp-Gonsalves.</i>
         <br/><br/>
 
-        <b><a href="http://jgilfelt.github.io/android-actionbarstylegenerator/">
-        Android Action Bar Style Generator</a></b><br/>
-        <i>por The Android Open Source Project</i> y
-        <i>readyState Software Ltd.</i> <br/>
-        Apache 2.0 license.<br/> <br/>
+        <b><a href="https://github.com/makovkastar/FloatingActionButton/">FloatingActionButton</a></b><br/>
+        <i>por Oleksandr Melnykov.</i><br/>
+        MIT License.<br/><br/>
 
         <b><a href="http://font.ubuntu.com/">Ubuntu Mono</a></b> <br/>
         <i>por Canonical Ltd.</i> <br/>

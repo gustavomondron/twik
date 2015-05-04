@@ -30,21 +30,35 @@ import com.reddyetwo.hashmypass.app.data.TagSettings;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Helper to populate a tag name {@link android.widget.AutoCompleteTextView}
+ */
 public class TagAutocomplete {
 
-    public static void populateTagAutocompleteTextView(Context context,
-                                                       long profileId,
+    private TagAutocomplete() {
+
+    }
+
+    /**
+     * Populate an {@link android.widget.AutoCompleteTextView} with tag names
+     *
+     * @param context     the {@link android.content.Context} instance
+     * @param profileId   the profile ID
+     * @param tagTextView the {@link android.widget.AutoCompleteTextView} instance
+     */
+    public static void populateTagAutocompleteTextView(Context context, long profileId,
                                                        AutoCompleteTextView tagTextView) {
 
-        List<Tag> tags = TagSettings.getProfileTags(context, profileId,
-                TagSettings.ORDER_BY_HASH_COUNTER, TagSettings.LIMIT_UNBOUNDED);
-        List<String> names = new ArrayList<String>();
+        List<Tag> tags = TagSettings
+                .getProfileTags(context, profileId, TagSettings.ORDER_BY_HASH_COUNTER,
+                        TagSettings.LIMIT_UNBOUNDED);
+        List<String> names = new ArrayList<>();
         for (Tag tag : tags) {
             names.add(tag.getName());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,
-                android.R.layout.simple_list_item_1, names);
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, names);
 
         tagTextView.setAdapter(adapter);
     }

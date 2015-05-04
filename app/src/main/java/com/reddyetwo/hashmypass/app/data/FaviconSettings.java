@@ -27,26 +27,42 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
+import com.reddyetwo.hashmypass.app.TwikApplication;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+/**
+ * Class to get/add/delete/update {@link com.reddyetwo.hashmypass.app.data.Favicon} from storage
+ */
 public class FaviconSettings {
 
     private static final String FILE_NAME = "favicon-%d.png";
+    private static final int FAVICON_QUALITY = 100;
 
+    private FaviconSettings() {
+
+    }
+
+    /**
+     * Get the favicon of a site
+     *
+     * @param context the {@link android.content.Context} instance
+     * @param site    the site
+     * @return the {@link com.reddyetwo.hashmypass.app.data.Favicon} instance
+     */
     public static Favicon getFavicon(Context context, String site) {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.query(DataOpenHelper.FAVICONS_TABLE_NAME,
-                new String[]{DataOpenHelper.COLUMN_ID},
-                DataOpenHelper.COLUMN_FAVICONS_SITE + "= ?", new String[]{site},
-                null, null, null);
+        Cursor cursor =
+                db.query(DataOpenHelper.FAVICONS_TABLE_NAME, new String[]{DataOpenHelper.COLUMN_ID},
+                        DataOpenHelper.COLUMN_FAVICONS_SITE + "= ?", new String[]{site}, null, null,
+                        null);
 
         Favicon favicon = null;
         if (cursor.moveToFirst()) {
-            long id = cursor.getLong(
-                    cursor.getColumnIndex(DataOpenHelper.COLUMN_ID));
+            long id = cursor.getLong(cursor.getColumnIndex(DataOpenHelper.COLUMN_ID));
             try {
                 String filename = String.format(FILE_NAME, id);
                 FileInputStream fis = context.openFileInput(filename);
@@ -54,13 +70,22 @@ public class FaviconSettings {
                 favicon = new Favicon(id, site, icon);
             } catch (FileNotFoundException e) {
                 // Favicon not found in storage
+                Log.d(TwikApplication.LOG_TAG, "Favicon file not found: " + e);
             }
         }
 
+        cursor.close();
         db.close();
         return favicon;
     }
 
+    /**
+     * Insert a favicon in the storage
+     *
+     * @param context the {@link android.content.Context} instance
+     * @param favicon the {@link com.reddyetwo.hashmypass.app.data.Favicon} instance
+     * @return the ID of the inserted favicon, or -1 if an error occurred
+     */
     public static long insertFavicon(Context context, Favicon favicon) {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -69,13 +94,11 @@ public class FaviconSettings {
         values.put(DataOpenHelper.COLUMN_FAVICONS_SITE, favicon.getSite());
         try {
             db.beginTransaction();
-            id = db.insertOrThrow(DataOpenHelper.FAVICONS_TABLE_NAME, null,
-                    values);
+            id = db.insertOrThrow(DataOpenHelper.FAVICONS_TABLE_NAME, null, values);
             String filename = String.format(FILE_NAME, id);
-            FileOutputStream fos =
-                    context.openFileOutput(filename, Context.MODE_PRIVATE);
-            boolean stored = favicon.getIcon()
-                    .compress(Bitmap.CompressFormat.PNG, 100, fos);
+            FileOutputStream fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
+            boolean stored =
+                    favicon.getIcon().compress(Bitmap.CompressFormat.PNG, FAVICON_QUALITY, fos);
             fos.close();
             if (stored) {
                 db.setTransactionSuccessful();
@@ -83,9 +106,7 @@ public class FaviconSettings {
                 id = -1;
             }
         } catch (Exception e) {
-            Log.d("TEST", "Error: " + e.getMessage());
-            //} catch (FileNotFoundException e) {
-            //   id = -1;
+            Log.d(TwikApplication.LOG_TAG, "Error saving favicon: " + e);
         } finally {
             db.endTransaction();
             db.close();
@@ -94,6 +115,13 @@ public class FaviconSettings {
         return id;
     }
 
+    /**
+     * Delete a favicon
+     *
+     * @param context the {@link android.content.Context} instance
+     * @param favicon the {@link com.reddyetwo.hashmypass.app.data.Favicon} instance
+     * @return true in case of success, false if an error occurred
+     */
     public static boolean deleteFavicon(Context context, Favicon favicon) {
         DataOpenHelper helper = new DataOpenHelper(context);
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -106,8 +134,7 @@ public class FaviconSettings {
                     DataOpenHelper.COLUMN_ID + "=" + favicon.getId(), null);
 
             // Delete file from storage
-            deleted = context.deleteFile(
-                    String.format(FILE_NAME, favicon.getId()));
+            deleted = context.deleteFile(String.format(FILE_NAME, favicon.getId()));
             if (deleted) {
                 db.setTransactionSuccessful();
             }

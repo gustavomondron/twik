@@ -26,26 +26,29 @@ import android.os.AsyncTask;
 
 import com.reddyetwo.hashmypass.app.util.IdenticonGenerator;
 
+/**
+ * {@link android.os.AsyncTask} for generating identicons in background
+ */
 public class IdenticonGenerationTask extends AsyncTask<char[], Void, Void> {
 
-    private Context mContext;
-
-    public interface OnIconGeneratedListener {
-        public void onIconGenerated(Bitmap bitmap);
-    }
-
-    private OnIconGeneratedListener mListener;
+    private final Context mContext;
+    private final OnIconGeneratedListener mListener;
     private Bitmap mBitmap;
 
-    public IdenticonGenerationTask(Context context,
-                                   OnIconGeneratedListener listener) {
+    /**
+     * Constructor
+     *
+     * @param context  the {@link android.content.Context} instance
+     * @param listener the {@link com.reddyetwo.hashmypass.app.IdenticonGenerationTask.OnIconGeneratedListener} listener
+     */
+    public IdenticonGenerationTask(Context context, OnIconGeneratedListener listener) {
         mContext = context;
         mListener = listener;
     }
 
     @Override
     protected Void doInBackground(char[]... params) {
-        if (params.length > 0) {
+        if (params.length > 0 && params[0].length > 0) {
             mBitmap = IdenticonGenerator.generate(mContext, params[0]);
         }
         return null;
@@ -55,5 +58,18 @@ public class IdenticonGenerationTask extends AsyncTask<char[], Void, Void> {
     protected void onPostExecute(Void result) {
         super.onPostExecute(result);
         mListener.onIconGenerated(mBitmap);
+    }
+
+    /**
+     * Interface which can be implemented to listen to icon generated events
+     */
+    public interface OnIconGeneratedListener {
+
+        /**
+         * Method called when the icon has been generated
+         *
+         * @param bitmap the icon {@link android.graphics.Bitmap}
+         */
+        public void onIconGenerated(Bitmap bitmap);
     }
 }

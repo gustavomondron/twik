@@ -21,6 +21,7 @@
 
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:layout_marginTop="@dimen/activity_vertical_margin"
               android:gravity="center"
@@ -28,7 +29,7 @@
               android:layout_height="match_parent">
 
     <ScrollView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1">
 
@@ -40,7 +41,7 @@
             <RelativeLayout
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="48dp">
 
                 <ImageView
@@ -68,7 +69,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="48dp">
 
                 <ImageView
@@ -94,6 +95,7 @@
                         android:maxLines="1"
                         android:maxLength="25"
                         android:paddingRight="48dp"
+                        android:textSize="@dimen/text_input"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:completionThreshold="2"
@@ -138,12 +140,11 @@
 
             <RelativeLayout
                 android:id="@+id/master_key_layout"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_below="@+id/tag_layout">
+                android:layout_marginRight="@dimen/activity_horizontal_margin">
 
                 <ImageView
                     android:id="@+id/ic_key"
@@ -162,16 +163,19 @@
                     android:singleLine="true"
                     android:maxLines="1"
                     android:maxLength="25"
+                    android:textSize="@dimen/text_input"
                     android:layout_toLeftOf="@+id/identicon"
                     android:layout_toRightOf="@+id/ic_key"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/background_edittext_material"
                     android:imeOptions="actionDone"
-                    android:hint="@string/master_key"/>
+                    android:hint="@string/master_key"
+                    tools:ignore="UnusedAttribute"/>
 
                 <ImageView
                     android:id="@+id/identicon"
+                    android:contentDescription="@string/identicon"
                     android:layout_width="48dp"
                     android:layout_height="match_parent"
                     android:paddingLeft="8dp"
@@ -184,7 +188,6 @@
 
             <TextView
                 android:id="@+id/website_password"
-                android:text="Website password"
                 android:textSize="@dimen/text_medium"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_vertical"
@@ -194,36 +197,11 @@
         </LinearLayout>
     </ScrollView>
 
-
-    <LinearLayout
-        android:gravity="bottom"
-        android:layout_width="match_parent"
+    <Button
+        android:layout_gravity="right"
+        android:id="@+id/hash_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:orientation="vertical"
-        android:showDividers="middle"
-        android:divider="?android:dividerHorizontal">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0dp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/button_size"
-            android:orientation="horizontal"
-            android:divider="?android:dividerHorizontal"
-            style="?android:buttonBarStyle">
-
-            <Button
-                android:id="@+id/hash_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                style="?android:buttonBarButtonStyle"
-                android:layout_weight="1"
-                android:text="@string/ok"/>
-
-        </LinearLayout>
-    </LinearLayout>
-
+        style="?android:buttonBarButtonStyle"
+        android:text="@android:string/ok"/>
 </LinearLayout>

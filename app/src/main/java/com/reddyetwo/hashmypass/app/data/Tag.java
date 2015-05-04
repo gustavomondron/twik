@@ -23,29 +23,52 @@ package com.reddyetwo.hashmypass.app.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * POJO class for tags
+ */
 public class Tag implements Parcelable {
 
-    public final static long NO_ID = -1;
-
+    public static final long NO_ID = -1;
     private long mId = NO_ID;
-    private long mProfileId;
+    public static final Parcelable.Creator<Tag> CREATOR = new Parcelable.Creator<Tag>() {
+        public Tag createFromParcel(Parcel in) {
+            return new Tag(in);
+        }
+
+        public Tag[] newArray(int size) {
+            return new Tag[size];
+        }
+    };
+    private final long mProfileId;
     private int mHashCounter = 0;
     private String mSite;
     private String mName;
     private int mPasswordLength;
     private PasswordType mPasswordType;
 
-    public Tag() {
-    }
-
+    /**
+     * Constructor
+     *
+     * @param tag tag to copy
+     */
     public Tag(Tag tag) {
-        this(tag.getId(), tag.getProfileId(), tag.getHashCounter(),
-                tag.getSite(), tag.getName(), tag.getPasswordLength(),
-                tag.getPasswordType());
+        this(tag.getId(), tag.getProfileId(), tag.getHashCounter(), tag.getSite(), tag.getName(),
+                tag.getPasswordLength(), tag.getPasswordType());
     }
 
-    public Tag(long id, long profileId, int hashCounter, String site,
-               String name, int passwordLength, PasswordType passwordType) {
+    /**
+     * Constructor
+     *
+     * @param id             tag ID
+     * @param profileId      profile ID
+     * @param hashCounter    number of times the tag has been used
+     * @param site           site identifier
+     * @param name           tag name
+     * @param passwordLength password length
+     * @param passwordType   password type
+     */
+    public Tag(long id, long profileId, int hashCounter, String site, String name,
+               int passwordLength, PasswordType passwordType) {
         mId = id;
         mProfileId = profileId;
         mHashCounter = hashCounter;
@@ -55,58 +78,134 @@ public class Tag implements Parcelable {
         mPasswordType = passwordType;
     }
 
+    /**
+     * Constructor
+     *
+     * @param in Parcelable object to get data from
+     */
+    private Tag(Parcel in) {
+        mId = in.readLong();
+        mProfileId = in.readLong();
+        mHashCounter = in.readInt();
+        mSite = in.readString();
+        mName = in.readString();
+        mPasswordLength = in.readInt();
+        mPasswordType = PasswordType.values()[in.readInt()];
+    }
+
+    /**
+     * Get the tag ID
+     *
+     * @return the tag ID
+     */
     public long getId() {
         return mId;
     }
 
+    /**
+     * Set the tag ID
+     *
+     * @param id the tag ID
+     */
     public void setId(long id) {
         mId = id;
     }
 
+    /**
+     * Get the profile ID
+     *
+     * @return the profile ID
+     */
     public long getProfileId() {
         return mProfileId;
     }
 
-    public void setProfileId(long profileId) {
-        mProfileId = profileId;
-    }
-
+    /**
+     * Get the number of times the tag has been used
+     *
+     * @return the usage counter
+     */
     public int getHashCounter() {
         return mHashCounter;
     }
 
+    /**
+     * Set the number of times the tag has been used
+     *
+     * @param hashCounter the number of times
+     */
     public void setHashCounter(int hashCounter) {
         mHashCounter = hashCounter;
     }
 
+    /**
+     * Get the site associated with this tag
+     *
+     * @return the site
+     */
     public String getSite() {
         return mSite;
     }
 
+    /**
+     * Set the site associated with this tag
+     *
+     * @param site the site identifier
+     */
     public void setSite(String site) {
         mSite = site;
     }
 
+    /**
+     * Get the tag name
+     *
+     * @return the tag name
+     */
     public String getName() {
         return mName;
     }
 
+    /**
+     * Set the tag name
+     *
+     * @param name the tag name
+     */
     public void setName(String name) {
         mName = name;
     }
 
+    /**
+     * Get the password length
+     *
+     * @return the password length
+     */
     public int getPasswordLength() {
         return mPasswordLength;
     }
 
+    /**
+     * Set the password length
+     *
+     * @param passwordLength the password length
+     */
     public void setPasswordLength(int passwordLength) {
         mPasswordLength = passwordLength;
     }
 
+    /**
+     * Get the password type
+     *
+     * @return the password type
+     */
     public PasswordType getPasswordType() {
         return mPasswordType;
     }
 
+    /**
+     * Set the password type
+     *
+     * @param passwordType the password type
+     */
     public void setPasswordType(PasswordType passwordType) {
         mPasswordType = passwordType;
     }
@@ -125,26 +224,5 @@ public class Tag implements Parcelable {
         dest.writeString(mName);
         dest.writeInt(mPasswordLength);
         dest.writeInt(mPasswordType.ordinal());
-    }
-
-    public static final Parcelable.Creator<Tag> CREATOR =
-            new Parcelable.Creator<Tag>() {
-                public Tag createFromParcel(Parcel in) {
-                    return new Tag(in);
-                }
-
-                public Tag[] newArray(int size) {
-                    return new Tag[size];
-                }
-            };
-
-    private Tag(Parcel in) {
-        mId = in.readLong();
-        mProfileId = in.readLong();
-        mHashCounter = in.readInt();
-        mSite = in.readString();
-        mName = in.readString();
-        mPasswordLength = in.readInt();
-        mPasswordType = PasswordType.values()[in.readInt()];
     }
 }

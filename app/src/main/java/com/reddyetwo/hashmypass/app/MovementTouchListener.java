@@ -24,66 +24,68 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class MovementTouchListener implements View.OnTouchListener {
+class MovementTouchListener implements View.OnTouchListener {
 
     private static final int STATE_PRESSING = 1;
     private static final int STATE_RELEASED = 2;
-
-    private static final int MOVEMENT_THRESHOLD_DP = 15; // 15 dp ~ 3 mm
-
     private int mState = STATE_RELEASED;
-    private OnPressedListener mOnPressedListener;
-    private float mMovementThresholdPx;
+    // Threshold ~= 3 mm
+    private static final int MOVEMENT_THRESHOLD_DP = 15;
+    private final OnPressedListener mOnPressedListener;
+    private final float mMovementThresholdPx;
     private float mX;
     private float mY;
 
-    public MovementTouchListener(Context context,
-                                 OnPressedListener onPressedListener) {
+    /**
+     * Constructor
+     *
+     * @param context           the {@link android.content.Context} instance
+     * @param onPressedListener the screen pressed events listener
+     */
+    public MovementTouchListener(Context context, OnPressedListener onPressedListener) {
         mOnPressedListener = onPressedListener;
         mMovementThresholdPx = TypedValue
-                .applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                        MOVEMENT_THRESHOLD_DP,
+                .applyDimension(TypedValue.COMPLEX_UNIT_DIP, MOVEMENT_THRESHOLD_DP,
                         context.getResources().getDisplayMetrics());
 
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-
-        switch (mState) {
-            case STATE_RELEASED:
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        mState = STATE_PRESSING;
-                        mX = event.getX();
-                        mY = event.getY();
-                        break;
-                    default:
-                }
-                break;
-            case STATE_PRESSING:
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_UP:
+        if (mState == STATE_RELEASED && event.getAction() == MotionEvent.ACTION_DOWN) {
+            mState = STATE_PRESSING;
+            mX = event.getX();
+            mY = event.getY();
+        } else if (mState == STATE_PRESSING) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_UP:
+                    mState = STATE_RELEASED;
+                    mOnPressedListener.onPressed();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    if (movementThresholdReached(event.getX(), event.getY())) {
                         mState = STATE_RELEASED;
-                        mOnPressedListener.onPressed();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        if (Math.abs(event.getX() - mX) >
-                                mMovementThresholdPx ||
-                                Math.abs(event.getY() - mY) >
-                                        mMovementThresholdPx) {
-                            mState = STATE_RELEASED;
-                        }
-                        break;
-                    default:
-                        mState = STATE_RELEASED;
-                }
+                    }
+                    break;
+                default:
+                    mState = STATE_RELEASED;
+            }
         }
-
         return true;
     }
 
+    private boolean movementThresholdReached(float x, float y) {
+        return Math.abs(x - mX) > mMovementThresholdPx || Math.abs(y - mY) > mMovementThresholdPx;
+    }
+
+    /**
+     * Interface which can be implemented to listen to screen pressed events
+     */
     public interface OnPressedListener {
+
+        /**
+         * Method called when the screen is pressed
+         */
         public void onPressed();
     }
 }

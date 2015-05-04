@@ -20,31 +20,32 @@
 package com.reddyetwo.hashmypass.app;
 
 import android.animation.Animator;
-import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
-import android.animation.ArgbEvaluator;
-import android.animation.ValueAnimator;
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.annotation.IntDef;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.OrientationEventListener;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.melnykov.fab.FloatingActionButton;
+import com.reddyetwo.hashmypass.app.adapter.ProfileSpinnerAdapter;
+import com.reddyetwo.hashmypass.app.adapter.TagListAdapter;
+import com.reddyetwo.hashmypass.app.animation.Animations;
 import com.reddyetwo.hashmypass.app.data.Favicon;
 import com.reddyetwo.hashmypass.app.data.FaviconSettings;
 import com.reddyetwo.hashmypass.app.data.Preferences;
@@ -52,147 +53,261 @@ import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
-import com.reddyetwo.hashmypass.app.util.Fab;
-import com.reddyetwo.hashmypass.app.util.FaviconLoader;
+import com.reddyetwo.hashmypass.app.dialog.AboutDialog;
+import com.reddyetwo.hashmypass.app.dialog.GeneratePasswordDialogFragment;
+import com.reddyetwo.hashmypass.app.tutorial.TutorialActivity;
+import com.reddyetwo.hashmypass.app.util.ApiUtils;
 import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 
 import java.util.List;
 
+/**
+ * Main application activity, which shows the list of tags
+ */
+public class MainActivity extends ActionBarActivity
+        implements GeneratePasswordDialogFragment.GeneratePasswordDialogListener {
 
-public class MainActivity extends Activity implements
-        GeneratePasswordDialogFragment.GeneratePasswordDialogListener {
-
+    private static final int LIST_EMPTY = 1;
+    private static final int LIST_CONTAINS_ITEMS = 2;
+    private static final int LIST_NOT_INITIALIZED = 3;
     // Constants
-    private static final int ID_ADD_PROFILE = -1;
     private static final int REQUEST_ADD_PROFILE = 1;
     private static final int REQUEST_CREATE_DEFAULT_PROFILE = 2;
     private static final String FRAGMENT_GENERATE_PASSWORD = "generatePassword";
-    private static final int LIST_EMPTY = 1;
-    private static final int LIST_CONTAINS_ITEMS = 2;
-    private static final int LIST_UNDEFINED = 3;
-
+    private static final long LIST_ANIMATION_DURATION = 150;
     // State keys
     private static final String STATE_SELECTED_PROFILE_ID = "profile_id";
-    private static final String STATE_ORIENTATION_HAS_CHANGED =
-            "orientation_has_changed";
-
-    // State vars
+    private static final String STATE_ORIENTATION_HAS_CHANGED = "orientation_has_changed";
+    /**
+     * Selected profile ID
+     */
     private long mSelectedProfileId = -1;
+    /**
+     * Listener for clicks on tag list items
+     */
+    private TagListAdapter.OnTagClickedListener mTagClickedListener;
+    /**
+     * Screen orientation changes listener
+     */
     private OrientationEventListener mOrientationEventListener;
+    /**
+     * Screen orientation changed flag
+     */
     private boolean mOrientationHasChanged;
-
-    private int[] mColors;
+    /**
+     * Color palette - normal state
+     */
+    private int[] mColorsNormal;
+    /**
+     * Color palette - pressed state
+     */
+    private int[] mColorsPressed;
+    /**
+     * Color palette - ripple state
+     */
+    private int[] mColorsRipple;
+    /**
+     * Tag order mode
+     */
+    private int mTagOrder;
+    /**
+     * Tag list UI component
+     */
     private RecyclerView mTagRecyclerView;
+    /**
+     * Empty list view UI component
+     */
     private LinearLayout mEmptyListLayout;
-    private TagAdapter mAdapter;
-    private Fab mFab;
+    /**
+     * Tag list adapter
+     */
+    private TagListAdapter mAdapter;
+    /**
+     * Add tag button component
+     */
+    private FloatingActionButton mFab;
+    /**
+     * Toolbar component
+     */
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        }
+        // Use primary dark color for the status bar
+        ApiUtils.colorizeSystemBar(getWindow());
 
-        // Select the last profile used for hashing a password
-        mSelectedProfileId = getLastProfile();
-
-        mTagRecyclerView = (RecyclerView) findViewById(R.id.tag_list);
-        mTagRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mTagRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mEmptyListLayout = (LinearLayout) findViewById(R.id.list_empty);
-
-        mColors = getResources().getIntArray(R.array.favicon_background_colors);
-        mFab = (Fab) findViewById(R.id.fabbutton);
-        mFab.setFabDrawable(
-                getResources().getDrawable(R.drawable.ic_action_add));
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Profile profile = ProfileSettings
-                        .getProfile(MainActivity.this, mSelectedProfileId);
-                Tag tag = new Tag(Tag.NO_ID, mSelectedProfileId, 1, null, "",
-                        profile.getPasswordLength(), profile.getPasswordType());
-                showGeneratePasswordDialog(tag);
-            }
-        });
-
-        /* Detect orientation changes.
-        In the case of an orientation change, we do not select the last used
-        profile but the currently selected profile.
-         */
-        if (savedInstanceState != null &&
-                savedInstanceState.getBoolean(STATE_ORIENTATION_HAS_CHANGED)) {
-            mSelectedProfileId =
-                    savedInstanceState.getLong(STATE_SELECTED_PROFILE_ID);
-        }
-        mOrientationHasChanged = false;
-        mOrientationEventListener = new OrientationEventListener(this,
-                SensorManager.SENSOR_DELAY_NORMAL) {
-
-            @Override
-            public void onOrientationChanged(int orientation) {
-                mOrientationHasChanged = true;
-            }
-        };
-        mOrientationEventListener.enable();
-
-        /* If the password generation dialog fragment is shown and the
-        screen, we have to restore the listener */
-        if (savedInstanceState != null) {
-            GeneratePasswordDialogFragment fragment =
-                    (GeneratePasswordDialogFragment) getFragmentManager()
-                            .findFragmentByTag(FRAGMENT_GENERATE_PASSWORD);
-            if (fragment != null) {
-                fragment.setDialogOkListener(this);
-            }
-        }
-
+        initializeView();
+        initializeSettings(savedInstanceState);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        // If we have just dismissed the application, close the application
-        // because the user wants to exit
-        if (HashMyPassApplication.getTutorialDismissed()) {
-            HashMyPassApplication.setTutorialDismissed(false);
+        /**
+         * Finish activity when tutorial is dismissed by user.
+         * It is called onResume because {@link com.reddyetwo.hashmypass.app.MainActivity}
+         * is responsible for launching {@link com.reddyetwo.hashmypass.app.tutorial.TutorialActivity} and,
+         * when the latter is dismissed, {@link com.reddyetwo.hashmypass.app.MainActivity} is
+         * usually resumed, not created.
+         */
+        TwikApplication application = TwikApplication.getInstance();
+        if (application.getTutorialDismissed()) {
+            application.setTutorialDismissed(false);
             finish();
             return;
         }
 
-        if (!showTutorial()) {
-            populateActionBarSpinner();
-
-            /* Cancel the master key alarm to clear cache */
+        if (ProfileSettings.getList(this).isEmpty()) {
+            // Show tutorial when profile list is empty
+            showTutorial();
+        } else {
+            // Cancel the master key alarm to clear cache
             MasterKeyAlarmManager.cancelAlarm(this);
+            populateView();
+        }
+    }
+
+    private void initializeSettings(Bundle savedInstanceState) {
+        if (savedInstanceState != null &&
+                savedInstanceState.getBoolean(STATE_ORIENTATION_HAS_CHANGED)) {
+            mSelectedProfileId = savedInstanceState.getLong(STATE_SELECTED_PROFILE_ID);
+        } else {
+            mSelectedProfileId = Preferences.getLastProfile(this);
+        }
+        mTagOrder = Preferences.getTagOrder(this);
+
+        mColorsNormal = getResources().getIntArray(R.array.color_palette_normal);
+        mColorsPressed = getResources().getIntArray(R.array.color_palette_pressed);
+        mColorsRipple = getResources().getIntArray(R.array.color_palette_ripple);
+    }
+
+    private void initializeView() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mEmptyListLayout = (LinearLayout) findViewById(R.id.list_empty);
+
+        mTagRecyclerView = (RecyclerView) findViewById(R.id.tag_list);
+        mTagRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mTagRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.attachToRecyclerView(mTagRecyclerView);
+
+        // Add toolbar
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        // Add listeners
+        addFabClickedListener();
+        addOrientationChangedListener();
+        addPasswordDialogListener();
+        addTagClickedListener();
+    }
+
+    private void populateView() {
+        populateToolBarSpinner();
+        populateTagList();
+        updateFabColor();
+    }
+
+    private void addOrientationChangedListener() {
+        mOrientationHasChanged = false;
+        mOrientationEventListener =
+                new OrientationEventListener(this, SensorManager.SENSOR_DELAY_NORMAL) {
+
+                    @Override
+                    public void onOrientationChanged(int orientation) {
+                        mOrientationHasChanged = true;
+                    }
+                };
+        mOrientationEventListener.enable();
+    }
+
+    private void addPasswordDialogListener() {
+        GeneratePasswordDialogFragment fragment =
+                (GeneratePasswordDialogFragment) getFragmentManager()
+                        .findFragmentByTag(FRAGMENT_GENERATE_PASSWORD);
+        if (fragment != null) {
+            fragment.setDialogOkListener(this);
+        }
+    }
+
+    private void addTagClickedListener() {
+        mTagClickedListener = new TagClickListener();
+    }
+
+    private void addFabClickedListener() {
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Profile profile = ProfileSettings.getProfile(MainActivity.this, mSelectedProfileId);
+                Tag tag = new Tag(Tag.NO_ID, mSelectedProfileId, 1, null, "",
+                        profile.getPasswordLength(), profile.getPasswordType());
+                showGeneratePasswordDialog(tag);
+            }
+        });
+    }
+
+    private void showTutorial() {
+        Intent intent = new Intent(this, TutorialActivity.class);
+        startActivity(intent);
+    }
+
+    private void populateTagList() {
+        final List<Tag> tags = TagSettings
+                .getProfileTags(this, mSelectedProfileId, mTagOrder, TagSettings.LIMIT_UNBOUNDED);
+        @ListStatus final int stateBeforeUpdating = getTagListStatus();
+
+        if (stateBeforeUpdating == LIST_NOT_INITIALIZED) {
+            mAdapter = new TagListAdapter(this, mSelectedProfileId, mTagOrder, mTagClickedListener,
+                    tags);
+            mTagRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.setProfileId(mSelectedProfileId);
         }
 
-        // Update FAB color
+        if (stateBeforeUpdating == LIST_EMPTY) {
+            mAdapter.setTags(tags);
+        }
+
+        // When stateBeforeUpdating == LIST_CONTAINS_ITEMS and the tag list of the current profile
+        // is not empty, the user has selected a different profile and the adapter needs to be
+        // updated by the animator.
+
+        // Update tag list visibility
+        updateTagListView(stateBeforeUpdating, tags);
+    }
+
+    /**
+     * Update FAB color to match the currently selected profile
+     */
+    private void updateFabColor() {
         if (mSelectedProfileId != Profile.NO_ID) {
-            Profile profile =
-                    ProfileSettings.getProfile(this, mSelectedProfileId);
+            Profile profile = ProfileSettings.getProfile(this, mSelectedProfileId);
             /* Warning: the profile could have been removed. In that case,
-            we'll select the first profile in the list */
+            select the first profile in the list */
             if (profile == null) {
                 profile = ProfileSettings.getList(this).get(0);
                 mSelectedProfileId = profile.getId();
             }
-            setFabColor(mColors[profile.getColorIndex()]);
+            int colorIndex = profile.getColorIndex();
+            setFabColor(mColorsNormal[colorIndex], mColorsPressed[colorIndex],
+                    mColorsRipple[colorIndex]);
         }
-
-        /* Update tag list (may have been changed from web browser) */
-        populateTagList();
     }
 
+    /**
+     * Get the tag position in the list of tags
+     *
+     * @param id the tag ID
+     * @return the position of the tag in the list
+     */
     private int getTagPosition(long id) {
-        List<Tag> tags = TagSettings.getProfileTags(this, mSelectedProfileId,
-                TagSettings.ORDER_BY_HASH_COUNTER, TagSettings.LIMIT_UNBOUNDED);
+        List<Tag> tags = TagSettings
+                .getProfileTags(this, mSelectedProfileId, mTagOrder, TagSettings.LIMIT_UNBOUNDED);
         int position = 0;
         int size = tags.size();
         while (position < size && tags.get(position).getId() != id) {
@@ -202,128 +317,88 @@ public class MainActivity extends Activity implements
     }
 
     /**
-     * Updates the visibility of the tag list
-     *
-     * @param listContainsItems indicates whether the list contains items
-     * @param prevState         previous state of the list
-     * @param tags              list of tags, used when prevState =
-     *                          LIST_UNDEFINED or LIST_CONTAINS_ITEMS. Null
-     *                          if list items should not be modified.
+     * Update the visibility of the tag list.
+     * This method is also used when a different profile has been selected.
+     * When the user selects a different profile, a different tag list is generated and the adapter
+     * must be updated.
      */
-    private void updateTagListVisibility(boolean listContainsItems,
-                                         int prevState, final List<Tag> tags) {
-        AnimatorSet invisibleAnimator = (AnimatorSet) AnimatorInflater
-                .loadAnimator(this, R.animator.invisible);
-        final AnimatorSet visibleAnimator = (AnimatorSet) AnimatorInflater
-                .loadAnimator(this, R.animator.visible);
-        AnimatorSet animator;
-
-        if (listContainsItems) {
-            switch (prevState) {
-                case LIST_UNDEFINED:
-                    if (tags != null) {
-                        mAdapter = new TagAdapter(tags);
-                        mTagRecyclerView.setAdapter(mAdapter);
-                        visibleAnimator.setTarget(mTagRecyclerView);
-                        visibleAnimator.start();
-                    }
+    private void updateTagListView(@ListStatus final int stateBeforeUpdating,
+                                   final List<Tag> newTags) {
+        if (!newTags.isEmpty()) {
+            switch (stateBeforeUpdating) {
+                case LIST_NOT_INITIALIZED:
+                    // Make tag list visible
+                    Animations.getToVisibleAnimatorSet(this, mTagRecyclerView).start();
                     break;
                 case LIST_EMPTY:
-                    if (tags != null) {
-                        mAdapter = new TagAdapter(tags);
-                        mTagRecyclerView.setAdapter(mAdapter);
-                    }
-                    invisibleAnimator.setTarget(mEmptyListLayout);
-                    visibleAnimator.setTarget(mTagRecyclerView);
-                    animator = new AnimatorSet();
-                    animator.playTogether(visibleAnimator, invisibleAnimator);
-                    animator.start();
+                    // Hide empty view and show tag list
+                    animateEmptyViewToVisibleListTransition();
                     break;
                 case LIST_CONTAINS_ITEMS:
-                    if (tags != null) {
-                        invisibleAnimator.setTarget(mTagRecyclerView);
-                        invisibleAnimator.setDuration(150);
-                        visibleAnimator.setTarget(mTagRecyclerView);
-                        visibleAnimator.setDuration(150);
-                        invisibleAnimator
-                                .addListener(new Animator.AnimatorListener() {
-                                    @Override
-                                    public void onAnimationStart(
-                                            Animator animation) {
-
-                                    }
-
-                                    @Override
-                                    public void onAnimationEnd(
-                                            Animator animation) {
-                                        mAdapter = new TagAdapter(tags);
-                                        mTagRecyclerView.setAdapter(mAdapter);
-                                        visibleAnimator.start();
-                                    }
-
-                                    @Override
-                                    public void onAnimationCancel(
-                                            Animator animation) {
-
-                                    }
-
-                                    @Override
-                                    public void onAnimationRepeat(
-                                            Animator animation) {
-
-                                    }
-                                });
-                        invisibleAnimator.start();
-                    }
+                    // Hide outdated tag list and then show tag list with updated tags
+                    animateListTransition(mTagRecyclerView, mTagRecyclerView, newTags);
                     break;
+                default:
             }
         } else {
-            if (tags != null) {
-                mAdapter = new TagAdapter(tags);
-                mTagRecyclerView.setAdapter(mAdapter);
-            }
-
-            switch (prevState) {
-                case LIST_UNDEFINED:
-                    visibleAnimator.setTarget(mEmptyListLayout);
-                    visibleAnimator.start();
+            switch (stateBeforeUpdating) {
+                case LIST_NOT_INITIALIZED:
+                    // Show empty view
+                    Animations.getToVisibleAnimatorSet(this, mEmptyListLayout).start();
                     break;
                 case LIST_CONTAINS_ITEMS:
-                    invisibleAnimator.setTarget(mTagRecyclerView);
-                    visibleAnimator.setTarget(mEmptyListLayout);
-                    animator = new AnimatorSet();
-                    animator.playTogether(invisibleAnimator, visibleAnimator);
-                    animator.start();
+                    // Hide tag list and show empty view
+                    animateListTransition(mTagRecyclerView, mEmptyListLayout, newTags);
                     break;
+                default:
             }
         }
     }
 
-    private void populateTagList() {
-        // Determine previous state
-        int prevState;
+    private void animateEmptyViewToVisibleListTransition() {
+        AnimatorSet invisibleAnimator =
+                Animations.getToInvisibleAnimatorSet(this, mEmptyListLayout);
+        AnimatorSet visibleAnimator = Animations.getToVisibleAnimatorSet(this, mTagRecyclerView);
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(visibleAnimator, invisibleAnimator);
+        animatorSet.start();
+    }
+
+    private void animateListTransition(Object toInvisibleObject, Object toVisibleObject,
+                                       List<Tag> newTags) {
+        AnimatorSet invisibleAnimator = Animations
+                .getToInvisibleAnimatorSet(this, toInvisibleObject, LIST_ANIMATION_DURATION);
+        AnimatorSet visibleAnimator =
+                Animations.getToVisibleAnimatorSet(this, toVisibleObject, LIST_ANIMATION_DURATION);
+        initTagListProfileChangedAnimator(invisibleAnimator, visibleAnimator, newTags);
+        invisibleAnimator.start();
+
+    }
+
+    private void initTagListProfileChangedAnimator(final AnimatorSet invisibleAnimator,
+                                                   final AnimatorSet visibleAnimator,
+                                                   final List<Tag> tags) {
+        invisibleAnimator
+                .addListener(new TagListProfileChangedAnimatorListener(visibleAnimator, tags));
+    }
+
+    @ListStatus
+    private int getTagListStatus() {
+        @ListStatus int status;
         if (mAdapter == null) {
-            prevState = LIST_UNDEFINED;
+            status = LIST_NOT_INITIALIZED;
         } else if (mAdapter.getItemCount() == 0) {
-            prevState = LIST_EMPTY;
+            status = LIST_EMPTY;
         } else {
-            prevState = LIST_CONTAINS_ITEMS;
+            status = LIST_CONTAINS_ITEMS;
         }
-
-        List<Tag> tags = TagSettings.getProfileTags(this, mSelectedProfileId,
-                TagSettings.ORDER_BY_HASH_COUNTER, TagSettings.LIMIT_UNBOUNDED);
-        updateTagListVisibility(tags.size() > 0, prevState, tags);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
+        return status;
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        cacheMasterKey();
+        setMasterKeyCacheAlarm();
     }
 
     @Override
@@ -337,8 +412,7 @@ public class MainActivity extends Activity implements
         super.onSaveInstanceState(outState);
 
         // Activity state
-        outState.putBoolean(STATE_ORIENTATION_HAS_CHANGED,
-                mOrientationHasChanged);
+        outState.putBoolean(STATE_ORIENTATION_HAS_CHANGED, mOrientationHasChanged);
         outState.putLong(STATE_SELECTED_PROFILE_ID, mSelectedProfileId);
 
     }
@@ -353,173 +427,96 @@ public class MainActivity extends Activity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
+        // automatically handle clicks on the Home/Up button, as long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
+            startActivity(new Intent(this, SettingsActivity.class));
         } else if (id == R.id.action_edit_profile) {
-            Intent intent = new Intent(this, EditProfileActivity.class);
-            intent.putExtra(EditProfileActivity.EXTRA_PROFILE_ID,
-                    mSelectedProfileId);
-            startActivity(intent);
-            return true;
+            startActivity(new Intent(this, EditProfileActivity.class)
+                    .putExtra(EditProfileActivity.EXTRA_PROFILE_ID, mSelectedProfileId));
         } else if (id == R.id.action_help) {
-            Intent intent = new Intent(this, TutorialActivity.class);
-            startActivity(intent);
-            return true;
+            startActivity(new Intent(this, TutorialActivity.class));
         } else if (id == R.id.action_about) {
             AboutDialog.showAbout(this);
-            return true;
+        } else if (id == R.id.action_sort_by_usage) {
+            mTagOrder = TagSettings.ORDER_BY_HASH_COUNTER;
+            Preferences.setTagOrder(this, mTagOrder);
+            mAdapter.setTagOrder(mTagOrder);
+            populateTagList();
+        } else if (id == R.id.action_sort_by_name) {
+            mTagOrder = TagSettings.ORDER_BY_NAME;
+            Preferences.setTagOrder(this, mTagOrder);
+            mAdapter.setTagOrder(mTagOrder);
+            populateTagList();
+        } else {
+            return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode,
-                                    Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case REQUEST_ADD_PROFILE:
-                switch (resultCode) {
-                    case RESULT_OK:
-                        mSelectedProfileId = data.getLongExtra(
-                                AddProfileActivity.RESULT_KEY_PROFILE_ID, 0);
-                        setFabColor(mColors[ProfileSettings
-                                .getProfile(this, mSelectedProfileId)
-                                .getColorIndex()]);
-                        populateTagList();
-                        break;
-                    default:
+                if (resultCode == RESULT_OK) {
+                    addProfile(data.getLongExtra(EditProfileActivity.RESULT_KEY_PROFILE_ID, 0));
                 }
                 break;
             case REQUEST_CREATE_DEFAULT_PROFILE:
-                switch (resultCode) {
-                    case RESULT_CANCELED:
-                        finish();
-                        return;
-                    default:
+                if (resultCode == RESULT_CANCELED) {
+                    finish();
                 }
                 break;
             default:
         }
     }
 
-    private void setFabColor(int color) {
-        int colorFrom = mFab.getFabColor();
-        ValueAnimator colorAnimation =
-                ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, color);
-        colorAnimation
-                .addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        mFab.setFabColor(
-                                (Integer) animation.getAnimatedValue());
-                    }
-                });
-        colorAnimation.start();
+    private void addProfile(long profileId) {
+        mSelectedProfileId = profileId;
+        int colorIndex = ProfileSettings.getProfile(this, mSelectedProfileId).getColorIndex();
+        setFabColor(mColorsNormal[colorIndex], mColorsPressed[colorIndex],
+                mColorsRipple[colorIndex]);
+        populateTagList();
     }
 
-    private void populateActionBarSpinner() {
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
+    private void setFabColor(int colorNormal, int colorPressed, int colorRipple) {
+        mFab.setColorNormal(colorNormal);
+        mFab.setColorPressed(colorPressed);
+        mFab.setColorRipple(colorRipple);
+    }
+
+    private void populateToolBarSpinner() {
+        if (mToolbar != null) {
             final List<Profile> profiles = ProfileSettings.getList(this);
             Profile addProfile = new Profile();
-            addProfile.setId(ID_ADD_PROFILE);
             addProfile.setName(getString(R.string.action_add_profile));
             profiles.add(addProfile);
+            ProfileSpinnerAdapter spinnerAdapter =
+                    new ProfileSpinnerAdapter(getSupportActionBar().getThemedContext(), profiles,
+                            R.layout.toolbar_spinner_item_dropdown,
+                            R.layout.toolbar_spinner_item_actionbar);
 
-            ProfileAdapter adapter = new ProfileAdapter(this, profiles);
-            actionBar.setListNavigationCallbacks(adapter,
-                    new ActionBar.OnNavigationListener() {
-                        @Override
-                        public boolean onNavigationItemSelected(
-                                int itemPosition, long itemId) {
-                            long selectedProfile =
-                                    profiles.get(itemPosition).getId();
-                            if (selectedProfile == ID_ADD_PROFILE) {
-                                Intent intent = new Intent(MainActivity.this,
-                                        AddProfileActivity.class);
-                                startActivityForResult(intent,
-                                        REQUEST_ADD_PROFILE);
-                            } else {
-                                if (mAdapter == null ||
-                                        selectedProfile != mSelectedProfileId) {
-                                    mSelectedProfileId = selectedProfile;
-                                    populateTagList();
-                                    /* Animate fab color transition,
-                                    but delay it a bit to let the tag list
-                                    populate without affecting the animation
-                                     */
-                                    mFab.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            setFabColor(mColors[ProfileSettings
-                                                    .getProfile(
-                                                            MainActivity.this,
-                                                            mSelectedProfileId)
-                                                    .getColorIndex()]);
-                                        }
-                                    }, 100);
-                                }
-                            }
-                            return false;
-                        }
-                    });
+            Spinner spinner = (Spinner) findViewById(R.id.spinner_nav);
+            spinner.setAdapter(spinnerAdapter);
+            spinner.setOnItemSelectedListener(new SpinnerItemSelectedListener());
 
             /* If we had previously selected a profile before pausing the
             activity and it still exists, select it in the spinner. */
-            int position = 0;
+            int position = mSelectedProfileId == Profile.NO_ID ? 0 :
+                    profiles.indexOf(ProfileSettings.getProfile(this, mSelectedProfileId));
 
-            /* If mSelectedProfileId == ID_ADD_PROFILE is because we have
-            never hashed any password and there is no "last profile used for
-            hashing" */
-            if (mSelectedProfileId != ID_ADD_PROFILE) {
-                for (Profile p : profiles) {
-                    if (p.getId() == mSelectedProfileId) {
-                        break;
-                    }
-                    position++;
-                }
+
+            /* It may happen that the last profiled used for hashing no longer exists */
+            if (position == -1) {
+                position = 0;
             }
-
-            /* It may happen that the last profiled used for hashing no longer
-            exists */
-            position = position % profiles.size();
-            actionBar.setSelectedNavigationItem(position);
+            spinner.setSelection(position);
         }
     }
 
-    private void updateLastProfile() {
-                /* Update last used profile preference */
-        SharedPreferences preferences =
-                getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putLong(Preferences.PREFS_KEY_LAST_PROFILE, mSelectedProfileId);
-        editor.apply();
-    }
-
-    private long getLastProfile() {
-        // Select the last profile used for hashing a password
-        SharedPreferences preferences =
-                getSharedPreferences(Preferences.PREFS_NAME, MODE_PRIVATE);
-        return preferences.getLong(Preferences.PREFS_KEY_LAST_PROFILE, -1);
-    }
-
-    private boolean showTutorial() {
-        // Check if tutorial should be shown
-        if (ProfileSettings.getList(this).size() == 0) {
-            Intent intent = new Intent(this, TutorialActivity.class);
-            startActivity(intent);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private void cacheMasterKey() {
+    private void setMasterKeyCacheAlarm() {
         int masterKeyMins = Preferences.getRememberMasterKeyMins(this);
         if (masterKeyMins > 0) {
             MasterKeyAlarmManager.setAlarm(this, masterKeyMins);
@@ -528,6 +525,7 @@ public class MainActivity extends Activity implements
 
     @Override
     public void onDialogDismiss(Tag tag) {
+        boolean listWasEmpty = mAdapter.getItemCount() == 0;
         if (tag != null && tag.getId() == Tag.NO_ID &&
                 tag.getName().length() > 0) {
             // It is a new tag
@@ -536,7 +534,7 @@ public class MainActivity extends Activity implements
             mAdapter.add(tag, position);
 
             // Update last used profile
-            updateLastProfile();
+            Preferences.setLastProfile(this, mSelectedProfileId);
         } else if (tag != null && tag.getName().length() > 0) {
             /* Save the tag and update the list because the name of a tag can
              alter its position in the list
@@ -544,165 +542,132 @@ public class MainActivity extends Activity implements
             TagSettings.updateTag(this, tag);
             mAdapter.update(tag);
         }
-    }
 
-    private class TagAdapter extends RecyclerView.Adapter<TagListViewHolder> {
-
-        private List<Tag> mTags;
-        private static final int mResource = R.layout.tag_list_item;
-
-        public TagAdapter(List<Tag> objects) {
-            super();
-            mTags = objects;
-        }
-
-        @Override
-        public TagListViewHolder onCreateViewHolder(ViewGroup viewGroup,
-                                                    int i) {
-            View v = LayoutInflater.from(viewGroup.getContext())
-                    .inflate(mResource, viewGroup, false);
-            return new TagListViewHolder(v);
-        }
-
-        @Override
-        public void onBindViewHolder(TagListViewHolder tagListViewHolder,
-                                     int i) {
-            final Tag tag = mTags.get(i);
-            FaviconLoader.setAsBackground(getApplicationContext(),
-                    tagListViewHolder.mFaviconTextView, tag);
-            tagListViewHolder.mTagNameTextView.setText(tag.getName());
-            tagListViewHolder.itemView
-                    .setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // Increase hash counter. This may affect tag list.
-                            tag.setHashCounter(tag.getHashCounter() + 1);
-                            TagSettings.updateTag(MainActivity.this, tag);
-                            mAdapter.update(tag);
-
-                            // Update last used profile
-                            updateLastProfile();
-
-                            // Show dialog
-                            showGeneratePasswordDialog(new Tag(tag));
-                        }
-                    });
-            tagListViewHolder.itemView
-                    .setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View v) {
-                            AlertDialog.Builder builder =
-                                    new AlertDialog.Builder(MainActivity.this);
-                            builder.setMessage(
-                                    getString(R.string.confirm_delete_tag,
-                                            tag.getName()));
-                            builder.setPositiveButton(R.string.action_delete,
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(
-                                                DialogInterface dialog,
-                                                int which) {
-                                            deleteTag(tag);
-                                        }
-                                    });
-                            builder.setNegativeButton(android.R.string.cancel,
-                                    null);
-                            builder.create().show();
-                            return false;
-                        }
-                    });
-        }
-
-        public void add(Tag tag, int position) {
-            mTags.add(position, tag);
-            if (mTags.size() == 1) {
-                updateTagListVisibility(true, LIST_EMPTY, null);
-            }
-            notifyItemInserted(position);
-        }
-
-        public void remove(Tag tag) {
-            int position = mTags.indexOf(tag);
-            mTags.remove(position);
-            notifyItemRemoved(position);
-            if (mTags.size() == 0) {
-                updateTagListVisibility(false, LIST_CONTAINS_ITEMS, null);
-            }
-        }
-
-        public void update(Tag tag) {
-            int oldPosition = 0;
-            while (oldPosition < mTags.size() &&
-                    mTags.get(oldPosition).getId() != tag.getId()) {
-                oldPosition++;
-            }
-            if (oldPosition >= mTags.size()) {
-                /* The tag is stored in the database but not in the list,
-                because it's a new tag but its customs settings were saved
-                during its creation.
-                 */
-                int newPosition = getTagPosition(tag.getId());
-                mTags.add(newPosition, tag);
-                notifyItemInserted(newPosition);
-            }
-            int newPosition = getTagPosition(tag.getId());
-            if (oldPosition != newPosition) {
-                mTags.remove(tag);
-                mTags.add(newPosition, tag);
-                notifyItemRemoved(oldPosition);
-                notifyItemInserted(newPosition);
-            } else {
-                mTags.set(oldPosition, tag);
-                notifyItemChanged(oldPosition);
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return mTags.size();
+        if (listWasEmpty && mAdapter.getItemCount() == 1) {
+            updateTagListView(LIST_EMPTY, mAdapter.getTags());
         }
     }
 
     private void deleteTag(Tag tag) {
-        if (TagSettings.deleteTag(this, tag)) {
-
-            // Update tags list
-            mAdapter.remove(tag);
-
-            // Check if we should delete favicon
-            String site = tag.getSite();
-            if (site != null) {
-                Favicon favicon = FaviconSettings.getFavicon(this, site);
-                if (favicon != null && !TagSettings.siteHasTags(this, site)) {
-                    FaviconSettings.deleteFavicon(this, favicon);
-                }
-
-            }
-        } else {
-            // Error!
+        if (!TagSettings.deleteTag(this, tag)) {
             Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();
+            Log.e(TwikApplication.LOG_TAG, "Error deleting tag from database");
+            return;
+        }
+
+        // Update tags list
+        mAdapter.remove(tag);
+
+        if (mAdapter.getItemCount() == 0) {
+            updateTagListView(LIST_CONTAINS_ITEMS, mAdapter.getTags());
+        }
+
+        // Check if we should delete favicon
+        String site = tag.getSite();
+        if (site != null) {
+            Favicon favicon = FaviconSettings.getFavicon(this, site);
+            boolean shouldDeleteFavicon = favicon != null && !TagSettings.siteHasTags(this, site);
+            if (shouldDeleteFavicon && !FaviconSettings.deleteFavicon(this, favicon)) {
+                Log.e(TwikApplication.LOG_TAG, "Error deleting favicon");
+            }
         }
     }
 
     private void showGeneratePasswordDialog(Tag tag) {
-        GeneratePasswordDialogFragment dialog =
-                new GeneratePasswordDialogFragment();
+        GeneratePasswordDialogFragment dialog = new GeneratePasswordDialogFragment();
         dialog.setProfileId(mSelectedProfileId);
         dialog.setTag(tag);
         dialog.setDialogOkListener(this);
         dialog.show(getFragmentManager(), FRAGMENT_GENERATE_PASSWORD);
     }
 
-    public class TagListViewHolder extends RecyclerView.ViewHolder {
+    @IntDef({LIST_EMPTY, LIST_CONTAINS_ITEMS, LIST_NOT_INITIALIZED})
+    private @interface ListStatus {
+    }
 
-        public TextView mFaviconTextView;
-        public TextView mTagNameTextView;
+    private class TagClickListener implements TagListAdapter.OnTagClickedListener {
 
-        public TagListViewHolder(View itemView) {
-            super(itemView);
-            mFaviconTextView =
-                    (TextView) itemView.findViewById(R.id.tag_favicon);
-            mTagNameTextView = (TextView) itemView.findViewById(R.id.tag_name);
+        @Override
+        public void onTagClicked(final Tag tag) {
+            Preferences.setLastProfile(MainActivity.this, mSelectedProfileId);
+            showGeneratePasswordDialog(tag);
+        }
+
+        @Override
+        public void onTagLongClicked(final Tag tag) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setMessage(getString(R.string.confirm_delete_tag, tag.getName()));
+            builder.setPositiveButton(R.string.action_delete,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            deleteTag(tag);
+                        }
+                    });
+            builder.setNegativeButton(android.R.string.cancel, null);
+            builder.create().show();
+        }
+    }
+
+    private class SpinnerItemSelectedListener implements AdapterView.OnItemSelectedListener {
+
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            if (id == Profile.NO_ID) {
+                Intent intent = new Intent(MainActivity.this, EditProfileActivity.class);
+                intent.putExtra(EditProfileActivity.EXTRA_PROFILE_ID, id);
+                startActivityForResult(intent, REQUEST_ADD_PROFILE);
+            } else if (id != mSelectedProfileId) {
+                mSelectedProfileId = id;
+                populateTagList();
+                updateFabColor();
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+            // Nothing to do
+        }
+
+    }
+
+    private class TagListProfileChangedAnimatorListener implements Animator.AnimatorListener {
+
+        private final AnimatorSet mVisibleAnimator;
+        private final List<Tag> mTags;
+
+        /**
+         * Constructor
+         *
+         * @param visibleAnimator the visibility {@link android.animation.AnimatorSet} instance
+         * @param tags            the {@link java.util.List} of tags
+         */
+        public TagListProfileChangedAnimatorListener(AnimatorSet visibleAnimator, List<Tag> tags) {
+            mVisibleAnimator = visibleAnimator;
+            mTags = tags;
+        }
+
+        @Override
+        public void onAnimationStart(Animator animation) {
+            // Nothing to do
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            // Update list tags
+            mAdapter.setProfileId(mSelectedProfileId);
+            mAdapter.setTags(mTags);
+            mVisibleAnimator.start();
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+            // Nothing to do
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+            // Nothing to do
         }
     }
 }

@@ -20,8 +20,10 @@
     -->
 
 <resources>
-    <dimen name="activity_top_margin">96dp</dimen>
-    <dimen name="activity_vertical_margin_large">48dp</dimen>
     <dimen name="list_empty_top_vertical_margin">112dp</dimen>
     <dimen name="list_empty_middle_vertical_margin">40dp</dimen>
+
+    <!-- Toolbar -->
+    <dimen name="toolbar_height">56dp</dimen>
+
 </resources>

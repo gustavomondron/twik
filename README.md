@@ -21,13 +21,15 @@ Twik features include:
 Building
 --------
 
-The source code includes an Android Studio project. Just open the project and 
-build it to generate the apk file, which can be installed on the device.
+The source code includes an Android Studio project.
+Android Studio 1.1+ is required to run the included unit tests.
 
 Acknowledgments
 ---------------
 
-French translation by Andrés Álvarez and greizgh.
+- French translation by Andrés Álvarez and greizgh.
+- Italian translation by Claudio Arseni.
+- German translation by Michael Wodniok.
 
 License
 -------
@@ -44,8 +46,8 @@ by Steve Cooper. Licensed under MPL 1.1/GPL 2.0/LGPL 2.1 licenses.
 - [Password Hasher Plus](http://passwordhasherplus.com) by Eric Woodruff.
 Licensed under MPL 1.1/GPL 2.0/LGPL 2.1 licenses.
 - [Contact Identicons](https://github.com/davidhampgonsalves/Contact-Identicons/) by David Hamp-Gonsalves.
-- [Android Action Bar Style Generator](http://jgilfelt.github.io/android-actionbarstylegenerator)
-by The Android Open Source Project and y readyState Software Ltd.
-Licensed under the Apache 2.0 License.
+- [FloatingActionButton](https://github.com/makovkastar/FloatingActionButton/)
+by Oleksandr Melnykov.
+Licensed under the MIT License.
 - [Ubuntu Mono](http://font.ubuntu.com) by Canonical Ltd.
 Licensed under Ubuntu Font Licence 1.0.

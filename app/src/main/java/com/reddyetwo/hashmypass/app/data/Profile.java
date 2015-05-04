@@ -20,20 +20,48 @@
 
 package com.reddyetwo.hashmypass.app.data;
 
+import com.reddyetwo.hashmypass.app.util.Constants;
+import com.reddyetwo.hashmypass.app.util.RandomPrivateKeyGenerator;
+
+/**
+ * POJO class for profiles
+ */
 public class Profile {
 
-    public final static long NO_ID = -1;
+    public static final long NO_ID = -1;
 
     private long mId = NO_ID;
-    private String mName;
-    private String mPrivateKey;
-    private int mPasswordLength;
-    private int mColorIndex;
-    private PasswordType mPasswordType;
+    private String mName = "";
+    private String mPrivateKey = RandomPrivateKeyGenerator.generate();
+    private int mPasswordLength = Constants.DEFAULT_PASSWORD_LENGTH;
+    private int mColorIndex = 0;
+    private PasswordType mPasswordType = PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS;
 
+    /**
+     * Constructor
+     */
     public Profile() {
     }
 
+    /**
+     * Constructor
+     *
+     * @param id the ID
+     */
+    public Profile(long id) {
+        mId = id;
+    }
+
+    /**
+     * Constructor
+     *
+     * @param id             the ID
+     * @param name           the name
+     * @param privateKey     the private key
+     * @param passwordLength the password length
+     * @param passwordType   the password type
+     * @param colorIndex     the color index
+     */
     public Profile(long id, String name, String privateKey, int passwordLength,
                    PasswordType passwordType, int colorIndex) {
         mId = id;
@@ -44,49 +72,80 @@ public class Profile {
         mColorIndex = colorIndex;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        boolean equals = false;
+        if (o instanceof Profile) {
+            equals = ((Profile) o).getId() == mId;
+        }
+        return equals;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) mId;
+    }
+
+    /**
+     * Get the profile ID
+     *
+     * @return the profile ID
+     */
     public long getId() {
         return mId;
     }
 
-    public void setId(long id) {
-        mId = id;
-    }
-
+    /**
+     * Get the profile name
+     *
+     * @return the profile name
+     */
     public String getName() {
         return mName;
     }
 
+    /**
+     * Set the profile name
+     *
+     * @param name the name
+     */
     public void setName(String name) {
         mName = name;
     }
 
+    /**
+     * Get the private key
+     *
+     * @return the private key
+     */
     public String getPrivateKey() {
         return mPrivateKey;
     }
 
-    public void setPrivateKey(String privateKey) {
-        mPrivateKey = privateKey;
-    }
-
+    /**
+     * Get the password length
+     *
+     * @return the password length
+     */
     public int getPasswordLength() {
         return mPasswordLength;
     }
 
-    public void setPasswordLength(int passwordLength) {
-        mPasswordLength = passwordLength;
-    }
-
+    /**
+     * Get the password type
+     *
+     * @return the password type
+     */
     public PasswordType getPasswordType() {
         return mPasswordType;
     }
 
-    public void setPasswordType(PasswordType passwordType) {
-        mPasswordType = passwordType;
-    }
-
-    public int getColorIndex() { return mColorIndex; }
-
-    public void setColorIndex(int colorIndex) {
-        mColorIndex = colorIndex;
+    /**
+     * Get the color index
+     *
+     * @return the color index
+     */
+    public int getColorIndex() {
+        return mColorIndex;
     }
 }

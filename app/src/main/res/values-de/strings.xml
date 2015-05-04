@@ -33,17 +33,9 @@
     <string name="action_about">Über</string>
     <string name="action_delete">Löschen</string>
     <string name="discard">Verwerfen</string>
-    <string name="ok">OK</string>
-    <string name="copy_to_clipboard">In die Zwischenablage kopieren</string>
-    <string name="cancel">Abbrechen</string>
-    <string name="add">Neu</string>
     <string name="save">Speichern</string>
-    <string name="hash">Generieren</string>
     <string name="skip">Überspringen</string>
-    <string name="next">Weiter</string>
     <string name="start">Los</string>
-    <string name="ready">Alles klar</string>
-    <string name="add_first_profile">Erstelle Dein erstes Profil</string>
 
     <!-- Dialogs -->
     <string name="confirm_delete">\"%s\" wirklich löschen?</string>
@@ -86,8 +78,14 @@
 
     <!-- Settings summaries -->
     <string name="settings_summary_remember_master_key_never">Master-Passwort wird nach dem Beenden der App nicht gespeichert</string>
-    <string name="settings_summary_remember_master_key_minutes"> Master-Passwort wird nach dem Beenden der App für maximal %d Minuten gespeichert</string>
-    <string name="settings_summary_remember_master_key_hours"> Master-Passwort wird nach dem Beenden der App für maximal %d Stunde(n) gespeichert</string>
+    <plurals name="settings_summary_remember_master_key_minutes">
+        <item quantity="one">Master-Passwort wird nach dem Beenden der App für maximal %d Minute gespeichert</item>
+        <item quantity="other">Master-Passwort wird nach dem Beenden der App für maximal %d Minuten gespeichert</item>
+    </plurals>
+    <plurals name="settings_summary_remember_master_key_hours">
+        <item quantity="one">Master-Passwort wird nach dem Beenden der App für maximal %d Stunde gespeichert</item>
+        <item quantity="other">Master-Passwort wird nach dem Beenden der App für maximal %d Stunden gespeichert</item>
+    </plurals>
     <string name="settings_summary_copy_to_clipboard_enabled">Das generierte Passwort wird automatisch in die Zwischenablage kopiert</string>
     <string name="settings_summary_copy_to_clipboard_disabled">Das generierte Passwort wird nicht automatisch in die Zwischenablage kopiert</string>
 
@@ -100,8 +98,7 @@
     <!-- About Dialog -->
     <string name="about_body">
 <![CDATA[
-        <b>Twik</b><br/>
-        Version 1.2.6<br/>
+        Version %s<br/>
         Copyright \u00A9 2014 Red Dye No. 2
         <br/><br/>
         <b>Twik</b> ist eine Applikation, die es einfacher macht, sichere und unterschiedliche Passwörter für verschiedene Webseiten zu erzeugen.
@@ -139,10 +136,9 @@
         <i>von David Hamp-Gonsalves.</i>
         <br/><br/>
 
-        <b><a href="http://jgilfelt.github.io/android-actionbarstylegenerator/">
-        Android Action Bar Style Generator</a></b><br/>
-        <i>von dem The Android Open Source Project und readyState Software Ltd.</i> <br/>
-        Apache 2.0 Lizenz.<br/> <br/>
+        <b><a href="https://github.com/makovkastar/FloatingActionButton/">FloatingActionButton</a></b><br/>
+        <i>von Oleksandr Melnykov.</i><br/>
+        MIT Licensebr/><br/>
 
         <b><a href="http://font.ubuntu.com/">Ubuntu Mono</a></b> <br/>
         <i>von Canonical Ltd.</i> <br/>

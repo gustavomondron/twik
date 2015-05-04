@@ -24,7 +24,9 @@
 package com.reddyetwo.hashmypass.app.hash;
 
 import android.util.Base64;
+import android.util.Log;
 
+import com.reddyetwo.hashmypass.app.TwikApplication;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.util.SecurePassword;
 
@@ -35,6 +37,9 @@ import java.security.NoSuchAlgorithmException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ * Generator of hashed passwords
+ */
 public class PasswordHasher {
 
     /**
@@ -47,24 +52,37 @@ public class PasswordHasher {
      */
     private static final String DIGEST_MD5 = "MD5";
 
-    private static String _hashPassword(String tag, char[] key, int length,
-                                        PasswordType type) {
+    private static final int INJECT_RESERVED = 4;
+    private static final int INJECT_NUMBER_OF_NUMERIC_CHARS = 10;
+    private static final int INJECT_NUMBER_OF_SPECIAL_CHARS = 15;
+    private static final int INJECT_NUMBER_OF_ALPHA_CHARS = 26;
+    private static final int INJECT_OFFSET_NUMERIC = 0;
+    private static final int INJECT_OFFSET_SPECIAL = 1;
+    private static final int INJECT_OFFSET_ALPHA_UPPERCASE = 2;
+    private static final int INJECT_OFFSET_ALPHA_LOWERCASE = 3;
+    private static final int INTERMEDIATE_HASH_SIZE = 24;
+
+    private PasswordHasher() {
+
+    }
+
+    private static String hashKey(String tag, char[] key, int length, PasswordType type) {
 
         Mac hmac;
         try {
             hmac = Mac.getInstance(HMAC_SHA1);
         } catch (NoSuchAlgorithmException e) {
+            Log.e(TwikApplication.LOG_TAG, "HMAC error: " + e);
             return null;
         }
 
         /* First, we have to calculate the hashing key as a result of hashing
          the tag and the private key */
-        SecretKeySpec keySpec = new SecretKeySpec(SecurePassword.toBytes(key),
-                HMAC_SHA1);
+        SecretKeySpec keySpec = new SecretKeySpec(SecurePassword.toBytes(key), HMAC_SHA1);
         try {
             hmac.init(keySpec);
         } catch (InvalidKeyException e) {
-            e.printStackTrace();
+            Log.e(TwikApplication.LOG_TAG, "Invalid secret key: " + e);
             return null;
         }
 
@@ -72,8 +90,9 @@ public class PasswordHasher {
                 Base64.NO_PADDING | Base64.NO_WRAP);
 
         int sum = 0;
-        for (int i = 0; i < hash.length(); i++)
+        for (int i = 0; i < hash.length(); i++) {
             sum += hash.charAt(i);
+        }
 
         /* Parse password to match the request type */
         if (type == PasswordType.NUMERIC) {
@@ -82,14 +101,18 @@ public class PasswordHasher {
             /* We force digits, punctuation characters and mixed case in
             order to provide compatibility with the Chrome extension */
             // Force digits
-            hash = injectCharacter(hash, 0, 4, sum, length, '0', 10);
+            hash = injectCharacter(hash, INJECT_OFFSET_NUMERIC, INJECT_RESERVED, sum, length, '0',
+                    INJECT_NUMBER_OF_NUMERIC_CHARS);
             if (type == PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS) {
                 // Force special chars
-                hash = injectCharacter(hash, 1, 4, sum, length, '!', 15);
+                hash = injectCharacter(hash, INJECT_OFFSET_SPECIAL, INJECT_RESERVED, sum, length,
+                        '!', INJECT_NUMBER_OF_SPECIAL_CHARS);
             }
             // Force mixed case
-            hash = injectCharacter(hash, 2, 4, sum, length, 'A', 26);
-            hash = injectCharacter(hash, 3, 4, sum, length, 'a', 26);
+            hash = injectCharacter(hash, INJECT_OFFSET_ALPHA_UPPERCASE, INJECT_RESERVED, sum,
+                    length, 'A', INJECT_NUMBER_OF_ALPHA_CHARS);
+            hash = injectCharacter(hash, INJECT_OFFSET_ALPHA_LOWERCASE, INJECT_RESERVED, sum,
+                    length, 'a', INJECT_NUMBER_OF_ALPHA_CHARS);
 
             // Remove special chars if needed
             if (type == PasswordType.ALPHANUMERIC) {
@@ -101,22 +124,29 @@ public class PasswordHasher {
         return hash.substring(0, length);
     }
 
-    public static String hashPassword(String tag, char[] masterKey,
-                                      String privateKey, int length,
-                                      PasswordType passwordType) {
-        /* First, hash the tag with the private key (in the case that it is
-        used) */
-        if (privateKey != null) {
-            tag = _hashPassword(privateKey, tag.toCharArray(), 24,
-                    PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
-        }
+    /**
+     * Generate a hashed password using a tag, a master key and a private key
+     *
+     * @param tag          the tag name
+     * @param masterKey    the master key
+     * @param privateKey   the private key
+     * @param length       the password length
+     * @param passwordType the password type
+     * @return the hashed password
+     */
+    public static String hashTagWithKeys(String tag, char[] masterKey, String privateKey,
+                                         int length, PasswordType passwordType) {
+        // First, hash the tag with the private key (in the case that it is used)
+        String tagToHash = privateKey == null ? tag :
+                hashKey(privateKey, tag.toCharArray(), INTERMEDIATE_HASH_SIZE,
+                        PasswordType.ALPHANUMERIC_AND_SPECIAL_CHARS);
 
         // Then, hash the result with the master key
-        return _hashPassword(tag, masterKey, length, passwordType);
+        return hashKey(tagToHash, masterKey, length, passwordType);
     }
 
     /**
-     * Calculates the digest of an input string
+     * Calculate the digest of an input string
      *
      * @param input the input string
      * @return the digest of the input string
@@ -129,6 +159,7 @@ public class PasswordHasher {
             messageDigest = MessageDigest.getInstance(DIGEST_MD5);
             result = messageDigest.digest(SecurePassword.toBytes(input));
         } catch (NoSuchAlgorithmException e) {
+            Log.e(TwikApplication.LOG_TAG, "Could not find DIGEST MD5 algorithm: " + e);
             result = null;
         }
 
@@ -145,10 +176,12 @@ public class PasswordHasher {
      */
     private static String convertToDigits(String input, int seed, int length) {
         char[] inputChars = input.toCharArray();
-        int pivot = 0; // Pivot for next char-to-digit conversion
+        // Pivot for next char-to-digit conversion
+        int pivot = 0;
         for (int i = 0; i < length; i++) {
             if (!Character.isDigit(inputChars[i])) {
-                inputChars[i] = (char) ((seed + inputChars[pivot]) % 10 + '0');
+                inputChars[i] =
+                        (char) ((seed + inputChars[pivot]) % INJECT_NUMBER_OF_NUMERIC_CHARS + '0');
                 pivot = i + 1;
             }
         }
@@ -166,13 +199,12 @@ public class PasswordHasher {
      *               truncation
      * @return the string with special chars replaced
      */
-    private static String removeSpecialCharacters(String input, int seed,
-                                                  int length) {
+    private static String removeSpecialCharacters(String input, int seed, int length) {
         char[] inputChars = input.toCharArray();
         int pivot = 0;
         for (int i = 0; i < length; i++) {
             if (!Character.isLetterOrDigit(inputChars[i])) {
-                inputChars[i] = (char) ((seed + pivot) % 26 + 'A');
+                inputChars[i] = (char) ((seed + pivot) % INJECT_NUMBER_OF_ALPHA_CHARS + 'A');
                 pivot = i + 1;
             }
         }
@@ -196,9 +228,9 @@ public class PasswordHasher {
      * @param cNum     number of valid character codes starting from cStart
      * @return the string with the injected chars
      */
-    private static String injectCharacter(String input, int offset,
-                                          int reserved, int seed, int length,
-                                          char cStart, int cNum) {
+    @SuppressWarnings("SameParameterValue")
+    private static String injectCharacter(String input, int offset, int reserved, int seed,
+                                          int length, char cStart, int cNum) {
         int pos0 = seed % length;
         int pos = (pos0 + offset) % length;
         // Check if a qualified character is already present.
@@ -206,14 +238,15 @@ public class PasswordHasher {
         for (int i = 0; i < length - reserved; i++) {
             int i2 = (pos0 + reserved + i) % length;
             char c = input.charAt(i2);
-            if (c >= cStart && c < cStart + cNum)
-                return input; // Already present - nothing to do
+            if (c >= cStart && c < cStart + cNum) {
+                // Already present - nothing to do
+                return input;
+            }
         }
 
         String head = pos > 0 ? input.substring(0, pos) : "";
         char inject = (char) (((seed + input.charAt(pos)) % cNum) + cStart);
-        String tail =
-                (pos + 1 < input.length()) ? input.substring(pos + 1) : "";
+        String tail = (pos + 1 < input.length()) ? input.substring(pos + 1) : "";
 
         return head + inject + tail;
     }

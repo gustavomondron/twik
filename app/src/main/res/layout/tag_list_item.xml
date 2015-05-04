@@ -20,9 +20,10 @@
     -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="horizontal"
+              android:background="?android:attr/selectableItemBackground"
               android:layout_width="match_parent"
-              android:background="@drawable/background_tag_list"
               android:layout_height="48dp">
 
     <TextView
@@ -43,5 +44,6 @@
         android:text="@string/tag"
         android:gravity="left|center_vertical"
         android:textSize="@dimen/text_medium"
-        android:layout_height="48dp"/>
+        android:layout_height="48dp"
+        tools:ignore="UnusedAttribute"/>
 </LinearLayout>

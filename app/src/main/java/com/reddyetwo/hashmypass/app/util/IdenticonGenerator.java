@@ -30,33 +30,60 @@ import android.util.TypedValue;
 
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 
+/**
+ * Identicons generator
+ */
 public class IdenticonGenerator {
-    public static int height = 5;
-    public static int width = 5;
+    private static final int IDENTICON_HEIGHT = 5;
+    private static final int IDENTICON_WIDTH = 5;
+    private static final int IDENTICON_DIP_SIZE = 32;
+    private static final int IDENTICON_MARGIN = 1;
+    private static final int MASK_UNSIGNED = 255;
+    private static final int ALPHA_OPAQUE = 255;
+    private static final String COLOR_BACKGROUND = "#00f0f0f0";
+    private static final int BYTE_RED = 0;
+    private static final int BYTE_GREEN = 1;
+    private static final int BYTE_BLUE = 2;
+    private static final int HALF_RATIO = 2;
+    private static final int NUMBER_OF_SIDES_WIDTH_MARGIN = 2;
 
+    private IdenticonGenerator() {
+
+    }
+
+    /**
+     * Generator the identicon of an input string
+     *
+     * @param context the {@link android.content.Context}
+     * @param input   the input
+     * @return the identicon {@link android.graphics.Bitmap}
+     */
     public static Bitmap generate(Context context, char[] input) {
 
         byte[] hash = PasswordHasher.calculateDigest(input);
 
-        Bitmap identicon = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+        Bitmap identicon = Bitmap.createBitmap(IDENTICON_WIDTH, IDENTICON_HEIGHT, Config.ARGB_8888);
 
-        // get byte values as unsigned ints
-        int r = hash[0] & 255;
-        int g = hash[1] & 255;
-        int b = hash[2] & 255;
+        // Get color byte values as unsigned integers
+        int r = hash[BYTE_RED] & MASK_UNSIGNED;
+        int g = hash[BYTE_GREEN] & MASK_UNSIGNED;
+        int b = hash[BYTE_BLUE] & MASK_UNSIGNED;
 
-        int background = Color.parseColor("#00f0f0f0");
-        int foreground = Color.argb(255, r, g, b);
+        int background = Color.parseColor(COLOR_BACKGROUND);
+        int foreground = Color.argb(ALPHA_OPAQUE, r, g, b);
+        int imageCenter = (int) Math.ceil(IDENTICON_WIDTH / HALF_RATIO);
 
-        for (int x = 0; x < width; x++) {
-
+        for (int x = 0; x < IDENTICON_WIDTH; x++) {
             //make identicon horizontally symmetrical
-            int i = x < 3 ? x : 4 - x;
+            int i = x < imageCenter ? x : IDENTICON_WIDTH - 1 - x;
             int pixelColor;
-            for (int y = 0; y < height; y++) {
+            for (int y = 0; y < IDENTICON_HEIGHT; y++) {
 
-                if ((hash[i] >> y & 1) == 1) pixelColor = foreground;
-                else pixelColor = background;
+                if ((hash[i] >> y & 1) == 1) {
+                    pixelColor = foreground;
+                } else {
+                    pixelColor = background;
+                }
 
                 identicon.setPixel(x, y, pixelColor);
             }
@@ -64,16 +91,15 @@ public class IdenticonGenerator {
 
         // scale image by 2 to add border
         Resources res = context.getResources();
-        int size = (int) TypedValue
-                .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32,
-                        res.getDisplayMetrics());
-        Bitmap bmpWithBorder =
-                Bitmap.createBitmap(size, size, identicon.getConfig());
+        int size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, IDENTICON_DIP_SIZE,
+                res.getDisplayMetrics());
+        Bitmap bmpWithBorder = Bitmap.createBitmap(size, size, identicon.getConfig());
         Canvas canvas = new Canvas(bmpWithBorder);
         canvas.drawColor(background);
-        identicon =
-                Bitmap.createScaledBitmap(identicon, size - 2, size - 2, false);
-        canvas.drawBitmap(identicon, 1, 1, null);
+        identicon = Bitmap.createScaledBitmap(identicon,
+                size - IDENTICON_MARGIN * NUMBER_OF_SIDES_WIDTH_MARGIN,
+                size - IDENTICON_MARGIN * NUMBER_OF_SIDES_WIDTH_MARGIN, false);
+        canvas.drawBitmap(identicon, IDENTICON_MARGIN, IDENTICON_MARGIN, null);
 
         return bmpWithBorder;
     }
