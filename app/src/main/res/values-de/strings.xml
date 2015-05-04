@@ -145,4 +145,7 @@
         Ubuntu Font Licence 1.0.
     ]]>
     </string>
+    <string name="sort_by_name">Sortieren nach Name</string>
+    <string name="sort_by_usage">Sortieren nach Nutzung</string>
+    <string name="sort_websites">Webseiten sortieren</string>
 </resources>
