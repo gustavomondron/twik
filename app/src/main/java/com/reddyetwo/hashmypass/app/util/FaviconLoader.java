@@ -19,6 +19,7 @@
 
 package com.reddyetwo.hashmypass.app.util;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -90,28 +91,33 @@ public class FaviconLoader {
                 faviconDrawable = new BitmapDrawable(context.getResources(), favicon.getIcon());
             }
         }
-        boolean writeInitial = faviconDrawable == null;
+
+        boolean writeFirstLetter = faviconDrawable == null;
         if (faviconDrawable == null) {
             faviconDrawable = context.getResources().getDrawable(R.drawable.favicon_background);
-
-            ((GradientDrawable) faviconDrawable)
-                    .setColor(getBackgroundColor(context, tag.getName().toCharArray()));
+            if (faviconDrawable != null) {
+                ((GradientDrawable) faviconDrawable)
+                        .setColor(getBackgroundColor(context, tag.getName().toCharArray()));
+            }
         }
 
-        setTextViewBackground(textView, faviconDrawable);
+        if (faviconDrawable != null) {
+            setTextViewBackground(textView, faviconDrawable);
 
-        if (writeInitial) {
-            textView.setText(tag.getName().substring(0, 1));
+            if (writeFirstLetter) {
+                textView.setText(tag.getName().substring(0, 1));
+            }
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private static void setTextViewBackground(TextView textView, Drawable background) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            //noinspection deprecation
-            textView.setBackgroundDrawable(background);
-        } else {
+        if (ApiUtils.hasJellyBeanApi()) {
             textView.setBackground(background);
             textView.setText("");
+        } else {
+            //noinspection deprecation
+            textView.setBackgroundDrawable(background);
         }
     }
 
