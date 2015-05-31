@@ -217,7 +217,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     private void updateViewState() {
         // Disable OK button when adding a new tag
         if (mTag.getId() == Tag.NO_ID) {
-            ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_NEUTRAL).setEnabled(false);
+            ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
         }
 
         // Manage focus
@@ -342,7 +342,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
             // Check whether the tag already exists
             String tagName = mTagEditText.getText().toString();
             if (dialog != null) {
-                Button okButton = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
+                Button okButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
                 if (tagName.length() == 0) {
                     okButton.setEnabled(false);
                 } else {
