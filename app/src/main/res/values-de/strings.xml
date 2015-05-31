@@ -36,6 +36,9 @@
     <string name="save">Speichern</string>
     <string name="skip">Überspringen</string>
     <string name="start">Los</string>
+    <string name="sort_websites">Webseiten sortieren</string>
+    <string name="sort_by_usage">Sortieren nach Nutzung</string>
+    <string name="sort_by_name">Sortieren nach Name</string>
 
     <!-- Dialogs -->
     <string name="confirm_delete">\"%s\" wirklich löschen?</string>
