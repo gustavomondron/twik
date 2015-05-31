@@ -25,7 +25,8 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -49,7 +50,7 @@ import com.reddyetwo.hashmypass.app.view.MaterialColorPalette;
 /**
  * Activity which allows editing or adding a profile
  */
-public class EditProfileActivity extends ActionBarActivity {
+public class EditProfileActivity extends AppCompatActivity {
 
     /**
      * Key for Profile ID extra received in the startActivity {@link android.content.Intent}
@@ -135,13 +136,6 @@ public class EditProfileActivity extends ActionBarActivity {
         if (!loadProfileData()) {
             return;
         }
-
-        // Add and setup toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setSubtitle(mProfile.getName());
 
         initializeView();
         initializeSettings(savedInstanceState);
@@ -231,6 +225,8 @@ public class EditProfileActivity extends ActionBarActivity {
     }
 
     private void initializeView() {
+        addToolbar();
+
         mPasswordTypeSpinner = (Spinner) findViewById(R.id.password_type_spinner);
         mPasswordLengthSpinner = (Spinner) findViewById(R.id.password_length_spinner);
         mDiscardButton = (Button) findViewById(R.id.discard_button);
@@ -309,6 +305,20 @@ public class EditProfileActivity extends ActionBarActivity {
                 NavUtils.navigateUpFromSameTask(EditProfileActivity.this);
             }
         });
+    }
+
+    /**
+     * Adds the toolbar to the activity. The toolbar is configured so it shows the navigation
+     * control and the subtitle.
+     */
+    private void addToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setSubtitle(mProfile.getName());
+        }
     }
 
     /**

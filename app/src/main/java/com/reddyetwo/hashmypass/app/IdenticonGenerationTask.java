@@ -70,6 +70,6 @@ public class IdenticonGenerationTask extends AsyncTask<char[], Void, Void> {
          *
          * @param bitmap the icon {@link android.graphics.Bitmap}
          */
-        public void onIconGenerated(Bitmap bitmap);
+        void onIconGenerated(Bitmap bitmap);
     }
 }

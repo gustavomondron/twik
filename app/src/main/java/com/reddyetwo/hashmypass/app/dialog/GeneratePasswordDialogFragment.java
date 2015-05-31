@@ -38,9 +38,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.reddyetwo.hashmypass.app.TwikApplication;
 import com.reddyetwo.hashmypass.app.IdenticonGenerationTask;
 import com.reddyetwo.hashmypass.app.R;
+import com.reddyetwo.hashmypass.app.TwikApplication;
 import com.reddyetwo.hashmypass.app.data.Preferences;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
@@ -58,7 +58,7 @@ import com.reddyetwo.hashmypass.app.util.SecurePassword;
  */
 public class GeneratePasswordDialogFragment extends DialogFragment
         implements TagSettingsDialogFragment.OnTagSettingsSavedListener,
-                   IdenticonGenerationTask.OnIconGeneratedListener {
+        IdenticonGenerationTask.OnIconGeneratedListener {
 
     private static final String STATE_PROFILE_ID = "profileId";
     private static final String STATE_TAG = "tag";
@@ -70,6 +70,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     private GeneratePasswordDialogListener mListener;
     private PasswordTextWatcher mPasswordTextWatcher;
 
+    private AlertDialog mAlertDialog;
     private TextView mFaviconTextView;
     private EditText mTagEditText;
     private EditText mMasterKeyEditText;
@@ -87,7 +88,9 @@ public class GeneratePasswordDialogFragment extends DialogFragment
 
         initializeSettings(savedInstanceState);
 
-        return builder.create();
+        mAlertDialog = builder.create();
+        mAlertDialog.setCanceledOnTouchOutside(false);
+        return mAlertDialog;
     }
 
     @Override
@@ -95,6 +98,20 @@ public class GeneratePasswordDialogFragment extends DialogFragment
         super.onResume();
         populateView();
         updateViewState();
+        manageKeyboardVisibility();
+    }
+
+    /**
+     * Shows the soft keyboard and set the focus to the appropriate TextView in the case that
+     * the tag name or the master password are empty.
+     */
+    private void manageKeyboardVisibility() {
+        // Manage keyboard status
+        if (mTagEditText.length() == 0) {
+            KeyboardManager.show(mAlertDialog.getWindow(), mTagEditText);
+        } else if (mMasterKeyEditText.length() == 0) {
+            KeyboardManager.show(mAlertDialog.getWindow(), mMasterKeyEditText);
+        }
     }
 
     @Override
@@ -217,7 +234,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     private void updateViewState() {
         // Disable OK button when adding a new tag
         if (mTag.getId() == Tag.NO_ID) {
-            ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_NEUTRAL).setEnabled(false);
+            ((AlertDialog) getDialog()).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
         }
 
         // Manage focus
@@ -226,11 +243,6 @@ public class GeneratePasswordDialogFragment extends DialogFragment
             mMasterKeyEditText.requestFocus();
         } else {
             mTagEditText.requestFocus();
-        }
-
-        // Manage keyboard status
-        if (mMasterKeyEditText.length() == 0 || mTagEditText.length() == 0) {
-            KeyboardManager.show(getActivity());
         }
     }
 
@@ -297,7 +309,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
          *
          * @param tag the {@link Tag} instance
          */
-        public void onDialogDismiss(Tag tag);
+        void onDialogDismiss(Tag tag);
     }
 
     private class DialogButtonClickedListener implements DialogInterface.OnClickListener {
@@ -342,7 +354,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
             // Check whether the tag already exists
             String tagName = mTagEditText.getText().toString();
             if (dialog != null) {
-                Button okButton = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
+                Button okButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
                 if (tagName.length() == 0) {
                     okButton.setEnabled(false);
                 } else {

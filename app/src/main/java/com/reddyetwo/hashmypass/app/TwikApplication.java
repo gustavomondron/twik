@@ -23,6 +23,7 @@ package com.reddyetwo.hashmypass.app;
 import android.app.Application;
 
 import com.reddyetwo.hashmypass.app.data.Preferences;
+import com.squareup.leakcanary.LeakCanary;
 
 import java.util.Arrays;
 
@@ -41,6 +42,7 @@ public class TwikApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        LeakCanary.install(this);
     }
 
     /**

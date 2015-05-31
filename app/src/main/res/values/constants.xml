@@ -21,7 +21,7 @@
 
 <resources>
     <item name="settings_default_remember_master_key"
-          format="integer" type="string">0
+          format="integer" type="string" translatable="false">0
     </item>
     <item name="settings_default_copy_to_clipboard" format="boolean"
           type="bool">false

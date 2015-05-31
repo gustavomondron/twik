@@ -36,6 +36,9 @@
     <string name="save">Speichern</string>
     <string name="skip">Überspringen</string>
     <string name="start">Los</string>
+    <string name="sort_websites">Webseiten sortieren</string>
+    <string name="sort_by_usage">Sortieren nach Nutzung</string>
+    <string name="sort_by_name">Sortieren nach Name</string>
 
     <!-- Dialogs -->
     <string name="confirm_delete">\"%s\" wirklich löschen?</string>
@@ -52,6 +55,7 @@
     <string name="tag">Webseite</string>
     <string name="tag_settings">Webseiten-Einstellungen</string>
     <string name="color">Farbe</string>
+    <string name="profile_default_name">Standard</string>
 
     <!-- Tutorial -->
     <string name="tutorial_splash_subtitle">Unterschiedliche Passwörter für unterschiedliche Seiten.\nOhne die Passwörter zu speichern!</string>
@@ -63,8 +67,6 @@
     <string name="tutorial_setup_content_3"><ul><li>Einen privaten Schlüssel. Dieser Schlüssel wird zufällig generiert und dann in deinem Gerät gespeichert.</li></ul></string>
     <string name="tutorial_setup_sample_master_key">z.B. "SahneDamenAuto"</string>
     <string name="tutorial_setup_sample_private_key">z.B. "ASDF-QWER-DFGH"</string>
-
-    <item name="profile_default_name" format="string" type="string">Standard</item>
 
     <!-- Notices -->
     <string name="lets_start"><b>Los geht\'s!</b></string>
@@ -135,10 +137,6 @@
         <b><a href="https://github.com/davidhampgonsalves/Contact-Identicons/">Contact-Identicons</a></b><br/>
         <i>von David Hamp-Gonsalves.</i>
         <br/><br/>
-
-        <b><a href="https://github.com/makovkastar/FloatingActionButton/">FloatingActionButton</a></b><br/>
-        <i>von Oleksandr Melnykov.</i><br/>
-        MIT Licensebr/><br/>
 
         <b><a href="http://font.ubuntu.com/">Ubuntu Mono</a></b> <br/>
         <i>von Canonical Ltd.</i> <br/>

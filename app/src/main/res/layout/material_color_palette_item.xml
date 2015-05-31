@@ -23,8 +23,8 @@
               android:orientation="vertical"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content">
-    <com.reddyetwo.hashmypass.app.view.MaterialColorPaletteButton
-        android:id="@+id/material_color_palette_button"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/color_button"
         android:layout_margin="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>

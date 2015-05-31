@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     * Copyright 2014 Red Dye No. 2
     *
     * This file is part of Twik.
@@ -57,6 +56,7 @@
     <string name="color">Color</string>
     <string name="logo" translatable="false">Logo</string>
     <string name="identicon" translatable="false">Identicon</string>
+    <string name="profile_default_name">Default</string>
 
     <!-- Tutorial -->
     <string name="tutorial_splash_subtitle">A different password for each site.
@@ -76,9 +76,6 @@
     <string name="tutorial_setup_sample_master_key">e.g. "correct horse
         battery staple"</string>
     <string name="tutorial_setup_sample_private_key">e.g. "ASDF-QWER-DFGH"</string>
-
-    <item name="profile_default_name" format="string" type="string">Default
-    </item>
 
     <!-- Notices -->
     <string name="lets_start"><b>Let\'s start!</b></string>
@@ -165,10 +162,6 @@
         <b><a href="https://github.com/davidhampgonsalves/Contact-Identicons/">Contact-Identicons</a></b><br/>
         <i>by David Hamp-Gonsalves.</i>
         <br/><br/>
-
-        <b><a href="https://github.com/makovkastar/FloatingActionButton/">FloatingActionButton</a></b><br/>
-        <i>by Oleksandr Melnykov.</i><br/>
-        MIT License.<br/><br/>
 
         <b><a href="http://font.ubuntu.com/">Ubuntu Mono</a></b> <br/>
         <i>by Canonical Ltd.</i> <br/>

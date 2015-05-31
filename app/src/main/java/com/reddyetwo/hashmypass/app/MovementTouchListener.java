@@ -86,6 +86,6 @@ class MovementTouchListener implements View.OnTouchListener {
         /**
          * Method called when the screen is pressed
          */
-        public void onPressed();
+        void onPressed();
     }
 }

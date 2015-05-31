@@ -21,15 +21,16 @@ package com.reddyetwo.hashmypass.app;
 
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 /**
- * {@link android.support.v7.app.ActionBarActivity} which shows the
+ * {@link android.support.v7.app,AppCompatActivity} which shows the
  * {@link com.reddyetwo.hashmypass.app.SettingsFragment} used to configure the application preferences
  */
-public class SettingsActivity extends ActionBarActivity {
+public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +38,23 @@ public class SettingsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_preferences_with_toolbar);
 
         // Add and setup toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        addToolbar();
 
         getFragmentManager().beginTransaction().replace(R.id.content_frame, new SettingsFragment())
                 .commit();
+    }
+
+    /**
+     * Adds the toolbar to the activity. The toolbar is configured so it shows the navigation
+     * control.
+     */
+    private void addToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override

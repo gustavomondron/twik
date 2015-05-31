@@ -46,8 +46,5 @@ by Steve Cooper. Licensed under MPL 1.1/GPL 2.0/LGPL 2.1 licenses.
 - [Password Hasher Plus](http://passwordhasherplus.com) by Eric Woodruff.
 Licensed under MPL 1.1/GPL 2.0/LGPL 2.1 licenses.
 - [Contact Identicons](https://github.com/davidhampgonsalves/Contact-Identicons/) by David Hamp-Gonsalves.
-- [FloatingActionButton](https://github.com/makovkastar/FloatingActionButton/)
-by Oleksandr Melnykov.
-Licensed under the MIT License.
 - [Ubuntu Mono](http://font.ubuntu.com) by Canonical Ltd.
 Licensed under Ubuntu Font Licence 1.0.

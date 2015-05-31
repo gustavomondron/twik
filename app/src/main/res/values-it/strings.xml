@@ -35,6 +35,9 @@
     <string name="save">Salva</string>
     <string name="skip">Salta</string>
     <string name="start">Avvia</string>
+    <string name="sort_websites">Sort websites</string>
+    <string name="sort_by_usage">Sort websites by usage</string>
+    <string name="sort_by_name">Sort websites by name</string>
 
     <!-- Dialogs -->
     <string name="confirm_delete">Eliminare il profilo \"%s\"?</string>
@@ -51,18 +54,19 @@
     <string name="tag">Sito web</string>
     <string name="tag_settings">Impostazioni sito web</string>
     <string name="color">Colore</string>
+    <string name="profile_default_name">Predefinito</string>
 
     <!-- Tutorial -->
-    <string name="tutorial_splash_subtitle">Una password diversa per ogi sito.
+    <string name="tutorial_splash_subtitle">Una password diversa per ogni sito.
      \nNessuna password archiviata.</string>
     <string name="tutorial_intro_header">Password sicure</string>
     <string name="tutorial_intro_content">Per generare una password per un sito
-        web è necessario inserire la password princiapel, conosciuta solo da te.
+        web è necessario inserire la password principale, conosciuta solo da te.
         Twik genererà quindi una password univoca per il sito.</string>
     <string name="tutorial_setup_header">Quasi fatto</string>
     <string name="tutorial_setup_content_1">Sono necessarie un paio
         di cose prima di iniziare:</string>
-    <string name="tutorial_setup_content_2"><ul><li>Una chiave principale. Da non 
+    <string name="tutorial_setup_content_2"><ul><li>Una chiave principale da non
         digitare ora!
         Semplicemente sceglierne una e ricordarla.</li></ul></string>
     <string name="tutorial_setup_content_3"><ul><li>Una chiave privata. Questa 
@@ -71,14 +75,11 @@
         batteria principale"</string>
     <string name="tutorial_setup_sample_private_key">esempio "ASDF-QWER-DFGH"</string>
 
-    <item name="profile_default_name" format="string" type="string">Predefinito
-    </item>
-
     <!-- Notices -->
     <string name="lets_start"><b>Iniziamo!</b></string>
-    <string name="no_tags">Genenrare nuove password premendo il pulsante in
+    <string name="no_tags">Generare nuove password premendo il pulsante in
         basso o condividendo il sito web con <i>Twik</i> dal browser.</string>
-    <string name="copied_to_clipboard">La password del sito web copiata negli
+    <string name="copied_to_clipboard">Password per il sito web copiata negli
         appunti</string>
 
     <!-- Settings titles -->
@@ -89,7 +90,7 @@
 
     <!-- Settings summaries -->
     <string name="settings_summary_remember_master_key_never">La chiave
-        princiaple non verrà ricordata dopo la chiusura
+        principale non verrà ricordata dopo la chiusura
         dell\'applicazione</string>
     <plurals name="settings_summary_remember_master_key_minutes">
         <item quantity="one">La chiave principale verrà ricordata per %d minuto dopo la chiusura
@@ -104,11 +105,11 @@
     <string name="settings_summary_copy_to_clipboard_enabled">La password con
         valori hash viene automaticamente copiata negli appunti</string>
     <string name="settings_summary_copy_to_clipboard_disabled">La password con
-        valori di hash non viene automaticamente copiata negli appunti</string>
+        valori hash non viene automaticamente copiata negli appunti</string>
 
     <!-- Errors -->
     <string name="error">È accaduto qualcosa!</string>
-    <string name="error_no_profiles">Oops! È necessario creare prima un
+    <string name="error_no_profiles">È necessario creare prima un
         profilo.</string>
     <string name="error_tag_exists">Questo sito web è già presente.</string>
     <string name="error_profile_exists">Questo nome esite già</string>
@@ -122,7 +123,7 @@
         <b>Twik</b> è una applicazione che rende semplice generare
         password sicure e diverse per ogni sito web.
         <br/><br/>
-        Twik si basa sul meccanismo di generazione password di "Password
+        Twik si basa sul meccanismo per generare password di "Password
         Hasher" sviluppato da Steve Cooper e "Password Hasher Plus" di Eric Woodruff.
         <br/><br/>
         Twik è inoltre disponibile come
@@ -159,10 +160,6 @@
         <b><a href="https://github.com/davidhampgonsalves/Contact-Identicons/">Contact-Identicons</a></b><br/>
         <i>di David Hamp-Gonsalves.</i>
         <br/><br/>
-
-        <b><a href="https://github.com/makovkastar/FloatingActionButton/">FloatingActionButton</a></b><br/>
-        <i>di Oleksandr Melnykov.</i><br/>
-        MIT License.<br/><br/>
 
         <b><a href="http://font.ubuntu.com/">Ubuntu Mono</a></b> <br/>
         <i>di Canonical Ltd.</i> <br/>

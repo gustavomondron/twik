@@ -121,6 +121,7 @@ public class TutorialIntroFragment extends Fragment {
 
     private void stopAnimation() {
         mAnimatorSet.cancel();
+        mAnimatorSet.removeAllListeners();
         mAnimatorSet = null;
     }
 

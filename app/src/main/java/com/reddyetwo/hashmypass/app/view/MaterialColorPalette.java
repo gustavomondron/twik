@@ -21,6 +21,7 @@ package com.reddyetwo.hashmypass.app.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -29,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.reddyetwo.hashmypass.app.R;
+import com.reddyetwo.hashmypass.app.util.FabUtils;
 
 /**
  * View which allows choosing a color from a color palette
@@ -37,7 +39,6 @@ public class MaterialColorPalette extends RecyclerView {
 
     private int[] mNormalColorList = new int[]{};
     private int[] mPressedColorList = new int[]{};
-    private int[] mRippleColorList = new int[]{};
     private int mSelectedPosition = 0;
     private OnColorSelectedListener mColorSelectedListener;
 
@@ -56,8 +57,6 @@ public class MaterialColorPalette extends RecyclerView {
                 array.getResourceId(R.styleable.MaterialColorPalette_color_palette_normal, 0);
         int pressedColorsResId =
                 array.getResourceId(R.styleable.MaterialColorPalette_color_palette_pressed, 0);
-        int rippleColorsResId =
-                array.getResourceId(R.styleable.MaterialColorPalette_color_palette_ripple, 0);
 
         if (normalColorsResId != 0) {
             mNormalColorList = getResources().getIntArray(normalColorsResId);
@@ -69,17 +68,10 @@ public class MaterialColorPalette extends RecyclerView {
             mPressedColorList = mNormalColorList;
         }
 
-        if (rippleColorsResId != 0) {
-            mRippleColorList = getResources().getIntArray(rippleColorsResId);
-        } else {
-            mRippleColorList = mNormalColorList;
-        }
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         setLayoutManager(layoutManager);
         setAdapter(new ColorPaletteAdapter());
-
     }
 
     /**
@@ -88,8 +80,8 @@ public class MaterialColorPalette extends RecyclerView {
      * @param position the color position
      */
     public void setSelectedPosition(int position) {
+        ((ColorPaletteAdapter) getAdapter()).updateButtons(position, mSelectedPosition);
         mSelectedPosition = position;
-        ((ColorPaletteAdapter) getAdapter()).updateButtons(position);
     }
 
     /**
@@ -116,7 +108,7 @@ public class MaterialColorPalette extends RecyclerView {
 
     private class ColorPaletteViewHolder extends RecyclerView.ViewHolder {
 
-        private final MaterialColorPaletteButton mButton;
+        private final FloatingActionButton mButton;
 
         /**
          * Constructor
@@ -125,16 +117,16 @@ public class MaterialColorPalette extends RecyclerView {
          */
         public ColorPaletteViewHolder(View itemView) {
             super(itemView);
-            mButton = (MaterialColorPaletteButton) itemView
-                    .findViewById(R.id.material_color_palette_button);
+            mButton = (FloatingActionButton) itemView
+                    .findViewById(R.id.color_button);
         }
 
         /**
-         * Get the color {@link com.reddyetwo.hashmypass.app.view.MaterialColorPaletteButton}
+         * Get the FloatingActionButton of this color
          *
          * @return the color button
          */
-        public MaterialColorPaletteButton getButton() {
+        public FloatingActionButton getButton() {
             return mButton;
         }
     }
@@ -150,21 +142,28 @@ public class MaterialColorPalette extends RecyclerView {
 
         @Override
         public void onBindViewHolder(ColorPaletteViewHolder holder, final int position) {
-            final MaterialColorPaletteButton button = holder.getButton();
-            button.setColor(mNormalColorList[position], mPressedColorList[position],
-                    mRippleColorList[position]);
-            button.setSelected(mSelectedPosition == position);
+            final FloatingActionButton button = holder.getButton();
+            FabUtils.setFabColor(button, mNormalColorList[position], mPressedColorList[position]);
+            setButtonSelectedStatus(button, mSelectedPosition == position);
             button.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    button.setSelected(true);
+                    setButtonSelectedStatus(button, true);
+                    updateButtons(position, mSelectedPosition);
                     mSelectedPosition = position;
-                    updateButtons(position);
                     if (mColorSelectedListener != null) {
                         mColorSelectedListener.onColorSelected(position);
                     }
                 }
             });
+        }
+
+        private void setButtonSelectedStatus(FloatingActionButton fab, boolean selected) {
+            if (selected) {
+                fab.setImageResource(R.drawable.ic_beenhere_white_18dp);
+            } else {
+                fab.setImageResource(android.R.color.transparent);
+            }
         }
 
         @Override
@@ -173,17 +172,14 @@ public class MaterialColorPalette extends RecyclerView {
         }
 
         /**
-         * Update button views, highlighting the selected color
+         * Updates button views, highlighting the selected color
          *
-         * @param selectedPosition the selected color position
+         * @param newPosition the selected color position
+         * @param previousPosition the previously selected color position
          */
-        public void updateButtons(int selectedPosition) {
-            for (int i = 0; i < selectedPosition; i++) {
-                notifyItemChanged(i);
-            }
-            for (int i = selectedPosition + 1; i < mNormalColorList.length; i++) {
-                notifyItemChanged(i);
-            }
+        public void updateButtons(int newPosition, int previousPosition) {
+            notifyItemChanged(newPosition);
+            notifyItemChanged(previousPosition);
         }
     }
 

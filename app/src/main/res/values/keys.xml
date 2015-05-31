@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     * Copyright 2014 Red Dye No. 2
     *
     * This file is part of Twik.
@@ -21,10 +20,10 @@
 
 
 <resources>
-    <item name="settings_key_remember_master_key" format="string"
-          type="string">remember_master_key
+    <item name="settings_key_remember_master_key" format="string" translatable="false" type="string">
+        remember_master_key
     </item>
-    <item name="settings_key_copy_to_clipboard" format="string" type="string"
-        >copy_to_clipboard
+    <item name="settings_key_copy_to_clipboard" format="string" translatable="false" type="string">
+        copy_to_clipboard
     </item>
 </resources>

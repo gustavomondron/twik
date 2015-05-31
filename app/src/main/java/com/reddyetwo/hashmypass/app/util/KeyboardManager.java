@@ -21,6 +21,8 @@ package com.reddyetwo.hashmypass.app.util;
 
 import android.content.Context;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 /**
@@ -36,7 +38,7 @@ public class KeyboardManager {
      * Hide the keyboard
      *
      * @param context the {@link android.content.Context} instance
-     * @param view    the root {@link android.view.View}
+     * @param view    the {@link android.view.View} with the current focus
      */
     public static void hide(Context context, View view) {
         if (view != null) {
@@ -49,11 +51,12 @@ public class KeyboardManager {
     /**
      * Show the keyboard
      *
-     * @param context the the {@link android.content.Context} instance
+     * @param window the Window containing the focused view
+     * @param view   the view that should get the focus
      */
-    public static void show(Context context) {
-        InputMethodManager imm =
-                (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    public static void show(Window window, View view) {
+        if (view.requestFocus()) {
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
     }
 }

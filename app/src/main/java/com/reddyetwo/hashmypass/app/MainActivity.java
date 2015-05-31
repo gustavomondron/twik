@@ -22,12 +22,15 @@ package com.reddyetwo.hashmypass.app;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
-import android.support.v7.app.ActionBarActivity;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,7 +45,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.melnykov.fab.FloatingActionButton;
 import com.reddyetwo.hashmypass.app.adapter.ProfileSpinnerAdapter;
 import com.reddyetwo.hashmypass.app.adapter.TagListAdapter;
 import com.reddyetwo.hashmypass.app.animation.Animations;
@@ -57,6 +59,7 @@ import com.reddyetwo.hashmypass.app.dialog.AboutDialog;
 import com.reddyetwo.hashmypass.app.dialog.GeneratePasswordDialogFragment;
 import com.reddyetwo.hashmypass.app.tutorial.TutorialActivity;
 import com.reddyetwo.hashmypass.app.util.ApiUtils;
+import com.reddyetwo.hashmypass.app.util.FabUtils;
 import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 
 import java.util.List;
@@ -64,7 +67,7 @@ import java.util.List;
 /**
  * Main application activity, which shows the list of tags
  */
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends AppCompatActivity
         implements GeneratePasswordDialogFragment.GeneratePasswordDialogListener {
 
     private static final int LIST_EMPTY = 1;
@@ -102,10 +105,6 @@ public class MainActivity extends ActionBarActivity
      * Color palette - pressed state
      */
     private int[] mColorsPressed;
-    /**
-     * Color palette - ripple state
-     */
-    private int[] mColorsRipple;
     /**
      * Tag order mode
      */
@@ -182,7 +181,6 @@ public class MainActivity extends ActionBarActivity
 
         mColorsNormal = getResources().getIntArray(R.array.color_palette_normal);
         mColorsPressed = getResources().getIntArray(R.array.color_palette_pressed);
-        mColorsRipple = getResources().getIntArray(R.array.color_palette_ripple);
     }
 
     private void initializeView() {
@@ -194,11 +192,13 @@ public class MainActivity extends ActionBarActivity
         mTagRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mFab = (FloatingActionButton) findViewById(R.id.fab);
-        mFab.attachToRecyclerView(mTagRecyclerView);
 
         // Add toolbar
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
 
         // Add listeners
         addFabClickedListener();
@@ -294,8 +294,7 @@ public class MainActivity extends ActionBarActivity
                 mSelectedProfileId = profile.getId();
             }
             int colorIndex = profile.getColorIndex();
-            setFabColor(mColorsNormal[colorIndex], mColorsPressed[colorIndex],
-                    mColorsRipple[colorIndex]);
+            FabUtils.setFabColor(mFab, mColorsNormal[colorIndex], mColorsPressed[colorIndex]);
         }
     }
 
@@ -476,15 +475,8 @@ public class MainActivity extends ActionBarActivity
     private void addProfile(long profileId) {
         mSelectedProfileId = profileId;
         int colorIndex = ProfileSettings.getProfile(this, mSelectedProfileId).getColorIndex();
-        setFabColor(mColorsNormal[colorIndex], mColorsPressed[colorIndex],
-                mColorsRipple[colorIndex]);
+        FabUtils.setFabColor(mFab, mColorsNormal[colorIndex], mColorsPressed[colorIndex]);
         populateTagList();
-    }
-
-    private void setFabColor(int colorNormal, int colorPressed, int colorRipple) {
-        mFab.setColorNormal(colorNormal);
-        mFab.setColorPressed(colorPressed);
-        mFab.setColorRipple(colorRipple);
     }
 
     private void populateToolBarSpinner() {
@@ -493,8 +485,9 @@ public class MainActivity extends ActionBarActivity
             Profile addProfile = new Profile();
             addProfile.setName(getString(R.string.action_add_profile));
             profiles.add(addProfile);
+
             ProfileSpinnerAdapter spinnerAdapter =
-                    new ProfileSpinnerAdapter(getSupportActionBar().getThemedContext(), profiles,
+                    new ProfileSpinnerAdapter(getActionBarContext(), profiles,
                             R.layout.toolbar_spinner_item_dropdown,
                             R.layout.toolbar_spinner_item_actionbar);
 
@@ -513,6 +506,22 @@ public class MainActivity extends ActionBarActivity
                 position = 0;
             }
             spinner.setSelection(position);
+        }
+    }
+
+    /**
+     * Returns a {@link Context} with the appropriate theme from creating views that will appear in
+     * the action bar.
+     *
+     * @return a themed Context for creating views, or the application Context if no themed context
+     * is found.
+     */
+    private Context getActionBarContext() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            return actionBar.getThemedContext();
+        } else {
+            return getApplicationContext();
         }
     }
 
