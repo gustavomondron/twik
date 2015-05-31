@@ -35,6 +35,9 @@
     <string name="save">Enregistrer</string>
     <string name="skip">Passer</string>
     <string name="start">Commencer</string>
+    <string name="sort_websites">Sort websites</string>
+    <string name="sort_by_usage">Sort websites by usage</string>
+    <string name="sort_by_name">Sort websites by name</string>
 
     <!-- Dialogs -->
     <string name="confirm_delete">Supprimer le profil \"%s\"?</string>
@@ -51,6 +54,7 @@
     <string name="tag">Site web</string>
     <string name="tag_settings">Réglages du site web</string>
     <string name="color">Couleur</string>
+    <string name="profile_default_name">Default</string>
 
     <!-- Tutorial -->
     <string name="tutorial_splash_subtitle">Un mot de passe différent

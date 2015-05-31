@@ -55,6 +55,7 @@
     <string name="tag">Webseite</string>
     <string name="tag_settings">Webseiten-Einstellungen</string>
     <string name="color">Farbe</string>
+    <string name="profile_default_name">Standard</string>
 
     <!-- Tutorial -->
     <string name="tutorial_splash_subtitle">Unterschiedliche Passwörter für unterschiedliche Seiten.\nOhne die Passwörter zu speichern!</string>
@@ -66,8 +67,6 @@
     <string name="tutorial_setup_content_3"><ul><li>Einen privaten Schlüssel. Dieser Schlüssel wird zufällig generiert und dann in deinem Gerät gespeichert.</li></ul></string>
     <string name="tutorial_setup_sample_master_key">z.B. "SahneDamenAuto"</string>
     <string name="tutorial_setup_sample_private_key">z.B. "ASDF-QWER-DFGH"</string>
-
-    <item name="profile_default_name" format="string" type="string">Standard</item>
 
     <!-- Notices -->
     <string name="lets_start"><b>Los geht\'s!</b></string>

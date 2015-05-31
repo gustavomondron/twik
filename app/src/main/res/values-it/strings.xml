@@ -35,6 +35,9 @@
     <string name="save">Salva</string>
     <string name="skip">Salta</string>
     <string name="start">Avvia</string>
+    <string name="sort_websites">Sort websites</string>
+    <string name="sort_by_usage">Sort websites by usage</string>
+    <string name="sort_by_name">Sort websites by name</string>
 
     <!-- Dialogs -->
     <string name="confirm_delete">Eliminare il profilo \"%s\"?</string>
@@ -51,6 +54,7 @@
     <string name="tag">Sito web</string>
     <string name="tag_settings">Impostazioni sito web</string>
     <string name="color">Colore</string>
+    <string name="profile_default_name">Predefinito</string>
 
     <!-- Tutorial -->
     <string name="tutorial_splash_subtitle">Una password diversa per ogni sito.
@@ -70,9 +74,6 @@
     <string name="tutorial_setup_sample_master_key">esempio "cavallo giusto
         batteria principale"</string>
     <string name="tutorial_setup_sample_private_key">esempio "ASDF-QWER-DFGH"</string>
-
-    <item name="profile_default_name" format="string" type="string">Predefinito
-    </item>
 
     <!-- Notices -->
     <string name="lets_start"><b>Iniziamo!</b></string>
