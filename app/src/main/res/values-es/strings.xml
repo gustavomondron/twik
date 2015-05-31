@@ -39,7 +39,6 @@
     <string name="sort_by_usage">Ordenar por uso</string>
     <string name="sort_by_name">Ordenar por nombre</string>
 
-
     <!-- Dialogs -->
     <string name="confirm_delete">¿Eliminar el perfil \"%s\"?</string>
     <string name="confirm_delete_tag">¿Eliminar el sitio web \"%s\"?</string>
@@ -55,6 +54,7 @@
     <string name="tag">Sitio web</string>
     <string name="tag_settings">Ajustes del sitio web</string>
     <string name="color">Color</string>
+    <string name="profile_default_name">Predeterminado</string>
 
     <!-- Tutorial -->
     <string name="tutorial_splash_subtitle">Una contraseña diferente
