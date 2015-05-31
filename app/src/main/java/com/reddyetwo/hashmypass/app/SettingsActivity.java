@@ -21,15 +21,15 @@ package com.reddyetwo.hashmypass.app;
 
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 /**
- * {@link android.support.v7.app.ActionBarActivity} which shows the
+ * {@link android.support.v7.app,AppCompatActivity} which shows the
  * {@link com.reddyetwo.hashmypass.app.SettingsFragment} used to configure the application preferences
  */
-public class SettingsActivity extends ActionBarActivity {
+public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -25,7 +25,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -49,7 +49,7 @@ import com.reddyetwo.hashmypass.app.view.MaterialColorPalette;
 /**
  * Activity which allows editing or adding a profile
  */
-public class EditProfileActivity extends ActionBarActivity {
+public class EditProfileActivity extends AppCompatActivity {
 
     /**
      * Key for Profile ID extra received in the startActivity {@link android.content.Intent}

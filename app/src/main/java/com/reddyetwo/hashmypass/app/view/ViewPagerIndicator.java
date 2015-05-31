@@ -82,7 +82,7 @@ public class ViewPagerIndicator extends View {
      */
     public void setViewPager(ViewPager viewPager) {
         mNumberOfItems = viewPager.getAdapter().getCount();
-        viewPager.setOnPageChangeListener(new IndicatorSimpleOnPageChangeListener());
+        viewPager.addOnPageChangeListener(new IndicatorSimpleOnPageChangeListener());
     }
 
     /**

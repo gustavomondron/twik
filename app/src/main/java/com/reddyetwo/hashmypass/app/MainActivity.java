@@ -27,7 +27,7 @@ import android.content.Intent;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -64,7 +64,7 @@ import java.util.List;
 /**
  * Main application activity, which shows the list of tags
  */
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends AppCompatActivity
         implements GeneratePasswordDialogFragment.GeneratePasswordDialogListener {
 
     private static final int LIST_EMPTY = 1;
