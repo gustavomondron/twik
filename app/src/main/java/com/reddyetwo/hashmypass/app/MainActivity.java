@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -44,7 +45,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.melnykov.fab.FloatingActionButton;
 import com.reddyetwo.hashmypass.app.adapter.ProfileSpinnerAdapter;
 import com.reddyetwo.hashmypass.app.adapter.TagListAdapter;
 import com.reddyetwo.hashmypass.app.animation.Animations;
@@ -59,6 +59,7 @@ import com.reddyetwo.hashmypass.app.dialog.AboutDialog;
 import com.reddyetwo.hashmypass.app.dialog.GeneratePasswordDialogFragment;
 import com.reddyetwo.hashmypass.app.tutorial.TutorialActivity;
 import com.reddyetwo.hashmypass.app.util.ApiUtils;
+import com.reddyetwo.hashmypass.app.util.FabUtils;
 import com.reddyetwo.hashmypass.app.util.MasterKeyAlarmManager;
 
 import java.util.List;
@@ -104,10 +105,6 @@ public class MainActivity extends AppCompatActivity
      * Color palette - pressed state
      */
     private int[] mColorsPressed;
-    /**
-     * Color palette - ripple state
-     */
-    private int[] mColorsRipple;
     /**
      * Tag order mode
      */
@@ -184,7 +181,6 @@ public class MainActivity extends AppCompatActivity
 
         mColorsNormal = getResources().getIntArray(R.array.color_palette_normal);
         mColorsPressed = getResources().getIntArray(R.array.color_palette_pressed);
-        mColorsRipple = getResources().getIntArray(R.array.color_palette_ripple);
     }
 
     private void initializeView() {
@@ -196,7 +192,6 @@ public class MainActivity extends AppCompatActivity
         mTagRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mFab = (FloatingActionButton) findViewById(R.id.fab);
-        mFab.attachToRecyclerView(mTagRecyclerView);
 
         // Add toolbar
         setSupportActionBar(mToolbar);
@@ -299,8 +294,7 @@ public class MainActivity extends AppCompatActivity
                 mSelectedProfileId = profile.getId();
             }
             int colorIndex = profile.getColorIndex();
-            setFabColor(mColorsNormal[colorIndex], mColorsPressed[colorIndex],
-                    mColorsRipple[colorIndex]);
+            FabUtils.setFabColor(mFab, mColorsNormal[colorIndex], mColorsPressed[colorIndex]);
         }
     }
 
@@ -481,15 +475,8 @@ public class MainActivity extends AppCompatActivity
     private void addProfile(long profileId) {
         mSelectedProfileId = profileId;
         int colorIndex = ProfileSettings.getProfile(this, mSelectedProfileId).getColorIndex();
-        setFabColor(mColorsNormal[colorIndex], mColorsPressed[colorIndex],
-                mColorsRipple[colorIndex]);
+        FabUtils.setFabColor(mFab, mColorsNormal[colorIndex], mColorsPressed[colorIndex]);
         populateTagList();
-    }
-
-    private void setFabColor(int colorNormal, int colorPressed, int colorRipple) {
-        mFab.setColorNormal(colorNormal);
-        mFab.setColorPressed(colorPressed);
-        mFab.setColorRipple(colorRipple);
     }
 
     private void populateToolBarSpinner() {
