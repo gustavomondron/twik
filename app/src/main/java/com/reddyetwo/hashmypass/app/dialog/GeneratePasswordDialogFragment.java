@@ -297,7 +297,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
          *
          * @param tag the {@link Tag} instance
          */
-        public void onDialogDismiss(Tag tag);
+        void onDialogDismiss(Tag tag);
     }
 
     private class DialogButtonClickedListener implements DialogInterface.OnClickListener {

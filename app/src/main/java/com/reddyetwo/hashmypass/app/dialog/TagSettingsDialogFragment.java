@@ -205,7 +205,7 @@ public class TagSettingsDialogFragment extends DialogFragment {
          *
          * @param tag the {@link com.reddyetwo.hashmypass.app.data.Tag} instance
          */
-        public void onTagSettingsSaved(Tag tag);
+        void onTagSettingsSaved(Tag tag);
     }
 
 }

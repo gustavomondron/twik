@@ -248,7 +248,7 @@ public class FaviconLoader {
          *
          * @param icon the favicon {@link android.graphics.drawable.BitmapDrawable}
          */
-        public void onFaviconLoaded(BitmapDrawable icon);
+        void onFaviconLoaded(BitmapDrawable icon);
     }
 
     private class FaviconChromeClient extends WebChromeClient {

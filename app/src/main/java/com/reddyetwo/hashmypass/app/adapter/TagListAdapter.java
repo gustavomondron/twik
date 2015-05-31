@@ -243,13 +243,13 @@ public class TagListAdapter extends RecyclerView.Adapter<TagListViewHolder> {
          *
          * @param tag the {@link com.reddyetwo.hashmypass.app.data.Tag} instance
          */
-        public void onTagClicked(final Tag tag);
+        void onTagClicked(final Tag tag);
 
         /**
          * Method called when a tag is long-clicked
          *
          * @param tag the the {@link com.reddyetwo.hashmypass.app.data.Tag} instance
          */
-        public void onTagLongClicked(final Tag tag);
+        void onTagLongClicked(final Tag tag);
     }
 }

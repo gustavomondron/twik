@@ -104,7 +104,7 @@ public class PasswordLengthDialogFragment extends DialogFragment {
          *
          * @param length the password length
          */
-        public void onPasswordLengthSelected(int length);
+        void onPasswordLengthSelected(int length);
 
     }
 }

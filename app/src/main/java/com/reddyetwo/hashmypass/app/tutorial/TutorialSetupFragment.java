@@ -87,6 +87,6 @@ public class TutorialSetupFragment extends Fragment {
          *
          * @param privateKey the private key
          */
-        public void onPrivateKeyChanged(String privateKey);
+        void onPrivateKeyChanged(String privateKey);
     }
 }
