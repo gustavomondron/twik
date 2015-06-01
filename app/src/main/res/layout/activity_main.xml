@@ -96,6 +96,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
             android:layout_margin="16dp"
+            app:borderWidth="0dp"
+            app:elevation="6dp"
             android:src="@drawable/ic_action_add">
         </android.support.design.widget.FloatingActionButton>
     </FrameLayout>
