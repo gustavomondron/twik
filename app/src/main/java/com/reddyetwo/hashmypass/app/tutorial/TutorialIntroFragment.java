@@ -58,6 +58,7 @@ public class TutorialIntroFragment extends Fragment {
     private TextView mWebsitePasswordView;
     private AnimatorSet mAnimatorSet;
     private Random mRandom;
+    private boolean mAnimationCancelled = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,6 +73,8 @@ public class TutorialIntroFragment extends Fragment {
 
         mRandom = new Random();
 
+        createAnimation();
+
         return rootView;
     }
 
@@ -82,12 +85,12 @@ public class TutorialIntroFragment extends Fragment {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        stopAnimation();
+    public void onStop() {
+        super.onStop();
+        cancelAnimation();
     }
 
-    private void startAnimation() {
+    private void createAnimation() {
         // Load and set up individual animators
         AnimatorSet websiteAnimator = (AnimatorSet) AnimatorInflater
                 .loadAnimator(getActivity(), R.animator.intro_website);
@@ -105,24 +108,30 @@ public class TutorialIntroFragment extends Fragment {
         mAnimatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
+                mAnimationCancelled = false;
                 generateRandomData();
             }
 
             @Override
+            public void onAnimationCancel(Animator animation) {
+                mAnimationCancelled = true;
+            }
+
+            @Override
             public void onAnimationEnd(Animator animation) {
-                if (mAnimatorSet != null) {
+                if (!mAnimationCancelled) {
                     mAnimatorSet.start();
                 }
             }
         });
+    }
 
+    private void startAnimation() {
         mAnimatorSet.start();
     }
 
-    private void stopAnimation() {
+    private void cancelAnimation() {
         mAnimatorSet.cancel();
-        mAnimatorSet.removeAllListeners();
-        mAnimatorSet = null;
     }
 
     private void generateRandomData() {

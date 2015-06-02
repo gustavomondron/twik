@@ -20,13 +20,6 @@
     -->
 
 <resources>
-    <declare-styleable name="MaterialColorPalette">
-        <attr name="color_palette_normal" format="reference"/>
-        <attr name="color_palette_pressed" format="reference"/>
-        <attr name="color_palette_ripple" format="reference"/>
-        <attr name="button_size" format="integer"/>
-    </declare-styleable>
-
     <declare-styleable name="ViewPagerIndicator">
         <attr name="radius" format="dimension"/>
         <attr name="spacing" format="dimension"/>
