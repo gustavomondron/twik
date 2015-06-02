@@ -27,6 +27,8 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -37,6 +39,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.reddyetwo.hashmypass.app.adapter.ColorPaletteAdapter;
 import com.reddyetwo.hashmypass.app.data.PasswordType;
 import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
@@ -45,7 +48,6 @@ import com.reddyetwo.hashmypass.app.util.Constants;
 import com.reddyetwo.hashmypass.app.util.KeyboardManager;
 import com.reddyetwo.hashmypass.app.util.ProfileFormInflater;
 import com.reddyetwo.hashmypass.app.util.ProfileFormWatcher;
-import com.reddyetwo.hashmypass.app.view.MaterialColorPalette;
 
 /**
  * Activity which allows editing or adding a profile
@@ -98,9 +100,9 @@ public class EditProfileActivity extends AppCompatActivity {
     private Button mDiscardButton;
 
     /**
-     * {@link com.reddyetwo.hashmypass.app.view.MaterialColorPalette} to pick a profile color
+     * Palette to pick a profile color
      */
-    private MaterialColorPalette mColorPalette;
+    private RecyclerView mColorPaletteRecyclerView;
 
     /**
      * Profile ID
@@ -118,7 +120,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private int mInitialPasswordLength;
 
     /**
-     * Selected color index in the {@link com.reddyetwo.hashmypass.app.view.MaterialColorPalette} instance
+     * Selected color index in the color palette
      */
     private int mColor;
 
@@ -232,8 +234,7 @@ public class EditProfileActivity extends AppCompatActivity {
         mDiscardButton = (Button) findViewById(R.id.discard_button);
         mSaveButton = (Button) findViewById(R.id.save_button);
         mNameEditText = (EditText) findViewById(R.id.profile_name_text);
-        mColorPalette = (MaterialColorPalette) findViewById(R.id.profile_color_palette);
-
+        mColorPaletteRecyclerView = (RecyclerView) findViewById(R.id.profile_color_palette);
 
         mPrivateKeyEditText = (EditText) findViewById(R.id.private_key_text);
         // Use a monospaced typeface for private key which allows distinguishing 0 from O.
@@ -241,11 +242,25 @@ public class EditProfileActivity extends AppCompatActivity {
                 Typeface.createFromAsset(getAssets(), Constants.FONT_MONOSPACE);
         mPrivateKeyEditText.setTypeface(monospacedTypeface);
 
+        initializeColorPalette();
         addPasswordLengthTouchListener();
         addColorPaletteSelectedListener();
         addSaveButtonClickListener();
         addDiscardButtonClickListener();
         addFormChangedListener();
+    }
+
+    private void initializeColorPalette() {
+        // Create adapter
+        int[] normalColorList = getResources().getIntArray(R.array.color_palette_normal);
+        int[] pressedColorList = getResources().getIntArray(R.array.color_palette_pressed);
+        int[] rippleColorList = getResources().getIntArray(R.array.color_palette_ripple);
+        ColorPaletteAdapter adapter = new ColorPaletteAdapter(normalColorList, pressedColorList, rippleColorList);
+        mColorPaletteRecyclerView.setAdapter(adapter);
+        mColorPaletteRecyclerView.setHasFixedSize(true);
+
+        // Setup layout manager
+        mColorPaletteRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
     }
 
     private void initializeSettings(Bundle savedInstanceState) {
@@ -261,8 +276,10 @@ public class EditProfileActivity extends AppCompatActivity {
                 mInitialPasswordLength);
         ProfileFormInflater.populatePasswordTypeSpinner(this, mPasswordTypeSpinner,
                 mProfile.getPasswordType());
-        mColorPalette.setSelectedPosition(mColor);
-        mColorPalette.scrollToPosition(mColor);
+
+        ColorPaletteAdapter adapter = (ColorPaletteAdapter) mColorPaletteRecyclerView.getAdapter();
+        adapter.selectItem(mColor);
+        mColorPaletteRecyclerView.scrollToPosition(mColor);
     }
 
     private void addPasswordLengthTouchListener() {
@@ -276,13 +293,13 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void addColorPaletteSelectedListener() {
-        mColorPalette
-                .setOnColorSelectedListener(new MaterialColorPalette.OnColorSelectedListener() {
-                    @Override
-                    public void onColorSelected(int color) {
-                        mColor = color;
-                    }
-                });
+        ColorPaletteAdapter adapter = (ColorPaletteAdapter) mColorPaletteRecyclerView.getAdapter();
+        adapter.setOnColorSelectedListener(new ColorPaletteAdapter.OnColorSelectedListener() {
+            @Override
+            public void onColorSelected(int color) {
+                mColor = color;
+            }
+        });
     }
 
     private void addFormChangedListener() {
