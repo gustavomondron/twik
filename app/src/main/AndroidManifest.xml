@@ -21,6 +21,7 @@
 
 <manifest
     package="com.reddyetwo.hashmypass.app"
+    android:installLocation="auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
