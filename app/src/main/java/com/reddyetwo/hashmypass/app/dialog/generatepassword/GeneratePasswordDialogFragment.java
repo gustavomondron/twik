@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
- */s
+ */
 
 package com.reddyetwo.hashmypass.app.dialog.generatepassword;
 
