@@ -15,10 +15,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
- */
+ */s
 
-
-package com.reddyetwo.hashmypass.app.dialog;
+package com.reddyetwo.hashmypass.app.dialog.generatepassword;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -29,8 +28,6 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,6 +43,7 @@ import com.reddyetwo.hashmypass.app.data.Profile;
 import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
+import com.reddyetwo.hashmypass.app.dialog.TagSettingsDialogFragment;
 import com.reddyetwo.hashmypass.app.hash.PasswordHasher;
 import com.reddyetwo.hashmypass.app.util.ClipboardHelper;
 import com.reddyetwo.hashmypass.app.util.Constants;
@@ -68,7 +66,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     private Tag mTag;
     private IdenticonGenerationTask mTask;
     private GeneratePasswordDialogListener mListener;
-    private PasswordTextWatcher mPasswordTextWatcher;
+    private GeneratePasswordDialogWatcher mGeneratePasswordDialogWatcher;
 
     private AlertDialog mAlertDialog;
     private TextView mFaviconTextView;
@@ -135,19 +133,19 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     @Override
     public void onTagSettingsSaved(Tag tag) {
         mTag = tag;
-        updatePassword();
+        updateGeneratedPassword();
     }
 
-    /**
-     * Generate key identicon
-     */
-    private void generateIdenticon() {
-        if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) {
-            mTask.cancel(true);
+    private void updateGeneratedPassword() {
+        if (mTagEditText.length() > 0 && mMasterKeyEditText.length() > 0) {
+            Profile profile = ProfileSettings.getProfile(getActivity(), mProfileId);
+            String password = PasswordHasher.hashTagWithKeys(mTag.getName(),
+                    SecurePassword.getPassword(mMasterKeyEditText.getText()),
+                    profile.getPrivateKey(), mTag.getPasswordLength(), mTag.getPasswordType());
+            mPasswordTextView.setText(password);
+        } else {
+            mPasswordTextView.setText("");
         }
-
-        mTask = new IdenticonGenerationTask(getActivity(), this);
-        mTask.execute(SecurePassword.getPassword(mMasterKeyEditText.getText()));
     }
 
     @Override
@@ -180,7 +178,7 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     }
 
     /**
-     * Set the {@link com.reddyetwo.hashmypass.app.dialog.GeneratePasswordDialogFragment.GeneratePasswordDialogListener},
+     * Set the {@link GeneratePasswordDialogFragment.GeneratePasswordDialogListener},
      * which is notified when the OK button has been clicked
      *
      * @param listener the dialog listener
@@ -277,26 +275,110 @@ public class GeneratePasswordDialogFragment extends DialogFragment
     }
 
     private void addTextChangedListeners() {
-        mPasswordTextWatcher = new PasswordTextWatcher();
-        mTagEditText.addTextChangedListener(mPasswordTextWatcher);
-        mMasterKeyEditText.addTextChangedListener(mPasswordTextWatcher);
+        mGeneratePasswordDialogWatcher = new GeneratePasswordDialogWatcher(buildDialogChangedListener());
+        mTagEditText.addTextChangedListener(mGeneratePasswordDialogWatcher);
+        mMasterKeyEditText.addTextChangedListener(mGeneratePasswordDialogWatcher);
+    }
+
+    private GeneratePasswordDialogWatcher.OnDialogChangedListener buildDialogChangedListener() {
+        return new GeneratePasswordDialogWatcher.OnDialogChangedListener() {
+            @Override
+            public void onDialogChanged() {
+                updateDialog();
+            }
+        };
+    }
+
+    private void updateDialog() {
+        updateOkButtonStatus();
+        updateTagSettingsButtonStatus();
+        updateTagErrorStatus();
+        updateTagName();
+        updateFavicon();
+        updateIdenticon();
+        updateGeneratedPassword();
+        cacheMasterKey();
+    }
+
+    private void updateOkButtonStatus() {
+        getOkButton().setEnabled(tagIsValid());
+    }
+
+    private Button getOkButton() {
+        return mAlertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+    }
+
+    private boolean tagIsValid() {
+        String tagName = getTagName();
+        return !tagName.isEmpty() && !tagNameExists(tagName);
+    }
+
+    private String getTagName() {
+        return mTagEditText.getText().toString();
+    }
+
+    private boolean tagNameExists(String tagName) {
+        Tag storedTag = getTag(tagName);
+        return storedTag.getId() != Tag.NO_ID && storedTag.getId() != mTag.getId();
+    }
+
+    private Tag getTag(String tagName) {
+        return TagSettings.getTag(getActivity(), mProfileId, tagName);
+    }
+
+    private void updateTagSettingsButtonStatus() {
+        if (tagIsValid()) {
+            enableTagSettingsButton();
+        } else {
+            disableTagSettingsButton();
+        }
+    }
+
+    private void enableTagSettingsButton() {
+        mTagSettingsImageButton.setVisibility(View.VISIBLE);
+        mTagSettingsImageButton.setEnabled(true);
+    }
+
+    private void disableTagSettingsButton() {
+        mTagSettingsImageButton.setVisibility(View.INVISIBLE);
+        mTagSettingsImageButton.setEnabled(false);
+    }
+
+    private void updateTagErrorStatus() {
+        String error = null;
+        if (tagNameExists(getTagName())) {
+            error = getString(R.string.error_tag_exists);
+        }
+        mTagEditText.setError(error);
+    }
+
+    private void cacheMasterKey() {
+        TwikApplication.getInstance()
+                .cacheMasterKey(SecurePassword.getPassword(mMasterKeyEditText.getText()));
+    }
+
+    private void updateTagName() {
+        mTag.setName(mTagEditText.getText().toString());
+    }
+
+    private void updateFavicon() {
+        if (mTag.getSite() == null) {
+            FaviconLoader.setAsBackground(getActivity(), mFaviconTextView, mTag);
+        }
+    }
+
+    private void updateIdenticon() {
+        if (mTask != null && mTask.getStatus() == AsyncTask.Status.RUNNING) {
+            mTask.cancel(true);
+        }
+
+        mTask = new IdenticonGenerationTask(getActivity(), this);
+        mTask.execute(SecurePassword.getPassword(mMasterKeyEditText.getText()));
     }
 
     private void removeTextChangedListeners() {
-        mTagEditText.removeTextChangedListener(mPasswordTextWatcher);
-        mMasterKeyEditText.removeTextChangedListener(mPasswordTextWatcher);
-    }
-
-    private void updatePassword() {
-        if (mTagEditText.length() > 0 && mMasterKeyEditText.length() > 0) {
-            Profile profile = ProfileSettings.getProfile(getActivity(), mProfileId);
-            String password = PasswordHasher.hashTagWithKeys(mTag.getName(),
-                    SecurePassword.getPassword(mMasterKeyEditText.getText()),
-                    profile.getPrivateKey(), mTag.getPasswordLength(), mTag.getPasswordType());
-            mPasswordTextView.setText(password);
-        } else {
-            mPasswordTextView.setText("");
-        }
+        mTagEditText.removeTextChangedListener(mGeneratePasswordDialogWatcher);
+        mMasterKeyEditText.removeTextChangedListener(mGeneratePasswordDialogWatcher);
     }
 
     /**
@@ -316,81 +398,19 @@ public class GeneratePasswordDialogFragment extends DialogFragment
 
         @Override
         public void onClick(android.content.DialogInterface dialog, int which) {
-
-            // Copy password to clipboard
-            if (Preferences.getCopyToClipboard(getActivity()) && mPasswordTextView.length() > 0) {
-                ClipboardHelper
-                        .copyToClipboard(getActivity(), ClipboardHelper.CLIPBOARD_LABEL_PASSWORD,
-                                mPasswordTextView.getText().toString(),
-                                R.string.copied_to_clipboard);
-            }
-
-            // Hide keyboard
+            copyPasswordToClipboardIfEnabled();
             KeyboardManager.hide(getActivity(), mTagEditText);
-
-            // Call listener
             mListener.onDialogDismiss(mTag);
         }
     }
 
-    private class PasswordTextWatcher implements TextWatcher {
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            // Nothing to do
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            // Nothing to do
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            // Warning: this code is called before the dialog show() method
-            // is called, and getDialog() can return a null value
-            AlertDialog dialog = (AlertDialog) getDialog();
-
-            // Check whether the tag already exists
-            String tagName = mTagEditText.getText().toString();
-            if (dialog != null) {
-                Button okButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                if (tagName.length() == 0) {
-                    okButton.setEnabled(false);
-                } else {
-                    Tag storedTag = TagSettings.getTag(getActivity(), mProfileId, tagName);
-                    if (storedTag.getId() != Tag.NO_ID && storedTag.getId() != mTag.getId()) {
-                        // Show error: the tag already exists
-                        mTagEditText.setError(getString(R.string.error_tag_exists));
-                        okButton.setEnabled(false);
-                    } else {
-                        mTagEditText.setError(null);
-                        okButton.setEnabled(true);
-                    }
-                }
-            }
-
-            // Cache master key
-            TwikApplication.getInstance()
-                    .cacheMasterKey(SecurePassword.getPassword(mMasterKeyEditText.getText()));
-
-            // Show favicon
-            mTag.setName(mTagEditText.getText().toString());
-            if (mTag.getSite() == null) {
-                FaviconLoader.setAsBackground(getActivity(), mFaviconTextView, mTag);
-            }
-
-            generateIdenticon();
-            updatePassword();
-
-            // Update tag settings button visibility
-            if (mTagEditText.getText().length() > 0) {
-                mTagSettingsImageButton.setVisibility(View.VISIBLE);
-                mTagSettingsImageButton.setEnabled(true);
-            } else {
-                mTagSettingsImageButton.setVisibility(View.INVISIBLE);
-                mTagSettingsImageButton.setEnabled(false);
-            }
+    private void copyPasswordToClipboardIfEnabled() {
+        if (Preferences.getCopyToClipboard(getActivity()) && mPasswordTextView.length() > 0) {
+            ClipboardHelper
+                    .copyToClipboard(getActivity(), ClipboardHelper.CLIPBOARD_LABEL_PASSWORD,
+                            mPasswordTextView.getText().toString(),
+                            R.string.copied_to_clipboard);
         }
     }
+
 }

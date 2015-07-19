@@ -56,7 +56,7 @@ import com.reddyetwo.hashmypass.app.data.ProfileSettings;
 import com.reddyetwo.hashmypass.app.data.Tag;
 import com.reddyetwo.hashmypass.app.data.TagSettings;
 import com.reddyetwo.hashmypass.app.dialog.AboutDialog;
-import com.reddyetwo.hashmypass.app.dialog.GeneratePasswordDialogFragment;
+import com.reddyetwo.hashmypass.app.dialog.generatepassword.GeneratePasswordDialogFragment;
 import com.reddyetwo.hashmypass.app.tutorial.TutorialActivity;
 import com.reddyetwo.hashmypass.app.util.ApiUtils;
 import com.reddyetwo.hashmypass.app.util.FabUtils;
