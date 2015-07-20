@@ -87,10 +87,10 @@ public class TwikApplication extends Application {
      * Wipe the cached master key
      */
     public void wipeCachedMasterKey() {
-        /* Rewrite the char array so we don't wait for garbage collection
-         to destroy it */
-        Arrays.fill(mCachedMasterKey, ' ');
-        mCachedMasterKey = null;
+        if (mCachedMasterKey != null) {
+            Arrays.fill(mCachedMasterKey, ' ');
+            mCachedMasterKey = null;
+        }
     }
 
     /**
