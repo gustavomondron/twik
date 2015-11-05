@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    * Copyright 2014 Red Dye No. 2
+    *
+    * This file is part of Twik.
+    *
+    * Twik is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * Twik is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * You should have received a copy of the GNU General Public License
+    * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
+    *
+    -->
+
+<resources>
+
+    <!-- Titles -->
+    <string name="app_name">Twik</string>
+
+    <!-- Actions -->
+    <string name="action_settings">Configurações</string>
+    <string name="action_add_profile">Adicionar perfil</string>
+    <string name="action_edit_profile">Editar perfil</string>
+    <string name="action_help">Ajuda</string>
+    <string name="action_about">Sobre</string>
+    <string name="action_delete">Remover</string>
+    <string name="discard">Discartar</string>
+    <string name="save">Salvar</string>
+    <string name="skip">Pular</string>
+    <string name="start">Começar</string>
+    <string name="sort_websites">Ordenar sites</string>
+    <string name="sort_by_usage">Ordenar sites por uso</string>
+    <string name="sort_by_name">Ordenar sites por nome</string>
+
+    <!-- Dialogs -->
+    <string name="confirm_delete">Remover perfil \"%s\"?</string>
+    <string name="confirm_delete_tag">Remover site  \"%s\?</string>
+    <string name="warning_lose_settings">Você perderá todas essas configurações!</string>
+
+    <!-- Descriptions / Hints -->
+    <string name="profile">Perfil</string>
+    <string name="password_length">Cumprimento da senha</string>
+    <string name="password_type">Tipo de senha</string>
+    <string name="private_key">Chave privada</string>
+    <string name="name">Nome</string>
+    <string name="master_key">Chave mestre</string>
+    <string name="tag">Site</string>
+    <string name="tag_settings">Configurações do site</string>
+    <string name="color">Cor</string>
+    <string name="logo" translatable="false">Logo</string>
+    <string name="identicon" translatable="false">Identicon</string>
+    <string name="profile_default_name">Padrão</string>
+
+    <!-- Tutorial -->
+    <string name="tutorial_splash_subtitle">Uma senha diferente para cada site.
+     \nSem senhas armazenadas.</string>
+    <string name="tutorial_intro_header">Senhas mais seguras</string>
+    <string name="tutorial_intro_content">Para gerar uma senha para um site
+        você apenas tem que entrar com a chave mestre, que apenas você sabe. Twik irá
+        então gerar uma senha única para o site.</string>
+    <string name="tutorial_setup_header">Quase lá</string>
+    <string name="tutorial_setup_content_1">Você precisa de algumas
+        coisas antes de começar:</string>
+    <string name="tutorial_setup_content_2"><ul><li>Uma chave mestre. Não digite-a
+        agora!
+        Apenas escolha uma e se lembre dela.</li></ul></string>
+    <string name="tutorial_setup_content_3"><ul><li>Uma chave privada. Essa chave irá
+        ser salva no seu dispositivo.</li></ul></string>
+    <string name="tutorial_setup_sample_master_key">i.e. "correto cavalo
+        bateria grampo"</string>
+    <string name="tutorial_setup_sample_private_key">i.e. "ASDF-QWER-DFGH"</string>
+
+    <!-- Notices -->
+    <string name="lets_start"><b>Vamos começar!</b></string>
+    <string name="no_tags">Gere novas senhas pressionando o
+        botão abaixo ou compartilhando o site com <i>Twik</i> do seu
+        navegador.</string>
+    <string name="copied_to_clipboard">Senha do site copiado
+        para a prancheta</string>
+
+    <!-- Settings titles -->
+    <string name="settings_title_remember_master_key">Lembrar da chave
+        mestre</string>
+    <string name="settings_title_copy_to_clipboard">Copiar senha para
+        prancheta</string>
+
+    <!-- Settings summaries -->
+    <string name="settings_summary_remember_master_key_never">Chave mestre
+        não será lembrada quando você sair do aplicativo</string>
+    <plurals name="settings_summary_remember_master_key_minutes">
+        <item quantity="one">Chave
+        mestre será lembrada por %d minuto depois que você sair do aplicativo</item>
+        <item quantity="other">Chave
+        mestre será lembrada por %d minutos depois que você sair do aplicativo</item>
+    </plurals>
+    <plurals name="settings_summary_remember_master_key_hours">
+        <item quantity="one">Chave mestre será lembrada por %d hora depois que você sair do aplicativo</item>
+        <item quantity="other">Chave mestre será lembrada por %d horas depois que você sair do aplicativo</item>
+    </plurals>
+    <string name="settings_summary_copy_to_clipboard_enabled">A senha
+        gerada é automaticamente copiada para a prancheta</string>
+    <string name="settings_summary_copy_to_clipboard_disabled">A senha
+        gerada não é automaticamente copiada para a prancheta</string>
+
+    <!-- Errors -->
+    <string name="error">Ouch! Algo aconteceu!</string>
+    <string name="error_no_profiles">Oops! Você deve criar um perfil
+        primeiro!</string>
+    <string name="error_tag_exists">Hey, você já tem esse site!</string>
+    <string name="error_profile_exists">Esse nome já existe</string>
+
+    <!-- About Dialog -->
+    <string name="about_body">
+<![CDATA[
+        Versão %s<br/>
+        Copyright \u00A9 2014 Red Dye No. 2
+        <br/><br/>
+        <b>Twik</b> é um aplicativo que torna mais fácil a geração de
+        senhas seguras e diferentes para cada site.
+        <br/><br/>
+        Twik é baseado no mecanismo de geração de senhas de Password
+        Hasher, por Steve Cooper e Password Hasher Plus, por Eric Woodruff.
+        <br/><br/>
+        Twik também está disponível como uma 
+        <a href="https://chrome.google.com/webstore/detail/twik-password-generator/aabbbcmaljeehpfjoepomhbocldfkinc">Extensão do Chrome</a> no Chrome Web Store.
+        <br/><br/>
+
+        <b>Reconhecimentos</b><br/>
+        Tradução francesa por Andrés Álvarez e greizgh<br/>
+        Tradução italiana por Claudio Arseni<br/>
+        Tradução alemã por Michael Wodniok (pseudônimo assassinado)
+        Tradução brasileira por AlexandreHertzog
+        <br/><br/>
+
+        <b>Licença</b><br/>
+        Twik é software livre: você pode redistribuí-lo e/ou modificá-lo
+        sob os termos da GNU General Public License como publicado pela
+        Fundação de Software Livre, tanto na versão 3 da Licença, ou
+        qualquer versão posterior (a sua escolha).<br/><br/>
+        Twik é distribuído na esperança de que seja útil,
+        mas sem QUALQUER GARANTIA; sem sequer com a garantia implícita de
+        COMERCIABILIDADE ou APTIDÃO PARA UM PROPÓSITO EM PARTICULAR. Veja a
+        GNU General Public License para mais detalhes.
+        <br/><br/>
+
+        <b>Licenças de código aberto</b>
+        <br /><br />
+        <b><a href="https://addons.mozilla.org/en-US/firefox/addon/password-hasher/">
+        Password Hasher</a></b><br/><i>por Steve Cooper.</i><br/>
+        Licenças MPL 1.1/GPL 2.0/LGPL 2.1.<br/><br/>
+
+        <b><a href="http://passwordhasherplus.com">Password Hasher Plus</a></b><br/>
+        <i>por Eric Woodruff.</i><br/>
+        Licenças MPL 1.1/GPL 2.0/LGPL 2.1.<br/><br/>
+
+        <b><a href="https://github.com/davidhampgonsalves/Contact-Identicons/">Contact-Identicons</a></b><br/>
+        <i>por David Hamp-Gonsalves.</i>
+        <br/><br/>
+
+        <b><a href="https://github.com/makovkastar/FloatingActionButton/">FloatingActionButton</a></b><br/>
+        <i>por Oleksandr Melnykov.</i><br/>
+        Licença MIT.<br/><br/>
+
+        <b><a href="http://font.ubuntu.com/">Ubuntu Mono</a></b> <br/>
+        <i>por Canonical Ltd.</i> <br/>
+        Ubuntu Font Licence 1.0.
+    ]]>
+    </string>
+</resources>
