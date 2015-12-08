@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    * Copyright 2014 Red Dye No. 2
+    *
+    * This file is part of Twik.
+    *
+    * Twik is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * Twik is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * You should have received a copy of the GNU General Public License
+    * along with Twik.  If not, see <http://www.gnu.org/licenses/>.
+    *
+    -->
+
+<resources>
+    <string-array name="RememberMasterKeyEntries">
+        <item>Nunca</item>
+        <item>5 minutos</item>
+        <item>30 minutos</item>
+        <item>1 hora</item>
+        <item>2 horas</item>
+        <item>4 horas</item>
+    </string-array>
+
+    <string-array name="RememberMasterKeyEntryValues" translatable="false">
+        <item>0</item>
+        <item>5</item>
+        <item>30</item>
+        <item>60</item>
+        <item>120</item>
+        <item>240</item>
+    </string-array>
+
+    <string-array name="password_types_array">
+        <item>Alfanumérico + Caracteres especiais</item>
+        <item>Alfanumérico</item>
+        <item>Numérico</item>
+    </string-array>
+
+</resources>
