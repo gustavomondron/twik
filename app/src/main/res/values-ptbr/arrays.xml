@@ -39,7 +39,7 @@
     </string-array>
 
     <string-array name="password_types_array">
-        <item>Alfanumérico + Caracteres especiai</item>
+        <item>Alfanumérico + Caracteres especiais</item>
         <item>Alfanumérico</item>
         <item>Numérico</item>
     </string-array>

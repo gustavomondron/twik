@@ -30,7 +30,7 @@
     <string name="action_help">Ajuda</string>
     <string name="action_about">Sobre</string>
     <string name="action_delete">Remover</string>
-    <string name="discard">Discartar</string>
+    <string name="discard">Descartar</string>
     <string name="save">Salvar</string>
     <string name="skip">Pular</string>
     <string name="start">Começar</string>
@@ -45,7 +45,7 @@
 
     <!-- Descriptions / Hints -->
     <string name="profile">Perfil</string>
-    <string name="password_length">Cumprimento da senha</string>
+    <string name="password_length">Comprimento da senha</string>
     <string name="password_type">Tipo de senha</string>
     <string name="private_key">Chave privada</string>
     <string name="name">Nome</string>
