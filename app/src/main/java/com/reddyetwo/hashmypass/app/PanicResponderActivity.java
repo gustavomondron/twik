@@ -19,6 +19,7 @@ public class PanicResponderActivity extends Activity {
         Intent intent = getIntent();
         if (intent != null && PANIC_TRIGGER_ACTION.equals(intent.getAction())) {
             TwikApplication.getInstance().wipeCachedMasterKey();
+            ExitActivity.exitAndRemoveFromRecentApps(this);
         }
 
         if (Build.VERSION.SDK_INT >= 21) {

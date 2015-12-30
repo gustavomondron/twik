@@ -87,6 +87,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ExitActivity"
+            android:theme="@android:style/Theme.NoDisplay" />
+
+        <activity
             android:name=".tutorial.TutorialActivity"
             android:noHistory="true"
             android:screenOrientation="portrait"
